@@ -4,9 +4,24 @@ lappend auto_path [file dirname [file dirname [file dirname [file normalize [inf
 package require ticklecharts
 
 # set theme if you want...
-set ::ticklecharts::theme "basic"
+# set ::ticklecharts::theme "basic"
 
-foreach chartfile [glob -directory [file dirname [info script]] -types f *.tcl] {
-    if {[file tail $chartfile] eq "all.tcl"} {continue}
+# bar
+foreach chartfile [glob -directory [file join [file dirname [info script]] bar] -types f *.tcl] {
+    source $chartfile
+}
+
+# line
+foreach chartfile [glob -directory [file join [file dirname [info script]] line] -types f *.tcl] {
+    source $chartfile
+}
+
+# pie
+foreach chartfile [glob -directory [file join [file dirname [info script]] pie] -types f *.tcl] {
+    source $chartfile
+}
+
+# layout
+foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
 }

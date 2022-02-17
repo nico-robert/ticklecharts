@@ -21,8 +21,8 @@ oo::define ticklecharts::ehuddle {
         #
         # Returns huddle
 
-        if {[llength $args] < 2} {
-            error "args..."
+        if {[llength $args] % 2} {
+            error "bad args... llength shoud be greater than 1"
         }
 
         set lhuddle {}
@@ -47,15 +47,13 @@ oo::define ticklecharts::ehuddle {
                             set l [llength {*}$data]
                             if {$l == 1} {
                                 foreach val [lindex {*}$data 0] {
-                                    set v [huddle number $val]
-                                    lappend listv $v
+                                    lappend listv [huddle number $val]
                                 }
                             } else {
                                 foreach val {*}$data {
                                     lappend listv [huddle list {*}[lmap a $val {huddle number $a}]]
                                 }
                             }
-
                             set value [huddle list {*}$listv]
                         }
                 "@LD"   {
@@ -64,11 +62,10 @@ oo::define ticklecharts::ehuddle {
                             if {$l == 1} {
                                 foreach val [lindex {*}$data 0] {
                                     if {[string is double $val]} {
-                                        set v [huddle number $val]
+                                        lappend listv [huddle number $val]
                                     } else {
-                                        set v [huddle string $val]
+                                        lappend listv [huddle string $val]
                                     }
-                                    lappend listv $v
                                 }
                             } else {
                                 foreach val {*}$data {
@@ -88,7 +85,7 @@ oo::define ticklecharts::ehuddle {
                 "@DO" {set value [huddle list $data]}
                 "@JS" {
                     set cc [clock clicks]
-                    dict set _js $cc $data
+                    dict set _js $cc [$data get]
                     set value [huddle string [string map {\" ""} "%JS${cc}%"]]
                 }
 
@@ -130,15 +127,13 @@ oo::define ticklecharts::ehuddle {
                                 set l [llength {*}$info]
                                 if {$l == 1} {
                                     foreach val [lindex {*}$info 0] {
-                                        set v [huddle number $val]
-                                        lappend listv $v
+                                        lappend listv [huddle number $val]
                                     }
                                 } else {
                                     foreach val {*}$info {
                                         lappend listv [huddle list {*}[lmap a $val {huddle number $a}]]
                                     }
                                 }
-
                                 set value [huddle list {*}$listv]
                             }
                     "@LD"   {
@@ -147,11 +142,10 @@ oo::define ticklecharts::ehuddle {
                                 if {$l == 1} {
                                     foreach val [lindex {*}$info 0] {
                                         if {[string is double $val]} {
-                                            set v [huddle number $val]
+                                            lappend listv [huddle number $val]
                                         } else {
-                                            set v [huddle string $val]
+                                            lappend listv [huddle string $val]
                                         }
-                                        lappend listv $v
                                     }
                                 } else {
                                     foreach val {*}$info {
@@ -165,7 +159,6 @@ oo::define ticklecharts::ehuddle {
                                         }]]
                                     }
                                 }
-
                                 set value [huddle list {*}$listv]
                             }
                     "@AO"   -
@@ -221,13 +214,11 @@ oo::define ticklecharts::ehuddle {
                     "@DO"  {
 
                             set subdata {}
-
                             foreach {k val} $info  {
                             
                                 if {$k ne "@AO"}  {error "key value must be @AO instead of '$k'"}
 
                                 set suv {}
-
                                 foreach vv $val {
                                     set subdatalist {}
                                     foreach {sk vk} $vv {
@@ -266,17 +257,13 @@ oo::define ticklecharts::ehuddle {
                                             default {lappend subdatalist {*}[my set $sk $vk]}
                                         }
                                     }
-                                    
-                                    
+
                                     if {[llength $subdatalist]} {
                                         lappend suv [huddle create {*}$subdatalist]
                                     }
                                 }
-                                
                                 lappend subdata {*}$suv
-
                             }
-
                             lappend lhuddle $subkeyvalue [huddle list {*}$subdata]
 
                         }
@@ -309,15 +296,11 @@ oo::define ticklecharts::ehuddle {
                             } else {
                                 lappend subdatalist [huddle create {*}$subdata]
                             }
-
                             set subdata {}
-
                         }
-
                         if {$type eq "@LO"} {
                             lappend lhuddle $subkeyvalue [huddle list {*}$subdatalist]
                         }
-
                     }
 
                     default {error "3 Unknown type '$type' specified for '$subkey'"}
@@ -451,13 +434,15 @@ oo::define ticklecharts::ehuddle {
             <@!> " "
             <s!> ""
             <#!> ""
+            <#?> "#"
             <0123> \{
             <0125> \}
+            \\/ /
         }
 
         dict for {key info} $_js {
             if {$key eq ""} {continue}
-            append lstringmap " {\"%JS${key}%\",} $info"
+            append lstringmap " {\"%JS${key}%\",} $info {\"%JS${key}%\"} $info"
         }
 
         return [string map $lstringmap [huddle jsondump [my extract]]]

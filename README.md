@@ -1,9 +1,12 @@
-:chart_with_downwards_trend: ticklEcharts - chart library
+ticklEcharts - chart library
 ================
 Tcl wrapper for [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript Visualization library).
-#### Dependencies :
+Dependencies :
+-------------------------
 `huddle` package from [Tcllib](https://www.tcl.tk/software/tcllib/)
-#### Usage :
+Usage :
+-------------------------
+
 ```tcl
 package require ticklecharts
 
@@ -68,7 +71,8 @@ $chart render
 # Demo
 $chart render -width "1200px" -height "800px" -render "svg"
 ```
-#### Data :
+Data :
+-------------------------
 `-data` in _series_ can be written like this : 
 ```tcl
 # Demo
@@ -92,7 +96,8 @@ $chart AddLineSeries -datalineitem {
                                 }
 ```
 
-#### Javascript function :
+Javascript function :
+-------------------------
 It's possible to add a javascript function to json data for this :
 ```tcl
 # Initializes a new jsfunc Class
@@ -114,8 +119,9 @@ set js [ticklecharts::jsfunc new {function (value, index) {
   "showMinLabel": null
 }
 ```
-#### Examples :
-See **[examples](/examples)** for all demo...
+Examples :
+-------------------------
+See **[examples](/examples)** for all demos...
 
 ```tcl
 # line + bar on same canvas...
@@ -156,7 +162,7 @@ $chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ![line and bar mixed](images/line_and_bar_mixed.png)
 
 ```tcl
-# demo layout line + bar...
+# demo layout line + bar + pie...
 set num  {1 2 3 4 5}
 set num1 {2 3.6 6 2 10}
 set num2 {4 6.6 8 10 15}
@@ -166,10 +172,11 @@ set js [ticklecharts::jsfunc new {function (value, index) {
                                 },
                                 }]
 
-set line [ticklecharts::chart new -theme dark]
+set line [ticklecharts::chart new]
                   
-$line SetOptions -title   {text "layout line + bar..."} \
-                 -tooltip {show "True"}          
+$line SetOptions -title   {text "layout line + bar + pie charts..."} \
+                 -tooltip {show "True"} \
+                 -legend {top "56%" left "20%"}    
     
 $line Xaxis -data [list $num] -boundaryGap "False"
 $line Yaxis
@@ -177,27 +184,44 @@ $line AddLineSeries -data [list $num]  -areaStyle {} -smooth true
 $line AddLineSeries -data [list $num1] -smooth true
 
 set bar [ticklecharts::chart new]
+
+$bar SetOptions -legend {top "2%" left "20%"}
+
 $bar Xaxis -data [list {A B C D E}] \
             -axisLabel [dict create show "True" formatter $js]
 $bar Yaxis
 $bar AddBarSeries -data [list {50 6 80 120 30}]
 $bar AddBarSeries -data [list {20 30 50 100 25}]
 
+set pie [ticklecharts::chart new]
+
+$pie SetOptions -legend {top "6%" left "65%"} 
+
+$pie AddPieSeries -name "Access From" -radius [list {"50%" "70%"}] \
+                  -labelLine {show "True"} \
+                  -datapieitem {
+                      {value 1048 name "C++"}
+                      {value 300 name "Tcl"}
+                      {value 580 name "Javascript"}
+                      {value 484 name "Python"}
+                      {value 735 name "C"}
+                    }
+
 
 set layout [ticklecharts::Gridlayout new]
-$layout Add $bar  -bottom "60%" -width "30%" -left "5%"
-$layout Add $line -top    "60%" -width "30%" -left "5%"
-$layout Add $bar  -width "55%"  -right "5%"
+$layout Add $bar  -bottom "60%" -width "40%" -left "5%"
+$layout Add $line -top    "60%" -width "40%" -left "5%"
+$layout Add $pie  -center [list {75% 50%}]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
 $layout render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
-               -width 1900px \
+               -width 1700px \
                -height 1000px
 ```
-![line and bar layout](images/line_bar_layout.png)
+![line, bar and pie layout](images/line_bar_pie_layout.png)
 
 #### Currently chart and options supported are :
 - **Global options :**
@@ -211,7 +235,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [x] angleAxis
 - [ ] radar
 - [ ] dataZoom
-- [ ] visualMap
+- [x] visualMap
 - [x] tooltip
 - [ ] axisPointer
 - [ ] toolbox
@@ -228,7 +252,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - **Series :**
 - [x] line
 - [x] bar
-- [ ] pie
+- [x] pie
 - [ ] scatter
 - [ ] effectScatter
 - [ ] radar
@@ -249,9 +273,16 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [ ] themeRiver
 - [ ] custom
 
-#### License :
+License :
+-------------------------
 **ticklEcharts** is covered under the terms of the [MIT](LICENSE) license.
 
-#### Release :
+Release :
+-------------------------
 *  **08-02-2022** : 1.0
     - Initial release.
+*  **16-02-2022** : 1.1
+    - Add pie chart + visualMap.
+    - Add demos line + pie + visualMap
+    - Bug fixes
+    - Add options

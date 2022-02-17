@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_gradient_stacked_area_chart</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569952688071" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569952687070 = echarts.init(document.getElementById('id_96569952688071'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "Stacked aera gradient chart",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "cross",
+        "axis": "auto",
+        "label": {
+          "show": true,
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "backgroundColor": "#6a7985",
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid": [{
+      "left": "3%",
+      "right": "4%",
+      "bottom": "3%",
+      "containLabel": true
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "line",
+      "name": "chart 1",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": false,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "Total",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "width": 0,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgb(128, 255, 165)"},
+                {offset: 1,color: "rgb(1, 191, 236)"}]),
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.8
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        140,
+        232,
+        101,
+        264,
+        90,
+        340,
+        250
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "line",
+      "name": "chart 2",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": false,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "Total",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "width": 0,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgb(0, 221, 255)"},
+                {offset: 1,color: "rgb(77, 119, 255)"}]),
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.8
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        120,
+        282,
+        111,
+        234,
+        220,
+        340,
+        310
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "line",
+      "name": "chart 3",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": false,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "Total",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "width": 0,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgb(55, 162, 255)"},
+                {offset: 1,color: "rgb(116, 21, 219)"}]),
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.8
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        320,
+        132,
+        201,
+        334,
+        190,
+        130,
+        220
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "line",
+      "name": "chart 4",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": false,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "Total",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "width": 0,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgb(255, 0, 135)"},
+                {offset: 1,color: "rgb(135, 0, 157)"}]),
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.8
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        220,
+        402,
+        231,
+        134,
+        190,
+        230,
+        120
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "line",
+      "name": "chart 5",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": false,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "Total",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "width": 0,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgb(255, 191, 0)"},
+                {offset: 1,color: "rgb(224, 62, 76)"}]),
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.8
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        220,
+        302,
+        181,
+        234,
+        210,
+        290,
+        150
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_96569952687070.setOption(option);
+    </script>
+  </body>
+</html>

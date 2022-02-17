@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_area_pieces</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569826347234" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569826346265 = echarts.init(document.getElementById('id_96569826347234'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "visualMap": [{
+      "type": "piecewise",
+      "splitNumber": 5,
+      "pieces": [
+        {
+          "color": "rgba(0, 0, 180, 0.4)",
+          "gt": 1,
+          "lt": 3
+        },
+        {
+          "color": "rgba(0, 0, 180, 0.4)",
+          "gt": 5,
+          "lt": 7
+        }
+      ],
+      "selectedMode": "multiple",
+      "inverse": false,
+      "precision": 0,
+      "itemWidth": 20,
+      "itemHeight": 14,
+      "align": "auto",
+      "textGap": 10,
+      "itemGap": 10,
+      "itemSymbol": "roundRect",
+      "show": false,
+      "dimension": 0,
+      "seriesIndex": 0,
+      "hoverLink": true,
+      "zlevel": 0,
+      "z": 4,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "padding": 5,
+      "backgroundColor": "rgba(0,0,0,0)",
+      "borderColor": "#ccc",
+      "borderWidth": 0
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": [
+        "0",
+        "30%"
+      ],
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "line",
+      "name": "lineseries_1",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "none",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "lineStyle": {
+        "color": "#5470C6",
+        "width": 5,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": null,
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "smooth": 0.6,
+      "data": [
+        [
+          "2019-10-10",
+          200
+        ],
+        [
+          "2019-10-11",
+          560
+        ],
+        [
+          "2019-10-12",
+          750
+        ],
+        [
+          "2019-10-13",
+          580
+        ],
+        [
+          "2019-10-14",
+          250
+        ],
+        [
+          "2019-10-15",
+          300
+        ],
+        [
+          "2019-10-16",
+          450
+        ],
+        [
+          "2019-10-17",
+          300
+        ],
+        [
+          "2019-10-18",
+          100
+        ]
+      ],
+      "markLine": {
+        "silent": false,
+        "symbol": [
+          "none",
+          "none"
+        ],
+        "precision": 2,
+        "label": {
+          "show": false,
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        },
+        "data": [
+          {"xAxis": 1},
+          {"xAxis": 3},
+          {"xAxis": 5},
+          {"xAxis": 7}
+        ]
+      },
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_96569826346265.setOption(option);
+    </script>
+  </body>
+</html>

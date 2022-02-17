@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_style_and_item_style</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569816294610" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569816293626 = echarts.init(document.getElementById('id_96569816294610'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "line",
+      "name": "lineseries_1",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "triangle",
+      "symbolSize": 20,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "itemStyle": {
+        "color": "yellow",
+        "borderColor": "#EE6666",
+        "borderWidth": 3,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "color": "#5470C6",
+        "width": 4,
+        "type": "dashed",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "smooth": false,
+      "data": [
+        120,
+        200,
+        150,
+        80,
+        70,
+        110,
+        130
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_96569816293626.setOption(option);
+    </script>
+  </body>
+</html>

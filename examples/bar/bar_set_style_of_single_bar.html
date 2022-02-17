@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>bar_set_style_of_single_bar</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569662023918" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569662022862 = echarts.init(document.getElementById('id_96569662023918'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "bar",
+      "name": "barseries_1",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "data": [
+        {
+          "value": 120,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 200,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false,
+          "itemStyle": {
+            "color": "#a90000",
+            "borderColor": "rgb(0, 0, 0)",
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderCap": "butt",
+            "borderJoin": "bevel",
+            "borderMiterLimit": 10,
+            "opacity": 1
+          }
+        },
+        {
+          "value": 150,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 80,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 70,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 110,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 130,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        }
+      ]
+    }]
+}
+        chart_96569662022862.setOption(option);
+    </script>
+  </body>
+</html>

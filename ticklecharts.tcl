@@ -1,8 +1,13 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
-# tickleEcharts - Tcl wrapper for Apache ECharts. (https://echarts.apache.org/en/index.html)
+# ticklEcharts - Tcl wrapper for Apache ECharts. (https://echarts.apache.org/en/index.html)
 
 # 08-02-2022 : v1.0   Initial release
+# 16-02-2022 : v1.1
+             # Add pie chart + visualMap.
+             # Add demos line + pie + visualMap
+             # Bug fixes
+             # Add options
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -21,7 +26,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.0
+    variable version 1.1
     variable dir $dir
     variable theme "basic"
     variable opts_theme ""

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_multiple_x_axes</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569841174986" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569841173985 = echarts.init(document.getElementById('id_96569841174986'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470C6",
+    "#EE6666"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "none",
+      "axisPointer": {
+        "type": "cross",
+        "axis": "auto",
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "xAxis": [
+    {
+      "show": true,
+      "type": "category",
+      "data": [
+        "2016-1",
+        "2016-2",
+        "2016-3",
+        "2016-4",
+        "2016-5",
+        "2016-6",
+        "2016-7",
+        "2016-8",
+        "2016-9",
+        "2016-10",
+        "2016-11",
+        "2016-12"
+      ],
+      "gridIndex": 0,
+      "position": "top",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": true,
+        "onZero": false,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#5470C6",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "axisTick": {
+        "show": true,
+        "alignWithLabel": true,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisPointer": {
+        "type": "line",
+        "axis": "auto",
+        "label": {
+          "show": true,
+          "rotate": 0,
+          "formatter": function (params) {
+                    return (
+                      'Precipitation  ' +
+                      params.value +
+                      (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                    );
+                  },
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "zlevel": 0,
+      "z": 0
+    },
+    {
+      "show": true,
+      "type": "category",
+      "data": [
+        "2015-1",
+        "2015-2",
+        "2015-3",
+        "2015-4",
+        "2015-5",
+        "2015-6",
+        "2015-7",
+        "2015-8",
+        "2015-9",
+        "2015-10",
+        "2015-11",
+        "2015-12"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": true,
+        "onZero": false,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#EE6666",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "axisTick": {
+        "show": true,
+        "alignWithLabel": true,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisPointer": {
+        "type": "line",
+        "axis": "auto",
+        "label": {
+          "show": true,
+          "rotate": 0,
+          "formatter": function (params) {
+                    return (
+                      'Precipitation  ' +
+                      params.value +
+                      (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                    );
+                  },
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "zlevel": 0,
+      "z": 0
+    }
+  ],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "line",
+      "name": "Precipitation(2015)",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        2.6,
+        5.9,
+        9.0,
+        26.4,
+        28.7,
+        70.7,
+        175.6,
+        182.2,
+        48.7,
+        18.8,
+        6.0,
+        2.3
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "line",
+      "name": "Precipitation(2016)",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "smooth": true,
+      "data": [
+        3.9,
+        5.9,
+        11.1,
+        18.7,
+        48.3,
+        69.2,
+        231.6,
+        46.6,
+        55.4,
+        18.4,
+        10.3,
+        0.7
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_96569841173985.setOption(option);
+    </script>
+  </body>
+</html>

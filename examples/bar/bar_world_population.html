@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>bar_world_population</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569726106347" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569726105352 = echarts.init(document.getElementById('id_96569726106347'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "World Population",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "shadow",
+        "axis": "auto",
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid": [{
+      "left": "3%",
+      "right": "4%",
+      "bottom": "3%",
+      "containLabel": true
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": [
+        0,
+        0.01
+      ],
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "category",
+      "data": [
+        "Brazil",
+        "Indonesia",
+        "USA",
+        "India",
+        "China",
+        "World"
+      ],
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "bar",
+      "name": "2011",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        18203,
+        23489,
+        29034,
+        104970,
+        131744,
+        630230
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "2012",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        19325,
+        23438,
+        31000,
+        121594,
+        134141,
+        681807
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_96569726105352.setOption(option);
+    </script>
+  </body>
+</html>

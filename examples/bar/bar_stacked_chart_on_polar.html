@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>bar_stacked_chart_on_polar</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_96569672952863" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_96569672951447 = echarts.init(document.getElementById('id_96569672952863'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": false,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "polar": {"z": 2},
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "radiusAxis": {
+    "type": "category",
+    "data": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu"
+    ],
+    "z": 10
+  },
+  "angleAxis": {
+    "startAngle": 90,
+    "clockwise": true
+  },
+  "series": [
+    {
+      "type": "bar",
+      "name": "A",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "polar",
+      "roundCap": false,
+      "showBackground": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "stack": "a",
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "B",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "polar",
+      "roundCap": false,
+      "showBackground": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "stack": "a",
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "C",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "polar",
+      "roundCap": false,
+      "showBackground": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "series",
+        "blurScope": "coordinateSystem"
+      },
+      "stack": "a",
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_96569672951447.setOption(option);
+    </script>
+  </body>
+</html>

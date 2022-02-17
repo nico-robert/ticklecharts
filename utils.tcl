@@ -117,7 +117,7 @@ proc ticklecharts::TclType value {
         return bool
     }
 
-    if {([string first "\{" $value] > -1) && ([string last "\}" $value] > -1) && [llength {*}$value] > 1} {
+    if {([string first "\{" $value] > -1) && ([string last "\}" $value] > -1) && [llength $value] > 1} {
         return list
     }
 
@@ -129,13 +129,30 @@ proc ticklecharts::TclType value {
     return str
 }
 
-proc ticklecharts::Type value {
-    # Guess the type of the value (1st time if ticklecharts::TclType is string)
-    # from https://rosettacode.org/wiki/JSON#Tcl
+proc ticklecharts::IsList value {
+    # Guess if value is a list (again and again !!)
     # 
     # value - string (everything is string !!!)
     #
-    # Returns type of c
+    # Returns type of value
+    
+    if {![catch {llength {*}$value}] && [llength {*}$value] > 1} {
+        return list
+    } else {
+        return [ticklecharts::TclType $value]
+    }
+
+}
+
+proc ticklecharts::Type value {
+    # Guess the type of the value (1st time if ticklecharts::TclType is string)
+    # from https://rosettacode.org/wiki/JSON#Tcl
+    # not the best way !!
+    # Controls only 2 types dict or list
+    # 
+    # value - string (everything is string !!!)
+    #
+    # Returns type of value
     
     regexp {^value is a (.*?) with a refcount} \
 	[::tcl::unsupported::representation $value] -> type
@@ -145,7 +162,7 @@ proc ticklecharts::Type value {
             return dict
         }
         list {
-            return list
+            return [ticklecharts::IsList $value]
         }
         default {
             return [ticklecharts::TclType $value]
@@ -219,6 +236,7 @@ proc ticklecharts::DictToEchartsHuddle {options} {
             "list.s" {
                 append opts [format " ${newtype}=$subkey {%s}" $svalue]
             }
+            "list.d" -
             "list.n" {
                 append opts [format " ${newtype}=$subkey {{%s}}" $svalue]
             }
@@ -260,13 +278,33 @@ proc ticklecharts::setdef {d key args} {
 
 	upvar 1 $d dictionary
 
-    if {([lindex $args 0] ne "-type") || ([lindex $args 2] ne "-default")} {
+    if {([lindex $args 0] ne "-type") && ([lindex $args 2] ne "-default")} {
         error "bad args..."
     }
 	
 	dict set dictionary $key [lindex $args 3] [lindex $args 1]
 }
 
+proc ticklecharts::MatchType {mytype type keyt} {
+    # Guess type follow optional list
+    # 
+    # mytype - type
+    # type   - list default type
+    # keyt   - upvar key type 
+    #
+    # Returns true if mytype is found , false otherwise
+
+	upvar 1 $keyt typekey
+    
+    foreach valtype [split $type "|"] {
+        if {[string match *$mytype* "$valtype"]} {
+            set typekey $valtype
+            return 1
+        }
+    }
+    
+    return 0
+}
 
 proc ticklecharts::merge {d other} {
     # merge 2 dictionnaries and control the type of value
@@ -283,28 +321,33 @@ proc ticklecharts::merge {d other} {
    
         lassign $info value type
         
+        # force string value for this key below
+        # if value is boolean or double...
+        if {$key eq "-name" || $key eq "name"} {
+            if {[dict exists $other $key]} {
+                set namevalue [dict get $other $key]
+                if {[Type $namevalue] ne "str"} {
+                    dict set other $key [string cat $namevalue "<s!>"]
+                }
+            }
+        }
+
         if {[dict exists $other $key]} {
         
             set mytype [Type [dict get $other $key]]
-
-            set match 0
-            foreach valtype [split $type "|"] {
-                if {[string match *$mytype* "$valtype"]} {
-                    set typekey $valtype
-                    set match 1
-                    break
-                }
+            
+            # check type list
+            if {![ticklecharts::MatchType $mytype $type typekey]} {
+                error "bad type 1 for this key '$key'= $mytype should be :$type"
             }
-            
-            if {!$match} {error "bad type 1 for this key '$key'= $mytype should be :$type"}
-            
+
             if {$typekey eq "dict" || $typekey eq "dict.o"} {
                 dict set mydict $key $value $typekey
             } else {
                 set value [dict get $other $key]
-            
+
                 if {$typekey eq "str"} {
-                    set value [string map {" " "<@!>"} $value]
+                    set value [ticklecharts::MapSpaceString $value]
                 }
             
                 dict set mydict $key $value $typekey
@@ -313,20 +356,14 @@ proc ticklecharts::merge {d other} {
         } else {
         
             set mytype [Type $value]
-
-            set match 0
-            foreach valtype [split $type "|"] {
-                if {[string match *$mytype* "$valtype"]} {
-                    set typekey $valtype
-                    set match 1
-                    break
-                }
+            
+            # check type list
+            if {![ticklecharts::MatchType $mytype $type typekey]} {
+                error "bad type 2 for this key '$key'= $mytype should be :$type"
             }
-            
-            if {!$match} {error "bad type 2 for this key '$key'= $mytype should be :$type"}
-            
+
             if {$typekey eq "str"} {
-                set value [string map {" " "<@!>"} $value]
+                set value [ticklecharts::MapSpaceString $value]
             }
                     
             dict set mydict $key $value $typekey
@@ -334,6 +371,17 @@ proc ticklecharts::merge {d other} {
     }
     
     return $mydict
+}
+
+proc ticklecharts::MapSpaceString {value} {
+    # Replace 'spaces' by symbol '<@!>' if present 
+    # Replace '#'      by symbol '<#?>' if present 
+    # for string type...
+    #
+    # value - string
+    #
+    # Returns mapped string
+    return [string map {" " <@!> # <#?>} $value]
 }
 
 proc ticklecharts::Isdict {value} {

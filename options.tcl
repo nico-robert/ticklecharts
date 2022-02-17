@@ -15,6 +15,10 @@ proc ticklecharts::BarItem {value} {
             error "key 'value' must be present in item"
         }
 
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
         setdef options name             -type str|null    -default "nothing"
         setdef options value            -type num|null    -default "nothing"
         setdef options symbol           -type str         -default [dict get $::ticklecharts::opts_theme symbol]
@@ -50,6 +54,10 @@ proc ticklecharts::LineItem {value} {
             error "key 'value' must be present in item"
         }
 
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
         setdef options name             -type str|null    -default "nothing"
         setdef options value            -type num|null    -default "nothing"
         setdef options symbol           -type str         -default [dict get $::ticklecharts::opts_theme symbol]
@@ -69,6 +77,133 @@ proc ticklecharts::LineItem {value} {
 
     }
 
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::PieItem {value} {
+
+    if {![dict exists $value -datapieitem]} {
+        error "key -datapieitem not present..."
+    }
+
+    foreach item [dict get $value -datapieitem] {
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name             -type str|null    -default "nothing"
+        setdef options value            -type num|null    -default "nothing"
+        setdef options groupId          -type num|null    -default "nothing"
+        setdef options selected         -type bool        -default "False"
+        setdef options label            -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine        -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle        -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis         -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur             -type dict|null   -default [ticklecharts::blur $item]
+        setdef options tooltip          -type dict|null   -default "nothing"
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::RichItem {value} {
+
+    if {![dict exists $value richitem]} {
+        return "nothing"
+    }
+
+    foreach {key item} [dict get $value richitem] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options color                -type str|null            -default "#fff"
+        setdef options fontStyle            -type str|null            -default "normal"
+        setdef options fontWeight           -type str|null            -default "normal"
+        setdef options fontFamily           -type str|null            -default "sans-serif"
+        setdef options fontSize             -type num|null            -default 12
+        setdef options align                -type str|null            -default "nothing"
+        setdef options verticalAlign        -type str|null            -default "nothing"
+        setdef options lineHeight           -type num|null            -default "nothing"
+
+        if {[dict exists $item backgroundColor image]} {
+            set val [dict get $item backgroundColor image]
+            set type [Type $val] ; # type value (should be a string...)
+            set val [ticklecharts::MapSpaceString $val] ; # spaces in path... ??
+            setdef options backgroundColor -type dict -default [dict create image [list $val $type]]
+            set item [dict remove $item backgroundColor] ; # remove key image
+        } else {
+            setdef options backgroundColor  -type str|null  -default "nothing"
+        }
+
+        setdef options borderColor          -type str|null            -default "nothing"
+        setdef options borderWidth          -type num|null            -default "nothing"
+        setdef options borderType           -type str|null            -default "solid"
+        setdef options borderDashOffset     -type num|null            -default "nothing"
+        setdef options borderRadius         -type num|list.n|null     -default "nothing"
+        setdef options padding              -type num|list.n|null     -default "nothing"
+        setdef options shadowColor          -type str|null            -default "nothing"
+        setdef options shadowBlur           -type num|null            -default "nothing"
+        setdef options shadowOffsetX        -type num|null            -default "nothing"
+        setdef options shadowOffsetY        -type num|null            -default "nothing"
+        setdef options width                -type num|str|null        -default "nothing"
+        setdef options height               -type num|str|null        -default "nothing"
+        setdef options textBorderColor      -type str|null            -default "nothing"
+        setdef options textBorderWidth      -type num|null            -default "nothing"
+        setdef options textBorderType       -type str|num|list.n|null -default "solid"
+        setdef options textBorderDashOffset -type num|null            -default "nothing"
+        setdef options textShadowColor      -type str|null            -default "transparent"
+        setdef options textShadowOffsetX    -type num|null            -default "nothing"
+        setdef options textShadowOffsetY    -type num|null            -default "nothing"
+
+        lappend opts $key [list [merge $options $item] dict]
+        set options {}
+
+    }
+
+    return [dict create {*}$opts]
+
+}
+
+proc ticklecharts::piecesItem {value} {
+
+    if {![dict exists $value pieces]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value pieces] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options label -type str|null -default "nothing"
+        setdef options value -type num|null -default "nothing"
+        setdef options color -type str|null -default "nothing"
+        setdef options min   -type num|null -default "nothing"
+        setdef options max   -type num|null -default "nothing"
+        setdef options gt    -type num|null -default "nothing"
+        setdef options gte   -type num|null -default "nothing"
+        setdef options lt    -type num|null -default "nothing"
+        setdef options lte   -type num|null -default "nothing"
+        
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+    
     return [list {*}$opts]
 
 }
@@ -168,6 +303,10 @@ proc ticklecharts::itemStyle {value} {
         setdef options borderJoin       -type str             -default "inherit"
         setdef options borderMiterLimit -type num|str         -default "inherit"
         setdef options opacity          -type str|num|null    -default "inherit"
+    }
+
+    if {$proc eq "ticklecharts::pieseries"} {
+        setdef options borderRadius -type str|num|list.d|null  -default "nothing"
     }
     
     set options [merge $options [dict get $value $key]]
@@ -411,7 +550,7 @@ proc ticklecharts::setXAxis {value} {
     
     setdef options -id             -type str|null            -default "nothing"
     setdef options -show           -type bool                -default "True"
-    setdef options -type           -type str                 -default "category"
+    setdef options -type           -type str|null            -default "category"
     setdef options -data           -type list.d|null         -default "nothing"
     setdef options -gridIndex      -type num                 -default 0
     setdef options -position       -type str                 -default "bottom"
@@ -440,6 +579,7 @@ proc ticklecharts::setXAxis {value} {
     setdef options -splitLine      -type dict|null           -default [ticklecharts::splitLine $value]
     setdef options -minorSplitLine -type dict|null           -default [ticklecharts::minorSplitLine $value]
     setdef options -splitArea      -type dict|null           -default [ticklecharts::splitArea $value]
+    setdef options -axisPointer    -type dict|null           -default [ticklecharts::axisPointer $value]
     setdef options -zlevel         -type num                 -default 0
     setdef options -z              -type num                 -default 0
     
@@ -459,7 +599,7 @@ proc ticklecharts::setYAxis {value} {
     setdef options -offset          -type num                 -default 0
     setdef options -realtimeSort    -type bool                -default "True"
     setdef options -sortSeriesIndex -type num                 -default 0
-    setdef options -type            -type str                 -default "value"
+    setdef options -type            -type str|null            -default "value"
     setdef options -data            -type list.d|null         -default "nothing"
     setdef options -name            -type str|null            -default "nothing"
     setdef options -nameLocation    -type str                 -default "end"
@@ -627,6 +767,8 @@ proc ticklecharts::axisLine {value} {
     if {![dict exists $value -axisLine]} {
         return "nothing"
     }
+    
+    set d [dict get $value -axisLine]
 
     setdef options show            -type bool            -default [dict get $::ticklecharts::opts_theme axisLineShow]
     setdef options onZero          -type bool            -default "True"
@@ -634,11 +776,11 @@ proc ticklecharts::axisLine {value} {
     setdef options symbol          -type str|list.s|null -default "null"
     setdef options symbolSize      -type list.n|null     -default "nothing"
     setdef options symbolOffset    -type list.n|num|null -default "nothing"
-    setdef options lineStyle       -type dict|null       -default [ticklecharts::lineStyle [dict get $value -axisLine]]
+    setdef options lineStyle       -type dict|null       -default [ticklecharts::lineStyle $d]
     #...
-
-    set options [merge $options [dict get $value -axisLine]]
-
+    
+    set options [merge $options $d]
+    
     return $options
 
 }
@@ -707,7 +849,7 @@ proc ticklecharts::markLineItem {value} {
 
                 lappend opts [list $t list.o]
                 
-                }
+            }
             objectItem {
                 setdef options name             -type str|null        -default "nothing"
                 setdef options type             -type str|null        -default "nothing"
@@ -757,6 +899,13 @@ proc ticklecharts::labelLine {value} {
     setdef options minTurnAngle -type num|null      -default "nothing"
     setdef options lineStyle    -type dict|null     -default [ticklecharts::lineStyle [dict get $value $key]]
     #...
+
+    lassign [info level 2] proc_l2
+
+    if {$proc_l2 eq "ticklecharts::pieseries"} {
+        setdef options length           -type num|null  -default "nothing"
+        setdef options maxSurfaceAngle  -type num|null  -default "nothing"
+    }
 
     set options [merge $options [dict get $value $key]]
 
@@ -902,6 +1051,8 @@ proc ticklecharts::label {value} {
     } else {
         return "nothing"
     }
+
+    set d [dict get $value $key]
     
     setdef options show                 -type bool            -default "True"
     setdef options position             -type str|list.d|null -default "nothing"
@@ -914,9 +1065,9 @@ proc ticklecharts::label {value} {
     setdef options fontFamily           -type str             -default "sans-serif"
     setdef options fontSize             -type num             -default 12
     setdef options align                -type str|null        -default "nothing"
-    setdef options verticalAlign        -type str             -default "center"
-    setdef options lineHeight           -type num             -default 12
-    setdef options backgroundColor      -type str             -default "transparent"
+    setdef options verticalAlign        -type str|null        -default "nothing"
+    setdef options lineHeight           -type num|null        -default 12
+    setdef options backgroundColor      -type str|null        -default "nothing"
     setdef options borderColor          -type str|null        -default "nothing"
     setdef options borderWidth          -type num             -default 0
     setdef options borderType           -type str|num|list.n  -default "solid"
@@ -939,9 +1090,23 @@ proc ticklecharts::label {value} {
     setdef options textShadowOffsetY    -type num             -default 0
     setdef options overflow             -type str             -default "truncate"
     setdef options ellipsis             -type str             -default "..."
+    setdef options rich                 -type dict|null       -default [ticklecharts::RichItem $d]
     #...
 
-    set options [merge $options [dict get $value $key]]
+    lassign [info level 2] proc_l2
+
+    if {$proc_l2 eq "ticklecharts::pieseries"} {
+        setdef options alignTo             -type str          -default "none"
+        setdef options edgeDistance        -type str|num|null -default "25%"
+        setdef options bleedMargin         -type num|null     -default 10
+        setdef options margin              -type num|null     -default "nothing"
+        setdef options distanceToLabelLine -type num          -default 5
+    }
+
+    # remove key from dict value rich...
+    set d [dict remove $d richitem]
+
+    set options [merge $options $d]
 
     return $options
 }
@@ -1249,6 +1414,35 @@ proc ticklecharts::shadowStyle {value} {
 
 }
 
+proc ticklecharts::emptyCircleStyle {value} {
+
+    if {![dict exists $value -emptyCircleStyle]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value -emptyCircleStyle]
+
+    setdef options color            -type str      -default "lightgray"
+    setdef options borderColor      -type str|null -default "#000"
+    setdef options borderWidth      -type num|null -default "nothing"
+    setdef options borderType       -type str|null -default "solid"
+    setdef options borderdashOffset -type num|null -default "nothing"
+    setdef options borderCap        -type str      -default "butt"
+    setdef options borderJoin       -type str      -default "bevel"
+    setdef options borderMiterLimit -type num      -default 10
+    setdef options shadowBlur       -type num|null -default "nothing"
+    setdef options shadowColor      -type str|null -default "nothing"
+    setdef options shadowOffsetX    -type num|null -default "nothing"
+    setdef options shadowOffsetY    -type num|null -default "nothing"
+    setdef options opacity          -type num|null -default 0.5
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
 proc ticklecharts::axisPointer {value} {
 
     if {[dict exists $value axisPointer]} {
@@ -1277,6 +1471,128 @@ proc ticklecharts::axisPointer {value} {
     setdef options animationDurationUpdate -type num|jsfunc      -default 200
     setdef options animationEasingUpdate   -type str             -default "exponentialOut"
     setdef options animationDelayUpdate    -type num|jsfunc|null -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::inRange {value} {
+
+    if {![dict exists $value inRange]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value inRange]
+
+    setdef options symbol          -type list.d|null -default "nothing"
+    setdef options symbolSize      -type list.d|null -default "nothing"
+    setdef options color           -type list.d|null -default "nothing"
+    setdef options colorAlpha      -type list.d|null -default "nothing"
+    setdef options opacity         -type list.d|null -default "nothing"
+    setdef options colorLightness  -type list.d|null -default "nothing"
+    setdef options colorSaturation -type list.d|null -default "nothing"
+    setdef options colorHue        -type list.d|null -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::outOfRange {value} {
+
+    if {![dict exists $value outOfRange]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value outOfRange]
+
+    setdef options symbol          -type list.d|null -default "nothing"
+    setdef options symbolSize      -type list.d|null -default "nothing"
+    setdef options color           -type list.d|null -default "nothing"
+    setdef options colorAlpha      -type list.d|null -default "nothing"
+    setdef options opacity         -type list.d|null -default "nothing"
+    setdef options colorLightness  -type list.d|null -default "nothing"
+    setdef options colorSaturation -type list.d|null -default "nothing"
+    setdef options colorHue        -type list.d|null -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::controller {value} {
+
+    if {![dict exists $value controller]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value controller]
+
+    setdef options inRange    -type dict|null -default [ticklecharts::inRange $d]
+    setdef options outOfRange -type dict|null -default [ticklecharts::outOfRange $d]
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::handleStyle {value} {
+
+    if {![dict exists $value handleStyle]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value handleStyle]
+
+    setdef options color            -type str|null            -default "nothing"
+    setdef options borderColor      -type str|null            -default "nothing"
+    setdef options borderWidth      -type num|null            -default 1
+    setdef options borderType       -type str|num|list.d|null -default "solid"
+    setdef options borderDashOffset -type num|null            -default "nothing"
+    setdef options borderCap        -type str|null            -default "butt"
+    setdef options borderMiterLimit -type num|null            -default 10
+    setdef options shadowBlur       -type num|null            -default "nothing"
+    setdef options shadowColor      -type str|null            -default "nothing"
+    setdef options shadowOffsetX    -type num|null            -default "nothing"
+    setdef options shadowOffsetY    -type num|null            -default "nothing"
+    setdef options opacity          -type num|null            -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::indicatorStyle {value} {
+
+    if {![dict exists $value indicatorStyle]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value indicatorStyle]
+
+    setdef options color            -type str|null            -default "nothing"
+    setdef options borderColor      -type str|null            -default "nothing"
+    setdef options borderWidth      -type num|null            -default 1
+    setdef options borderType       -type str|num|list.d|null -default "solid"
+    setdef options borderDashOffset -type num|null            -default "nothing"
+    setdef options borderCap        -type str|null            -default "butt"
+    setdef options borderMiterLimit -type num|null            -default 10
+    setdef options shadowBlur       -type num|null            -default "nothing"
+    setdef options shadowColor      -type str|null            -default "nothing"
+    setdef options shadowOffsetX    -type num|null            -default "nothing"
+    setdef options shadowOffsetY    -type num|null            -default "nothing"
+    setdef options opacity          -type num|null            -default "nothing"
     #...
 
     set options [merge $options $d]

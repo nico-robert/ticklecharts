@@ -78,17 +78,17 @@ proc ticklecharts::title {value} {
     setdef options sublink           -type str|null   -default "nothing"
     setdef options subtarget         -type str        -default "blank"
     setdef options subtextStyle      -type dict|null  -default [ticklecharts::textStyle $dico subtextStyle]
-    setdef options textAlign         -type str        -default "auto"
+    setdef options textAlign         -type str|null   -default "null"
     setdef options textVerticalAlign -type str        -default "auto"
     setdef options triggerEvent      -type bool|null  -default "nothing"
     setdef options padding           -type num|list.n -default 5
     setdef options itemGap           -type num        -default 10
     setdef options zlevel            -type num|null   -default "nothing"
     setdef options z                 -type num        -default 2
-    setdef options left              -type str        -default "auto"
-    setdef options top               -type str        -default "auto"
-    setdef options right             -type str        -default "auto"
-    setdef options bottom            -type str        -default "auto"
+    setdef options left              -type str|num    -default "auto"
+    setdef options top               -type str|num    -default "auto"
+    setdef options right             -type str|num    -default "auto"
+    setdef options bottom            -type str|num    -default "auto"
     setdef options backgroundColor   -type str        -default "transparent"
     setdef options borderColor       -type str        -default "transparent"
     setdef options borderWidth       -type num        -default 1
@@ -195,12 +195,12 @@ proc ticklecharts::legend {value} {
     setdef options show                  -type bool            -default "True"
     setdef options zlevel                -type num|null        -default "nothing"
     setdef options z                     -type num             -default 2
-    setdef options left                  -type str|num         -default "center"
-    setdef options top                   -type str|num         -default "auto"
-    setdef options right                 -type str|num         -default "auto"
-    setdef options bottom                -type str|num         -default "auto"
-    setdef options width                 -type str|num         -default "auto"
-    setdef options height                -type str|num         -default "auto"
+    setdef options left                  -type str|num|null    -default "center"
+    setdef options top                   -type str|num|null    -default "auto"
+    setdef options right                 -type str|num|null    -default "auto"
+    setdef options bottom                -type str|num|null    -default "auto"
+    setdef options width                 -type str|num|null    -default "auto"
+    setdef options height                -type str|num|null    -default "auto"
     setdef options orient                -type str             -default "horizontal"
     setdef options align                 -type str             -default "auto"
     setdef options padding               -type num|list.n      -default 5
@@ -233,6 +233,9 @@ proc ticklecharts::legend {value} {
     setdef options pageIconColor         -type str             -default "rgb(47, 69, 84)"
     setdef options pageIconInactiveColor -type str             -default "rgb(170, 170, 170)"
     setdef options pageIconSize          -type num|list.n      -default 15
+    # not supported yet...
+
+    # setdef options data                  -type dict|list.n     -default "nothing"
     #...
 
     set options [merge $options $dico]
@@ -255,6 +258,122 @@ proc ticklecharts::polar {value} {
     setdef options z      -type num                 -default 2
     setdef options center -type list.d|null         -default "nothing"
     setdef options radius -type str|num|list.d|null -default "nothing"
+    #...
+
+    set options [merge $options $dico]
+    
+    return $options
+
+}
+
+proc ticklecharts::visualMap {value} {
+    # options : https://echarts.apache.org/en/option.html#visualMap
+    #
+    # value - Options described in proc ticklecharts::visualMap below.
+    #
+    # return dict visualMap options
+
+    set dico [dict get $value -visualMap]
+
+    if {![dict exists $dico type]} {
+        error "visualMap type shoud be specified... 'continuous' or 'piecewise'"
+    }
+
+    switch -exact -- [dict get $dico type] {
+        continuous {
+            setdef options type            -type str             -default [dict get $dico type]
+            setdef options id              -type str|null        -default "nothing"
+            setdef options min             -type num|null        -default "nothing"
+            setdef options max             -type num|null        -default "nothing"
+            setdef options range           -type list.n|null     -default "nothing"
+            setdef options calculable      -type bool|null       -default "False"
+            setdef options realtime        -type bool|null       -default "True"
+            setdef options inverse         -type bool|null       -default "False"
+            setdef options precision       -type num|null        -default 0
+            setdef options itemWidth       -type num|null        -default 20
+            setdef options itemHeight      -type num|null        -default 14
+            setdef options align           -type str|null        -default "auto"
+            setdef options text            -type list.s|null     -default "nothing"
+            setdef options textGap         -type num|null        -default 10
+            setdef options show            -type bool            -default "True"
+            setdef options dimension       -type num|null        -default "nothing"
+            setdef options seriesIndex     -type num|list.d|null -default "nothing"
+            setdef options hoverLink       -type bool            -default "True"
+            setdef options inRange         -type dict|null       -default [ticklecharts::inRange $dico]
+            setdef options outOfRange      -type dict|null       -default [ticklecharts::outOfRange $dico]
+            setdef options controller      -type dict|null       -default [ticklecharts::controller $dico]
+            setdef options zlevel          -type num             -default 0
+            setdef options z               -type num             -default 4
+            setdef options left            -type num|str|null    -default "auto"
+            setdef options top             -type num|str|null    -default "auto"
+            setdef options right           -type num|str|null    -default "auto"
+            setdef options bottom          -type num|str|null    -default "auto"
+            setdef options padding         -type list.n|num      -default 5
+            setdef options backgroundColor -type str             -default "rgba(0,0,0,0)"
+            setdef options borderColor     -type str             -default "#ccc"
+            setdef options borderWidth     -type num             -default 0
+            setdef options color           -type list.s|null     -default "nothing"
+            setdef options color           -type list.s|null     -default "nothing"
+            setdef options textStyle       -type dict|null       -default [ticklecharts::textStyle $dico textStyle]
+            setdef options formatter       -type str|jsfunc|null -default "nothing"
+            setdef options handleIcon      -type str|null        -default "nothing"
+            setdef options handleSize      -type str|num|null    -default "120%"
+            setdef options handleStyle     -type dict|null       -default [ticklecharts::handleStyle $dico]
+            setdef options indicatorIcon   -type str|null        -default "circle"
+            setdef options indicatorSize   -type str|num|null    -default "50%"
+            setdef options indicatorStyle  -type dict|null       -default [ticklecharts::indicatorStyle $dico]
+            #...
+        }
+        piecewise {
+            setdef options type            -type str             -default [dict get $dico type]
+            setdef options id              -type str|null        -default "nothing"
+            setdef options splitNumber     -type num|null        -default 5
+            setdef options pieces          -type list.o|null     -default [ticklecharts::piecesItem $dico]
+            setdef options min             -type num|null        -default "nothing"
+            setdef options max             -type num|null        -default "nothing"
+            setdef options minOpen         -type bool|null       -default "nothing"
+            setdef options maxOpen         -type bool|null       -default "nothing"
+            setdef options selectedMode    -type str|null        -default "multiple"
+            setdef options inverse         -type bool|null       -default "False"
+            setdef options precision       -type num|null        -default 0
+            setdef options itemWidth       -type num|null        -default 20
+            setdef options itemHeight      -type num|null        -default 14
+            setdef options align           -type str|null        -default "auto"
+            setdef options text            -type list.s|null     -default "nothing"
+            setdef options textGap         -type num|null        -default 10
+            setdef options showLabel       -type bool|null       -default "nothing"
+            setdef options itemGap         -type num|null        -default 10
+            setdef options itemSymbol      -type str|null        -default "roundRect"
+            setdef options show            -type bool            -default "True"
+            setdef options dimension       -type num|null        -default "nothing"
+            setdef options seriesIndex     -type num|list.d|null -default "nothing"
+            setdef options hoverLink       -type bool            -default "True"
+            setdef options inRange         -type dict|null       -default [ticklecharts::inRange $dico]
+            setdef options outOfRange      -type dict|null       -default [ticklecharts::outOfRange $dico]
+            setdef options controller      -type dict|null       -default [ticklecharts::controller $dico]
+            setdef options zlevel          -type num             -default 0
+            setdef options z               -type num             -default 4
+            setdef options left            -type num|str|null    -default "auto"
+            setdef options top             -type num|str|null    -default "auto"
+            setdef options right           -type num|str|null    -default "auto"
+            setdef options bottom          -type num|str|null    -default "auto"
+            setdef options padding         -type list.n|num      -default 5
+            setdef options backgroundColor -type str             -default "rgba(0,0,0,0)"
+            setdef options borderColor     -type str             -default "#ccc"
+            setdef options borderWidth     -type num             -default 0
+            setdef options color           -type list.s|null     -default "nothing"
+            setdef options color           -type list.s|null     -default "nothing"
+            setdef options textStyle       -type dict|null       -default [ticklecharts::textStyle $dico textStyle]
+            setdef options formatter       -type str|jsfunc|null -default "nothing"
+            #...
+        }
+        default {
+            error "Type name shoud be 'continuous' or 'piecewise'"
+        }
+    }
+    
+    # remove key
+    set dico [dict remove $dico pieces]
     #...
 
     set options [merge $options $dico]

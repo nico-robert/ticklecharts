@@ -42,7 +42,7 @@ oo::define ticklecharts::Gridlayout {
         # Add charts to layout
         #
         # chart - chart object
-        # args  - Options described below.
+        # args  - Options described below (optional).
         #
         # -top    - Distance between grid component and the top side of the container. (% or number)
         # -bottom - Distance between grid component and the bottom side of the container. (% or number)
@@ -87,15 +87,43 @@ oo::define ticklecharts::Gridlayout {
 
         incr _indexchart
         set g 0
-        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar legend tooltip}
+        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar legend tooltip visualMap}
 
         foreach {key opts} [$chart options] {
 
             switch -glob -- $key {
+                *legend  {
+                    # Find data name in series if data legend is not specified...
+                    if {[lsearch [dict keys $opts] *data] == -1} {
+                        set data_name {}
+                        foreach series_opts [lsearch -all [$chart options] *=series] {
+                            set myserie [lindex [$chart options] [expr {$series_opts + 1}]]
+                            
+                            # if item data...
+                            if {[dict exists $myserie @DO=data @AO]} {
+                                foreach data_item [dict get $myserie @DO=data @AO] {
+                                    if {[dict exists $data_item @S=name]} {
+                                        lappend data_name [dict get $data_item @S=name]
+                                    } else {
+                                        if {[dict get $myserie @S=name] ni $data_name} {
+                                            lappend data_name [dict get $myserie @S=name]
+                                        }
+                                    }
+                                }
+                            } else {
+                                lappend data_name [dict get $myserie @S=name]
+                            }
+
+                        }
+                        # add data name in legend...
+                        dict set opts @LS=data [list $data_name]
+                    }
+
+                }
                 *series  {
                     set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
                     set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
-                    set stack [lsearch -inline [dict keys $opts] *stack]
+                    set stack  [lsearch -inline [dict keys $opts] *stack]
                     
                     
                     dict remove $opts $xindex ; # delete key
@@ -106,7 +134,22 @@ oo::define ticklecharts::Gridlayout {
                     
                     if {[dict exists $opts $stack] && [dict get $opts $stack] ne "null"} {
                         set value [dict get $opts $stack]
-                        dict set opts $stack [string map {" " "<@!>"} "$value $_indexchart"]
+                        dict set opts $stack [ticklecharts::MapSpaceString "$value $_indexchart"]
+                    }
+
+                    # replace 'center' flag if exists by the one in args if exists...
+                    set coordinatecenter [lsearch -inline [dict keys $opts] *center]
+                    if {[dict exists $opts $coordinatecenter]} {
+                        if {[info exists center]} {
+                            set mytype [Type $center]
+                            if {$mytype ne "list"} {
+                                error "'center' flag must be a list"
+                            }
+
+                            dict remove $opts $coordinatecenter ; # delete key
+                            dict set opts @LD=center [list $center]
+
+                        }
                     }
                 
                 }
@@ -115,7 +158,7 @@ oo::define ticklecharts::Gridlayout {
                     if {[info exists center]} {
                         set mytype [Type $center]
                         if {$mytype ne "list"} {
-                            error "center must be a list"
+                            error "'center' flag must be a list"
                         }
 
                         dict remove $opts $coordinatecenter ; # delete key
@@ -124,7 +167,12 @@ oo::define ticklecharts::Gridlayout {
                     }
 
                 }
-                *xAxis       -
+                *visualMap {
+                    set seriesindex [lsearch -inline [dict keys $opts] *seriesIndex]
+                    dict remove $opts $seriesindex ; # delete key
+                    dict set opts @N=seriesIndex $_indexchart
+                }
+                *xAxis -
                 *yAxis  {
                     set gridindex [lsearch -inline [dict keys $opts] *gridIndex]
                     dict remove $opts $gridindex ; # delete key
@@ -166,7 +214,7 @@ oo::define ticklecharts::Gridlayout {
                 if {[info exists [set val]]} {
                     set myvalue [expr $[set val]]
                     set mytype [Type $myvalue]
-                    
+
                     switch -- $mytype {
                         "list" -
                         "str" {lappend f @S=$val $myvalue}
@@ -181,10 +229,18 @@ oo::define ticklecharts::Gridlayout {
         }
 
         # Check if polar key exists in first place
-        # Error if yes , not possible 
+        # Error if yes , not possible.
         set keypolar [lsearch [dict keys $_options] *polar]
         if {!$_indexchart && $keypolar > -1} {
             error "'Polar' mode should not be added first..."
+        }
+
+        # Check if pie chart type exists in first place
+        # Error if yes , not possible.
+        if {[dict exists $_options @D=series @S=type]} {
+            if {!$_indexchart && [dict get $_options @D=series @S=type] eq "pie"} {
+                error "'Pie' chart should not be added first..."
+            }
         }
 
     }
