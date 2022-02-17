@@ -1,9 +1,12 @@
 ticklEcharts - chart library
-================
+==========================
 Tcl wrapper for [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript Visualization library).
+
 Dependencies :
 -------------------------
+
 `huddle` package from [Tcllib](https://www.tcl.tk/software/tcllib/)
+
 Usage :
 -------------------------
 
