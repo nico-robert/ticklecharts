@@ -155,7 +155,7 @@ proc ticklecharts::Type value {
     # Returns type of value
     
     regexp {^value is a (.*?) with a refcount} \
-	[::tcl::unsupported::representation $value] -> type
+    [::tcl::unsupported::representation $value] -> type
     
     switch $type {
         dict {
@@ -276,13 +276,13 @@ proc ticklecharts::setdef {d key args} {
     #
     # Returns dictionary
 
-	upvar 1 $d dictionary
+    upvar 1 $d dictionary
 
     if {([lindex $args 0] ne "-type") && ([lindex $args 2] ne "-default")} {
         error "bad args..."
     }
-	
-	dict set dictionary $key [lindex $args 3] [lindex $args 1]
+
+    dict set dictionary $key [lindex $args 3] [lindex $args 1]
 }
 
 proc ticklecharts::MatchType {mytype type keyt} {
@@ -294,7 +294,7 @@ proc ticklecharts::MatchType {mytype type keyt} {
     #
     # Returns true if mytype is found , false otherwise
 
-	upvar 1 $keyt typekey
+    upvar 1 $keyt typekey
     
     foreach valtype [split $type "|"] {
         if {[string match *$mytype* "$valtype"]} {

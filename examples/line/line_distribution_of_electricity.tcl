@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# 16-02-2022 : basic pieces
+# 19-02-2022 : with markarea
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -37,8 +40,14 @@ $chart AddLineSeries -smooth "True" \
                                   300 550 500 400 390
                                   380 390 400 500 600
                                   750 800 700 600 400
-                                  }]
-                                    
+                                  }] \
+                    -markArea {
+                        itemStyle {color "rgba(255, 173, 177, 0.4)"}
+                        data {
+                            {{name "Morning Peak" xAxis "07:30"} {xAxis "10:00"}}
+                            {{name "Evening Peak" xAxis "17:30"} {xAxis "21:15"}}
+                            }
+                        }
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]

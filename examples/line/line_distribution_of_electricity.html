@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>line_distribution_of_electricity_without_markarea</title>
+    <title>line_distribution_of_electricity</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_96569914411021" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_124946707509702" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_96569914410029 = echarts.init(document.getElementById('id_96569914411021'), null, {renderer: 'canvas'});
+        var chart_124946707508316 = echarts.init(document.getElementById('id_124946707509702'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -262,12 +262,50 @@
         600,
         400
       ],
+      "markArea": {
+        "silent": false,
+        "itemStyle": {
+          "color": "rgba(255, 173, 177, 0.4)",
+          "borderColor": "rgb(0, 0, 0)",
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "opacity": 1
+        },
+        "data": [
+          [
+            {
+              "valueIndex": 0,
+              "name": "Morning Peak",
+              "xAxis": "07:30"
+            },
+            {
+              "valueIndex": 0,
+              "xAxis": "10:00"
+            }
+          ],
+          [
+            {
+              "valueIndex": 0,
+              "name": "Evening Peak",
+              "xAxis": "17:30"
+            },
+            {
+              "valueIndex": 0,
+              "xAxis": "21:15"
+            }
+          ]
+        ]
+      },
       "zlevel": 0,
       "z": 2,
       "silent": false
     }]
 }
-        chart_96569914410029.setOption(option);
+        chart_124946707508316.setOption(option);
     </script>
   </body>
 </html>

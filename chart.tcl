@@ -2,11 +2,12 @@
 # Distributed under MIT license. Please see LICENSE for details.
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart   ; # huddle
-    variable _options         ; # list options chart
-    variable _indexlineseries ; # index line serie
-    variable _indexbarseries  ; # index bar serie
-    variable _indexpieseries  ; # index pie serie
+    variable _echartshchart     ; # huddle
+    variable _options           ; # list options chart
+    variable _indexlineseries   ; # index line serie
+    variable _indexbarseries    ; # index bar serie
+    variable _indexpieseries    ; # index pie serie
+    variable _indexfunnelseries ; # index funnel serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -234,9 +235,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-bar
         #
         # Returns nothing      
-        incr _indexlineseries
+        incr _indexbarseries
 
-        set options [ticklecharts::barseries $_indexlineseries $args]
+        set options [ticklecharts::barseries $_indexbarseries $args]
         set f [ticklecharts::OptsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -253,9 +254,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-line
         #
         # Returns nothing     
-        incr _indexbarseries
+        incr _indexlineseries
 
-        set options [ticklecharts::lineseries $_indexbarseries $args]
+        set options [ticklecharts::lineseries $_indexlineseries $args]
         set f [ticklecharts::OptsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -263,7 +264,7 @@ oo::define ticklecharts::chart {
     }
 
     method AddPieSeries {args} {
-        # Add data serie chart (use only for line chart)
+        # Add data serie chart (use only for pie chart)
         #
         # args - Options described below.
         #
@@ -275,6 +276,25 @@ oo::define ticklecharts::chart {
         incr _indexpieseries
 
         set options [ticklecharts::pieseries $_indexpieseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
+
+    method AddFunnelSeries {args} {
+        # Add data serie chart (use only for funnel chart)
+        #
+        # args - Options described below.
+        #
+        # get default value options : [self] getoptions funnelseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-funnel
+        #
+        # Returns nothing     
+        incr _indexfunnelseries
+
+        set options [ticklecharts::funnelseries $_indexfunnelseries $args]
         set f [ticklecharts::OptsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -329,7 +349,7 @@ oo::define ticklecharts::chart {
 
     }
     # export method
-    export AddBarSeries AddLineSeries AddPieSeries
+    export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries
     export Xaxis Yaxis RadiusAxis AngleAxis SetOptions
 }
 

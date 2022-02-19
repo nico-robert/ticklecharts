@@ -435,6 +435,7 @@ oo::define ticklecharts::ehuddle {
             <s!> ""
             <#!> ""
             <#?> "#"
+            <\n?> "\n"
             <0123> \{
             <0125> \}
             \\/ /

@@ -117,6 +117,41 @@ proc ticklecharts::PieItem {value} {
 
 }
 
+proc ticklecharts::FunnelItem {value} {
+
+    if {![dict exists $value -datafunnelitem]} {
+        error "key -datafunnelitem not present..."
+    }
+
+    foreach item [dict get $value -datafunnelitem] {
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name      -type str|null  -default "nothing"
+        setdef options value     -type num|null  -default "nothing"
+        setdef options label     -type dict|null -default [ticklecharts::label $item]
+        setdef options labelLine -type dict|null -default [ticklecharts::labelLine $item]
+        setdef options itemStyle -type dict|null -default [ticklecharts::itemStyle $item]
+        setdef options emphasis  -type dict|null -default [ticklecharts::emphasis $item]
+        setdef options blur      -type dict|null -default [ticklecharts::blur $item]
+        setdef options select    -type dict|null -default [ticklecharts::select $item]
+        setdef options tooltip   -type dict|null -default "nothing"
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::RichItem {value} {
 
     if {![dict exists $value richitem]} {
@@ -174,6 +209,52 @@ proc ticklecharts::RichItem {value} {
     }
 
     return [dict create {*}$opts]
+
+}
+
+proc ticklecharts::markAreaItem {value} {
+
+    if {![dict exists $value data]} {
+        return "nothing"
+    }
+
+    foreach listitem [dict get $value data] {
+
+        if {[llength $listitem] != 2} {
+            error "should be a list of 2 elements..."
+        }
+
+        set subopts {}
+
+        foreach item $listitem {
+
+            if {[llength $item] % 2} {
+                error "item must be even..."
+            }
+
+            setdef options type       -type str|null     -default "nothing"
+            setdef options valueIndex -type num|null     -default 0
+            setdef options valueDim   -type str|null     -default "nothing"
+            setdef options coord      -type list.d|null  -default "nothing"
+            setdef options name       -type str|null     -default "nothing"
+            setdef options x          -type num|str|null -default "nothing"
+            setdef options y          -type num|str|null -default "nothing"
+            setdef options xAxis      -type str|null     -default "nothing"
+            setdef options value      -type num|null     -default "nothing"
+            setdef options itemStyle  -type dict|null    -default [ticklecharts::itemStyle $item]
+            setdef options label      -type dict|null    -default [ticklecharts::label $item]
+            setdef options emphasis   -type dict|null    -default [ticklecharts::emphasis $item]
+            setdef options blur       -type dict|null    -default [ticklecharts::blur $item]
+
+            lappend subopts [merge $options $item]
+            set options {} 
+        }
+
+        lappend opts [list $subopts list.o]
+
+    }
+
+    return [list {*}$opts]
 
 }
 
@@ -553,6 +634,7 @@ proc ticklecharts::setXAxis {value} {
     setdef options -type           -type str|null            -default "category"
     setdef options -data           -type list.d|null         -default "nothing"
     setdef options -gridIndex      -type num                 -default 0
+    setdef options -alignTicks      -type bool|null          -default "nothing"
     setdef options -position       -type str                 -default "bottom"
     setdef options -offset         -type num                 -default 0
     setdef options -name           -type str|null            -default "nothing"
@@ -595,6 +677,7 @@ proc ticklecharts::setYAxis {value} {
     setdef options -id              -type str|null            -default "nothing"
     setdef options -show            -type bool                -default "True"
     setdef options -gridIndex       -type num                 -default 0
+    setdef options -alignTicks      -type bool|null           -default "nothing"
     setdef options -position        -type str                 -default "bottom"
     setdef options -offset          -type num                 -default 0
     setdef options -realtimeSort    -type bool                -default "True"
@@ -806,7 +889,6 @@ proc ticklecharts::markLine {value} {
     setdef options emphasis                -type dict|null       -default [ticklecharts::emphasis $d]
     setdef options blur                    -type dict|null       -default [ticklecharts::blur $d]
     setdef options data                    -type list.o|null     -default [ticklecharts::markLineItem $d]
-    
     setdef options animation               -type bool|null       -default "nothing"
     setdef options animationThreshold      -type num|null        -default "nothing"
     setdef options animationDuration       -type num|jsfunc|null -default "nothing"
@@ -1601,3 +1683,34 @@ proc ticklecharts::indicatorStyle {value} {
 
 }
 
+proc ticklecharts::markArea {value} {
+
+    if {![dict exists $value -markArea]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value -markArea]
+
+    setdef options silent                  -type bool|null       -default "False"
+    setdef options label                   -type dict|null       -default [ticklecharts::label $d]
+    setdef options itemStyle               -type dict|null       -default [ticklecharts::itemStyle $d]
+    setdef options emphasis                -type dict|null       -default [ticklecharts::emphasis $d]
+    setdef options blur                    -type dict|null       -default [ticklecharts::blur $d]
+    setdef options data                    -type list.o|null     -default [ticklecharts::markAreaItem $d]
+    setdef options animation               -type bool|null       -default "nothing"
+    setdef options animationThreshold      -type num|null        -default "nothing"
+    setdef options animationDuration       -type num|jsfunc|null -default "nothing"
+    setdef options animationEasing         -type str|null        -default "nothing"
+    setdef options animationDelay          -type num|jsfunc|null -default "nothing"
+    setdef options animationDurationUpdate -type num|jsfunc|null -default "nothing"
+    setdef options animationEasingUpdate   -type str|null        -default "nothing"
+    setdef options animationDelayUpdate    -type num|jsfunc|null -default "nothing"
+    #...
+
+    set d [dict remove $d data label itemStyle emphasis blur]
+
+    set options [merge $options $d]
+
+    return $options
+
+}

@@ -21,6 +21,11 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] pie] 
     source $chartfile
 }
 
+# funnel
+foreach chartfile [glob -directory [file join [file dirname [info script]] funnel] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
