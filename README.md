@@ -286,6 +286,9 @@ Release :
     - Initial release.
 *  **16-02-2022** : 1.1
     - Add pie chart + visualMap.
-    - Add demos line + pie + visualMap
-    - Bug fixes
-    - Add options
+    - Add demos line + pie + visualMap.
+    - Bug fixes.
+    - Add options.
+*  **19-02-2022** : 1.2
+    - Add funnel chart + markArea.
+    - Add markArea + funnel examples.
