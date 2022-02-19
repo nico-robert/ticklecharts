@@ -270,7 +270,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [ ] lines
 - [ ] graph
 - [ ] sankey
-- [ ] funnel
+- [x] funnel
 - [ ] gauge
 - [ ] pictorialBar
 - [ ] themeRiver
