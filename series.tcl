@@ -50,6 +50,7 @@ proc ticklecharts::barseries {index value} {
     setdef options -progressiveChunkMode    -type str|null        -default "nothing"
     setdef options -data                    -type list.d          -default {}
     setdef options -markLine                -type dict|null       -default [ticklecharts::markLine $value]
+    setdef options -markPoint               -type dict|null       -default [ticklecharts::markPoint $value]
     setdef options -zlevel                  -type num             -default 0
     setdef options -z                       -type num             -default 2
     setdef options -silent                  -type bool            -default "False"
@@ -78,7 +79,7 @@ proc ticklecharts::barseries {index value} {
     set value [dict remove $value -label -endLabel \
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint \
-                                  -labelLayout -itemStyle \
+                                  -labelLayout -itemStyle -backgroundStyle \
                                   -emphasis -blur -select -tooltip]
                                 
     set options [merge $options $value]
@@ -327,6 +328,64 @@ proc ticklecharts::funnelseries {index value} {
                                   -emphasis -blur -select -tooltip]
     
 
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::radarseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-radar
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::radarseries below.
+    #
+    # return dict radarseries options
+
+    setdef options -type                    -type str             -default "radar"
+    setdef options -id                      -type str|null        -default "nothing"
+    setdef options -name                    -type str             -default "radarseries_${index}"
+    setdef options -colorBy                 -type str             -default "data"
+    setdef options -radarIndex              -type num|null        -default 0
+    setdef options -symbol                  -type str|jsfunc|null -default "circle"
+    setdef options -symbolSize              -type num|list.n      -default 8
+    setdef options -symbolRotate            -type num|null        -default "nothing"
+    setdef options -symbolKeepAspect        -type bool            -default "True"
+    setdef options -symbolOffset            -type list.d|null     -default "nothing"
+    setdef options -label                   -type dict|null       -default [ticklecharts::label $value]
+    setdef options -labelLayout             -type dict|null       -default [ticklecharts::labelLayout $value]
+    setdef options -itemStyle               -type dict|null       -default [ticklecharts::itemStyle $value]
+    setdef options -lineStyle               -type dict|null       -default [ticklecharts::lineStyle $value]
+    setdef options -areaStyle               -type dict|null       -default [ticklecharts::areaStyle $value]
+    setdef options -emphasis                -type dict|null       -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -type dict|null       -default [ticklecharts::blur $value]
+    setdef options -select                  -type dict|null       -default [ticklecharts::select $value]
+    setdef options -selectedMode            -type bool|str|null   -default "nothing"
+    setdef options -data                    -type list.o          -default [ticklecharts::RadarItem $value]
+    setdef options -zlevel                  -type num             -default 0
+    setdef options -z                       -type num             -default 2
+    setdef options -silent                  -type bool            -default "False"
+    setdef options -animation               -type bool|null       -default "nothing"
+    setdef options -animationThreshold      -type num|null        -default "nothing"
+    setdef options -animationDuration       -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasing         -type str|null        -default "nothing"
+    setdef options -animationDelay          -type num|jsfunc|null -default "nothing"
+    setdef options -animationDurationUpdate -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasingUpdate   -type str|null        -default "nothing"
+    setdef options -animationDelayUpdate    -type num|jsfunc|null -default "nothing"
+
+    # not supported yet...
+
+    # setdef options -dataGroupId            -type str|null         -default "nothing"
+    # setdef options -universalTransition    -type dict|null        -default "nothing"
+    # setdef options -tooltip                -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    set value [dict remove $value -label \
+                                  -lineStyle \
+                                  -areaStyle \
+                                  -labelLayout -itemStyle \
+                                  -emphasis -blur -select -tooltip]
+                                
     set options [merge $options $value]
 
     return $options
