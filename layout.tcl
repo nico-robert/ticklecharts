@@ -1,5 +1,7 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
+#
+namespace eval ticklecharts {}
 
 oo::class create ticklecharts::Gridlayout {
     variable _layout ; # huddle
@@ -87,14 +89,14 @@ oo::define ticklecharts::Gridlayout {
 
         incr _indexchart
         set g 0
-        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar legend tooltip visualMap}
+        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar radar legend tooltip visualMap}
 
         foreach {key opts} [$chart options] {
 
             switch -glob -- $key {
                 *legend  {
                     # Find data name in series if data legend is not specified...
-                    if {[lsearch [dict keys $opts] *data] == -1} {
+                    if {[lsearch [dict keys $opts] *data] == -1 || [lsearch [dict keys $opts] @NULL=data] > -1} {
                         set data_name {}
                         foreach series_opts [lsearch -all [$chart options] *=series] {
                             set myserie [lindex [$chart options] [expr {$series_opts + 1}]]
@@ -122,7 +124,7 @@ oo::define ticklecharts::Gridlayout {
                 }
                 *series  {
                     set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
-                    set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
+                    set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]!
                     set stack  [lsearch -inline [dict keys $opts] *stack]
                     
                     
@@ -151,8 +153,28 @@ oo::define ticklecharts::Gridlayout {
 
                         }
                     }
+
+                    # set position in serie instead of grid... for funnel chart
+                    if {[dict get $opts @S=type] eq "funnel"} {
+                        set g 1
+                        foreach val {top bottom left right width height} {
+                            if {[info exists [set val]]} {
+                                set position [lsearch -inline [dict keys $opts] *$val]
+                                dict remove $opts $position ; # delete key
+                                set myvalue [expr $[set val]]
+                                set mytype [Type $myvalue]
+
+                                switch -- $mytype {
+                                    "str" {dict set opts @S=$val $myvalue}
+                                    "num" {dict set opts @N=$val $myvalue}
+                                    default {error "$val must be a str or a float... now is $mytype"}
+                                }
+                            }
+                        }
+                    }
                 
                 }
+                *radar -
                 *polar {
                     set coordinatecenter [lsearch -inline [dict keys $opts] *center]
                     if {[info exists center]} {
@@ -188,7 +210,6 @@ oo::define ticklecharts::Gridlayout {
                             set mytype [Type $myvalue]
 
                             switch -- $mytype {
-                                "list" -
                                 "str" {dict set opts @S=$val $myvalue}
                                 "num" {dict set opts @N=$val $myvalue}
                                 default {error "$val must be a str or a float... now is $mytype"}
@@ -216,7 +237,6 @@ oo::define ticklecharts::Gridlayout {
                     set mytype [Type $myvalue]
 
                     switch -- $mytype {
-                        "list" -
                         "str" {lappend f @S=$val $myvalue}
                         "num" {lappend f @N=$val $myvalue}
                         default {error "$val must be a str or a float... now is $mytype"}
@@ -233,6 +253,13 @@ oo::define ticklecharts::Gridlayout {
         set keypolar [lsearch [dict keys $_options] *polar]
         if {!$_indexchart && $keypolar > -1} {
             error "'Polar' mode should not be added first..."
+        }
+
+        # Check if radar key exists in first place
+        # Error if yes , not possible.
+        set keyradar [lsearch [dict keys $_options] *radar]
+        if {!$_indexchart && $keyradar > -1} {
+            error "'Radar' mode should not be added first..."
         }
 
         # Check if pie chart type exists in first place
@@ -285,7 +312,7 @@ oo::define ticklecharts::Gridlayout {
         set opts_html [ticklecharts::htmloptions $args]
         my layoutToHuddle ; # transform to huddle
         set myhuddle [my get]
-        set json     [$myhuddle toJSON]
+        set json     [$myhuddle toJSON] ; # jsondump
 
         set newhtml    [ticklecharts::htmlmap $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
