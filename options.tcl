@@ -81,6 +81,78 @@ proc ticklecharts::LineItem {value} {
 
 }
 
+proc ticklecharts::RadarItem {value} {
+
+    if {![dict exists $value -dataradaritem]} {
+        error "key -dataradaritem not present..."
+    }
+
+    foreach item [dict get $value -dataradaritem] {
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name             -type str|null    -default "nothing"
+        setdef options value            -type list.n|null -default "nothing"
+        setdef options groupId          -type str|null    -default "nothing"
+        setdef options symbol           -type str|null    -default "nothing"
+        setdef options symbolSize       -type num|null    -default "nothing"
+        setdef options symbolRotate     -type num|null    -default "nothing"
+        setdef options symbolKeepAspect -type bool        -default "False"
+        setdef options symbolOffset     -type list.n|null -default "nothing"
+        setdef options label            -type dict|null   -default [ticklecharts::label $item]
+        setdef options itemStyle        -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options lineStyle        -type dict|null   -default [ticklecharts::lineStyle $item]
+        setdef options areaStyle        -type dict|null   -default [ticklecharts::areaStyle $item]
+        setdef options emphasis         -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur             -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select           -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip          -type dict|null   -default "nothing"
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::IndicatorItem {value} {
+
+    if {![dict exists $value -indicatoritem]} {
+        error "key -indicatoritem not present..."
+    }
+
+    foreach item [dict get $value -indicatoritem] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        if {![dict exists $item name]} {
+            error "key 'name' must be present in item"
+        }
+
+        setdef options name   -type str|null    -default "nothing"
+        setdef options max    -type num|null    -default "nothing"
+        setdef options min    -type num|null    -default "nothing"
+        setdef options color  -type str|null    -default "nothing"
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::PieItem {value} {
 
     if {![dict exists $value -datapieitem]} {
@@ -590,6 +662,34 @@ proc ticklecharts::SetRadiusAxis {value} {
 
 }
 
+proc ticklecharts::SetRadarCoordinate {value} {
+
+    setdef options -id             -type str|null       -default "nothing"
+    setdef options -zlevel         -type num|null       -default "nothing"
+    setdef options -z              -type num|null       -default "nothing"
+    setdef options -center         -type list.d         -default [list {"50%" "50%"}]
+    setdef options -radius         -type list.d|num|str -default "75%"
+    setdef options -startAngle     -type num            -default 90
+    setdef options -axisName       -type dict|null      -default [ticklecharts::axisName $value]
+    setdef options -nameGap        -type num|null       -default 15
+    setdef options -splitNumber    -type num|null       -default 5
+    setdef options -shape          -type str            -default "polygon"
+    setdef options -scale          -type bool|null      -default "nothing"
+    setdef options -triggerEvent   -type bool|null      -default "nothing"
+    setdef options -axisLine       -type dict|null      -default [ticklecharts::axisLine $value]
+    setdef options -axisTick       -type dict|null      -default [ticklecharts::axisTick $value]
+    setdef options -axisLabel      -type dict|null      -default [ticklecharts::axisLabel $value]
+    setdef options -splitLine      -type dict|null      -default [ticklecharts::splitLine $value]
+    setdef options -splitArea      -type dict|null      -default [ticklecharts::splitArea $value]
+    setdef options -indicator      -type list.o         -default [ticklecharts::IndicatorItem $value]
+    #...
+
+    set options [merge $options $value]
+    
+    return $options
+
+}
+
 proc ticklecharts::SetAngleAxis {value} {
 
     setdef options -id             -type str|null            -default "nothing"
@@ -1023,7 +1123,9 @@ proc ticklecharts::labelLayout {value} {
 
 proc ticklecharts::axisTick {value} {
 
-    if {$::ticklecharts::theme ne "basic"} {
+    lassign [info level 2] proc_l2
+
+    if {$::ticklecharts::theme ne "basic" && $proc_l2 ne "ticklecharts::SetRadarCoordinate"} {
         if {![dict exists $value -axisTick]} {
             dict set value -axisTick [dict create dummy null]
         }
@@ -1065,7 +1167,9 @@ proc ticklecharts::minorTick {value} {
 
 proc ticklecharts::axisLabel {value} {
 
-    if {$::ticklecharts::theme ne "basic"} {
+    lassign [info level 2] proc_l2
+
+    if {$::ticklecharts::theme ne "basic" && $proc_l2 ne "ticklecharts::SetRadarCoordinate"} {
         if {![dict exists $value -axisLabel]} {
             dict set value -axisLabel [dict create dummy null]
         }
@@ -1248,12 +1352,63 @@ proc ticklecharts::endLabel {value} {
 
 }
 
+proc ticklecharts::axisName {value} {
+
+    if {[dict exists $value axisName]} {
+        set key "axisName"
+    } elseif {[dict exists $value -axisName]} {
+        set key "-axisName"
+    } else {
+        return "nothing"
+    }
+
+    setdef options show                 -type bool            -default "True"
+    setdef options formatter            -type str|jsfunc|null -default "nothing"
+    setdef options color                -type str|null        -default [dict get $::ticklecharts::opts_theme axisLabelColor]
+    setdef options fontStyle            -type str             -default "normal"
+    setdef options fontWeight           -type str|num         -default "normal"
+    setdef options fontFamily           -type str             -default "sans-serif"
+    setdef options fontSize             -type num             -default 12
+    setdef options lineHeight           -type num|null        -default "nothing"
+    setdef options backgroundColor      -type str             -default "transparent"
+    setdef options borderColor          -type str|null        -default "nothing"
+    setdef options borderWidth          -type num             -default 0
+    setdef options borderType           -type str|num|list.n  -default "solid"
+    setdef options borderDashOffset     -type num             -default 0
+    setdef options borderRadius         -type num             -default 0
+    setdef options padding              -type num|list.n      -default 0
+    setdef options shadowColor          -type str             -default "transparent"
+    setdef options shadowBlur           -type num             -default 0
+    setdef options shadowOffsetX        -type num             -default 0
+    setdef options shadowOffsetY        -type num             -default 0
+    setdef options width                -type num|null        -default "nothing"
+    setdef options height               -type num|null        -default "nothing"
+    setdef options textBorderColor      -type str|null        -default "null"
+    setdef options textBorderWidth      -type num             -default 0
+    setdef options textBorderType       -type str|num|list.n  -default "solid"
+    setdef options textBorderDashOffset -type num             -default 0
+    setdef options textShadowColor      -type str             -default "transparent"
+    setdef options textShadowBlur       -type num             -default 0
+    setdef options textShadowOffsetX    -type num             -default 0
+    setdef options textShadowOffsetY    -type num             -default 0
+    setdef options overflow             -type str             -default "truncate"
+    setdef options ellipsis             -type str             -default "..."
+    #...
+
+    set options [merge $options [dict get $value $key]]
+
+    return $options
+
+}
+
 proc ticklecharts::lineStyle {value} {
 
     lassign [info level 3] proc_l3
     lassign [info level 2] proc_l2
 
-    if {$::ticklecharts::theme ne "basic"} {
+    if {$::ticklecharts::theme ne "basic" &&
+        $proc_l3 ne "ticklecharts::RadarItem" &&
+        $proc_l2 ne "ticklecharts::radarseries"} {
         if {![dict exists $value -lineStyle]} {
             dict set value -lineStyle [dict create dummy null]
         }
@@ -1278,18 +1433,18 @@ proc ticklecharts::lineStyle {value} {
         set linewidth [dict get $::ticklecharts::opts_theme graphLineWidth]
     }
     
-    setdef options color          -type str|jsfunc|null -default $color
-    setdef options width          -type num             -default $linewidth
-    setdef options type           -type list.n|num|str  -default "solid"
-    setdef options dashOffset     -type num             -default 0
-    setdef options cap            -type str             -default "butt"
-    setdef options join           -type str             -default "bevel"
-    setdef options miterLimit     -type num             -default 10
-    setdef options shadowBlur     -type num             -default 0
-    setdef options shadowColor    -type str|null        -default "null"
-    setdef options shadowOffsetX  -type num             -default 0
-    setdef options shadowOffsetY  -type num             -default 0
-    setdef options opacity        -type num             -default 1
+    setdef options color          -type str|jsfunc|list.s|null -default $color
+    setdef options width          -type num                    -default $linewidth
+    setdef options type           -type list.n|num|str         -default "solid"
+    setdef options dashOffset     -type num                    -default 0
+    setdef options cap            -type str                    -default "butt"
+    setdef options join           -type str                    -default "bevel"
+    setdef options miterLimit     -type num                    -default 10
+    setdef options shadowBlur     -type num                    -default 0
+    setdef options shadowColor    -type str|null               -default "null"
+    setdef options shadowOffsetX  -type num                    -default 0
+    setdef options shadowOffsetY  -type num                    -default 0
+    setdef options opacity        -type num                    -default 1
     #...
     
     if {$proc_l2 eq "ticklecharts::legend"} {
