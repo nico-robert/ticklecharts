@@ -14,7 +14,7 @@ Usage :
 package require ticklecharts
 
 set chart [ticklecharts::chart new]
-$chart SetOptions ; # can be omitted
+
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 $chart Yaxis
 $chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
@@ -130,8 +130,10 @@ See **[examples](/examples)** for all demos...
 # line + bar on same canvas...
 package require ticklecharts
 
+# init chart class...
 set chart [ticklecharts::chart new]
 
+# Set options :
 $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" crossStyle {color "#999"}}} \
                   -grid {left "3%" right "4%" bottom "3%" containLabel "True"} \
                   -legend {}
@@ -139,13 +141,16 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" c
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
 
-# special char '<0123>' = '{' and '<0125>' = '}'   
+# 2 choices to set 'formatter' flag 
+# special char '<0123>' to replace this '{' and '<0125>' to replace this '}'
+# or 
+# ticklecharts::jsfunc...
 $chart Yaxis -name "Precipitation" -min 0 -max 250 -interval 50 \
                                    -axisLabel {formatter "<0123>value<0125> ml"}
 $chart Yaxis -name "Temperature"   -min 0 -max 25  -interval 5 \
                                    -axisLabel {formatter "<0123>value<0125> °C"}
 
-
+# Add bars...
 $chart AddBarSeries -name "Evaporation" \
                     -data [list {2.0 4.9 7.0 23.2 25.6 76.7 135.6 162.2 32.6 20.0 6.4 3.3}]
                     
@@ -160,6 +165,7 @@ $chart AddLineSeries -name "Temperature" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
+# Save to html...
 $chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ```
 ![line and bar mixed](images/line_and_bar_mixed.png)
@@ -191,7 +197,7 @@ set bar [ticklecharts::chart new]
 $bar SetOptions -legend {top "2%" left "20%"}
 
 $bar Xaxis -data [list {A B C D E}] \
-            -axisLabel [dict create show "True" formatter $js]
+            -axisLabel [list show "True" formatter $js]
 $bar Yaxis
 $bar AddBarSeries -data [list {50 6 80 120 30}]
 $bar AddBarSeries -data [list {20 30 50 100 25}]
@@ -236,7 +242,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [x] polar
 - [x] radiusAxis
 - [x] angleAxis
-- [ ] radar
+- [x] radar
 - [ ] dataZoom
 - [x] visualMap
 - [x] tooltip
@@ -258,7 +264,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [x] pie
 - [ ] scatter
 - [ ] effectScatter
-- [ ] radar
+- [x] radar
 - [ ] tree
 - [ ] treemap
 - [ ] sunburst
@@ -292,3 +298,6 @@ Release :
 *  **19-02-2022** : 1.2
     - Add funnel chart + markArea.
     - Add markArea + funnel examples.
+*  **20-02-2022** : 1.3
+    - Add radar chart.
+    - Add radar, pie, layout examples.

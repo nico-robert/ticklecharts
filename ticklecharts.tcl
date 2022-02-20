@@ -11,6 +11,9 @@
 # 19-02-2022 : v1.2
                # Add funnel chart + markArea.
                # Add markArea + funnel examples.
+# 20-02-2022 : v1.3
+               # Add radar chart.
+               # Add radar, pie, layout examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -29,7 +32,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.2
+    variable version 1.3
     variable dir $dir
     variable theme "basic"
     variable opts_theme ""
