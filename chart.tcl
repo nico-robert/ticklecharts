@@ -1,5 +1,7 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
+#
+namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
     variable _echartshchart     ; # huddle
@@ -8,6 +10,7 @@ oo::class create ticklecharts::chart {
     variable _indexbarseries    ; # index bar serie
     variable _indexpieseries    ; # index pie serie
     variable _indexfunnelseries ; # index funnel serie
+    variable _indexradarseries  ; # index radar serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -88,7 +91,7 @@ oo::define ticklecharts::chart {
 
             if {[string match {*series} $key]} {
                 $_echartshchart append $key $opts
-            } elseif {[regexp {xAxis|yAxis} $key] && $mixed} {
+            } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
                 $_echartshchart append $key $opts
             } else {
                 $_echartshchart set $key $opts
@@ -116,7 +119,7 @@ oo::define ticklecharts::chart {
         set opts_html [ticklecharts::htmloptions $args]
         my chartToHuddle ; # transform to huddle
         set myhuddle [my get]
-        set json     [$myhuddle toJSON]
+        set json     [$myhuddle toJSON] ; # jsondump
 
         set newhtml    [ticklecharts::htmlmap $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
@@ -137,7 +140,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions setXAxis
+        # gets default option values : [self] getoptions setXAxis
         # or
         # from doc : https://echarts.apache.org/en/option.html#xAxis
         #
@@ -160,7 +163,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions setYAxis
+        # gets default option values : [self] getoptions setYAxis
         # or
         # from doc : https://echarts.apache.org/en/option.html#yAxis
         #
@@ -183,7 +186,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions SetRadiusAxis
+        # gets default option values : [self] getoptions SetRadiusAxis
         # or
         # from doc : https://echarts.apache.org/en/option.html#radiusAxis
         #
@@ -206,7 +209,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions SetAngleAxis
+        # gets default option values : [self] getoptions SetAngleAxis
         # or
         # from doc : https://echarts.apache.org/en/option.html#angleAxis
         #
@@ -223,6 +226,29 @@ oo::define ticklecharts::chart {
         lappend _options @L=angleAxis [list {*}$f]
 
     }
+
+    method RadarCoordinate {args} {
+        # Init Radar coordinate (available only for radar chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions Radar
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#radar
+        #
+        # Returns nothing      
+        set mykeys [my keys]
+    
+        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
+            error "xAxis or yAxis not supported with 'Radar coordinate'"
+        }
+        
+        set options [ticklecharts::SetRadarCoordinate $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+        
+        lappend _options @D=radar [list {*}$f]
+
+    }
     
     
     method AddBarSeries {args} {
@@ -230,7 +256,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions barseries
+        # gets default option values : [self] getoptions barseries
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-bar
         #
@@ -249,7 +275,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions lineseries
+        # gets default option values : [self] getoptions lineseries
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-line
         #
@@ -268,7 +294,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions pieseries
+        # gets default option values : [self] getoptions pieseries
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-pie
         #
@@ -287,7 +313,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # get default value options : [self] getoptions funnelseries
+        # gets default option values : [self] getoptions funnelseries
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-funnel
         #
@@ -295,6 +321,25 @@ oo::define ticklecharts::chart {
         incr _indexfunnelseries
 
         set options [ticklecharts::funnelseries $_indexfunnelseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
+
+    method AddRadarSeries {args} {
+        # Add data serie chart (use only for radar chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions radarseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-radar
+        #
+        # Returns nothing     
+        incr _indexradarseries
+
+        set options [ticklecharts::radarseries $_indexradarseries $args]
         set f [ticklecharts::OptsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -340,16 +385,14 @@ oo::define ticklecharts::chart {
             lappend opts "@D=visualMap" [ticklecharts::visualMap $args]
         }
         
-        foreach {skey svalue} $opts {
-        
-            set f [ticklecharts::OptsToEchartsHuddle $svalue]
-            lappend _options $skey [list {*}$f]
-
+        foreach {key value} $opts {
+            set f [ticklecharts::OptsToEchartsHuddle $value]
+            lappend _options $key [list {*}$f]
         }
 
     }
     # export method
-    export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries
-    export Xaxis Yaxis RadiusAxis AngleAxis SetOptions
+    export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries
+    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
