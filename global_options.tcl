@@ -233,9 +233,9 @@ proc ticklecharts::legend {value} {
     setdef options pageIconColor         -type str             -default "rgb(47, 69, 84)"
     setdef options pageIconInactiveColor -type str             -default "rgb(170, 170, 170)"
     setdef options pageIconSize          -type num|list.n      -default 15
-    # not supported yet...
-
-    # setdef options data                  -type dict|list.n     -default "nothing"
+    
+    # not fully supported...
+    setdef options data                  -type list.d|null     -default "nothing"
     #...
 
     set options [merge $options $dico]
