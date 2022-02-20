@@ -39,9 +39,7 @@ oo::define ticklecharts::ehuddle {
                 "@S"    {set value [huddle string $data]}
                 "@N"    {set value [huddle number $data]}
                 "@NULL" {set value [huddle null]}
-                "@LS"   {
-                            set value [huddle list {*}[join $data]]
-                        }
+                "@LS"   {set value [huddle list {*}[join $data]]}
                 "@LN"   {
                             set listv {}
                             set l [llength {*}$data]
@@ -75,11 +73,9 @@ oo::define ticklecharts::ehuddle {
                                         } else {
                                             huddle string $a
                                         }
-                                        
                                     }]]
                                 }
                             }
-
                             set value [huddle list {*}$listv]
                         }
                 "@DO" {set value [huddle list $data]}
@@ -100,7 +96,6 @@ oo::define ticklecharts::ehuddle {
             } else {
                 return [list $keyvalue $value]
             }
-
         }
 
         set mydict [dict create {*}$data]
@@ -119,9 +114,7 @@ oo::define ticklecharts::ehuddle {
                     "@S"    {set value [huddle string $info]}
                     "@N"    {set value [huddle number $info]}
                     "@NULL" {set value [huddle null]}
-                    "@LS"   {
-                                set value [huddle list {*}[join $info]]
-                    }
+                    "@LS"   {set value [huddle list {*}[join $info]]}
                     "@LN"   {
                                 set listv {}
                                 set l [llength {*}$info]
@@ -188,10 +181,8 @@ oo::define ticklecharts::ehuddle {
                             } else {
                                 lappend lhuddle $subkeyvalue [huddle list [huddle create {*}$subdata]]
                             }
-
                         }
                     }
-                    
                     "@JS" {
                         set cc [clock clicks]
                         dict set _js $cc [$info get]
@@ -216,7 +207,9 @@ oo::define ticklecharts::ehuddle {
                             set subdata {}
                             foreach {k val} $info  {
                             
-                                if {$k ne "@AO"}  {error "key value must be @AO instead of '$k'"}
+                                if {$k ne "@AO"} {
+                                    error "key value must be @AO instead of '$k'"
+                                }
 
                                 set suv {}
                                 foreach vv $val {
@@ -225,7 +218,7 @@ oo::define ticklecharts::ehuddle {
                                         lassign [split $sk "="] subtype subkeyvalue1
 
                                         switch -exact -- $subtype {
-                                            "@L"    {lappend subdatalist $subkeyvalue1 [huddle create {*}[my set $sk $vk]]}
+                                            "@L"   {lappend subdatalist $subkeyvalue1 [huddle create {*}[my set $sk $vk]]}
                                             "@D"   {
                                                     set dlist {}
                                                     foreach vald $vk {
@@ -286,7 +279,6 @@ oo::define ticklecharts::ehuddle {
                                         "@LS"   -
                                         "@LD"   -
                                         "@LN"  {lappend subdata {*}[my set $k $val]}
-
                                         default {error "5 Unknown type '$subtype' specified for '$subkeyvalue1'"}
                                 }
                             }
@@ -435,7 +427,7 @@ oo::define ticklecharts::ehuddle {
             <s!> ""
             <#!> ""
             <#?> "#"
-            <\n?> "\n"
+            <n?> "\n"
             <0123> \{
             <0125> \}
             \\/ /
