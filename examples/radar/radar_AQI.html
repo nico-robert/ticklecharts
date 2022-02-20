@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>radar_AQI</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_162170020796306" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_162170020794722 = echarts.init(document.getElementById('id_162170020796306'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "#161627",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "AQI - Radar",
+      "target": "blank",
+      "textStyle": {
+        "color": "#eee",
+        "fontStyle": "normal",
+        "fontWeight": "bolder",
+        "fontFamily": "sans-serif",
+        "fontSize": 18,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": 5,
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 20,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": "single",
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "textStyle": {
+        "color": "#fff",
+        "fontStyle": "normal",
+        "fontWeight": "bolder",
+        "fontFamily": "sans-serif",
+        "fontSize": 14,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "Beijing",
+        "Shanghai",
+        "Guangzhou"
+      ]
+    }],
+  "radar": {
+    "center": [
+      "50%",
+      "50%"
+    ],
+    "radius": "75%",
+    "startAngle": 90,
+    "axisName": {
+      "show": true,
+      "color": "rgb(238,197,102)",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "fontFamily": "sans-serif",
+      "fontSize": 12,
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderType": "solid",
+      "borderDashOffset": 0,
+      "borderRadius": 0,
+      "padding": 0,
+      "shadowColor": "transparent",
+      "shadowBlur": 0,
+      "shadowOffsetX": 0,
+      "shadowOffsetY": 0,
+      "width": 100,
+      "height": 100,
+      "textBorderColor": null,
+      "textBorderWidth": 0,
+      "textBorderType": "solid",
+      "textBorderDashOffset": 0,
+      "textShadowColor": "transparent",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 0,
+      "textShadowOffsetY": 0,
+      "overflow": "truncate",
+      "ellipsis": "..."
+    },
+    "nameGap": 15,
+    "splitNumber": 5,
+    "shape": "circle",
+    "axisLine": {
+      "show": true,
+      "onZero": true,
+      "symbol": null,
+      "lineStyle": {
+        "color": "rgba(238,197,102,0.5)",
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      }
+    },
+    "splitLine": {
+      "show": true,
+      "onZero": true,
+      "symbol": null,
+      "lineStyle": {
+        "color": [
+          "rgba(238,197,102,1)",
+          "rgba(238,197,102,0.8)",
+          "rgba(238,197,102,0.6)",
+          "rgba(238,197,102,0.4)",
+          "rgba(238,197,102,0.2)",
+          "rgba(238,197,102,0.1)"
+        ],
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      }
+    },
+    "splitArea": {
+      "interval": 0,
+      "show": false
+    },
+    "indicator": [
+      {
+        "name": "AQI",
+        "max": 300
+      },
+      {
+        "name": "PM2.5",
+        "max": 250
+      },
+      {
+        "name": "PM10",
+        "max": 300
+      },
+      {
+        "name": "CO",
+        "max": 5
+      },
+      {
+        "name": "NO2",
+        "max": 200
+      },
+      {
+        "name": "SO2",
+        "max": 100
+      }
+    ]
+  },
+  "series": [
+    {
+      "type": "radar",
+      "name": "Beijing",
+      "colorBy": "data",
+      "radarIndex": 0,
+      "symbol": "none",
+      "symbolSize": 8,
+      "symbolKeepAspect": true,
+      "itemStyle": {
+        "color": "#F9713C",
+        "borderColor": "rgb(0, 0, 0)",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "areaStyle": {
+        "color": null,
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.1
+      },
+      "data": [
+        {
+          "value": [
+            55,
+            9,
+            56,
+            0.46,
+            18,
+            6
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            25,
+            11,
+            21,
+            0.65,
+            34,
+            9
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            56,
+            7,
+            63,
+            0.3,
+            14,
+            5
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            33,
+            7,
+            29,
+            0.33,
+            16,
+            6
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            42,
+            24,
+            44,
+            0.76,
+            40,
+            16
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            82,
+            58,
+            90,
+            1.77,
+            68,
+            33
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            74,
+            49,
+            77,
+            1.46,
+            48,
+            27
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            78,
+            55,
+            80,
+            1.29,
+            59,
+            29
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            267,
+            216,
+            280,
+            4.8,
+            108,
+            64
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            185,
+            127,
+            216,
+            2.52,
+            61,
+            27
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            39,
+            19,
+            38,
+            0.57,
+            31,
+            15
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            41,
+            11,
+            40,
+            0.43,
+            21,
+            7
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            64,
+            38,
+            74,
+            1.04,
+            46,
+            22
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            108,
+            79,
+            120,
+            1.7,
+            75,
+            41
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            108,
+            63,
+            116,
+            1.48,
+            44,
+            26
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            33,
+            6,
+            29,
+            0.34,
+            13,
+            5
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            94,
+            66,
+            110,
+            1.54,
+            62,
+            31
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            186,
+            142,
+            192,
+            3.88,
+            93,
+            79
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            57,
+            31,
+            54,
+            0.96,
+            32,
+            14
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            22,
+            8,
+            17,
+            0.48,
+            23,
+            10
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            39,
+            15,
+            36,
+            0.61,
+            29,
+            13
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            94,
+            69,
+            114,
+            2.08,
+            73,
+            39
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            99,
+            73,
+            110,
+            2.43,
+            76,
+            48
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            31,
+            12,
+            30,
+            0.5,
+            32,
+            16
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            42,
+            27,
+            43,
+            1,
+            53,
+            22
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            154,
+            117,
+            157,
+            3.05,
+            92,
+            58
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            234,
+            185,
+            230,
+            4.09,
+            123,
+            69
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            160,
+            120,
+            186,
+            2.77,
+            91,
+            50
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            134,
+            96,
+            165,
+            2.76,
+            83,
+            41
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            52,
+            24,
+            60,
+            1.03,
+            50,
+            21
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            46,
+            5,
+            49,
+            0.28,
+            10,
+            6
+          ],
+          "symbolKeepAspect": false
+        }
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "radar",
+      "name": "Shanghai",
+      "colorBy": "data",
+      "radarIndex": 0,
+      "symbol": "none",
+      "symbolSize": 8,
+      "symbolKeepAspect": true,
+      "itemStyle": {
+        "color": "#B3E4A1",
+        "borderColor": "rgb(0, 0, 0)",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "areaStyle": {
+        "color": null,
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.05
+      },
+      "data": [
+        {
+          "value": [
+            91,
+            45,
+            125,
+            0.82,
+            34,
+            23
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            65,
+            27,
+            78,
+            0.86,
+            45,
+            29
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            83,
+            60,
+            84,
+            1.09,
+            73,
+            27
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            109,
+            81,
+            121,
+            1.28,
+            68,
+            51
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            106,
+            77,
+            114,
+            1.07,
+            55,
+            51
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            109,
+            81,
+            121,
+            1.28,
+            68,
+            51
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            106,
+            77,
+            114,
+            1.07,
+            55,
+            51
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            89,
+            65,
+            78,
+            0.86,
+            51,
+            26
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            53,
+            33,
+            47,
+            0.64,
+            50,
+            17
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            80,
+            55,
+            80,
+            1.01,
+            75,
+            24
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            117,
+            81,
+            124,
+            1.03,
+            45,
+            24
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            99,
+            71,
+            142,
+            1.1,
+            62,
+            42
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            95,
+            69,
+            130,
+            1.28,
+            74,
+            50
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            116,
+            87,
+            131,
+            1.47,
+            84,
+            40
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            108,
+            80,
+            121,
+            1.3,
+            85,
+            37
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            134,
+            83,
+            167,
+            1.16,
+            57,
+            43
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            79,
+            43,
+            107,
+            1.05,
+            59,
+            37
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            71,
+            46,
+            89,
+            0.86,
+            64,
+            25
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            97,
+            71,
+            113,
+            1.17,
+            88,
+            31
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            84,
+            57,
+            91,
+            0.85,
+            55,
+            31
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            87,
+            63,
+            101,
+            0.9,
+            56,
+            41
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            104,
+            77,
+            119,
+            1.09,
+            73,
+            48
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            87,
+            62,
+            100,
+            1,
+            72,
+            28
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            168,
+            128,
+            172,
+            1.49,
+            97,
+            56
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            65,
+            45,
+            51,
+            0.74,
+            39,
+            17
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            39,
+            24,
+            38,
+            0.61,
+            47,
+            17
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            39,
+            24,
+            39,
+            0.59,
+            50,
+            19
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            93,
+            68,
+            96,
+            1.05,
+            79,
+            29
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            188,
+            143,
+            197,
+            1.66,
+            99,
+            51
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            174,
+            131,
+            174,
+            1.55,
+            108,
+            50
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            187,
+            143,
+            201,
+            1.39,
+            89,
+            53
+          ],
+          "symbolKeepAspect": false
+        }
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "radar",
+      "name": "Guangzhou",
+      "colorBy": "data",
+      "radarIndex": 0,
+      "symbol": "none",
+      "symbolSize": 8,
+      "symbolKeepAspect": true,
+      "itemStyle": {
+        "color": "rgb(238, 197, 102)",
+        "borderColor": "rgb(0, 0, 0)",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "areaStyle": {
+        "color": null,
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.05
+      },
+      "data": [
+        {
+          "value": [
+            26,
+            37,
+            27,
+            1.163,
+            27,
+            13
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            85,
+            62,
+            71,
+            1.195,
+            60,
+            8
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            78,
+            38,
+            74,
+            1.363,
+            37,
+            7
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            21,
+            21,
+            36,
+            0.634,
+            40,
+            9
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            41,
+            42,
+            46,
+            0.915,
+            81,
+            13
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            56,
+            52,
+            69,
+            1.067,
+            92,
+            16
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            64,
+            30,
+            28,
+            0.924,
+            51,
+            2
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            55,
+            48,
+            74,
+            1.236,
+            75,
+            26
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            76,
+            85,
+            113,
+            1.237,
+            114,
+            27
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            91,
+            81,
+            104,
+            1.041,
+            56,
+            40
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            84,
+            39,
+            60,
+            0.964,
+            25,
+            11
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            64,
+            51,
+            101,
+            0.862,
+            58,
+            23
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            70,
+            69,
+            120,
+            1.198,
+            65,
+            36
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            77,
+            105,
+            178,
+            2.549,
+            64,
+            16
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            109,
+            68,
+            87,
+            0.996,
+            74,
+            29
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            73,
+            68,
+            97,
+            0.905,
+            51,
+            34
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            54,
+            27,
+            47,
+            0.592,
+            53,
+            12
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            51,
+            61,
+            97,
+            0.811,
+            65,
+            19
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            91,
+            71,
+            121,
+            1.374,
+            43,
+            18
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            73,
+            102,
+            182,
+            2.787,
+            44,
+            19
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            73,
+            50,
+            76,
+            0.717,
+            31,
+            20
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            84,
+            94,
+            140,
+            2.238,
+            68,
+            18
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            93,
+            77,
+            104,
+            1.165,
+            53,
+            7
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            99,
+            130,
+            227,
+            3.97,
+            55,
+            15
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            146,
+            84,
+            139,
+            1.094,
+            40,
+            17
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            113,
+            108,
+            137,
+            1.481,
+            48,
+            15
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            81,
+            48,
+            62,
+            1.619,
+            26,
+            3
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            56,
+            48,
+            68,
+            1.336,
+            37,
+            9
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            82,
+            92,
+            174,
+            3.29,
+            0,
+            13
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            106,
+            116,
+            188,
+            3.628,
+            101,
+            16
+          ],
+          "symbolKeepAspect": false
+        },
+        {
+          "value": [
+            118,
+            50,
+            0,
+            1.383,
+            76,
+            11
+          ],
+          "symbolKeepAspect": false
+        }
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_162170020794722.setOption(option);
+    </script>
+  </body>
+</html>
