@@ -429,7 +429,7 @@ proc ticklecharts::itemStyle {value} {
     
     setdef options color            -type str|jsfunc|null -default "nothing"
     setdef options borderColor      -type str|null        -default "rgb(0, 0, 0)"
-    setdef options borderWidth      -type num|null        -default 0
+    setdef options borderWidth      -type num|null        -default "nothing"
     setdef options borderType       -type str|num|list.n  -default "solid"
     setdef options borderDashOffset -type num|null        -default 0
     setdef options borderCap        -type str             -default "butt"
@@ -1863,6 +1863,27 @@ proc ticklecharts::markArea {value} {
     #...
 
     set d [dict remove $d data label itemStyle emphasis blur]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::rippleEffect {value} {
+
+    if {![dict exists $value -rippleEffect]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value -rippleEffect]
+
+    setdef options color     -type str|null -default "nothing"
+    setdef options number    -type num|null -default 3
+    setdef options period    -type num|null -default 4
+    setdef options scale     -type num|null -default 2.5
+    setdef options brushType -type str|null -default "fill"
+    #...
 
     set options [merge $options $d]
 
