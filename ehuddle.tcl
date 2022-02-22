@@ -1,5 +1,7 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
+#
+namespace eval ticklecharts {}
 
 oo::class create ticklecharts::ehuddle {
     variable _huddle ; # list huddle value
@@ -368,7 +370,8 @@ oo::define ticklecharts::ehuddle {
         if {[llength $_js]} {
             set t [$newhuddle js]
             if {$t ne ""} {
-                dict set _js {*}$t
+                # add jsfunc to global _js...
+                set _js [dict merge $_js $t]
             }
         } else {
             set _js [$newhuddle js]
@@ -430,6 +433,8 @@ oo::define ticklecharts::ehuddle {
             <n?> "\n"
             <0123> \{
             <0125> \}
+            <091> \[
+            <093> \]
             \\/ /
         }
 
