@@ -1,7 +1,10 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# 16-02-2022 : Initial release
+# 22-02-2022 : image path correction
+
 # image dir
-set imagedir [file join [file dirname [file dirname [file dirname [file normalize [info script]]]]] images]
+set imagedir ../../images
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
