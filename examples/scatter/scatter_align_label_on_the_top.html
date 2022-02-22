@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>scatter_align_label_on_the_top</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_3552887951554" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var myChart = echarts.init(document.getElementById('id_3552887951554'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "grid": [{
+      "left": 40,
+      "right": 130
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": true,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "scatter",
+      "name": "1990",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": function (data) {
+                                                return Math.sqrt(data[2]) / 5e2;
+                                              },
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "label": {
+        "show": true,
+        "position": "right",
+        "rotate": 0,
+        "formatter": function (param) {
+                                          return param.data[3];
+                                        },
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "labelLine": {
+        "show": true,
+        "length2": 5,
+        "lineStyle": {
+          "color": "#bbb",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "labelLayout": function () {
+                                            return {
+                                              x: myChart.getWidth() - 100,
+                                              moveOverlap: 'shiftY'
+                                            };
+                                          },
+      "emphasis": {
+        "scale": true,
+        "focus": "self",
+        "blurScope": "coordinateSystem"
+      },
+      "data": [
+        [
+          28604,
+          77,
+          17096869,
+          "Australia",
+          1990
+        ],
+        [
+          31163,
+          77.4,
+          27662440,
+          "Canada",
+          1990
+        ],
+        [
+          1516,
+          68,
+          1154605773,
+          "China",
+          1990
+        ],
+        [
+          13670,
+          74.7,
+          10582082,
+          "Cuba",
+          1990
+        ],
+        [
+          28599,
+          75,
+          4986705,
+          "Finland",
+          1990
+        ],
+        [
+          29476,
+          77.1,
+          56943299,
+          "France",
+          1990
+        ],
+        [
+          31476,
+          75.4,
+          78958237,
+          "Germany",
+          1990
+        ],
+        [
+          28666,
+          78.1,
+          254830,
+          "Iceland",
+          1990
+        ],
+        [
+          1777,
+          57.7,
+          870601776,
+          "India",
+          1990
+        ],
+        [
+          29550,
+          79.1,
+          122249285,
+          "Japan",
+          1990
+        ],
+        [
+          2076,
+          67.9,
+          20194354,
+          "North Korea",
+          1990
+        ],
+        [
+          12087,
+          72,
+          42972254,
+          "South Korea",
+          1990
+        ],
+        [
+          24021,
+          75.4,
+          3397534,
+          "New Zealand",
+          1990
+        ],
+        [
+          43296,
+          76.8,
+          4240375,
+          "Norway",
+          1990
+        ],
+        [
+          10088,
+          70.8,
+          38195258,
+          "Poland",
+          1990
+        ],
+        [
+          19349,
+          69.6,
+          147568552,
+          "Russia",
+          1990
+        ],
+        [
+          10670,
+          67.3,
+          53994605,
+          "Turkey",
+          1990
+        ],
+        [
+          26424,
+          75.7,
+          57110117,
+          "United Kingdom",
+          1990
+        ],
+        [
+          37062,
+          75.4,
+          252847810,
+          "United States",
+          1990
+        ]
+      ],
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        myChart.setOption(option);
+    </script>
+  </body>
+</html>

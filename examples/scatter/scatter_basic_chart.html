@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>scatter_basic_chart</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_3614474870045" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_3614474870026 = echarts.init(document.getElementById('id_3614474870045'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "scatter",
+      "name": "scatterseries_1",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": 20,
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "data": [
+        [
+          10.0,
+          8.04
+        ],
+        [
+          8.07,
+          6.95
+        ],
+        [
+          13.0,
+          7.58
+        ],
+        [
+          9.05,
+          8.81
+        ],
+        [
+          11.0,
+          8.33
+        ],
+        [
+          14.0,
+          7.66
+        ],
+        [
+          13.4,
+          6.81
+        ],
+        [
+          10.0,
+          6.33
+        ],
+        [
+          14.0,
+          8.96
+        ],
+        [
+          12.5,
+          6.82
+        ],
+        [
+          9.15,
+          7.20
+        ],
+        [
+          11.5,
+          7.20
+        ],
+        [
+          3.03,
+          4.23
+        ],
+        [
+          12.2,
+          7.83
+        ],
+        [
+          2.02,
+          4.47
+        ],
+        [
+          1.05,
+          3.33
+        ],
+        [
+          4.05,
+          4.96
+        ],
+        [
+          6.03,
+          7.24
+        ],
+        [
+          12.0,
+          6.26
+        ],
+        [
+          12.0,
+          8.84
+        ],
+        [
+          7.08,
+          5.82
+        ],
+        [
+          5.02,
+          5.68
+        ]
+      ],
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_3614474870026.setOption(option);
+    </script>
+  </body>
+</html>
