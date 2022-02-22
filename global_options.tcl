@@ -20,15 +20,15 @@ proc ticklecharts::globaloptions {value} {
     #
     # return dict options
 
-    setdef options -backgroundColor         -type str|null      -default [dict get $::ticklecharts::opts_theme backgroundColor]
-    setdef options -color                   -type list.s|null   -default [dict get $::ticklecharts::opts_theme color]
-    setdef options -animation               -type bool|str|null -default "True"
-    setdef options -animationDuration       -type num|null      -default 1000
-    setdef options -animationDurationUpdate -type num|null      -default 500
-    setdef options -animationEasing         -type str|null      -default "cubicInOut"
-    setdef options -animationEasingUpdate   -type str|null      -default "cubicInOut"
-    setdef options -animationThreshold      -type num|null      -default 2000
-    setdef options -progressiveThreshold    -type num|null      -default 3000
+    setdef options -backgroundColor         -type str|jsfunc|null -default [dict get $::ticklecharts::opts_theme backgroundColor]
+    setdef options -color                   -type list.s|null     -default [dict get $::ticklecharts::opts_theme color]
+    setdef options -animation               -type bool|str|null   -default "True"
+    setdef options -animationDuration       -type num|null        -default 1000
+    setdef options -animationDurationUpdate -type num|null        -default 500
+    setdef options -animationEasing         -type str|null        -default "cubicInOut"
+    setdef options -animationEasingUpdate   -type str|null        -default "cubicInOut"
+    setdef options -animationThreshold      -type num|null        -default 2000
+    setdef options -progressiveThreshold    -type num|null        -default 3000
 
     set options [merge $options $value]
 
