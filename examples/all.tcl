@@ -31,6 +31,11 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] radar
     source $chartfile
 }
 
+# scatter
+foreach chartfile [glob -directory [file join [file dirname [info script]] scatter] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
