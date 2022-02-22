@@ -156,7 +156,8 @@ $chart AddBarSeries -name "Evaporation" \
                     
 $chart AddBarSeries -name "Precipitation" \
                     -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}]                    
-                    
+
+# Add line...                    
 $chart AddLineSeries -name "Temperature" \
                      -yAxisIndex 1 \
                      -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
@@ -262,8 +263,8 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [x] line
 - [x] bar
 - [x] pie
-- [ ] scatter
-- [ ] effectScatter
+- [x] scatter
+- [x] effectScatter
 - [x] radar
 - [ ] tree
 - [ ] treemap
@@ -301,3 +302,8 @@ Release :
 *  **20-02-2022** : 1.3
     - Add radar chart.
     - Add radar, pie, layout examples.
+*  **22-02-2022** : 1.4
+    - Add scatter + effectScatter chart.
+    - Add scatter examples + line step example.
+    - Add ::ticklecharts::htmlstdout variable to control _stdout_
+	  for render html output.
