@@ -307,7 +307,7 @@ oo::define ticklecharts::Gridlayout {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         #
-        # # return full path html file + stdout.
+        # return full path html file + stdout.
 
         set opts_html [ticklecharts::htmloptions $args]
         my layoutToHuddle ; # transform to huddle
@@ -322,7 +322,9 @@ oo::define ticklecharts::Gridlayout {
         puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
         close $fp
 
-        puts [format {html:%s} $outputfile]
+        if {$::ticklecharts::htmlstdout} {
+            puts [format {html:%s} $outputfile]
+        }
 
         return $outputfile
 
