@@ -117,7 +117,7 @@ proc ticklecharts::lineseries {index value} {
     setdef options -connectNulls            -type bool            -default "False"
     setdef options -clip                    -type bool            -default "True"
     setdef options -triggerLineEvent        -type bool            -default "False"
-    setdef options -step                    -type bool            -default "False"
+    setdef options -step                    -type bool|str        -default "False"
     setdef options -label                   -type dict|null       -default [ticklecharts::label $value]
     setdef options -endLabel                -type dict|null       -default [ticklecharts::endLabel $value]
     setdef options -labelLine               -type dict|null       -default [ticklecharts::labelLine $value]
@@ -386,6 +386,101 @@ proc ticklecharts::radarseries {index value} {
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -tooltip]
                                 
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::scatterseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-scatter
+    # or
+    # options : https://echarts.apache.org/en/option.html#series-effectScatter
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::scatterseries below.
+    #
+    # return dict scatterseries or effectScatterseries options
+
+    setdef options -type                    -type str               -default "scatter"
+    setdef options -id                      -type str|null          -default "nothing"
+    setdef options -name                    -type str               -default "scatterseries_${index}"
+    setdef options -colorBy                 -type str               -default "series"
+    setdef options -coordinateSystem        -type str               -default "cartesian2d"
+    setdef options -xAxisIndex              -type num|null          -default "nothing"
+    setdef options -yAxisIndex              -type num|null          -default "nothing"
+    setdef options -polarIndex              -type num|null          -default "nothing"
+    setdef options -geoIndex                -type num|null          -default "nothing"
+    setdef options -calendarIndex           -type num|null          -default "nothing"
+    setdef options -legendHoverLink         -type bool              -default "True"
+    setdef options -symbol                  -type str|jsfunc|null   -default "circle"
+    setdef options -symbolSize              -type num|jsfunc|list.n -default 10
+    setdef options -symbolRotate            -type num|null          -default "nothing"
+    setdef options -symbolKeepAspect        -type bool              -default "True"
+    setdef options -symbolOffset            -type list.d|null       -default "nothing"    
+    setdef options -large                   -type bool              -default "False"
+    setdef options -largeThreshold          -type num               -default 2000    
+    setdef options -cursor                  -type str|null          -default "pointer"    
+    setdef options -label                   -type dict|null         -default [ticklecharts::label $value]
+    setdef options -labelLine               -type dict|null         -default [ticklecharts::labelLine $value]    
+    setdef options -labelLayout             -type dict|jsfunc|null  -default [ticklecharts::labelLayout $value]
+    setdef options -itemStyle               -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -type bool|str|null     -default "nothing"
+    setdef options -progressive             -type num|null          -default "nothing"
+    setdef options -progressiveThreshold    -type num|null          -default "nothing"
+    setdef options -data                    -type list.d            -default {}    
+    setdef options -markLine                -type dict|null         -default [ticklecharts::markLine $value]
+    setdef options -markPoint               -type dict|null         -default [ticklecharts::markPoint $value]
+    setdef options -markArea                -type dict|null         -default [ticklecharts::markArea $value]
+    setdef options -clip                    -type bool              -default "True"
+    setdef options -zlevel                  -type num               -default 0
+    setdef options -z                       -type num               -default 2
+    setdef options -silent                  -type bool              -default "False"
+    setdef options -animation               -type bool|null         -default "nothing"
+    setdef options -animationThreshold      -type num|null          -default "nothing"
+    setdef options -animationDuration       -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -type str|null          -default "nothing"
+    setdef options -animationDelay          -type num|jsfunc|null   -default "nothing"
+    setdef options -animationDurationUpdate -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -type str|null          -default "nothing"
+    setdef options -animationDelayUpdate    -type num|jsfunc|null   -default "nothing"
+        
+    if {[dict exists $value -type]} {
+        switch -exact -- [dict get $value -type] {
+            effectScatter {
+                setdef options -effectType   -type str       -default "ripple"
+                setdef options -showEffectOn -type str       -default "render"
+                setdef options -rippleEffect -type dict|null -default [ticklecharts::rippleEffect $value]
+            }
+        }
+    }        
+    
+    # not supported yet...
+
+    # setdef options -dimensions             -type list.d|null      -default "nothing"
+    # setdef options -encode                 -type dict|null        -default "nothing"
+    # setdef options -seriesLayoutBy         -type str|null         -default "nothing"
+    # setdef options -datasetIndex           -type num|null         -default "nothing"
+    # setdef options -dataGroupId            -type str|null         -default "nothing"
+    # setdef options -tooltip                -type dict|null        -default [ticklecharts::tooltipseries $value]
+    
+    set lflag {-label -labelLine -lineStyle
+               -markPoint -markLine \
+               -labelLayout -itemStyle -markArea 
+               -emphasis -blur -select -tooltip -rippleEffect}
+    
+    # does not remove '-labelLayout' for js function.
+    if {[dict exists $value -labelLayout] && [Type [dict get $value -labelLayout]] eq "jsfunc"} {
+        set lflag [lsearch -inline -all -not -exact $lflag -labelLayout]
+        set value [dict remove $value {*}$lflag]
+    } else {
+        set value [dict remove $value {*}$lflag]
+    
+    }
+        
     set options [merge $options $value]
 
     return $options
