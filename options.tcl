@@ -1,6 +1,6 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
-
+#
 namespace eval ticklecharts {}
 
 proc ticklecharts::BarItem {value} {
@@ -425,8 +425,6 @@ proc ticklecharts::itemStyle {value} {
         return "nothing"
     }
     
-    lassign [info level 2] proc
-    
     setdef options color            -type str|jsfunc|null -default "nothing"
     setdef options borderColor      -type str|null        -default "rgb(0, 0, 0)"
     setdef options borderWidth      -type num|null        -default "nothing"
@@ -443,7 +441,7 @@ proc ticklecharts::itemStyle {value} {
     setdef options decal            -type dict|null       -default "nothing"
     #...
     
-    if {$proc eq "ticklecharts::legend"} {
+    if {[InfoNameProc 2 "legend"]} {
         set options [dict remove $options color borderColor borderWidth \
                                           borderDashOffset borderCap \
                                           borderJoin borderMiterLimit \
@@ -458,7 +456,7 @@ proc ticklecharts::itemStyle {value} {
         setdef options opacity          -type str|num|null    -default "inherit"
     }
 
-    if {$proc eq "ticklecharts::pieseries"} {
+    if {[InfoNameProc 2 "pieseries"]} {
         setdef options borderRadius -type str|num|list.d|null  -default "nothing"
     }
     
@@ -819,8 +817,6 @@ proc ticklecharts::setYAxis {value} {
 
 proc ticklecharts::splitLine {value} {
 
-    lassign [info level 2] proc_l2
-
     if {$::ticklecharts::theme ne "basic"} {
         if {![dict exists $value -splitLine]} {
             dict set value -splitLine [dict create dummy null]
@@ -831,15 +827,13 @@ proc ticklecharts::splitLine {value} {
         return "nothing"
     }
 
-    if {$proc_l2 eq "ticklecharts::setXAxis"} {
+    if {[InfoNameProc 2 "setXAxis"]} {
         set showgrid [dict get $::ticklecharts::opts_theme axisXgridlineShow]
-    } elseif {$proc_l2 eq "ticklecharts::setYAxis"} {
+    } elseif {[InfoNameProc 2 "setYAxis"]} {
         set showgrid [dict get $::ticklecharts::opts_theme axisYgridlineShow] 
     } else {
         set showgrid "True"
     }
-
-
 
     setdef options show            -type bool            -default $showgrid
     setdef options onZero          -type bool            -default "True"
@@ -917,9 +911,7 @@ proc ticklecharts::areaStyle {value} {
         return "nothing"
     }
     
-    lassign [info level 3] proc
-    
-    if {$proc eq "ticklecharts::splitArea"} {
+    if {[InfoNameProc 3 "splitArea"]} {
         set color  [dict get $::ticklecharts::opts_theme splitAreaColor]
     } else {
         set color "null"
@@ -1082,9 +1074,7 @@ proc ticklecharts::labelLine {value} {
     setdef options lineStyle    -type dict|null     -default [ticklecharts::lineStyle [dict get $value $key]]
     #...
 
-    lassign [info level 2] proc_l2
-
-    if {$proc_l2 eq "ticklecharts::pieseries"} {
+    if {[InfoNameProc 2 "pieseries"]} {
         setdef options length           -type num|null  -default "nothing"
         setdef options maxSurfaceAngle  -type num|null  -default "nothing"
     }
@@ -1123,9 +1113,7 @@ proc ticklecharts::labelLayout {value} {
 
 proc ticklecharts::axisTick {value} {
 
-    lassign [info level 2] proc_l2
-
-    if {$::ticklecharts::theme ne "basic" && $proc_l2 ne "ticklecharts::SetRadarCoordinate"} {
+    if {$::ticklecharts::theme ne "basic" && ![InfoNameProc 2 "SetRadarCoordinate"]} {
         if {![dict exists $value -axisTick]} {
             dict set value -axisTick [dict create dummy null]
         }
@@ -1167,9 +1155,7 @@ proc ticklecharts::minorTick {value} {
 
 proc ticklecharts::axisLabel {value} {
 
-    lassign [info level 2] proc_l2
-
-    if {$::ticklecharts::theme ne "basic" && $proc_l2 ne "ticklecharts::SetRadarCoordinate"} {
+    if {$::ticklecharts::theme ne "basic" && ![InfoNameProc 2 "SetRadarCoordinate"]} {
         if {![dict exists $value -axisLabel]} {
             dict set value -axisLabel [dict create dummy null]
         }
@@ -1180,7 +1166,7 @@ proc ticklecharts::axisLabel {value} {
     }
         
     setdef options show                 -type bool            -default [dict get $::ticklecharts::opts_theme axisLabelShow]
-    setdef options interval             -type num|jsfunc      -default 0
+    setdef options interval             -type num|str|jsfunc  -default "auto"
     setdef options inside               -type bool            -default "False"
     setdef options rotate               -type num             -default 0
     setdef options margin               -type num             -default 8
@@ -1279,9 +1265,8 @@ proc ticklecharts::label {value} {
     setdef options rich                 -type dict|null       -default [ticklecharts::RichItem $d]
     #...
 
-    lassign [info level 2] proc_l2
 
-    if {$proc_l2 eq "ticklecharts::pieseries"} {
+    if {[InfoNameProc 2 "pieseries"]} {
         setdef options alignTo             -type str          -default "none"
         setdef options edgeDistance        -type str|num|null -default "25%"
         setdef options bleedMargin         -type num|null     -default 10
@@ -1403,12 +1388,7 @@ proc ticklecharts::axisName {value} {
 
 proc ticklecharts::lineStyle {value} {
 
-    lassign [info level 3] proc_l3
-    lassign [info level 2] proc_l2
-
-    if {$::ticklecharts::theme ne "basic" &&
-        $proc_l3 ne "ticklecharts::RadarItem" &&
-        $proc_l2 ne "ticklecharts::radarseries"} {
+    if {$::ticklecharts::theme ne "basic" && ![InfoNameProc 3 "RadarItem"] && ![InfoNameProc 2 "radarseries"]} {
         if {![dict exists $value -lineStyle]} {
             dict set value -lineStyle [dict create dummy null]
         }
@@ -1422,10 +1402,10 @@ proc ticklecharts::lineStyle {value} {
         return "nothing"
     }
         
-    if {$proc_l3 eq "ticklecharts::splitLine"} {
+    if {[InfoNameProc 3 "splitLine"] || [InfoNameProc 3 "minorSplitLine"]} {
         set color     [dict get $::ticklecharts::opts_theme splitLineColor]
         set linewidth [dict get $::ticklecharts::opts_theme graphLineWidth]
-    } elseif {$proc_l2 eq "ticklecharts::lineseries"} {
+    } elseif {[InfoNameProc 2 "lineseries"]} {
         set color     "nothing"
         set linewidth [dict get $::ticklecharts::opts_theme lineWidth]
     } else {
@@ -1447,7 +1427,7 @@ proc ticklecharts::lineStyle {value} {
     setdef options opacity        -type num                    -default 1
     #...
     
-    if {$proc_l2 eq "ticklecharts::legend"} {
+    if {[InfoNameProc 2 "legend"]} {
         set options [dict remove $options color width type \
                                           dashOffset cap join \
                                           miterLimit shadowBlur opacity]
@@ -1471,9 +1451,7 @@ proc ticklecharts::lineStyle {value} {
 
 proc ticklecharts::textStyle {value key} {
 
-    lassign [info level 2] proc_l2
-
-    if {$::ticklecharts::theme ne "basic" && $proc_l2 ne "ticklecharts::tooltip"} {
+    if {$::ticklecharts::theme ne "basic" && ![InfoNameProc 2 "tooltip"]} {
         if {![dict exists $value $key]} {
             dict set value $key [dict create dummy null]
         }
@@ -1489,7 +1467,7 @@ proc ticklecharts::textStyle {value key} {
         default      {set color "nothing"}
     }
 
-    if {$::ticklecharts::theme ne "basic" && $proc_l2 eq "ticklecharts::legend"} {
+    if {$::ticklecharts::theme ne "basic" && [InfoNameProc 2 "legend"]} {
         set fontSize 12
         set fontWeight "normal"
     } else {
