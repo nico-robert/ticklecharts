@@ -19,6 +19,11 @@
                # Add scatter examples + line step example.
                # Add ::ticklecharts::htmlstdout variable to control stdout
                # for render html output.
+# 28-02-2022 : v1.5
+               # Add heatmap chart.
+               # Add heatmap examples.
+               # Add 'deleteseries' method to delete serie chart.
+               # Update README to explain `deleteseries` and `getoptions` methods.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -37,7 +42,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.4
+    variable version 1.5
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1
@@ -47,6 +52,6 @@ namespace eval ticklecharts {
 
 }
 
-namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type
+namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type ticklecharts::InfoNameProc
 
 package provide ticklecharts $::ticklecharts::version
