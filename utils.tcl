@@ -2,7 +2,7 @@
 # Distributed under MIT license. Please see LICENSE for details.
 
 namespace eval ticklecharts {
-    namespace export setdef merge Type
+    namespace export setdef merge Type InfoNameProc
 }
 
 proc ticklecharts::htmlmap {htmloptions} {
@@ -394,7 +394,7 @@ proc ticklecharts::Isdict {value} {
 }
 
 proc ticklecharts::InfoOptions {key {indent 0}} {
-    # Get default options according to key procedure
+    # Gets default options according to key procedure
     #
     # key    - dict
     # indent - format stdout
@@ -420,4 +420,17 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
         }
 
     }
+}
+
+proc ticklecharts::InfoNameProc {level name} {
+    # Gets name of proc follow level
+    #
+    # level  - level number
+    # indent - name proc without namespace
+    #
+    # Returns True if name match with current namespace/level, False otherwise .
+
+    lassign [info level $level] infonameproc
+
+    return [string match *$name $infonameproc]
 }
