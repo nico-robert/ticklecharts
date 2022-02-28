@@ -29,7 +29,7 @@ set chart [ticklecharts::chart new]
 ##### :heavy_check_mark: Arguments available :
 | args | Type | Description
 | ------ | ------ | ------
-| _-backgroundColor_ | string | canvas color background (hex, rgb, rgba color)
+| _-backgroundColor_ | string \| jsfunc | canvas color background (hex, rgb, rgba color)
 | _-color_ | list of list | list series chart colors should be a list of list like this : `[list {red blue green}]`
 | _-animation_ | boolean | chart animation (default `True`)
 | _-others_ | _ | animation sub options (see proc: `ticklecharts::globaloptions` in `global_options.tcl`)
@@ -98,21 +98,74 @@ $chart AddLineSeries -datalineitem {
                                 {name "Sun" value 260}
                                 }
 ```
+Useful methods :
+-------------------------
+
+1. Get default _options_ according to a `key` (name of procedure) :
+```tcl
+# get all options for title...
+$chart getoptions -title
+# output :
+ id                -type str|null   -default "nothing"
+ show              -type bool       -default "True"
+ text              -type str|null   -default "nothing"
+ link              -type str|null   -default "nothing"
+ target            -type str        -default "blank"
+ textStyle         -type dict|null
+   color                -type str|null       -default $color
+   fontStyle            -type str            -default "normal"
+   fontWeight           -type str|num        -default $fontWeight
+   fontFamily           -type str            -default "sans-serif"
+   fontSize             -type num            -default $fontSize
+   lineHeight           -type num|null       -default "nothing"
+   width                -type num            -default 100
+   height               -type num            -default 50
+   textBorderColor      -type str|null       -default "null"
+   textBorderWidth      -type num            -default 0
+   textBorderType       -type str|num|list.n -default "solid"
+   textBorderDashOffset -type num            -default 0
+   textShadowColor      -type str            -default "transparent"
+   textShadowBlur       -type num            -default 0
+   textShadowOffsetX    -type num            -default 0
+   textShadowOffsetY    -type num            -default 0
+   overflow             -type str|null       -default "null"
+   ellipsis             -type str            -default "..."
+ subtext           -type str|null   -default "nothing"
+ sublink           -type str|null   -default "nothing"
+ ...
+ ...
+# following options voluntarily deleted... 
+```
+2. Delete _series_ by index:
+```tcl
+$chart AddLineSeries -data [list {1 2 3 4}]
+$chart AddBarSeries  -data [list {4 5 6 7}]
+
+# Delete bar series :
+$chart deleteseries 1
+```
 
 Javascript function :
 -------------------------
-It's possible to add a javascript function to json data for this :
+Add a `javascript` function to `json` :
 ```tcl
 # Initializes a new jsfunc Class
 ticklecharts::jsfunc new {function}
 ```
-This function will be able to be inserted directly into the `JSON` data and will also create a `jsfunc` type
+This function will be able to be inserted directly into the `JSON` data and will also create a new type `jsfunc`.
 ```tcl
 # Demo
 set js [ticklecharts::jsfunc new {function (value, index) {
                                 return value + ' (C°)';
                                 },
                                 }]
+
+$chart Xaxis -axisLabel [list show "True" \
+                              margin 8 \
+                              formatter $js\
+                              showMinLabel "null" \
+                              ... ]
+
 # html result :
 "axisLabel": {
   "margin": 8,
@@ -120,6 +173,7 @@ set js [ticklecharts::jsfunc new {function (value, index) {
                           return value + ' (C°)';
                           },
   "showMinLabel": null
+  ...
 }
 ```
 Examples :
@@ -271,7 +325,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [ ] sunburst
 - [ ] boxplot
 - [ ] candlestick
-- [ ] heatmap
+- [x] heatmap
 - [ ] map
 - [ ] parallel
 - [ ] lines
@@ -307,3 +361,8 @@ Release :
     - Add scatter examples + line step example.
     - Add ::ticklecharts::htmlstdout variable to control _stdout_
 	  for render html output.
+*  **28-02-2022** : 1.5
+    - Add heatmap chart.
+    - Add heatmap examples.
+    - Add `deleteseries` method to delete serie chart.
+    - Update README to explain `deleteseries` and `getoptions` methods.
