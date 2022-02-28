@@ -12,6 +12,7 @@ oo::class create ticklecharts::chart {
     variable _indexfunnelseries  ; # index funnel serie
     variable _indexradarseries   ; # index radar serie
     variable _indexscatterseries ; # index scatter serie
+    variable _indexheatmapseries ; # index heatmap serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -82,8 +83,28 @@ oo::define ticklecharts::chart {
         return $k
     }
 
+    method deleteseries {index} {
+        # Delete series by index.
+        #
+        # Returns nothing
+        set i -1 ; set j 0 ; set k 0
+        foreach {key opts} $_options {
+            if {[string match {*series} $key]} {
+                if {[incr i] == $index} {
+                    set k 1
+                    break
+                }
+            }
+            incr j 2
+        }
+
+        if {$k} {set _options [lreplace $_options $j [expr {$j + 1}]]}
+
+        return
+    }
+
     method chartToHuddle {} {
-        # Transform list to hudlle
+        # Transform list to ehudlle
         #
         # Returns nothing
         set mixed [my ismixed]
@@ -367,6 +388,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddHeatmapSeries {args} {
+        # Add data serie chart (use only for heatmap chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions heatmapseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-heatmap
+        #
+        # Returns nothing     
+        incr _indexheatmapseries
+
+        set options [ticklecharts::heatmapseries $_indexheatmapseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -415,6 +455,7 @@ oo::define ticklecharts::chart {
     }
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
+    export AddHeatmapSeries
     export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
