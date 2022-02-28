@@ -348,10 +348,8 @@ oo::define ticklecharts::ehuddle {
         foreach {k val} $value {
             $newhuddle set $k $val
         }
-
-        set keys [my keys]
         
-        if {$valkey in $keys} {
+        if {$valkey in [my keys]} {
             set h [my extract]
             set index [huddle llength [huddle get $h $valkey]]
             huddle set h $valkey $index [$newhuddle extract]
