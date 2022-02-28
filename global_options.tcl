@@ -291,7 +291,7 @@ proc ticklecharts::visualMap {value} {
             setdef options inverse         -type bool|null       -default "False"
             setdef options precision       -type num|null        -default 0
             setdef options itemWidth       -type num|null        -default 20
-            setdef options itemHeight      -type num|null        -default 14
+            setdef options itemHeight      -type num|null        -default 140
             setdef options align           -type str|null        -default "auto"
             setdef options text            -type list.s|null     -default "nothing"
             setdef options textGap         -type num|null        -default 10
@@ -308,6 +308,7 @@ proc ticklecharts::visualMap {value} {
             setdef options top             -type num|str|null    -default "auto"
             setdef options right           -type num|str|null    -default "auto"
             setdef options bottom          -type num|str|null    -default "auto"
+            setdef options orient          -type str             -default "vertical"
             setdef options padding         -type list.n|num      -default 5
             setdef options backgroundColor -type str             -default "rgba(0,0,0,0)"
             setdef options borderColor     -type str             -default "#ccc"
