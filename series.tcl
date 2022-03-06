@@ -1,7 +1,6 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
-#
 namespace eval ticklecharts {}
 
 proc ticklecharts::barseries {index value} {
