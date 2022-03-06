@@ -24,6 +24,9 @@
                # Add heatmap examples.
                # Add 'deleteseries' method to delete serie chart.
                # Update README to explain `deleteseries` and `getoptions` methods.
+# 06-03-2022 : v1.5.1
+               # Add graphic (rect, circle, arc, line, text...)
+               # Add graphic examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -42,7 +45,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.5
+    variable version 1.5.1
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1

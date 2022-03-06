@@ -166,7 +166,7 @@ $chart Xaxis -axisLabel [list show "True" \
                               showMinLabel "null" \
                               ... ]
 
-# html result :
+# json result :
 "axisLabel": {
   "margin": 8,
   "formatter": function (value, index) {
@@ -309,7 +309,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [ ] parallelAxis
 - [ ] singleAxis
 - [ ] timeline
-- [ ] graphic
+- [x] graphic
 - [ ] calendar
 - [ ] dataset
 - [ ] aria
@@ -366,3 +366,6 @@ Release :
     - Add heatmap examples.
     - Add `deleteseries` method to delete serie chart.
     - Update README to explain `deleteseries` and `getoptions` methods.
+*  **06-03-2022** : 1.5.1
+    - Add graphic (rect, circle, arc, line, text...)
+    - Add graphic examples.
