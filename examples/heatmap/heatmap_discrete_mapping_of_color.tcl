@@ -83,21 +83,23 @@ proc generateData {} {
 }
 
 #  perlin noise helper from https://github.com/josephg/noisejs
-oo::class create Grad {
-    variable _x _y _z
-    constructor {x y z} {
-        set _x $x
-        set _y $y
-        set _z $z
+catch {
+    oo::class create Grad {
+        variable _x _y _z
+        constructor {x y z} {
+            set _x $x
+            set _y $y
+            set _z $z
+        }
     }
-}
 
-oo::define Grad {
-    method dot2 {x y} {
-        return [expr {($_x * $x) + ($_y * $y)}]
-    }
-    method dot3 {x y z} {
-        return [expr {($_x * $x) + ($_y * $y) + ($_z * $z)}]
+    oo::define Grad {
+        method dot2 {x y} {
+            return [expr {($_x * $x) + ($_y * $y)}]
+        }
+        method dot3 {x y z} {
+            return [expr {($_x * $x) + ($_y * $y) + ($_z * $z)}]
+        }
     }
 }
 
