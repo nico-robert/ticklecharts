@@ -251,6 +251,24 @@ oo::define ticklecharts::chart {
 
     }
 
+    method AddGraphic {args} {
+        # Add elements (text, rect, circle...) to chart
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions AddGraphic
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#graphic
+        #
+        # Returns nothing      
+        
+        set options [ticklecharts::SetGraphic $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+        
+        lappend _options @L=graphic [list {*}$f]
+
+    }
+
     method RadarCoordinate {args} {
         # Init Radar coordinate (available only for radar chart)
         #
@@ -455,7 +473,7 @@ oo::define ticklecharts::chart {
     }
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries
+    export AddHeatmapSeries AddGraphic
     export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
