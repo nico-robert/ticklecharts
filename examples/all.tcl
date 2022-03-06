@@ -36,6 +36,16 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] scatt
     source $chartfile
 }
 
+# heatmap
+foreach chartfile [glob -directory [file join [file dirname [info script]] heatmap] -types f *.tcl] {
+    source $chartfile
+}
+
+# graphic
+foreach chartfile [glob -directory [file join [file dirname [info script]] graphic] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
