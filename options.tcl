@@ -771,7 +771,6 @@ proc ticklecharts::setXAxis {value} {
 
 proc ticklecharts::setYAxis {value} {
 
-
     setdef options -id              -type str|null            -default "nothing"
     setdef options -show            -type bool                -default "True"
     setdef options -gridIndex       -type num                 -default 0
@@ -810,6 +809,415 @@ proc ticklecharts::setYAxis {value} {
     setdef options -z               -type num                 -default 0
     
     set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::SetGraphic {value} {
+    
+    setdef options -id       -type str|null    -default "nothing"
+    setdef options -elements -type list.o|null -default [ticklecharts::childrenElements $value "-elements"]
+
+    set value [dict remove $value -elements]
+    
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::childrenElements {value key} {
+    
+    if {![dict exists $value $key]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value $key] {
+
+        if {![dict exists $item type]} {
+            error "'type' for '$key' should be specified..."
+        }
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options type               -type str             -default [dict get $item type]
+        setdef options id                 -type str|null        -default "nothing"
+        setdef options x                  -type num|null        -default "nothing"
+        setdef options y                  -type num|null        -default "nothing"
+        setdef options rotation           -type num|null        -default 0
+        setdef options scaleX             -type num|null        -default 1
+        setdef options scaleY             -type num|null        -default 1
+        setdef options originX            -type num|null        -default "nothing"
+        setdef options originY            -type num|null        -default "nothing"
+        setdef options transition         -type str|list.s|null -default [list {x y}]
+        setdef options enterFrom          -type dict|null       -default [ticklecharts::propertiesAnimation $item "enterFrom"]
+        setdef options leaveTo            -type dict|null       -default [ticklecharts::propertiesAnimation $item "leaveTo"]
+        setdef options enterAnimation     -type dict|null       -default [ticklecharts::typeAnimation $item "enterAnimation"]
+        setdef options updateAnimation    -type dict|null       -default [ticklecharts::typeAnimation $item "updateAnimation"]
+        setdef options leaveAnimation     -type dict|null       -default [ticklecharts::typeAnimation $item "leaveAnimation"]
+        setdef options left               -type str|num|null    -default "nothing"
+        setdef options right              -type str|num|null    -default "nothing"
+        setdef options top                -type str|num|null    -default "nothing"
+        setdef options bottom             -type str|num|null    -default "nothing"
+        setdef options bounding           -type str             -default "all"
+        setdef options z                  -type num             -default 0
+        setdef options zlevel             -type num             -default 0
+        setdef options info               -type jsfunc|null     -default "nothing"
+        setdef options silent             -type bool            -default "False"
+        setdef options invisible          -type bool            -default "False"
+        setdef options ignore             -type bool            -default "False"
+        # setdef options textContent      -type dict|null       -default "nothing"
+        setdef options textConfig         -type dict|null       -default [ticklecharts::textConfig $item]
+        setdef options during             -type jsfunc|null     -default "nothing"
+        setdef options cursor             -type str             -default "pointer"
+        setdef options draggable          -type bool            -default "False"
+        setdef options progressive        -type bool            -default "False"
+
+        switch -exact -- [dict get $item type] {
+            group {
+                setdef options keyframeAnimation  -type list.o|null  -default [ticklecharts::keyframeAnimation $item [dict get $item type]]
+                setdef options width              -type num|null     -default "nothing"
+                setdef options height             -type num|null     -default "nothing"
+                setdef options diffChildrenByName -type bool|null    -default "nothing"
+                setdef options children           -type list.o|null  -default [ticklecharts::appendInGroup $item]
+                # ...
+            }
+            image {
+                setdef options keyframeAnimation  -type list.o|null  -default [ticklecharts::keyframeAnimation $item [dict get $item type]]
+                setdef options style              -type dict|null    -default [ticklecharts::style $item [dict get $item type]]
+                setdef options focus              -type str          -default "none"
+                setdef options blurScope          -type str          -default "coordinateSystem"
+                # ...
+            }
+            text {
+                setdef options keyframeAnimation  -type list.o|null  -default [ticklecharts::keyframeAnimation $item [dict get $item type]]
+                setdef options style              -type dict|null    -default [ticklecharts::style $item [dict get $item type]]
+                setdef options focus              -type str          -default "none"
+                setdef options blurScope          -type str          -default "coordinateSystem"
+                # ...
+            }
+            circle      -
+            ring        -
+            sector      -
+            arc         -
+            polygon     -
+            polyline    -
+            line        -
+            bezierCurve -
+            rect {
+                setdef options keyframeAnimation  -type list.o|null  -default [ticklecharts::keyframeAnimation $item [dict get $item type]]
+                setdef options shape              -type dict|null    -default [ticklecharts::shape $item [dict get $item type]]
+                setdef options style              -type dict|null    -default [ticklecharts::style $item [dict get $item type]]
+                setdef options focus              -type str          -default "none"
+                setdef options blurScope          -type str          -default "coordinateSystem"
+                # ...
+            }
+
+            default {error "bad type or not supported..."}
+        }
+
+
+        setdef options onclick      -type jsfunc|null  -default "nothing"
+        setdef options onmouseover  -type jsfunc|null  -default "nothing"
+        setdef options onmouseout   -type jsfunc|null  -default "nothing"
+        setdef options onmousemove  -type jsfunc|null  -default "nothing"
+        setdef options onmousewheel -type jsfunc|null  -default "nothing"
+        setdef options onmousedown  -type jsfunc|null  -default "nothing"
+        setdef options onmouseup    -type jsfunc|null  -default "nothing"
+        setdef options ondrag       -type jsfunc|null  -default "nothing"
+        setdef options ondragstart  -type jsfunc|null  -default "nothing"
+        setdef options ondragend    -type jsfunc|null  -default "nothing"
+        setdef options ondragenter  -type jsfunc|null  -default "nothing"
+        setdef options ondragleave  -type jsfunc|null  -default "nothing"
+        setdef options ondragover   -type jsfunc|null  -default "nothing"
+        setdef options ondrop       -type jsfunc|null  -default "nothing"
+
+        
+        set item [dict remove $item enterFrom leaveTo \
+                            enterAnimation updateAnimation \
+                            leaveAnimation keyframeAnimation textConfig style children shape]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::appendInGroup {value} {
+
+    if {![dict exists $value children]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value children] {
+        set d [list "children" [list $item]]
+        lappend opts {*}[ticklecharts::childrenElements $d "children"]
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::shape {value type} {
+
+    if {![dict exists $value shape]} {
+        return "nothing"
+    }
+
+    set d [dict get $value shape]
+
+    switch -exact -- $type {
+        rect {
+            setdef options x          -type num|null    -default "nothing"
+            setdef options y          -type num|null    -default "nothing"
+            setdef options width      -type num|null    -default "nothing"
+            setdef options height     -type num|null    -default "nothing"
+            setdef options r          -type list.n|null -default "nothing"
+        }
+        circle {
+            setdef options cx         -type num|null     -default "nothing"
+            setdef options cy         -type num|null     -default "nothing"
+            setdef options r          -type num|null     -default "nothing"
+        }
+        ring {
+            setdef options cx         -type num|null     -default "nothing"
+            setdef options cy         -type num|null     -default "nothing"
+            setdef options r          -type num|null     -default "nothing"
+            setdef options r0         -type num|null     -default "nothing"
+        }
+        arc -
+        sector {
+            setdef options cx         -type num|null     -default "nothing"
+            setdef options cy         -type num|null     -default "nothing"
+            setdef options r          -type num|null     -default "nothing"
+            setdef options r0         -type num|null     -default "nothing"
+            setdef options startAngle -type num          -default 0
+            setdef options endAngle   -type num          -default [expr {3.14159 * 2}]
+            setdef options clockwise  -type bool         -default "True"
+        }
+        polyline -
+        polygon {
+            setdef options points           -type list.n|null   -default "nothing"
+            setdef options smooth           -type num|str|null  -default "nothing"
+            setdef options smoothConstraint -type bool|null     -default "nothing"
+        }
+        line {
+            setdef options x1         -type num|null     -default "nothing"
+            setdef options y1         -type num|null     -default "nothing"
+            setdef options x2         -type num|null     -default "nothing"
+            setdef options y2         -type num|null     -default "nothing"
+            setdef options percent    -type num          -default 1
+        }
+        bezierCurve {
+            setdef options x1         -type num|null     -default "nothing"
+            setdef options y1         -type num|null     -default "nothing"
+            setdef options x2         -type num|null     -default "nothing"
+            setdef options y2         -type num|null     -default "nothing"
+            setdef options cpx1       -type num|null     -default "nothing"
+            setdef options cpy1       -type num|null     -default "nothing"
+            setdef options cpx2       -type num|null     -default "nothing"
+            setdef options cpy2       -type num|null     -default "nothing"
+            setdef options percent    -type num          -default 1
+        }
+        default {error "bad shape type for $type..."}
+    }
+
+    setdef options transition -type list.s|str|null -default "nothing"
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::style {value type} {
+
+    if {![dict exists $value style]} {
+        return "nothing"
+    }
+
+    set d [dict get $value style]
+
+    if {[dict exists $d $type]} {
+        dict set d $type [ticklecharts::MapSpaceString [dict get $d $type]] ; # spaces in path... ??
+    }
+
+    switch -exact -- $type {
+        image {
+            setdef options image  -type str|null -default "nothing"
+            setdef options height -type num|null -default "nothing"
+        }
+        text {
+            setdef options text              -type str|null    -default "nothing"
+            setdef options overflow          -type str|null    -default "nothing"
+            setdef options font              -type str|null    -default "nothing"
+            setdef options fontSize          -type num|null    -default "nothing"
+            setdef options fontWeight        -type str|null    -default "nothing"
+            setdef options lineDash          -type list.n|null -default "nothing"
+            setdef options lineDashOffset    -type num|null    -default "nothing"
+            setdef options textAlign         -type str|null    -default "nothing"
+            setdef options textVerticalAlign -type str|null    -default "nothing"
+        }
+    }
+
+    setdef options width         -type num|null        -default "nothing"
+    setdef options x             -type num|null        -default "nothing"
+    setdef options y             -type num|null        -default "nothing"
+    setdef options fill          -type str|null        -default "nothing"
+    setdef options stroke        -type str|null        -default "nothing"
+    setdef options lineWidth     -type num|null        -default "nothing"
+    setdef options shadowBlur    -type num|null        -default "nothing"
+    setdef options shadowOffsetX -type num|null        -default "nothing"
+    setdef options shadowOffsetY -type num|null        -default "nothing"
+    setdef options shadowColor   -type str|null        -default "nothing"
+    setdef options transition    -type str|list.d|null -default "nothing"
+
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::textConfig {value} {
+
+    if {![dict exists $value textConfig]} {
+        return "nothing"
+    }
+
+    set d [dict get $value textConfig]
+
+    setdef options position      -type str         -default "inside"
+    setdef options rotation      -type num         -default 0
+    # setdef options layoutRect  -type dict|null   -default "nothing"
+    # setdef options offset      -type dict|null   -default "nothing"
+    setdef options origin        -type list.d|null -default "nothing"
+    setdef options distance      -type num         -default 5
+    setdef options local         -type bool        -default "False"
+    setdef options insideFill    -type str|null    -default "nothing"
+    setdef options insideStroke  -type str|null    -default "nothing"
+    setdef options outsideFill   -type str|null    -default "nothing"
+    setdef options outsideStroke -type str|null    -default "nothing"
+    setdef options inside        -type bool|null   -default "nothing"
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::keyframeAnimation {value type} {
+
+    if {![dict exists $value keyframeAnimation]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value keyframeAnimation] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options duration  -type num|null    -default "nothing"
+        setdef options easing    -type str|null    -default "nothing"
+        setdef options delay     -type num|null    -default "nothing"
+        setdef options loop      -type bool        -default "False"
+        setdef options keyframes -type list.o|null -default [ticklecharts::keyframes $item $type]
+
+        set item [dict remove $item keyframes]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::keyframes {value type} {
+
+    if {![dict exists $value keyframes]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value keyframes] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options percent -type num|null  -default "nothing"
+        setdef options easing  -type str|null  -default "nothing"
+        setdef options scaleX  -type num|null  -default "nothing"
+        setdef options scaleY  -type num|null  -default "nothing"
+        setdef options style   -type dict|null -default [ticklecharts::style $item $type]
+
+        set item [dict remove $item style]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::propertiesAnimation {value key} {
+
+    if {![dict exists $value $key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options x      -type num|null  -default 0
+    setdef options style  -type dict|null -default [ticklecharts::propertiestyle $d]
+
+    set d [dict remove $d style]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::propertiestyle {value} {
+
+    if {![dict exists $value style]} {
+        return "nothing"
+    }
+
+    set d [dict get $value style]
+
+    setdef options opacity -type num|null -default 0
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::typeAnimation {value key} {
+
+    if {![dict exists $value $key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options duration -type num|null -default "nothing"
+    setdef options easing   -type str|null -default "nothing"
+    setdef options delay    -type num|null -default "nothing"
+
+    set options [merge $options $d]
 
     return $options
 
@@ -1013,7 +1421,7 @@ proc ticklecharts::markLineItem {value} {
             lineItem {
 
                 if {[llength $info] != 2} {
-                    error "must be a list of 2 startpoint and endpoint"
+                    error "must be a list of 2, startpoint and endpoint"
                 }
 
                 set t {}
