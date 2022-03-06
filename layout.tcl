@@ -82,6 +82,11 @@ oo::define ticklecharts::Gridlayout {
         if {"series" ni $keys} {
             error "charts must have a key 'series'"
         }
+
+        # not supported yet...
+        if {"graphic" in $keys} {
+            error "graphic not supported..."
+        }
         
         if {("grid" ni $keys) && ($args eq "")} {
             error "charts must have a grid key if no options..."
