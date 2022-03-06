@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>graphic_shape</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_907639338618012" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_907639338615123 = echarts.init(document.getElementById('id_907639338618012'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "graphic": {"elements": [
+      {
+        "type": "circle",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 300,
+        "bottom": 160,
+        "bounding": "raw",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {"r": 80},
+        "style": {"fill": "gray"},
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "arc",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 600,
+        "bottom": 160,
+        "bounding": "raw",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {
+          "r": 80,
+          "startAngle": 0,
+          "endAngle": 3.14,
+          "clockwise": true
+        },
+        "style": {"fill": "blue"},
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "rect",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "left": "center",
+        "bottom": 100,
+        "bounding": "all",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {
+          "width": 400,
+          "height": 50
+        },
+        "style": {"fill": "rgba(0,0,0,0.3)"},
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "line",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 100,
+        "bottom": 100,
+        "bounding": "all",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {
+          "x1": 0,
+          "y1": 0,
+          "x2": 0,
+          "y2": 300,
+          "percent": 1
+        },
+        "style": {
+          "stroke": "red",
+          "lineWidth": 3
+        },
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "bezierCurve",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 150,
+        "bottom": 100,
+        "bounding": "all",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {
+          "x1": 0,
+          "y1": 0,
+          "x2": 0,
+          "y2": 300,
+          "cpx1": 10,
+          "cpy1": 50,
+          "cpx2": 30,
+          "cpy2": 100,
+          "percent": 1
+        },
+        "style": {
+          "stroke": "magenta",
+          "lineWidth": 3
+        },
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "ring",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "left": 100,
+        "bottom": 300,
+        "bounding": "all",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {
+          "cx": 50,
+          "cy": 100,
+          "r": 50,
+          "r0": 40
+        },
+        "style": {
+          "fill": "yellow",
+          "stroke": "green",
+          "lineWidth": 3
+        },
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      },
+      {
+        "type": "polyline",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 400,
+        "bottom": 200,
+        "bounding": "raw",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "shape": {"points": [
+            [
+              200,
+              90
+            ],
+            [
+              50,
+              60
+            ],
+            [
+              80,
+              100
+            ],
+            [
+              60,
+              300
+            ]
+          ]},
+        "style": {"fill": "green"},
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      }
+    ]},
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }]
+}
+        chart_907639338615123.setOption(option);
+    </script>
+  </body>
+</html>

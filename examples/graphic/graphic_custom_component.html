@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>graphic_custom_component</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_chart" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var mychart = echarts.init(document.getElementById('id_chart'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "Altitude (km) vs Temperature (°C)",
+        ""
+      ]
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "formatter": "Temperature : <br/>{b}km : {c}°C",
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid": [{
+      "left": "3%",
+      "right": "4%",
+      "bottom": "3%",
+      "containLabel": true
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "formatter": "{value} °C",
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "category",
+      "data": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80
+      ],
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": false,
+        "onZero": false,
+        "symbol": null
+      },
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "formatter": "{value} km",
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "graphic": {"elements": [
+      {
+        "type": "group",
+        "rotation": 0.785398163397448,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "right": 110,
+        "bottom": 110,
+        "bounding": "raw",
+        "z": 100,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "children": [
+          {
+            "type": "rect",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "center",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "shape": {
+              "width": 400,
+              "height": 50
+            },
+            "style": {"fill": "rgba(0,0,0,0.3)"},
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          },
+          {
+            "type": "text",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "center",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "style": {
+              "text": "ECHARTS LINE CHART",
+              "font": "bold 26px sans-serif",
+              "fill": "#fff"
+            },
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "left": "10%",
+        "top": "center",
+        "bounding": "all",
+        "z": 0,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "children": [
+          {
+            "type": "rect",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "middle",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "shape": {
+              "width": 240,
+              "height": 90
+            },
+            "style": {
+              "fill": "#fff",
+              "stroke": "#555",
+              "lineWidth": 1,
+              "shadowBlur": 8,
+              "shadowOffsetX": 3,
+              "shadowOffsetY": 3,
+              "shadowColor": "rgba(0,0,0,0.2)"
+            },
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          },
+          {
+            "type": "text",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "middle",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "style": {
+              "text": "xAxis represents temperature in °C, yAxis represents altitude in km, An image watermark in the upper right, This text block can be placed in any place",
+              "overflow": "break",
+              "font": "14px Microsoft YaHei",
+              "width": 220,
+              "fill": "#333"
+            },
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          }
+        ]
+      }
+    ]},
+  "series": [{
+      "type": "line",
+      "name": "graphic",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "smooth": true,
+      "data": [
+        15,
+        -50,
+        -56.5,
+        -46.5,
+        -22.1,
+        -2.5,
+        -27.7,
+        -55.7,
+        -76.5
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        mychart.setOption(option);
+    </script>
+  </body>
+</html>

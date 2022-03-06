@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>graphic_stroke_animation</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_chart" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var mychart = echarts.init(document.getElementById('id_chart'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "graphic": {"elements": [{
+        "type": "text",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "left": "center",
+        "top": "center",
+        "bounding": "all",
+        "z": 0,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "keyframeAnimation": [{
+            "duration": 3000,
+            "loop": true,
+            "keyframes": [
+              {
+                "percent": 0.7,
+                "style": {
+                  "lineDash": [
+                    200,
+                    0
+                  ],
+                  "lineDashOffset": 200,
+                  "fill": "transparent"
+                }
+              },
+              {
+                "percent": 0.8,
+                "style": {"fill": "transparent"}
+              },
+              {
+                "percent": 1,
+                "style": {"fill": "black"}
+              }
+            ]
+          }],
+        "style": {
+          "text": "Apache ECharts",
+          "fontSize": 80,
+          "fontWeight": "bold",
+          "lineDash": [
+            0,
+            200
+          ],
+          "lineDashOffset": 0,
+          "fill": "transparent",
+          "stroke": "#000",
+          "lineWidth": 1
+        },
+        "focus": "none",
+        "blurScope": "coordinateSystem"
+      }]}
+}
+        mychart.setOption(option);
+    </script>
+  </body>
+</html>
