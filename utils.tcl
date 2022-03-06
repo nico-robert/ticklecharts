@@ -1,6 +1,6 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
-
+#
 namespace eval ticklecharts {
     namespace export setdef merge Type InfoNameProc
 }
@@ -426,7 +426,7 @@ proc ticklecharts::InfoNameProc {level name} {
     # Gets name of proc follow level
     #
     # level  - level number
-    # indent - name proc without namespace
+    # name   - name proc without namespace
     #
     # Returns True if name match with current namespace/level, False otherwise .
 
