@@ -1,5 +1,7 @@
 # Copyright (c) 2022 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
+#
+namespace eval ticklecharts {}
 
 oo::class create ticklecharts::jsfunc {
     variable _jsfunc
