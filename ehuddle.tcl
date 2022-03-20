@@ -3,14 +3,36 @@
 #
 namespace eval ticklecharts {}
 
+# add jsfunc huddle type
+namespace eval ::huddle::types::jsfunc {
+    variable settings 
+    
+    # type definition
+    set settings {
+                    publicMethods {jsfunc}
+                    tag jsf
+                    isContainer no
+                }
+            
+    proc jsfunc {arg} {
+        return [wrap [list jsf $arg]]
+    }
+    
+    proc equal {jsf1 jsf2} {
+        return [string equal $jsf1 $jsf2]
+    }
+
+    proc jsondump {huddle_object offset newline nextoff} {
+        return [join [lindex $huddle_object 1 1]]
+    }
+}
+
 oo::class create ticklecharts::ehuddle {
     variable _huddle ; # list huddle value
-    variable _js     ; # dict javascript value
 
     constructor {} {
         # init variable.
         set _huddle {}
-        set _js [dict create]
     }
 }
 
@@ -35,7 +57,8 @@ oo::define ticklecharts::ehuddle {
             lassign [split $key "="] type keyvalue
 
             if {$data eq "nothing"} {return}
-
+            # Transform key to huddle type...
+            #
             switch -exact -- $type {
                 "@B"    {set value [huddle boolean $data]}
                 "@S"    {set value [huddle string $data]}
@@ -79,11 +102,7 @@ oo::define ticklecharts::ehuddle {
                             set value [huddle list {*}$listv]
                         }
                 "@DO" {set value [huddle list $data]}
-                "@JS" {
-                    set cc [clock clicks]
-                    dict set _js $cc [$data get]
-                    set value [huddle string [string map {\" ""} "%JS${cc}%"]]
-                }
+                "@JS" {set value [huddle jsfunc [$data get]]}
 
                 default {error "1 Unknown type '$type' specified for '$keyvalue'"}
             }
@@ -99,16 +118,19 @@ oo::define ticklecharts::ehuddle {
         }
 
         set mydict [dict create {*}$data]
-
+        # second level data can be transformed into a dictionary
+        #
         dict for {subkey info} $mydict {
-
+            # Guess if info is a dictionary
+            #
             if {![ticklecharts::Isdict $info]} {
 
                 lassign [split $subkey "="] type subkeyvalue
                 set lko 0
 
                 if {$info eq "nothing"} {continue}
-                
+                # Transform key to huddle type...
+                #
                 switch -exact -- $type {
                     "@B"    {set value [huddle boolean $info]}
                     "@S"    {set value [huddle string $info]}
@@ -182,11 +204,7 @@ oo::define ticklecharts::ehuddle {
                             }
                         }
                     }
-                    "@JS" {
-                        set cc [clock clicks]
-                        dict set _js $cc [$info get]
-                        set value [huddle string [string map {\" ""} "%JS${cc}%"]]
-                    }
+                    "@JS" {set value [huddle jsfunc [$info get]]}
 
                     default {error "2 Unknown type '$type' specified for '$subkeyvalue'"}
                 }
@@ -323,7 +341,6 @@ oo::define ticklecharts::ehuddle {
         }
 
         return $lhuddle
-
     }
 
     method extract {} {
@@ -360,17 +377,6 @@ oo::define ticklecharts::ehuddle {
             } else {
                 huddle set h $valkey 0 [$newhuddle extract]
             }
-        }
-
-        # add js class
-        if {[llength $_js]} {
-            set t [$newhuddle js]
-            if {$t ne ""} {
-                # add jsfunc to global _js...
-                set _js [dict merge $_js $t]
-            }
-        } else {
-            set _js [$newhuddle js]
         }
         
         # destroy...
@@ -409,11 +415,6 @@ oo::define ticklecharts::ehuddle {
             return 0
         }
     }  
-    
-    method js {} {
-        # Returns javascript dict
-        return $_js
-    }
 
     method toJSON {} {
         # Transform huddle to JSON
@@ -433,15 +434,8 @@ oo::define ticklecharts::ehuddle {
             <093> \]
             \\/ /
         }
-
-        dict for {key info} $_js {
-            if {$key eq ""} {continue}
-            append lstringmap " {\"%JS${key}%\",} $info {\"%JS${key}%\"} $info"
-        }
-
         return [string map $lstringmap [huddle jsondump [my extract]]]
     }
-    
 }
 
 proc ticklecharts::ehuddle_num val {
@@ -450,4 +444,76 @@ proc ticklecharts::ehuddle_num val {
     #
     # Returns format hudlle num
     return [format "HUDDLE {num %s}" $val]
+}
+
+# Add jsfunc as hudlle type
+huddle addType ::huddle::types::jsfunc
+
+proc ::huddle::jsondump {huddle_object {offset "  "} {newline "\n"} {begin ""}} {
+    # patch huddle 0.3 = huddle::jsondump
+    # typo $data should be $huddle_object
+    # unwrap $huddle_object for avoid to have this error below :
+    # 'can't read "types(callback:mytype)": no such element in array'
+    #
+    variable types
+    set nextoff "$begin$offset"
+    set nlof "$newline$nextoff"
+    set sp " "
+    if {[string equal $offset ""]} {set sp ""}
+
+    set type [huddle type $huddle_object]
+
+    switch -- $type {
+        boolean -
+        number {
+            return [huddle get_stripped $huddle_object]
+        }
+        null {
+            return null
+        }
+        string {
+            set data [huddle get_stripped $huddle_object]
+
+            # JSON permits only oneline string
+            set data [string map {
+                    \n \\n
+                    \t \\t
+                    \r \\r
+                    \b \\b
+                    \f \\f
+                    \\ \\\\
+                    \" \\\"
+                    / \\/
+                } $data
+            ]
+	    return "\"$data\""
+        }
+        list {
+            set inner {}
+            set len [huddle llength $huddle_object]
+            for {set i 0} {$i < $len} {incr i} {
+                set subobject [huddle get $huddle_object $i]
+                lappend inner [jsondump $subobject $offset $newline $nextoff]
+            }
+            if {[llength $inner] == 1} {
+                return "\[[lindex $inner 0]\]"
+            }
+            return "\[$nlof[join $inner ,$nlof]$newline$begin\]"
+        }
+        dict {
+            set inner {}
+            foreach {key} [huddle keys $huddle_object] {
+                lappend inner [subst {"$key":$sp[jsondump [huddle get $huddle_object $key] $offset $newline $nextoff]}]
+            }
+            if {[llength $inner] == 1} {
+                return $inner
+            }
+            return "\{$nlof[join $inner ,$nlof]$newline$begin\}"
+        }
+        default {
+            # patch...
+            lassign [huddle unwrap $huddle_object] tag _src
+            return [$types(callback:$tag) jsondump $huddle_object $offset $newline $nextoff]
+        }
+    }
 }
