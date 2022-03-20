@@ -382,3 +382,43 @@ proc ticklecharts::visualMap {value} {
     return $options
 
 }
+
+proc ticklecharts::toolbox {value} {
+    # options : https://echarts.apache.org/en/option.html#toolbox
+    #
+    # value - Options described in proc ticklecharts::toolbox below.
+    #
+    # return dict toolbox options
+
+    set dico [dict get $value -toolbox]
+
+    setdef options id                    -type str|null        -default "nothing"
+    setdef options show                  -type bool            -default "True"
+    setdef options orient                -type str             -default "horizontal"
+    setdef options itemSize              -type num             -default 15
+    setdef options itemGap               -type num             -default 10
+    setdef options showTitle             -type bool            -default "True"
+    setdef options feature               -type dict|null       -default [ticklecharts::feature $dico]
+    setdef options iconStyle             -type dict|null       -default [ticklecharts::iconStyle $dico "toolbox"]
+    setdef options emphasis              -type dict|null       -default [ticklecharts::iconEmphasis $dico]
+    setdef options zlevel                -type num|null        -default "nothing"
+    setdef options z                     -type num             -default 2
+    setdef options left                  -type str|num|null    -default "nothing"
+    setdef options top                   -type str|num|null    -default "auto"
+    setdef options right                 -type str|num|null    -default "auto"
+    setdef options bottom                -type str|num|null    -default "nothing"
+    setdef options width                 -type str|num|null    -default "auto"
+    setdef options height                -type str|num|null    -default "auto"
+    # not supported yet...
+    # setdef options tooltip             -type dict|null       -default "nothing"
+    
+    
+    # remove key
+    set dico [dict remove $dico feature iconStyle emphasis]
+    #...
+
+    set options [merge $options $dico]
+    
+    return $options
+
+}
