@@ -1,3 +1,6 @@
+# v1.0 : Initial example
+# v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
 
@@ -8,7 +11,15 @@ set chart [ticklecharts::chart new]
 
 $chart SetOptions -title   {text "Temperature Change"} \
                  -legend  {show True} \
-                 -tooltip {show True trigger "axis"}
+                 -tooltip {show True trigger "axis"} \
+                 -toolbox [list feature [list \
+                                        dataZoom {yAxisIndex "none"} \
+                                        dataView {readOnly "false"} \
+                                        magicType [list type [list {line bar}]] \
+                                        restore {} \
+                                        saveAsImage {} \
+                                    ] \
+                 ]
                
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
             -boundaryGap "False"

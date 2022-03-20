@@ -1,3 +1,6 @@
+# v1.0 : Initial example
+# v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
 
@@ -7,8 +10,14 @@ if {[catch {package present ticklecharts}]} {package require ticklecharts}
 set chart [ticklecharts::chart new]
 
 $chart SetOptions -tooltip [list show True trigger "axis" axisPointer {type "shadow"}] \
-                -legend {} \
-                -grid {left "3%" right "4%" bottom "3%" containLabel "True"}
+                  -legend {} \
+                  -grid {left "3%" right "4%" bottom "3%" containLabel "True"} \
+                  -toolbox [list orient vertical left right top center \
+                            feature [list \
+                            dataView {readOnly false} magicType [list type [list {line bar stack}]] \
+                            restore {} saveAsImage {}] \
+                            ]
+
                
 $chart Xaxis -type "value"
 $chart Yaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] -type "category" -boundaryGap "True"
@@ -48,4 +57,4 @@ $chart AddBarSeries -name "Search Engine" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

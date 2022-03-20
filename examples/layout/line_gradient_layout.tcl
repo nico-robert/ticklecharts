@@ -1,3 +1,6 @@
+# v1.0 : Initial example
+# v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
 # source all.tcl
@@ -27,7 +30,8 @@ set line1 [ticklecharts::chart new]
 
 $line1 SetOptions -title     {text "Gradient along the y axis" left "center"} \
                   -visualMap {type "continuous" show "False" min 0 max 400} \
-                  -tooltip   {trigger "axis"}
+                  -tooltip   {trigger "axis"} \
+                  -toolbox   {feature {saveAsImage {}}}
 
 $line1 Xaxis -data [list [lmap v $data {lindex $v 0}]]                             
 $line1 Yaxis
@@ -52,6 +56,6 @@ set layout [ticklecharts::Gridlayout new]
 $layout Add $line1 -bottom "60%" 
 $layout Add $line2 -top    "60%"
 
-$layout render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$layout Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 
 

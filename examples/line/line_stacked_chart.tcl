@@ -1,3 +1,6 @@
+# v1.0 : Initial example
+# v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
 
@@ -8,7 +11,8 @@ set chart [ticklecharts::chart new]
 
 $chart SetOptions -title   {text "Stacked chart"} \
                  -legend  {show True} \
-                 -tooltip {show True trigger "axis"}
+                 -tooltip {show True trigger "axis"} \
+                 -toolbox {feature {saveAsImage {}}}
                
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] -boundaryGap "False"
 $chart Yaxis
@@ -36,4 +40,4 @@ $chart AddLineSeries -name "Search Engine" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

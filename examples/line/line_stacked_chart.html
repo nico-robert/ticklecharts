@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_96569805160586" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_32668111457490" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_96569805158996 = echarts.init(document.getElementById('id_96569805160586'), null, {renderer: 'canvas'});
+        var chart_32668111455685 = echarts.init(document.getElementById('id_32668111457490'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -87,6 +87,26 @@
       "padding": 5,
       "order": "seriesAsc"
     }],
+  "toolbox": {
+    "show": true,
+    "orient": "horizontal",
+    "itemSize": 15,
+    "itemGap": 10,
+    "showTitle": true,
+    "feature": {"saveAsImage": {
+        "type": "png",
+        "backgroundColor": "transparent",
+        "connectedBackgroundColor": "#fff",
+        "show": true,
+        "title": "Save as image",
+        "pixelRatio": 1
+      }},
+    "z": 2,
+    "top": "auto",
+    "right": "auto",
+    "width": "auto",
+    "height": "auto"
+  },
   "xAxis": [{
       "show": true,
       "type": "category",
@@ -294,7 +314,7 @@
     }
   ]
 }
-        chart_96569805158996.setOption(option);
+        chart_32668111455685.setOption(option);
     </script>
   </body>
 </html>

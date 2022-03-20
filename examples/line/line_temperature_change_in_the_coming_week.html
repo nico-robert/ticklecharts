@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_96569931669957" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_35089529867191" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_96569931668892 = echarts.init(document.getElementById('id_96569931669957'), null, {renderer: 'canvas'});
+        var chart_35089529865391 = echarts.init(document.getElementById('id_35089529867191'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -87,6 +87,59 @@
       "padding": 5,
       "order": "seriesAsc"
     }],
+  "toolbox": {
+    "show": true,
+    "orient": "horizontal",
+    "itemSize": 15,
+    "itemGap": 10,
+    "showTitle": true,
+    "feature": {
+      "dataZoom": {
+        "show": true,
+        "filterMode": "filter",
+        "yAxisIndex": "none"
+      },
+      "dataView": {
+        "show": true,
+        "title": "Data view",
+        "readOnly": false,
+        "lang": [
+          "Data view",
+          "Turn off",
+          "Refresh"
+        ],
+        "backgroundColor": "#fff",
+        "textareaColor": "#fff",
+        "textareaBorderColor": "#000",
+        "buttonColor": "#c23531",
+        "buttonTextColor": "#fff"
+      },
+      "magicType": {
+        "show": true,
+        "type": [
+          "line",
+          "bar"
+        ]
+      },
+      "restore": {
+        "show": true,
+        "title": "Restore"
+      },
+      "saveAsImage": {
+        "type": "png",
+        "backgroundColor": "transparent",
+        "connectedBackgroundColor": "#fff",
+        "show": true,
+        "title": "Save as image",
+        "pixelRatio": 1
+      }
+    },
+    "z": 2,
+    "top": "auto",
+    "right": "auto",
+    "width": "auto",
+    "height": "auto"
+  },
   "xAxis": [{
       "show": true,
       "type": "category",
@@ -135,7 +188,7 @@
       "triggerEvent": false,
       "axisLabel": {
         "show": true,
-        "interval": 0,
+        "interval": "auto",
         "inside": false,
         "rotate": 0,
         "margin": 8,
@@ -322,7 +375,7 @@
     }
   ]
 }
-        chart_96569931668892.setOption(option);
+        chart_35089529865391.setOption(option);
     </script>
   </body>
 </html>
