@@ -91,8 +91,7 @@ oo::define ticklecharts::chart {
         foreach {key opts} $_options {
             if {[string match {*series} $key]} {
                 if {[incr i] == $index} {
-                    set k 1
-                    break
+                    set k 1 ; break
                 }
             }
             incr j 2
@@ -431,12 +430,13 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         # 
-        # -title     - title options  (https://echarts.apache.org/en/option.html#title)
-        # -polar     - polar options  (https://echarts.apache.org/en/option.html#polar)
-        # -legend    - legend options (https://echarts.apache.org/en/option.html#legend)
-        # -tooltip   - polar options  (https://echarts.apache.org/en/option.html#tooltip)
-        # -grid      - grid options   (https://echarts.apache.org/en/option.html#grid)
-        # -visualMap - grid options   (https://echarts.apache.org/en/option.html#visualMap)
+        # -title     - title options     https://echarts.apache.org/en/option.html#title
+        # -polar     - polar options     https://echarts.apache.org/en/option.html#polar
+        # -legend    - legend options    https://echarts.apache.org/en/option.html#legend
+        # -tooltip   - polar options     https://echarts.apache.org/en/option.html#tooltip
+        # -grid      - grid options      https://echarts.apache.org/en/option.html#grid
+        # -visualMap - visualMap options https://echarts.apache.org/en/option.html#visualMap
+        # -toolbox   - toolbox options   https://echarts.apache.org/en/option.html#toolbox
         #
         # Returns nothing    
         set opts {}
@@ -464,6 +464,10 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -visualMap]} {
             lappend opts "@D=visualMap" [ticklecharts::visualMap $args]
         }
+
+        if {[dict exists $args -toolbox]} {
+            lappend opts "@L=toolbox" [ticklecharts::toolbox $args]
+        }
         
         foreach {key value} $opts {
             set f [ticklecharts::OptsToEchartsHuddle $value]
@@ -471,9 +475,14 @@ oo::define ticklecharts::chart {
         }
 
     }
+
+    # To keep the same logic of naming methods for ticklecharts 
+    # the first letter in capital letter...
+    forward Render my render
+
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic
+    export AddHeatmapSeries AddGraphic Render
     export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
