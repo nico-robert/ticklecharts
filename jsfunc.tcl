@@ -5,21 +5,20 @@ namespace eval ticklecharts {}
 
 oo::class create ticklecharts::jsfunc {
     variable _jsfunc
-    variable _type
 
     constructor {args} {
         # Initializes a new jsfunc Class.
-        # Add comma at the end if not present.
         #
-        # args - Options described below.
+        # args - javascript function.
         #
         # javascript function
         #
-        set _type "jsfunc"
         set jsf [string trim [join $args]]
 
-        if {[string range $jsf end end] ne ","} {
-            set jsf [string cat $jsf ","]
+        # delete comma at the end if exists...
+        # since I added jsfunc as huddle type 
+        if {[string range $jsf end end] eq ","} {
+            set jsf [string range $jsf 0 end-1]
         }
 
         set _jsfunc [list $jsf]
@@ -35,7 +34,7 @@ oo::define ticklecharts::jsfunc {
     
     method gettype {} {
         # Returns type
-        return $_type
+        return "jsfunc"
     }
 
 }
