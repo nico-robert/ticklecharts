@@ -1,8 +1,6 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
 
-puts [file dirname [file dirname [file normalize [info script]]]]
-
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
