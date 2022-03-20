@@ -94,7 +94,7 @@ oo::define ticklecharts::Gridlayout {
 
         incr _indexchart
         set g 0
-        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar radar legend tooltip visualMap}
+        set layoutkeys {series radiusAxis angleAxis xAxis yAxis grid title polar radar legend tooltip visualMap toolbox}
 
         foreach {key opts} [$chart options] {
 
@@ -334,7 +334,11 @@ oo::define ticklecharts::Gridlayout {
         return $outputfile
 
     }
+    # To keep the same logic of naming methods for ticklecharts 
+    # the first letter in capital letter...
+    forward Render my render
+
     # export method
-    export Add
+    export Add Render
     
 }
