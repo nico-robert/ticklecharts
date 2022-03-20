@@ -372,7 +372,7 @@ Release :
 *  **20-03-2022** : 1.5.2
     - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
     - Update chart examples to include toolbox utility.
-    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require http, tls, json packages from tclib)
+    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require http, tls, json packages from tcllib)
     - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
