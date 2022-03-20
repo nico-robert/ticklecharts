@@ -224,21 +224,21 @@ proc ticklecharts::DictToEchartsHuddle {options} {
     dict for {subkey subinfo} $options {
         lassign $subinfo svalue type
         
-        set newtype [ticklecharts::HuddleType $type]
+        set htype [ticklecharts::HuddleType $type]
        
         switch -exact -- $type {
             "dict" {
-                append opts [format " ${newtype}=$subkey %s" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
+                append opts [format " ${htype}=$subkey %s" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
             }
             "dict.o" {
-                append opts [format " ${newtype}=$subkey {%s}" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
+                append opts [format " ${htype}=$subkey {%s}" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
             }
             "list.s" {
-                append opts [format " ${newtype}=$subkey {%s}" $svalue]
+                append opts [format " ${htype}=$subkey {%s}" $svalue]
             }
             "list.d" -
             "list.n" {
-                append opts [format " ${newtype}=$subkey {{%s}}" $svalue]
+                append opts [format " ${htype}=$subkey {{%s}}" $svalue]
             }
             "list.o" {
                 set l {}
@@ -254,10 +254,10 @@ proc ticklecharts::DictToEchartsHuddle {options} {
                     
                     lappend l [ticklecharts::DictToEchartsHuddle $val]
                 }
-                append opts [format " ${newtype}=$subkey {%s}" [list @AO $l]]
+                append opts [format " ${htype}=$subkey {%s}" [list @AO $l]]
             }
             default {
-                append opts [format " ${newtype}=$subkey %s" $svalue]
+                append opts [format " ${htype}=$subkey %s" $svalue]
             }
         }
         
