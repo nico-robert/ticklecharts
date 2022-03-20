@@ -27,6 +27,14 @@
 # 06-03-2022 : v1.5.1
                # Add graphic (rect, circle, arc, line, text...)
                # Add graphic examples.
+# 20-03-2022 : v1.5.2
+               # Add toolbox option (A group of utility tools... Save as image, Zoom, Data view...)
+               # Update chart examples to include toolbox utility.
+               # Add examples with json data from apache echarts-examples (require http, tls, json packages from tclib)
+               # Add 'jsfunc' as huddle type, instead of using a 'string map' and 'dictionary' combination.
+               # Patch for huddle.tcl (v0.3) 'proc ::huddle::jsondump'.
+               # Add 'Render' method to keep the same logic of naming methods for ticklecharts,
+               # the first letter in capital letter... Note : 'render' method is still active.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -45,7 +53,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.5.1
+    variable version 1.5.2
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1

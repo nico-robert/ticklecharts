@@ -19,11 +19,11 @@ $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 $chart Yaxis
 $chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
 
-$chart render
+$chart Render
 ```
 ![Basic line chart](images/line_basic_chart.png)
 ```tcl
-# Initializes a new Chart Class
+# Initializes a new 2D Chart Class
 set chart [ticklecharts::chart new]
 ```
 ##### :heavy_check_mark: Arguments available :
@@ -55,7 +55,7 @@ Here `-data` corresponds to the Y values. (:warning: `-data` option should be a 
 
 ```tcl
 # Export chart to html
-$chart render
+$chart Render
 ```
 ##### :heavy_check_mark: Arguments available :
 | args | Description
@@ -72,7 +72,7 @@ $chart render
 
 ```tcl
 # Demo
-$chart render -width "1200px" -height "800px" -render "svg"
+$chart Render -width "1200px" -height "800px" -render "svg"
 ```
 Data :
 -------------------------
@@ -221,7 +221,7 @@ set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
 # Save to html...
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ```
 ![line and bar mixed](images/line_and_bar_mixed.png)
 
@@ -280,7 +280,7 @@ $layout Add $pie  -center [list {75% 50%}]
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] \
+$layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1700px \
                -height 1000px
@@ -302,7 +302,7 @@ $layout render -outfile [file join $dirname $fbasename.html] \
 - [x] visualMap
 - [x] tooltip
 - [ ] axisPointer
-- [ ] toolbox
+- [x] toolbox
 - [ ] brush
 - [ ] geo
 - [ ] parallel
@@ -369,3 +369,11 @@ Release :
 *  **06-03-2022** : 1.5.1
     - Add graphic (rect, circle, arc, line, text...)
     - Add graphic examples.
+*  **20-03-2022** : 1.5.2
+    - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
+    - Update chart examples to include toolbox utility.
+    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require http, tls, json packages from tclib)
+    - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
+    - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
+    - Add `Render` method to keep the same logic of naming methods for ticklecharts,
+    the first letter in capital letter... Note : `render` method is still active.
