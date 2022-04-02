@@ -2,7 +2,7 @@
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
-    namespace export setdef merge Type InfoNameProc
+    namespace export setdef merge Type InfoNameProc EchartsOptsTheme
 }
 
 proc ticklecharts::htmlmap {htmloptions} {
@@ -278,11 +278,16 @@ proc ticklecharts::setdef {d key args} {
 
     upvar 1 $d dictionary
 
-    if {([lindex $args 0] ne "-type") && ([lindex $args 2] ne "-default")} {
-        error "bad args..."
+    foreach {k value} $args {
+        switch -exact -- $k {
+            "-validvalue" {set validvalue $value}
+            "-type"       {set type       $value}
+            "-default"    {set default    $value}
+            default       {error "Unknown key '$k' specified"}
+            }
     }
 
-    dict set dictionary $key [lindex $args 3] [lindex $args 1]
+    dict set dictionary $key [list $default $type $validvalue]
 }
 
 proc ticklecharts::MatchType {mytype type keyt} {
@@ -318,8 +323,7 @@ proc ticklecharts::merge {d other} {
     set mydict [dict create]
     
     dict for {key info} $d {
-   
-        lassign $info value type
+        lassign $info value type validvalue
         
         # force string value for this key below
         # if value is boolean or double...
@@ -345,6 +349,9 @@ proc ticklecharts::merge {d other} {
                 dict set mydict $key $value $typekey
             } else {
                 set value [dict get $other $key]
+                
+                # Verification of certain values (especially for string types)
+                formatEcharts $validvalue $value $key
 
                 if {$typekey eq "str"} {
                     set value [ticklecharts::MapSpaceString $value]
@@ -433,4 +440,14 @@ proc ticklecharts::InfoNameProc {level name} {
     lassign [info level $level] infonameproc
 
     return [string match *$name $infonameproc]
+}
+
+proc ticklecharts::EchartsOptsTheme {name} {
+    # Gets default theme value
+    #
+    # name   - name theme option
+    #
+    # Returns value.
+
+    return [dict get $::ticklecharts::opts_theme $name]
 }
