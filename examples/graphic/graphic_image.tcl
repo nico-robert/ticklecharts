@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'gray' string color by 'rgb' gray match
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -26,7 +29,7 @@ $chart AddGraphic -elements {
                                 type text right 220 bottom 120 z 100
                                 style {
                                     overflow "break"
-                                    fill gray
+                                    fill "rgb(128,128,128)"
                                     text "+"
                                     fontSize 75
                                     }

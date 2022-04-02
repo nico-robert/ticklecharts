@@ -1,5 +1,7 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'center' by 'middle' for label verticalAlign flag
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -42,7 +44,7 @@ $chart AddLineSeries -name "Search Engine" \
                 -areaStyle {} \
                 -stack "Total" \
                 -emphasis {focus "series"} \
-                -label {show "True" position "top" verticalAlign "center" align "center" color "nothing"}
+                -label {show "True" position "top" verticalAlign "middle" align "center" color "nothing"}
 
 
 set fbasename [file rootname [file tail [info script]]]

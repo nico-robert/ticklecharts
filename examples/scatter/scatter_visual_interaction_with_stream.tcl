@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'center' by 'middle' for visualMap top flag
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -23,7 +26,7 @@ try {
                     -grid {left "5%" right "15%" bottom "10%"} \
                     -visualMap [list \
                                 type continuous min 15202 max 159980 \
-                                dimension 1 orient vertical right 10 top center \
+                                dimension 1 orient vertical right 10 top middle \
                                 text [list {HIGH LOW}] calculable true \
                                 inRange [list color [list {#f2c31a #24b7f2}]] \
                     ]

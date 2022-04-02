@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'center' by 'middle' for visualMap top flag
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -148,7 +151,7 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip {position top} \
                   -visualMap [list type "piecewise" calculable true \
                                    realtime false \
-                                   min 0 max 1 left right top center splitNumber 8 inRange [list color [list {#313695 #4575b4 #74add1 #abd9e9
+                                   min 0 max 1 left right top middle splitNumber 8 inRange [list color [list {#313695 #4575b4 #74add1 #abd9e9
                                                                           #e0f3f8 #ffffbf
                                                                           #fee090 #fdae61
                                                                           #f46d43 #f46d43

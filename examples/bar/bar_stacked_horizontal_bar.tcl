@@ -1,5 +1,6 @@
 # v1.0 : Initial example
 # v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Replace 'center' by 'middle' for toolbox top position
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
@@ -12,7 +13,7 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip [list show True trigger "axis" axisPointer {type "shadow"}] \
                   -legend {} \
                   -grid {left "3%" right "4%" bottom "3%" containLabel "True"} \
-                  -toolbox [list orient vertical left right top center \
+                  -toolbox [list orient vertical left right top middle \
                             feature [list \
                             dataView {readOnly false} magicType [list type [list {line bar stack}]] \
                             restore {} saveAsImage {}] \

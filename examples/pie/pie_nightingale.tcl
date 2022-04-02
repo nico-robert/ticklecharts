@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Typo 'aera' should be 'area'...
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -29,7 +32,7 @@ $pie AddPieSeries -name "Radius Mode" -radius [list {20 140}] -center [list {25%
                       }
 
 $pie AddPieSeries -name "Area Mode" -radius [list {20 140}] -center [list {75% 50%}] \
-                  -roseType "aera" \
+                  -roseType "area" \
                   -itemStyle {borderRadius 5} \
                   -datapieitem {
                       {value 30 name "rose 1"}

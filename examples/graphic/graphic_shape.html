@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_907639338618012" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_156907343758831" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_907639338615123 = echarts.init(document.getElementById('id_907639338618012'), null, {renderer: 'canvas'});
+        var chart_156907343757507 = echarts.init(document.getElementById('id_156907343758831'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -51,7 +51,7 @@
         "draggable": false,
         "progressive": false,
         "shape": {"r": 80},
-        "style": {"fill": "gray"},
+        "style": {"fill": "rgb(128,128,128)"},
         "focus": "none",
         "blurScope": "coordinateSystem"
       },
@@ -81,7 +81,7 @@
           "endAngle": 3.14,
           "clockwise": true
         },
-        "style": {"fill": "blue"},
+        "style": {"fill": "rgb(0,0,255)"},
         "focus": "none",
         "blurScope": "coordinateSystem"
       },
@@ -141,7 +141,7 @@
           "percent": 1
         },
         "style": {
-          "stroke": "red",
+          "stroke": "rgb(255,0,0)",
           "lineWidth": 3
         },
         "focus": "none",
@@ -179,7 +179,7 @@
           "percent": 1
         },
         "style": {
-          "stroke": "magenta",
+          "stroke": "rgb(255,0,255)",
           "lineWidth": 3
         },
         "focus": "none",
@@ -212,8 +212,8 @@
           "r0": 40
         },
         "style": {
-          "fill": "yellow",
-          "stroke": "green",
+          "fill": "rgb(255,255,0)",
+          "stroke": "rgb(0,128,0)",
           "lineWidth": 3
         },
         "focus": "none",
@@ -257,7 +257,7 @@
               300
             ]
           ]},
-        "style": {"fill": "green"},
+        "style": {"fill": "rgb(0,128,0)"},
         "focus": "none",
         "blurScope": "coordinateSystem"
       }
@@ -292,7 +292,7 @@
   "yAxis": [{
       "show": true,
       "gridIndex": 0,
-      "position": "bottom",
+      "position": "left",
       "offset": 0,
       "realtimeSort": true,
       "sortSeriesIndex": 0,
@@ -311,7 +311,7 @@
       "z": 0
     }]
 }
-        chart_907639338615123.setOption(option);
+        chart_156907343757507.setOption(option);
     </script>
   </body>
 </html>

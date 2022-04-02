@@ -3,6 +3,9 @@
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'center' by 'middle' for elements top flag
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -10,7 +13,7 @@ set chart [ticklecharts::chart new]
 
 $chart AddGraphic -elements [list \
                                 [list \
-                                    type "text" left "center" top "center" \
+                                    type "text" left "center" top "middle" \
                                     style [list \
                                                 text "Apache ECharts" fontSize 80 \
                                                 fontWeight "bold" lineDash [list {0 200}] \

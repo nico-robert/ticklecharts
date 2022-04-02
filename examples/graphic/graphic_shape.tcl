@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'color' string color by 'rgb' color match
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -12,7 +15,7 @@ $chart AddGraphic -elements [list \
                                     r 80
                                 }
                                 style {
-                                    fill "gray"
+                                    fill "rgb(128,128,128)"
                                 }
                             } \
                             {
@@ -22,7 +25,7 @@ $chart AddGraphic -elements [list \
                                     endAngle 3.14
                                 }
                                 style {
-                                    fill "blue"
+                                    fill "rgb(0,0,255)"
                                 }
                             } \
                             {
@@ -33,17 +36,17 @@ $chart AddGraphic -elements [list \
                             {
                                 type line right 100 bottom 100 z 100
                                 shape {x1 0 y1 0 x2 0 y2 300}
-                                style {stroke "red" lineWidth 3}
+                                style {stroke "rgb(255,0,0)" lineWidth 3}
                             } \
                             {
                                 type bezierCurve right 150 bottom 100 z 100
                                 shape {x1 0 y1 0 x2 0 y2 300 cpx1 10 cpx2 30 cpy1 50 cpy2 100}
-                                style {stroke "magenta" lineWidth 3}
+                                style {stroke "rgb(255,0,255)" lineWidth 3}
                             } \
                             {
                                 type ring left 100 bottom 300 z 100
                                 shape {cx 50 cy 100 r 50 r0 40}
-                                style {stroke "green" fill "yellow" lineWidth 3}
+                                style {stroke "rgb(0,128,0)" fill "rgb(255,255,0)" lineWidth 3}
                             } \
                             [list \
                                 type polyline bounding "raw" z 100 right 400 bottom 200 \
@@ -51,7 +54,7 @@ $chart AddGraphic -elements [list \
                                     points [list {200 90} {50 60} {80 100} {60 300}] \
                                 ] \
                                 style {
-                                    fill "green"
+                                    fill "rgb(0,128,0)"
                                 }
                             ] \
                             ]

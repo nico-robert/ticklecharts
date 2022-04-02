@@ -1,5 +1,7 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'center' by 'middle' for children top flag
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -27,12 +29,12 @@ $chart AddGraphic -elements {
                             {
                                 type group rotation 0.785398163397448 bounding "raw" right 110 bottom 110 z 100
                                 children {
-                                            {type rect left center top center z 100 shape {width 400 height 50} style {fill "rgba(0,0,0,0.3)"}}
-                                            {type text left center top center z 100 style {fill "#fff" text "ECHARTS LINE CHART" font "bold 26px sans-serif"}}
+                                            {type rect left center top middle z 100 shape {width 400 height 50} style {fill "rgba(0,0,0,0.3)"}}
+                                            {type text left center top middle z 100 style {fill "#fff" text "ECHARTS LINE CHART" font "bold 26px sans-serif"}}
                                         }
                             }
                             {
-                                type group left 10% top center
+                                type group left 10% top middle
                                 children {
                                             {
                                                 type rect z 100 left center top middle
