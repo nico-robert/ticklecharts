@@ -22,7 +22,6 @@ oo::class create ticklecharts::jsfunc {
         }
 
         set _jsfunc [list $jsf]
-
     }
 }
 

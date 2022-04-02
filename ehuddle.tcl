@@ -418,7 +418,6 @@ oo::define ticklecharts::ehuddle {
 
     method toJSON {} {
         # Transform huddle to JSON
-        # map javascript dict in JSON
         # replace special chars by space... etc.
         # 
         # Returns JSON
