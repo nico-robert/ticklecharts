@@ -35,6 +35,9 @@
                # Patch for huddle.tcl (v0.3) 'proc ::huddle::jsondump'.
                # Add 'Render' method to keep the same logic of naming methods for ticklecharts,
                # the first letter in capital letter... Note : 'render' method is still active.
+# 02-04-2022 : v1.5.3
+               # Add '-validvalue' flag to respect the values by default according to the Echarts documentation (especially for string types) 
+               # Update examples to reflect the changes.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -44,6 +47,7 @@ set dir [file dirname [file normalize [info script]]]
 source [file join $dir utils.tcl]
 source [file join $dir chart.tcl]
 source [file join $dir ehuddle.tcl]
+source [file join $dir eformat.tcl]
 source [file join $dir jsfunc.tcl]
 source [file join $dir layout.tcl]
 source [file join $dir global_options.tcl]
@@ -53,16 +57,19 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.5.2
+    variable version 1.5.3
+    variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1
     variable opts_theme ""
     variable htmltemplate [file join $dir html template.html]
-    variable script "https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"
+    variable script "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
 
 }
 
-namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type ticklecharts::InfoNameProc
+namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type 
+namespace import ticklecharts::InfoNameProc ticklecharts::formatEcharts
+namespace import ticklecharts::EchartsOptsTheme
 
 package provide ticklecharts $::ticklecharts::version

@@ -106,32 +106,32 @@ Useful methods :
 # get all options for title...
 $chart getoptions -title
 # output :
- id                -type str|null   -default "nothing"
- show              -type bool       -default "True"
- text              -type str|null   -default "nothing"
- link              -type str|null   -default "nothing"
- target            -type str        -default "blank"
- textStyle         -type dict|null
-   color                -type str|null       -default $color
-   fontStyle            -type str            -default "normal"
-   fontWeight           -type str|num        -default $fontWeight
-   fontFamily           -type str            -default "sans-serif"
-   fontSize             -type num            -default $fontSize
-   lineHeight           -type num|null       -default "nothing"
-   width                -type num            -default 100
-   height               -type num            -default 50
-   textBorderColor      -type str|null       -default "null"
-   textBorderWidth      -type num            -default 0
-   textBorderType       -type str|num|list.n -default "solid"
-   textBorderDashOffset -type num            -default 0
-   textShadowColor      -type str            -default "transparent"
-   textShadowBlur       -type num            -default 0
-   textShadowOffsetX    -type num            -default 0
-   textShadowOffsetY    -type num            -default 0
-   overflow             -type str|null       -default "null"
-   ellipsis             -type str            -default "..."
- subtext           -type str|null   -default "nothing"
- sublink           -type str|null   -default "nothing"
+id                -validvalue {}                      -type str|null   -default "nothing"
+show              -validvalue {}                      -type bool       -default "True"
+text              -validvalue {}                      -type str|null   -default "nothing"
+link              -validvalue {}                      -type str|null   -default "nothing"
+target            -validvalue formatTarget            -type str        -default "blank"
+textStyle         -validvalue {}                      -type dict|null
+  color                -validvalue formatColor          -type str|null       -default $color
+  fontStyle            -validvalue formatFontStyle      -type str            -default "normal"
+  fontWeight           -validvalue formatFontWeight     -type str|num        -default $fontWeight
+  fontFamily           -validvalue {}                   -type str            -default "sans-serif"
+  fontSize             -validvalue {}                   -type num            -default $fontSize
+  lineHeight           -validvalue {}                   -type num|null       -default "nothing"
+  width                -validvalue {}                   -type num            -default 100
+  height               -validvalue {}                   -type num            -default 50
+  textBorderColor      -validvalue {}                   -type str|null       -default "null"
+  textBorderWidth      -validvalue {}                   -type num            -default 0
+  textBorderType       -validvalue formatTextBorderType -type str|num|list.n -default "solid"
+  textBorderDashOffset -validvalue {}                   -type num            -default 0
+  textShadowColor      -validvalue formatColor          -type str            -default "transparent"
+  textShadowBlur       -validvalue {}                   -type num            -default 0
+  textShadowOffsetX    -validvalue {}                   -type num            -default 0
+  textShadowOffsetY    -validvalue {}                   -type num            -default 0
+  overflow             -validvalue formatOverflow       -type str|null       -default "null"
+  ellipsis             -validvalue {}                   -type str            -default "..."
+subtext           -validvalue {}                      -type str|null   -default "nothing"
+sublink           -validvalue {}                      -type str|null   -default "nothing"
  ...
  ...
 # following options voluntarily deleted... 
@@ -162,17 +162,18 @@ set js [ticklecharts::jsfunc new {function (value, index) {
 
 $chart Xaxis -axisLabel [list show "True" \
                               margin 8 \
-                              formatter $js\
+                              formatter $js \
                               showMinLabel "null" \
                               ... ]
 
 # json result :
 "axisLabel": {
+  "show": true,
   "margin": 8,
   "formatter": function (value, index) {
                           return value + ' (C°)';
                           },
-  "showMinLabel": null
+  "showMinLabel": null,
   ...
 }
 ```
@@ -359,7 +360,7 @@ Release :
 *  **22-02-2022** : 1.4
     - Add scatter + effectScatter chart.
     - Add scatter examples + line step example.
-    - Add ::ticklecharts::htmlstdout variable to control _stdout_
+    - Add `::ticklecharts::htmlstdout` variable to control _stdout_
 	  for render html output.
 *  **28-02-2022** : 1.5
     - Add heatmap chart.
@@ -377,3 +378,6 @@ Release :
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
     the first letter in capital letter... Note : `render` method is still active.
+*  **02-04-2022** : 1.5.3
+    - Add `-validvalue` flag to respect the values by default according to the Echarts documentation (especially for string types).
+    - Update examples to reflect the changes.
