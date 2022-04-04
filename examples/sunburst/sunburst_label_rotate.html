@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>sunburst_label_rotate</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_199502540031548" class="chart-container" style="width:900px; height:800px;"></div>
+    <script>
+        var chart_199502540029415 = echarts.init(document.getElementById('id_199502540031548'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "series": [{
+      "type": "sunburst",
+      "name": "sunburstseries_1",
+      "zlevel": 0,
+      "z": 2,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": [
+        "15%",
+        "80%"
+      ],
+      "data": [
+        {
+          "value": 8,
+          "children": [
+            {
+              "value": 4,
+              "children": [
+                {"value": 2},
+                {"value": 1},
+                {"value": 1},
+                {"value": 0.5}
+              ]
+            },
+            {"value": 2}
+          ]
+        },
+        {
+          "value": 4,
+          "children": [{"children": [{"value": 2}]}]
+        },
+        {
+          "value": 4,
+          "children": [{"children": [{"value": 2}]}]
+        },
+        {
+          "value": 3,
+          "children": [{"children": [{"value": 1}]}]
+        }
+      ],
+      "label": {
+        "show": true,
+        "position": "inside",
+        "distance": 5,
+        "rotate": "radial",
+        "formatter": function (param) {
+                                var depth = param.treePathInfo.length;
+                                if (depth === 2) {
+                                return 'radial';
+                                } else if (depth === 3) {
+                                return 'tangential';
+                                } else if (depth === 4) {
+                                return '0';
+                                }
+                                return '';
+                             },
+        "color": "#000",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "align": "center",
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": "#fff",
+        "textBorderWidth": 2,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "nodeClick": "rootToNode",
+      "sort": null,
+      "emphasis": {
+        "scale": true,
+        "focus": "ancestor",
+        "blurScope": "coordinateSystem"
+      },
+      "levels": [
+        {
+          
+        },
+        {
+          "label": {
+            "show": true,
+            "position": "inside",
+            "distance": 5,
+            "rotate": "radial",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "fontSize": 12,
+            "align": "center",
+            "lineHeight": 12,
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderRadius": 0,
+            "shadowColor": "transparent",
+            "shadowBlur": 0,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "textBorderColor": null,
+            "textBorderWidth": 0,
+            "textBorderType": "solid",
+            "textBorderDashOffset": 0,
+            "textShadowColor": "transparent",
+            "textShadowBlur": 0,
+            "textShadowOffsetX": 0,
+            "textShadowOffsetY": 0,
+            "overflow": "truncate",
+            "ellipsis": "..."
+          },
+          "itemStyle": {
+            "color": "#CD4949",
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderCap": "butt",
+            "borderJoin": "bevel",
+            "borderMiterLimit": 10,
+            "opacity": 1
+          }
+        },
+        {
+          "label": {
+            "show": true,
+            "position": "inside",
+            "distance": 5,
+            "rotate": "tangential",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "fontSize": 12,
+            "align": "center",
+            "lineHeight": 12,
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderRadius": 0,
+            "shadowColor": "transparent",
+            "shadowBlur": 0,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "textBorderColor": null,
+            "textBorderWidth": 0,
+            "textBorderType": "solid",
+            "textBorderDashOffset": 0,
+            "textShadowColor": "transparent",
+            "textShadowBlur": 0,
+            "textShadowOffsetX": 0,
+            "textShadowOffsetY": 0,
+            "overflow": "truncate",
+            "ellipsis": "..."
+          },
+          "itemStyle": {
+            "color": "#F47251",
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderCap": "butt",
+            "borderJoin": "bevel",
+            "borderMiterLimit": 10,
+            "opacity": 1
+          }
+        },
+        {
+          "label": {
+            "show": true,
+            "position": "inside",
+            "distance": 5,
+            "rotate": 0,
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "fontSize": 12,
+            "align": "center",
+            "lineHeight": 12,
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderRadius": 0,
+            "shadowColor": "transparent",
+            "shadowBlur": 0,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "textBorderColor": null,
+            "textBorderWidth": 0,
+            "textBorderType": "solid",
+            "textBorderDashOffset": 0,
+            "textShadowColor": "transparent",
+            "textShadowBlur": 0,
+            "textShadowOffsetX": 0,
+            "textShadowOffsetY": 0,
+            "overflow": "truncate",
+            "ellipsis": "..."
+          },
+          "itemStyle": {
+            "color": "#FFC75F",
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderCap": "butt",
+            "borderJoin": "bevel",
+            "borderMiterLimit": 10,
+            "opacity": 1
+          }
+        }
+      ],
+      "animation": true
+    }]
+}
+        chart_199502540029415.setOption(option);
+    </script>
+  </body>
+</html>
