@@ -381,7 +381,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatSelectedMode {
             # possible values...
             if {[Type $value] eq "str"} {
-                lassign [split $::ticklecharts::echarts_version "."] major minor release
+                lassign [split $::ticklecharts::echarts_version "."] major minor patch
                 if {[format {%s.%s} $major $minor] >= 5.3} {
                     set validvalue {multiple single series}
                 } else {
@@ -487,7 +487,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatSort {
             # possible values...
             if {[Type $value] eq "str"} {
-                set validvalue {descending ascending none}
+                set validvalue {descending ascending none desc asc}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
@@ -514,6 +514,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
                 if {[InfoNameProc 2 "barseries"]} {
                     append validvalue " start insideStart middle insideEnd end"
+                }
+
+                if {[InfoNameProc 2 "sunburstseries"]} {
+                    append validvalue " outside"
                 }
 
                 if {[InfoNameProc 2 "pieseries"]} {
@@ -590,7 +594,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatYAxisPosition {
             # possible values...
-            set validvalue {top bottom}
+            set validvalue {left right}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -631,7 +635,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     
         formatFocus {
             # possible values...
-            set validvalue {none self series}
+            set validvalue {none self series ancestor descendant}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -742,6 +746,31 @@ proc ticklecharts::formatEcharts {formattype value key} {
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
+            }
+        }
+
+        formatNodeClick {
+            # possible values...
+            set validvalue {rootToNode link}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatRotate {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {radial tangential}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            } elseif {[Type $value] eq "num"} {
+                if {![expr {$value >= -90 && $value <= 90}]} {
+                    error "'$value' should be between '-90' and '90' \
+                            for this key '$key' in $nameproc"
+                }
             }
         }
 
