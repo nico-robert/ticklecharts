@@ -200,9 +200,9 @@ $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
 # special char '<0123>' to replace this '{' and '<0125>' to replace this '}'
 # or 
 # ticklecharts::jsfunc...
-$chart Yaxis -name "Precipitation" -min 0 -max 250 -interval 50 \
+$chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50 \
                                    -axisLabel {formatter "<0123>value<0125> ml"}
-$chart Yaxis -name "Temperature"   -min 0 -max 25  -interval 5 \
+$chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5 \
                                    -axisLabel {formatter "<0123>value<0125> °C"}
 
 # Add bars...
@@ -323,7 +323,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] radar
 - [ ] tree
 - [ ] treemap
-- [ ] sunburst
+- [x] sunburst
 - [ ] boxplot
 - [ ] candlestick
 - [x] heatmap
@@ -373,7 +373,7 @@ Release :
 *  **20-03-2022** : 1.5.2
     - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
     - Update chart examples to include toolbox utility.
-    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require http, tls, json packages from tcllib)
+    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `tls`, `json` packages from Tcllib)
     - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
@@ -381,3 +381,6 @@ Release :
 *  **02-04-2022** : 1.5.3
     - Add `-validvalue` flag to respect the values by default according to the Echarts documentation (especially for string types).
     - Update examples to reflect the changes.
+*  **06-03-2022** : 1.6
+    - Add `sunburst` chart.
+    - Add `sunburst` examples + correction `line` chart label position example.

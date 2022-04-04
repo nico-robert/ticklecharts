@@ -38,6 +38,9 @@
 # 02-04-2022 : v1.5.3
                # Add '-validvalue' flag to respect the values by default according to the Echarts documentation (especially for string types) 
                # Update examples to reflect the changes.
+# 06-03-2022 : v1.6
+               # Add sunburst chart.
+               # Add sunburst examples + correction line chart label position example.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -57,12 +60,12 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.5.3
+    variable version 1.6
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1
-    variable opts_theme ""
+    variable opts_theme {}
     variable htmltemplate [file join $dir html template.html]
     variable script "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
 
