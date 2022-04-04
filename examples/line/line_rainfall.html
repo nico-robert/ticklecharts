@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_128349764831528" class="chart-container" style="width:1900px; height:1000px;"></div>
+    <div id="id_165134041112073" class="chart-container" style="width:1900px; height:1000px;"></div>
     <script>
-        var chart_128349764830149 = echarts.init(document.getElementById('id_128349764831528'), null, {renderer: 'canvas'});
+        var chart_165134041110401 = echarts.init(document.getElementById('id_165134041112073'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -85,7 +85,6 @@
         "axis": "auto",
         "label": {
           "show": true,
-          "rotate": 0,
           "fontStyle": "normal",
           "fontWeight": "normal",
           "fontFamily": "sans-serif",
@@ -93,9 +92,6 @@
           "lineHeight": 12,
           "backgroundColor": "#505765",
           "borderWidth": 0,
-          "borderType": "solid",
-          "borderDashOffset": 0,
-          "borderRadius": 2,
           "shadowColor": "transparent",
           "shadowBlur": 0,
           "shadowOffsetX": 0,
@@ -109,7 +105,9 @@
           "textShadowOffsetX": 0,
           "textShadowOffsetY": 0,
           "overflow": "truncate",
-          "ellipsis": "..."
+          "ellipsis": "...",
+          "precision": "auto",
+          "margin": 3
         },
         "animation": false,
         "animationThreshold": 2000,
@@ -3235,7 +3233,7 @@
     {
       "show": true,
       "gridIndex": 0,
-      "position": "bottom",
+      "position": "left",
       "offset": 0,
       "realtimeSort": true,
       "sortSeriesIndex": 0,
@@ -3258,7 +3256,7 @@
       "show": true,
       "gridIndex": 0,
       "alignTicks": true,
-      "position": "bottom",
+      "position": "right",
       "offset": 0,
       "realtimeSort": true,
       "sortSeriesIndex": 0,
@@ -6406,7 +6404,6 @@
         "silent": true,
         "itemStyle": {
           "borderColor": "rgb(0, 0, 0)",
-          "borderWidth": 0,
           "borderType": "solid",
           "borderDashOffset": 0,
           "borderCap": "butt",
@@ -9557,7 +9554,6 @@
         "silent": true,
         "itemStyle": {
           "borderColor": "rgb(0, 0, 0)",
-          "borderWidth": 0,
           "borderType": "solid",
           "borderDashOffset": 0,
           "borderCap": "butt",
@@ -9582,7 +9578,7 @@
     }
   ]
 }
-        chart_128349764830149.setOption(option);
+        chart_165134041110401.setOption(option);
     </script>
   </body>
 </html>

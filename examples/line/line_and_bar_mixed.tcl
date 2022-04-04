@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : change position label right for second Yaxis (default left) 
+#       + rename 'render' to 'Render' (Note : The first letter in capital letter)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -14,8 +17,8 @@ $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
              
              
-$chart Yaxis -name "Precipitation" -min 0 -max 250 -interval 50 -axisLabel {formatter "<0123>value<0125> ml"}
-$chart Yaxis -name "Temperature"   -min 0 -max 25  -interval 5  -axisLabel {formatter "<0123>value<0125> °C"}
+$chart Yaxis -name "Precipitation" -position "left"  -min 0 -max 250 -interval 50 -axisLabel {formatter "<0123>value<0125> ml"}
+$chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5  -axisLabel {formatter "<0123>value<0125> °C"}
 
 
 $chart AddBarSeries -name "Evaporation" \
