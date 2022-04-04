@@ -243,6 +243,7 @@ proc ticklecharts::pieseries {index value} {
     set value [dict remove $value -label \
                                   -labelLine \
                                   -markPoint \
+                                  -data \
                                   -markLine -markArea \
                                   -emptyCircleStyle \
                                   -labelLayout -itemStyle \
@@ -320,6 +321,7 @@ proc ticklecharts::funnelseries {index value} {
 
     set value [dict remove $value -label \
                                   -labelLine \
+                                  -data \
                                   -markPoint \
                                   -markLine -markArea \
                                   -labelLayout -itemStyle \
@@ -380,6 +382,7 @@ proc ticklecharts::radarseries {index value} {
 
     set value [dict remove $value -label \
                                   -lineStyle \
+                                  -data \
                                   -areaStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -universalTransition -tooltip]
@@ -537,6 +540,62 @@ proc ticklecharts::heatmapseries {index value} {
                                   -labelLayout -itemStyle -markLine -markPoint -markArea \
                                   -emphasis -blur -select -universalTransition -tooltip]
         
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::sunburstseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-sunburst
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::sunburstseries below.
+    #
+    # return dict sunburstseries options
+
+    setdef options -type                    -validvalue {}                 -type str             -default "sunburst"
+    setdef options -id                      -validvalue {}                 -type str|null        -default "nothing"
+    setdef options -name                    -validvalue {}                 -type str             -default "sunburstseries_${index}"
+    setdef options -zlevel                  -validvalue {}                 -type num             -default 0
+    setdef options -z                       -validvalue {}                 -type num             -default 2
+    setdef options -center                  -validvalue {}                 -type list.d          -default [list {"50%" "50%"}]
+    setdef options -radius                  -validvalue {}                 -type list.d|num|str  -default [list {0 "75%"}]
+    setdef options -data                    -validvalue {}                 -type list.o          -default [ticklecharts::sunburstItem $value]
+    setdef options -labelLayout             -validvalue {}                 -type dict|null       -default [ticklecharts::labelLayout $value]
+    setdef options -label                   -validvalue {}                 -type dict|null       -default [ticklecharts::label $value]
+    setdef options -labelLine               -validvalue {}                 -type dict|null       -default [ticklecharts::labelLine $value]
+    setdef options -itemStyle               -validvalue {}                 -type dict|null       -default [ticklecharts::itemStyle $value]
+    setdef options -nodeClick               -validvalue formatNodeClick    -type bool|str        -default "rootToNode"
+    setdef options -sort                    -validvalue formatSort         -type str|jsfunc|null -default "desc"
+    setdef options -renderLabelForZeroData  -validvalue {}                 -type bool|null       -default "nothing"
+    setdef options -emphasis                -validvalue {}                 -type dict|null       -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -validvalue {}                 -type dict|null       -default [ticklecharts::blur $value]
+    setdef options -select                  -validvalue {}                 -type dict|null       -default [ticklecharts::select $value]
+    setdef options -selectedMode            -validvalue formatSelectedMode -type bool|str|null   -default "nothing"
+    setdef options -levels                  -validvalue {}                 -type list.o|null     -default [ticklecharts::levelsItem $value]
+    setdef options -animation               -validvalue {}                 -type bool|null       -default "True"
+    setdef options -animationThreshold      -validvalue {}                 -type num|null        -default "nothing"
+    setdef options -animationDuration       -validvalue {}                 -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasing         -validvalue formatAEasing      -type str|null        -default "nothing"
+    setdef options -animationDelay          -validvalue {}                 -type num|jsfunc|null -default "nothing"
+    setdef options -animationDurationUpdate -validvalue {}                 -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasingUpdate   -validvalue formatAEasing      -type str|null        -default "nothing"
+    setdef options -animationDelayUpdate    -validvalue {}                 -type num|jsfunc|null -default "nothing"
+
+
+    if {![dict exists $value -data]} {
+        error "key -data not present..."
+    }
+
+    set value [dict remove $value -label \
+                                  -data \
+                                  -levels \
+                                  -labelLine \
+                                  -labelLayout -itemStyle \
+                                  -emphasis -blur -select]
+    
+
     set options [merge $options $value]
 
     return $options

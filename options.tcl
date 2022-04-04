@@ -3,6 +3,72 @@
 #
 namespace eval ticklecharts {}
 
+proc ticklecharts::sunburstItem {value} {
+
+    if {[dict exists $value -data]} { 
+        set key -data
+    } elseif {[dict exists $value children]} {
+        set key children
+    } else {
+        return "nothing"
+    }
+
+    foreach item [dict get $value $key] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name        -validvalue {}  -type str|null    -default "nothing"
+        setdef options value       -validvalue {}  -type num|null    -default "nothing"
+        setdef options link        -validvalue {}  -type str|null    -default "nothing"
+        setdef options children    -validvalue {}  -type list.o|null -default [ticklecharts::sunburstItem $item]
+        setdef options label       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine   -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+
+        set item [dict remove $item children label labelLine itemStyle]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::levelsItem {value} {
+
+    if {![dict exists $value -levels]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value -levels] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options radius      -validvalue {}  -type list.d|null -default "nothing"
+        setdef options label       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine   -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis    -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur        -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select      -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+
+        set item [dict remove $item label labelLine itemStyle emphasis blur select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::BarItem {value} {
 
     if {![dict exists $value -databaritem]} {
@@ -445,10 +511,6 @@ proc ticklecharts::itemStyle {value} {
     #...
     
     if {[InfoNameProc 2 "legend"]} {
-        set options [dict remove $options color borderColor borderWidth \
-                                          borderDashOffset borderCap \
-                                          borderJoin borderMiterLimit opacity]
-
         setdef options color            -validvalue formatColor   -type str|jsfunc|null -default "inherit"
         setdef options borderColor      -validvalue formatColor   -type str|null        -default "inherit"
         setdef options borderWidth      -validvalue {}            -type str|num|null    -default "auto"
@@ -459,8 +521,9 @@ proc ticklecharts::itemStyle {value} {
         setdef options opacity          -validvalue formatOpacity -type str|num|null    -default "inherit"
     }
 
-    if {[InfoNameProc 2 "pieseries"]} {
-        setdef options borderRadius -validvalue {} -type str|num|list.d|null  -default "nothing"
+    if {[InfoNameProc 2 "pieseries"] || [InfoNameProc 2 "sunburstseries"]} {
+        setdef options borderColor  -validvalue formatColor -type str|null             -default "nothing"
+        setdef options borderRadius -validvalue {}          -type str|num|list.d|null  -default "nothing"
     }
     
     set options [merge $options [dict get $value $key]]
@@ -482,7 +545,7 @@ proc ticklecharts::emphasis {value} {
     set d [dict get $value $key]
 
     setdef options scale     -validvalue {}              -type bool|null -default "True"
-    setdef options focus     -validvalue {}              -type str|null  -default "none"
+    setdef options focus     -validvalue formatFocus     -type str|null  -default "none"
     setdef options blurScope -validvalue formatBlurScope -type str|null  -default "coordinateSystem"
     setdef options label     -validvalue {}              -type dict|null -default [ticklecharts::label     $d]
     setdef options labelLine -validvalue {}              -type dict|null -default [ticklecharts::labelLine $d]
@@ -1654,7 +1717,7 @@ proc ticklecharts::label {value} {
     setdef options show                 -validvalue {}                      -type bool            -default "True"
     setdef options position             -validvalue formatPosition          -type str|list.d|null -default "nothing"
     setdef options distance             -validvalue {}                      -type num|null        -default "nothing"
-    setdef options rotate               -validvalue {}                      -type num             -default 0
+    setdef options rotate               -validvalue formatRotate            -type num             -default 0
     setdef options formatter            -validvalue {}                      -type str|jsfunc|null -default "nothing"
     setdef options color                -validvalue formatColor             -type str|null        -default [EchartsOptsTheme axisLabelColor]
     setdef options fontStyle            -validvalue formatFontStyle         -type str             -default "normal"
@@ -1693,6 +1756,7 @@ proc ticklecharts::label {value} {
     if {[InfoNameProc 3 "axisPointer"]} {
         set options [dict remove $options position distance rotate align verticalAlign borderType borderDashOffset \
                                           borderRadius]
+
         setdef options precision  -validvalue {} -type str|num  -default "auto"
         setdef options margin     -validvalue {} -type num|null -default 3
     }
@@ -1704,6 +1768,17 @@ proc ticklecharts::label {value} {
         setdef options margin              -validvalue {}            -type num|null     -default "nothing"
         setdef options distanceToLabelLine -validvalue {}            -type num          -default 5
     }
+
+    if {[InfoNameProc 2 "sunburstseries"]} {
+        setdef options rotate       -validvalue formatRotate    -type num|str         -default "radial"
+        setdef options align        -validvalue formatTextAlign -type str|null        -default "center"
+        setdef options minAngle     -validvalue {}              -type num|null        -default "nothing"
+        setdef options position     -validvalue formatPosition  -type str|list.d|null -default "inside"
+        setdef options distance     -validvalue {}              -type num|null        -default 5
+        setdef options borderRadius -validvalue {}              -type num             -default 0
+        setdef options offset       -validvalue {}              -type list.n|null     -default "nothing"
+
+    }    
 
     # remove key from dict value rich...
     set d [dict remove $d richitem]

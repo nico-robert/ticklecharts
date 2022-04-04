@@ -4,15 +4,16 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart      ; # huddle
-    variable _options            ; # list options chart
-    variable _indexlineseries    ; # index line serie
-    variable _indexbarseries     ; # index bar serie
-    variable _indexpieseries     ; # index pie serie
-    variable _indexfunnelseries  ; # index funnel serie
-    variable _indexradarseries   ; # index radar serie
-    variable _indexscatterseries ; # index scatter serie
-    variable _indexheatmapseries ; # index heatmap serie
+    variable _echartshchart       ; # huddle
+    variable _options             ; # list options chart
+    variable _indexlineseries     ; # index line serie
+    variable _indexbarseries      ; # index bar serie
+    variable _indexpieseries      ; # index pie serie
+    variable _indexfunnelseries   ; # index funnel serie
+    variable _indexradarseries    ; # index radar serie
+    variable _indexscatterseries  ; # index scatter serie
+    variable _indexheatmapseries  ; # index heatmap serie
+    variable _indexsunburstseries ; # index sunburst serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -424,6 +425,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddSunburstSeries {args} {
+        # Add data serie chart (use only for sunburst chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions sunburstseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-sunburst
+        #
+        # Returns nothing     
+        incr _indexsunburstseries
+
+        set options [ticklecharts::sunburstseries $_indexsunburstseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -482,7 +502,7 @@ oo::define ticklecharts::chart {
 
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic Render
+    export AddHeatmapSeries AddGraphic AddSunburstSeries Render
     export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
