@@ -267,11 +267,16 @@ oo::define ticklecharts::Gridlayout {
             error "'Radar' mode should not be added first..."
         }
 
-        # Check if pie chart type exists in first place
-        # Error if yes , not possible.
+        # Check if pie or sunburst chart type exists in first place
+        # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
-            if {!$_indexchart && [dict get $_options @D=series @S=type] eq "pie"} {
-                error "'Pie' chart should not be added first..."
+            if {!$_indexchart} {
+                if {[dict get $_options @D=series @S=type] eq "pie"} {
+                    error "'Pie' chart should not be added first..."
+                }
+                if {[dict get $_options @D=series @S=type] eq "sunburst"} {
+                    error "'Sunburst' chart should not be added first..."
+                }                
             }
         }
 
