@@ -290,6 +290,7 @@ oo::define ticklecharts::ehuddle {
 
                                 switch -exact -- $subtype {
                                     "@L"    {lappend subdata $subkeyvalue1 [huddle create {*}[my set $k $val]]}
+                                    "@DO"   {lappend subdata {*}[my set $k $value]}
                                     "@B"    -
                                     "@S"    -
                                     "@N"    -
@@ -426,7 +427,7 @@ oo::define ticklecharts::ehuddle {
             <s!> ""
             <#!> ""
             <#?> "#"
-            <n?> "\n"
+            <n?> "\\n"
             <0123> \{
             <0125> \}
             <091> \[
