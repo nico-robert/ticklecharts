@@ -38,7 +38,7 @@
 # 02-04-2022 : v1.5.3
                # Add '-validvalue' flag to respect the values by default according to the Echarts documentation (especially for string types) 
                # Update examples to reflect the changes.
-# 06-03-2022 : v1.6
+# 04-04-2022 : v1.6
                # Add sunburst chart.
                # Add sunburst examples + correction line chart label position example.
 
