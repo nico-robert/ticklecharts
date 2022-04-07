@@ -49,10 +49,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
-        barCategoryGap -
+        formatBarCategoryGap -
         formatBarGap {
             # possible values...
-            if {[regexp {^[-0-9.]+%$} $value]} {
+            if {![regexp {^[-0-9.]+%$} $value]} {
                 error "$key ($nameproc) : The gap between bars between different series, \
                       is a percent value like '30%', which means 30% of the bar width. \
                       Set barGap as '-100%' can overlap bars that belong to different series, \
@@ -405,8 +405,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
             # possible values...
             if {$type eq "str"} {
-                set validvalue {circle rect roundRect triangle diamond pin arrow none}
-                if {$value ni $validvalue} {
+                set validvalue {emptyCircle circle rect roundRect triangle diamond pin arrow none image://* path://*}
+                set match 0
+                foreach val $validvalue {
+                    if {[string match $val $value]} {
+                        set match 1 ; break
+                    }
+                }
+                if {!$match} {
                     error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
                 }
@@ -577,6 +583,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatShape {
             # possible values...
             set validvalue {polygon circle}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatEdgeShape {
+            # possible values...
+            set validvalue {curve polyline}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -769,6 +784,42 @@ proc ticklecharts::formatEcharts {formattype value key} {
             } elseif {[Type $value] eq "num"} {
                 if {![expr {$value >= -90 && $value <= 90}]} {
                     error "'$value' should be between '-90' and '90' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatLayout {
+            # possible values...
+            set validvalue {orthogonal radial}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatTreeOrient {
+            # possible values...
+            set validvalue {LR RL TB BT}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatEForkPosition  {
+            # possible values...
+            if {![regexp {^[0-9.]+%$} $value]} {
+                error "'$value' should be be between \['0%', '100%'\]"
+            }
+        }
+
+        formatRoam {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {scale move}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
                 }
             }
