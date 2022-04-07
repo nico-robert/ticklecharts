@@ -238,6 +238,11 @@ proc ticklecharts::legend {value} {
     setdef options data                  -validvalue {}                    -type list.d|null     -default "nothing"
     #...
 
+    if {[dict exists $d dataLegendItem]} {
+        set options [dict remove $options data]
+        setdef options data -validvalue {} -type list.o -default [ticklecharts::LegendItem $d]
+    }
+
     set options [merge $options $d]
     
     return $options
