@@ -14,6 +14,7 @@ oo::class create ticklecharts::chart {
     variable _indexscatterseries  ; # index scatter serie
     variable _indexheatmapseries  ; # index heatmap serie
     variable _indexsunburstseries ; # index sunburst serie
+    variable _indextreeseries     ; # index tree serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -444,6 +445,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddTreeSeries {args} {
+        # Add data serie chart (use only for tree chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions treeseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-tree
+        #
+        # Returns nothing     
+        incr _indextreeseries
+
+        set options [ticklecharts::treeseries $_indextreeseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -502,7 +522,7 @@ oo::define ticklecharts::chart {
 
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic AddSunburstSeries Render
+    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries Render
     export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
 }
 
