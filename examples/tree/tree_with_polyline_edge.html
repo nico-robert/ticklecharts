@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>tree_with_polyline_edge</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_285250983700894" class="chart-container" style="width:1500px; height:1500px;"></div>
+    <script>
+        var chart_285250983699290 = echarts.init(document.getElementById('id_285250983700894'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [{
+      "type": "tree",
+      "name": "tree1",
+      "zlevel": 0,
+      "z": 2,
+      "left": "8%",
+      "top": "10%",
+      "right": "20%",
+      "bottom": "22%",
+      "width": "auto",
+      "height": "auto",
+      "layout": "orthogonal",
+      "orient": "LR",
+      "symbol": "emptyCircle",
+      "symbolSize": 7,
+      "symbolKeepAspect": true,
+      "edgeShape": "polyline",
+      "edgeForkPosition": "63%",
+      "roam": false,
+      "expandAndCollapse": true,
+      "initialTreeDepth": 3,
+      "label": {
+        "show": true,
+        "position": "left",
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "align": "right",
+        "verticalAlign": "middle",
+        "lineHeight": 12,
+        "backgroundColor": "#fff",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "lineStyle": {
+        "width": 2,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "descendant",
+        "blurScope": "coordinateSystem"
+      },
+      "leaves": {"label": {
+          "show": true,
+          "position": "right",
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "align": "left",
+          "verticalAlign": "middle",
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        }},
+      "data": [{
+          "name": "flare",
+          "collapsed": false,
+          "children": [
+            {
+              "name": "data",
+              "collapsed": false,
+              "children": [
+                {
+                  "name": "converters",
+                  "collapsed": true,
+                  "children": [
+                    {
+                      "name": "Converters",
+                      "value": 721,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "DelimitedTextConverter",
+                      "value": 4294,
+                      "collapsed": false
+                    }
+                  ]
+                },
+                {
+                  "name": "DataUtil",
+                  "value": 3322,
+                  "collapsed": false
+                }
+              ]
+            },
+            {
+              "name": "display",
+              "collapsed": false,
+              "children": [
+                {
+                  "name": "DirtySprite",
+                  "value": 8833,
+                  "collapsed": false
+                },
+                {
+                  "name": "LineSprite",
+                  "value": 1732,
+                  "collapsed": false
+                },
+                {
+                  "name": "RectSprite",
+                  "value": 3623,
+                  "collapsed": false
+                }
+              ]
+            },
+            {
+              "name": "flex",
+              "collapsed": false,
+              "children": [{
+                  "name": "FlareVis",
+                  "value": 4116,
+                  "collapsed": false
+                }]
+            },
+            {
+              "name": "query",
+              "collapsed": false,
+              "children": [
+                {
+                  "name": "AggregateExpression",
+                  "value": 1616,
+                  "collapsed": false
+                },
+                {
+                  "name": "And",
+                  "value": 1027,
+                  "collapsed": false
+                },
+                {
+                  "name": "Arithmetic",
+                  "value": 3891,
+                  "collapsed": false
+                },
+                {
+                  "name": "Average",
+                  "value": 891,
+                  "collapsed": false
+                },
+                {
+                  "name": "BinaryExpression",
+                  "value": 2893,
+                  "collapsed": false
+                },
+                {
+                  "name": "Comparison",
+                  "value": 5103,
+                  "collapsed": false
+                },
+                {
+                  "name": "CompositeExpression",
+                  "value": 3677,
+                  "collapsed": false
+                },
+                {
+                  "name": "Count",
+                  "value": 781,
+                  "collapsed": false
+                },
+                {
+                  "name": "DateUtil",
+                  "value": 4141,
+                  "collapsed": false
+                },
+                {
+                  "name": "Distinct",
+                  "value": 933,
+                  "collapsed": false
+                },
+                {
+                  "name": "Expression",
+                  "value": 5130,
+                  "collapsed": false
+                },
+                {
+                  "name": "ExpressionIterator",
+                  "value": 3617,
+                  "collapsed": false
+                },
+                {
+                  "name": "Fn",
+                  "value": 3240,
+                  "collapsed": false
+                },
+                {
+                  "name": "If",
+                  "value": 2732,
+                  "collapsed": false
+                },
+                {
+                  "name": "IsA",
+                  "value": 2039,
+                  "collapsed": false
+                },
+                {
+                  "name": "Literal",
+                  "value": 1214,
+                  "collapsed": false
+                },
+                {
+                  "name": "Match",
+                  "value": 3748,
+                  "collapsed": false
+                },
+                {
+                  "name": "Maximum",
+                  "value": 843,
+                  "collapsed": false
+                },
+                {
+                  "name": "methods",
+                  "collapsed": true,
+                  "children": [
+                    {
+                      "name": "add",
+                      "value": 593,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "and",
+                      "value": 330,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "average",
+                      "value": 287,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "count",
+                      "value": 277,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "distinct",
+                      "value": 292,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "div",
+                      "value": 595,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "eq",
+                      "value": 594,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "fn",
+                      "value": 460,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "gt",
+                      "value": 603,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "gte",
+                      "value": 625,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "iff",
+                      "value": 748,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "isa",
+                      "value": 461,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "lt",
+                      "value": 597,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "lte",
+                      "value": 619,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "max",
+                      "value": 283,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "min",
+                      "value": 283,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "mod",
+                      "value": 591,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "mul",
+                      "value": 603,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "neq",
+                      "value": 599,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "not",
+                      "value": 386,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "or",
+                      "value": 323,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "orderby",
+                      "value": 307,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "range",
+                      "value": 772,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "select",
+                      "value": 296,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "stddev",
+                      "value": 363,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "sub",
+                      "value": 600,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "sum",
+                      "value": 280,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "update",
+                      "value": 307,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "variance",
+                      "value": 335,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "where",
+                      "value": 299,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "xor",
+                      "value": 354,
+                      "collapsed": false
+                    },
+                    {
+                      "name": "_",
+                      "value": 264,
+                      "collapsed": false
+                    }
+                  ]
+                },
+                {
+                  "name": "Minimum",
+                  "value": 843,
+                  "collapsed": false
+                },
+                {
+                  "name": "Not",
+                  "value": 1554,
+                  "collapsed": false
+                },
+                {
+                  "name": "Or",
+                  "value": 970,
+                  "collapsed": false
+                },
+                {
+                  "name": "Query",
+                  "value": 13896,
+                  "collapsed": false
+                },
+                {
+                  "name": "Range",
+                  "value": 1594,
+                  "collapsed": false
+                },
+                {
+                  "name": "StringUtil",
+                  "value": 4130,
+                  "collapsed": false
+                },
+                {
+                  "name": "Sum",
+                  "value": 791,
+                  "collapsed": false
+                },
+                {
+                  "name": "Variable",
+                  "value": 1124,
+                  "collapsed": false
+                },
+                {
+                  "name": "Variance",
+                  "value": 1876,
+                  "collapsed": false
+                },
+                {
+                  "name": "Xor",
+                  "value": 1101,
+                  "collapsed": false
+                }
+              ]
+            },
+            {
+              "name": "scale",
+              "collapsed": false,
+              "children": [
+                {
+                  "name": "IScaleMap",
+                  "value": 2105,
+                  "collapsed": false
+                },
+                {
+                  "name": "LinearScale",
+                  "value": 1316,
+                  "collapsed": false
+                },
+                {
+                  "name": "LogScale",
+                  "value": 3151,
+                  "collapsed": false
+                },
+                {
+                  "name": "OrdinalScale",
+                  "value": 3770,
+                  "collapsed": false
+                },
+                {
+                  "name": "QuantileScale",
+                  "value": 2435,
+                  "collapsed": false
+                },
+                {
+                  "name": "QuantitativeScale",
+                  "value": 4839,
+                  "collapsed": false
+                },
+                {
+                  "name": "RootScale",
+                  "value": 1756,
+                  "collapsed": false
+                },
+                {
+                  "name": "Scale",
+                  "value": 4268,
+                  "collapsed": false
+                },
+                {
+                  "name": "ScaleType",
+                  "value": 1821,
+                  "collapsed": false
+                },
+                {
+                  "name": "TimeScale",
+                  "value": 5833,
+                  "collapsed": false
+                }
+              ]
+            }
+          ]
+        }],
+      "animationDuration": 550,
+      "animationDurationUpdate": 750
+    }]
+}
+        chart_285250983699290.setOption(option);
+    </script>
+  </body>
+</html>
