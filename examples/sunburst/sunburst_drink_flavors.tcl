@@ -22,7 +22,6 @@ $chart SetOptions -title {
                             text "WORLD COFFEE RESEARCH SENSORY LEXICON"
                             subtext "Source: https://worldcoffeeresearch.org/work/sensory-lexicon/"
                             textStyle {fontSize 14 align "center"}
-                            textStyle {align "center"} 
                             sublink "https://worldcoffeeresearch.org/work/sensory-lexicon/"
                         } \
                   
