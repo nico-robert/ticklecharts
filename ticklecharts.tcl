@@ -41,6 +41,9 @@
 # 04-04-2022 : v1.6
                # Add sunburst chart.
                # Add sunburst examples + correction line chart label position example.
+# 07-04-2022 : v1.7
+               # Add tree chart.
+               # Add tree examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -60,7 +63,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.6
+    variable version 1.7
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

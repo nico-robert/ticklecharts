@@ -321,7 +321,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] scatter
 - [x] effectScatter
 - [x] radar
-- [ ] tree
+- [x] tree
 - [ ] treemap
 - [x] sunburst
 - [ ] boxplot
@@ -384,3 +384,6 @@ Release :
 *  **04-04-2022** : 1.6
     - Add `sunburst` chart.
     - Add `sunburst` examples + correction `line` chart label position example.
+*  **07-04-2022** : 1.7
+    - Add `tree` chart.
+    - Add `tree` examples.
