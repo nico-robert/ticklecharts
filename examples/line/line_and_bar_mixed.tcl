@@ -35,4 +35,4 @@ $chart AddLineSeries -name "Temperature" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
