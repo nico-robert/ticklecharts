@@ -46,6 +46,16 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] graph
     source $chartfile
 }
 
+# sunburst
+foreach chartfile [glob -directory [file join [file dirname [info script]] sunburst] -types f *.tcl] {
+    source $chartfile
+}
+
+# tree
+foreach chartfile [glob -directory [file join [file dirname [info script]] tree] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
