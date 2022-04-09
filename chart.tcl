@@ -110,14 +110,12 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
         set mixed [my ismixed]
-        # special case to append...
-        set value {xAxis yAxis radar}
         
         foreach {key opts} $_options {
 
             if {[string match {*series} $key]} {
                 $_echartshchart append $key $opts
-            } elseif {($key in $value) && $mixed} {
+            } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
                 $_echartshchart append $key $opts
             } else {
                 $_echartshchart set $key $opts
