@@ -56,6 +56,11 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] tree]
     source $chartfile
 }
 
+# themeRiver
+foreach chartfile [glob -directory [file join [file dirname [info script]] themeriver] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
