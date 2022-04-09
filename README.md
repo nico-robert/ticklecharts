@@ -390,3 +390,5 @@ Release :
 *  **09-04-2022** : 1.8
     - Add `themeRiver` chart + `singleAxis` option.
     - Add `themeRiver` examples.
+*  **09-04-2022** : 1.8.1
+    - Fix bug on adding multiple axis (xAxis, yAxis...).
