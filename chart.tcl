@@ -15,7 +15,7 @@ oo::class create ticklecharts::chart {
     variable _indexheatmapseries    ; # index heatmap serie
     variable _indexsunburstseries   ; # index sunburst serie
     variable _indextreeseries       ; # index tree serie
-    variable _indexthemeriverseries ; # index tree serie
+    variable _indexthemeriverseries ; # index themeriver serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -492,7 +492,7 @@ oo::define ticklecharts::chart {
     }
 
     method AddThemeRiverSeries {args} {
-        # Add data serie chart (use only for tree chart)
+        # Add data serie chart (use only for ThemeRiver chart)
         #
         # args - Options described below.
         #
