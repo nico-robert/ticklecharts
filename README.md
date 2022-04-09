@@ -179,7 +179,7 @@ $chart Xaxis -axisLabel [list show "True" \
 ```
 Examples :
 -------------------------
-See **[examples](/examples)** for all demos...
+See **[examples](/examples)** for all demos (from [apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
 
 ```tcl
 # line + bar on same canvas...
@@ -338,6 +338,9 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] themeRiver
 - [ ] custom
 
+#### Photo gallery :
+![Photo gallery](images/all.gif)
+
 License :
 -------------------------
 **ticklEcharts** is covered under the terms of the [MIT](LICENSE) license.
@@ -373,7 +376,7 @@ Release :
 *  **20-03-2022** : 1.5.2
     - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
     - Update chart examples to include toolbox utility.
-    - Add examples with json data from [apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `tls`, `json` packages from Tcllib)
+    - Add examples with json data from [github apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `tls`, `json` packages from Tcllib)
     - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
