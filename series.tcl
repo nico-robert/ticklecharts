@@ -669,5 +669,55 @@ proc ticklecharts::treeseries {index value} {
     set options [merge $options $value]
 
     return $options
+ 
+}
+
+proc ticklecharts::themeriverseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-themeRiver
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::themeriverseries below.
+    #
+    # return dict themeriverseries options
+
+    setdef options -type                    -validvalue {}                  -type str               -default "themeRiver"
+    setdef options -id                      -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -name                    -validvalue {}                  -type str               -default "themeriverseries_${index}"
+    setdef options -colorBy                 -validvalue formatColorBy       -type str               -default "data"
+    setdef options -zlevel                  -validvalue {}                  -type num               -default 0
+    setdef options -z                       -validvalue {}                  -type num               -default 2
+    setdef options -left                    -validvalue formatLeft          -type num|str|null      -default "nothing"
+    setdef options -top                     -validvalue formatTop           -type num|str|null      -default "nothing"
+    setdef options -right                   -validvalue formatRight         -type num|str|null      -default "nothing"
+    setdef options -bottom                  -validvalue formatBottom        -type num|str|null      -default "nothing"
+    setdef options -width                   -validvalue {}                  -type num|str|null      -default "nothing"
+    setdef options -height                  -validvalue {}                  -type num|str|null      -default "nothing"
+    # bug with coordinateSystem = single... 5.2.2
+    setdef options -coordinateSystem        -validvalue formatCSYS          -type str|null          -default "nothing"
+    setdef options -boundaryGap             -validvalue {}                  -type list.d            -default [list {"10%" "10%"}]
+    setdef options -singleAxisIndex         -validvalue {}                  -type num               -default 0
+    setdef options -label                   -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
+    setdef options -labelLine               -validvalue {}                  -type dict|null         -default [ticklecharts::labelLine $value]
+    setdef options -itemStyle               -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -labelLayout             -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
+    setdef options -emphasis                -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -validvalue formatSelectedMode  -type bool|str|null     -default "False"
+    setdef options -data                    -validvalue {}                  -type list.d            -default [ticklecharts::themeriverItem $value]
+
+    # not supported yet...
+    # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    set value [dict remove $value -label \
+                                  -data \
+                                  -labelLine \
+                                  -labelLayout -itemStyle \
+                                  -emphasis -blur -select]
+    
+
+    set options [merge $options $value]
+
+    return $options
 
 }

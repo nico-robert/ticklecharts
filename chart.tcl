@@ -4,17 +4,18 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart       ; # huddle
-    variable _options             ; # list options chart
-    variable _indexlineseries     ; # index line serie
-    variable _indexbarseries      ; # index bar serie
-    variable _indexpieseries      ; # index pie serie
-    variable _indexfunnelseries   ; # index funnel serie
-    variable _indexradarseries    ; # index radar serie
-    variable _indexscatterseries  ; # index scatter serie
-    variable _indexheatmapseries  ; # index heatmap serie
-    variable _indexsunburstseries ; # index sunburst serie
-    variable _indextreeseries     ; # index tree serie
+    variable _echartshchart         ; # huddle
+    variable _options               ; # list options chart
+    variable _indexlineseries       ; # index line serie
+    variable _indexbarseries        ; # index bar serie
+    variable _indexpieseries        ; # index pie serie
+    variable _indexfunnelseries     ; # index funnel serie
+    variable _indexradarseries      ; # index radar serie
+    variable _indexscatterseries    ; # index scatter serie
+    variable _indexheatmapseries    ; # index heatmap serie
+    variable _indexsunburstseries   ; # index sunburst serie
+    variable _indextreeseries       ; # index tree serie
+    variable _indexthemeriverseries ; # index tree serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -109,12 +110,14 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
         set mixed [my ismixed]
+        # special case to append...
+        set value {xAxis yAxis radar}
         
         foreach {key opts} $_options {
 
             if {[string match {*series} $key]} {
                 $_echartshchart append $key $opts
-            } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
+            } elseif {($key in $value) && $mixed} {
                 $_echartshchart append $key $opts
             } else {
                 $_echartshchart set $key $opts
@@ -257,7 +260,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions AddGraphic
+        # gets default option values : [self] getoptions SetGraphic
         # or
         # from doc : https://echarts.apache.org/en/option.html#graphic
         #
@@ -275,7 +278,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions Radar
+        # gets default option values : [self] getoptions SetRadarCoordinate
         # or
         # from doc : https://echarts.apache.org/en/option.html#radar
         #
@@ -290,6 +293,29 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::OptsToEchartsHuddle $options]
         
         lappend _options @D=radar [list {*}$f]
+
+    }
+
+    method SingleAxis {args} {
+        # Init singleAxis
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions SetSingleAxis
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#singleAxis
+        #
+        # Returns nothing      
+        set mykeys [my keys]
+    
+        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
+            error "xAxis or yAxis not supported with 'SingleAxis'"
+        }
+        
+        set options [ticklecharts::SetSingleAxis $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+        
+        lappend _options @D=singleAxis [list {*}$f]
 
     }
     
@@ -464,6 +490,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddThemeRiverSeries {args} {
+        # Add data serie chart (use only for tree chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions themeriverseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-themeriver
+        #
+        # Returns nothing     
+        incr _indexthemeriverseries
+
+        set options [ticklecharts::themeriverseries $_indexthemeriverseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -522,7 +567,7 @@ oo::define ticklecharts::chart {
 
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries Render
-    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions
+    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries Render
+    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis
 }
 
