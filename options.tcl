@@ -3,6 +3,36 @@
 #
 namespace eval ticklecharts {}
 
+proc ticklecharts::themeriverItem {value} {
+
+    if {![dict exists $value -data]} {
+        error "key -data not present..."
+    }
+
+    foreach item [dict get $value -data] {
+
+        if {[llength $item] != 3} {
+            error "item should be a list of 3 elements..."
+        }
+
+        lassign $item date value name
+
+        setdef options date   -validvalue {}   -type str|num  -default $date
+        setdef options value  -validvalue {}   -type num      -default $value
+        setdef options name   -validvalue {}   -type str      -default $name
+
+        # simply to check if the data in my list item are correct...
+        merge $options $item
+
+        lappend opts [list $date $value $name]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::treeItem {value} {
 
     if {[dict exists $value -data]} { 
@@ -959,6 +989,46 @@ proc ticklecharts::setYAxis {value} {
     setdef options -zlevel          -validvalue {}                  -type num                 -default 0
     setdef options -z               -validvalue {}                  -type num                 -default 0
     
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::SetSingleAxis {value} {
+    
+    setdef options -id             -validvalue {}                 -type str|null            -default "nothing"
+    setdef options -zlevel         -validvalue {}                 -type num                 -default 0
+    setdef options -z              -validvalue {}                 -type num                 -default 2
+    setdef options -left           -validvalue formatLeft         -type num|str             -default "5%"
+    setdef options -top            -validvalue formatTop          -type num|str             -default "5%"
+    setdef options -right          -validvalue formatRight        -type num|str             -default "5%"
+    setdef options -bottom         -validvalue formatBottom       -type num|str             -default "5%"
+    setdef options -width          -validvalue {}                 -type num|str             -default "auto"
+    setdef options -height         -validvalue {}                 -type num|str             -default "auto"
+    setdef options -orient         -validvalue formatOrient       -type str                 -default "horizontal"
+    setdef options -type           -validvalue formatType         -type str|null            -default "value"
+    setdef options -name           -validvalue {}                 -type str|null            -default "nothing"
+    setdef options -nameLocation   -validvalue formatNameLocation -type str                 -default "end"
+    setdef options -nameTextStyle  -validvalue {}                 -type dict|null           -default [ticklecharts::NameTextStyle $value]
+    setdef options -nameGap        -validvalue {}                 -type num                 -default 15
+    setdef options -nameRotate     -validvalue {}                 -type num                 -default 0
+    setdef options -inverse        -validvalue {}                 -type bool                -default "False"
+    setdef options -boundaryGap    -validvalue {}                 -type bool|list.d         -default "True"
+    setdef options -min            -validvalue {}                 -type num|str|jsfunc|null -default "nothing"
+    setdef options -max            -validvalue {}                 -type num|str|jsfunc|null -default "nothing"
+    setdef options -scale          -validvalue {}                 -type bool|null           -default "nothing"
+    setdef options -splitNumber    -validvalue {}                 -type num                 -default 5
+    setdef options -minInterval    -validvalue {}                 -type num                 -default 0
+    setdef options -maxInterval    -validvalue {}                 -type num|null            -default "nothing"
+    setdef options -interval       -validvalue {}                 -type num|null            -default "nothing"
+    setdef options -logBase        -validvalue {}                 -type num|null            -default "nothing"
+    setdef options -silent         -validvalue {}                 -type bool                -default "False"
+    setdef options -triggerEvent   -validvalue {}                 -type bool                -default "False"
+    setdef options -axisPointer    -validvalue {}                 -type dict|null           -default [ticklecharts::axisPointer $value]
+    setdef options -axisTick       -validvalue {}                 -type dict|null           -default [ticklecharts::axisTick $value]
+    setdef options -axisLabel      -validvalue {}                 -type dict|null           -default [ticklecharts::axisLabel $value]
+
     set options [merge $options $value]
 
     return $options
