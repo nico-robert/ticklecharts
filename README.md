@@ -308,7 +308,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] geo
 - [ ] parallel
 - [ ] parallelAxis
-- [ ] singleAxis
+- [x] singleAxis
 - [ ] timeline
 - [x] graphic
 - [ ] calendar
@@ -335,7 +335,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] funnel
 - [ ] gauge
 - [ ] pictorialBar
-- [ ] themeRiver
+- [x] themeRiver
 - [ ] custom
 
 License :
@@ -387,3 +387,6 @@ Release :
 *  **07-04-2022** : 1.7
     - Add `tree` chart.
     - Add `tree` examples.
+*  **09-04-2022** : 1.8
+    - Add `themeRiver` chart + `singleAxis` option.
+    - Add `themeRiver` examples.

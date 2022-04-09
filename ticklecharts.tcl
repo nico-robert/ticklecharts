@@ -44,6 +44,9 @@
 # 07-04-2022 : v1.7
                # Add tree chart.
                # Add tree examples.
+# 09-04-2022 : v1.8
+               # Add themeRiver chart + singleAxis option.
+               # Add themeRiver examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -63,7 +66,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.7
+    variable version 1.8
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
