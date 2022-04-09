@@ -340,7 +340,7 @@ proc ticklecharts::merge {d other} {
         
             set mytype [Type [dict get $other $key]]
             
-            # check type list
+            # check type in default list
             if {![ticklecharts::MatchType $mytype $type typekey]} {
                 error "bad type 1 for this key '$key'= $mytype should be :$type"
             }
@@ -364,7 +364,7 @@ proc ticklecharts::merge {d other} {
         
             set mytype [Type $value]
             
-            # check type list
+            # check type in default list
             if {![ticklecharts::MatchType $mytype $type typekey]} {
                 error "bad type 2 for this key '$key'= $mytype should be :$type"
             }
