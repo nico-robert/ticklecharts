@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>themeriver_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_29453355791554" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_29453355789830 = echarts.init(document.getElementById('id_29453355791554'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "DQ",
+        "TY",
+        "SS",
+        "QG",
+        "SY",
+        "DD"
+      ]
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "line",
+        "axis": "auto",
+        "lineStyle": {
+          "color": "rgba(0,0,0,0.2)",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "singleAxis": [{
+      "zlevel": 0,
+      "z": 2,
+      "left": "5%",
+      "top": 50,
+      "right": "5%",
+      "bottom": 50,
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "type": "time",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisPointer": {
+        "type": "line",
+        "axis": "auto",
+        "label": {
+          "show": true,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "...",
+          "precision": "auto",
+          "margin": 3
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "axisTick": {
+        "show": false,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      }
+    }],
+  "series": [{
+      "type": "themeRiver",
+      "name": "themeriverseries_1",
+      "colorBy": "data",
+      "zlevel": 0,
+      "z": 2,
+      "boundaryGap": [
+        "10%",
+        "10%"
+      ],
+      "singleAxisIndex": 0,
+      "emphasis": {
+        "scale": true,
+        "focus": "none",
+        "blurScope": "coordinateSystem",
+        "itemStyle": {
+          "borderColor": "rgb(0, 0, 0)",
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 20,
+          "shadowColor": "rgba(0, 0, 0, 0.8)",
+          "opacity": 1
+        }
+      },
+      "selectedMode": false,
+      "data": [
+        [
+          "2015/11/08",
+          10,
+          "DQ"
+        ],
+        [
+          "2015/11/09",
+          15,
+          "DQ"
+        ],
+        [
+          "2015/11/10",
+          35,
+          "DQ"
+        ],
+        [
+          "2015/11/11",
+          38,
+          "DQ"
+        ],
+        [
+          "2015/11/12",
+          22,
+          "DQ"
+        ],
+        [
+          "2015/11/13",
+          16,
+          "DQ"
+        ],
+        [
+          "2015/11/14",
+          7,
+          "DQ"
+        ],
+        [
+          "2015/11/15",
+          2,
+          "DQ"
+        ],
+        [
+          "2015/11/16",
+          17,
+          "DQ"
+        ],
+        [
+          "2015/11/17",
+          33,
+          "DQ"
+        ],
+        [
+          "2015/11/18",
+          40,
+          "DQ"
+        ],
+        [
+          "2015/11/19",
+          32,
+          "DQ"
+        ],
+        [
+          "2015/11/20",
+          26,
+          "DQ"
+        ],
+        [
+          "2015/11/21",
+          35,
+          "DQ"
+        ],
+        [
+          "2015/11/22",
+          40,
+          "DQ"
+        ],
+        [
+          "2015/11/23",
+          32,
+          "DQ"
+        ],
+        [
+          "2015/11/24",
+          26,
+          "DQ"
+        ],
+        [
+          "2015/11/25",
+          22,
+          "DQ"
+        ],
+        [
+          "2015/11/26",
+          16,
+          "DQ"
+        ],
+        [
+          "2015/11/27",
+          22,
+          "DQ"
+        ],
+        [
+          "2015/11/28",
+          10,
+          "DQ"
+        ],
+        [
+          "2015/11/08",
+          35,
+          "TY"
+        ],
+        [
+          "2015/11/09",
+          36,
+          "TY"
+        ],
+        [
+          "2015/11/10",
+          37,
+          "TY"
+        ],
+        [
+          "2015/11/11",
+          22,
+          "TY"
+        ],
+        [
+          "2015/11/12",
+          24,
+          "TY"
+        ],
+        [
+          "2015/11/13",
+          26,
+          "TY"
+        ],
+        [
+          "2015/11/14",
+          34,
+          "TY"
+        ],
+        [
+          "2015/11/15",
+          21,
+          "TY"
+        ],
+        [
+          "2015/11/16",
+          18,
+          "TY"
+        ],
+        [
+          "2015/11/17",
+          45,
+          "TY"
+        ],
+        [
+          "2015/11/18",
+          32,
+          "TY"
+        ],
+        [
+          "2015/11/19",
+          35,
+          "TY"
+        ],
+        [
+          "2015/11/20",
+          30,
+          "TY"
+        ],
+        [
+          "2015/11/21",
+          28,
+          "TY"
+        ],
+        [
+          "2015/11/22",
+          27,
+          "TY"
+        ],
+        [
+          "2015/11/23",
+          26,
+          "TY"
+        ],
+        [
+          "2015/11/24",
+          15,
+          "TY"
+        ],
+        [
+          "2015/11/25",
+          30,
+          "TY"
+        ],
+        [
+          "2015/11/26",
+          35,
+          "TY"
+        ],
+        [
+          "2015/11/27",
+          42,
+          "TY"
+        ],
+        [
+          "2015/11/28",
+          42,
+          "TY"
+        ],
+        [
+          "2015/11/08",
+          21,
+          "SS"
+        ],
+        [
+          "2015/11/09",
+          25,
+          "SS"
+        ],
+        [
+          "2015/11/10",
+          27,
+          "SS"
+        ],
+        [
+          "2015/11/11",
+          23,
+          "SS"
+        ],
+        [
+          "2015/11/12",
+          24,
+          "SS"
+        ],
+        [
+          "2015/11/13",
+          21,
+          "SS"
+        ],
+        [
+          "2015/11/14",
+          35,
+          "SS"
+        ],
+        [
+          "2015/11/15",
+          39,
+          "SS"
+        ],
+        [
+          "2015/11/16",
+          40,
+          "SS"
+        ],
+        [
+          "2015/11/17",
+          36,
+          "SS"
+        ],
+        [
+          "2015/11/18",
+          33,
+          "SS"
+        ],
+        [
+          "2015/11/19",
+          43,
+          "SS"
+        ],
+        [
+          "2015/11/20",
+          40,
+          "SS"
+        ],
+        [
+          "2015/11/21",
+          34,
+          "SS"
+        ],
+        [
+          "2015/11/22",
+          28,
+          "SS"
+        ],
+        [
+          "2015/11/23",
+          26,
+          "SS"
+        ],
+        [
+          "2015/11/24",
+          37,
+          "SS"
+        ],
+        [
+          "2015/11/25",
+          41,
+          "SS"
+        ],
+        [
+          "2015/11/26",
+          46,
+          "SS"
+        ],
+        [
+          "2015/11/27",
+          47,
+          "SS"
+        ],
+        [
+          "2015/11/28",
+          41,
+          "SS"
+        ],
+        [
+          "2015/11/08",
+          10,
+          "QG"
+        ],
+        [
+          "2015/11/09",
+          15,
+          "QG"
+        ],
+        [
+          "2015/11/10",
+          35,
+          "QG"
+        ],
+        [
+          "2015/11/11",
+          38,
+          "QG"
+        ],
+        [
+          "2015/11/12",
+          22,
+          "QG"
+        ],
+        [
+          "2015/11/13",
+          16,
+          "QG"
+        ],
+        [
+          "2015/11/14",
+          7,
+          "QG"
+        ],
+        [
+          "2015/11/15",
+          2,
+          "QG"
+        ],
+        [
+          "2015/11/16",
+          17,
+          "QG"
+        ],
+        [
+          "2015/11/17",
+          33,
+          "QG"
+        ],
+        [
+          "2015/11/18",
+          40,
+          "QG"
+        ],
+        [
+          "2015/11/19",
+          32,
+          "QG"
+        ],
+        [
+          "2015/11/20",
+          26,
+          "QG"
+        ],
+        [
+          "2015/11/21",
+          35,
+          "QG"
+        ],
+        [
+          "2015/11/22",
+          40,
+          "QG"
+        ],
+        [
+          "2015/11/23",
+          32,
+          "QG"
+        ],
+        [
+          "2015/11/24",
+          26,
+          "QG"
+        ],
+        [
+          "2015/11/25",
+          22,
+          "QG"
+        ],
+        [
+          "2015/11/26",
+          16,
+          "QG"
+        ],
+        [
+          "2015/11/27",
+          22,
+          "QG"
+        ],
+        [
+          "2015/11/28",
+          10,
+          "QG"
+        ],
+        [
+          "2015/11/08",
+          10,
+          "SY"
+        ],
+        [
+          "2015/11/09",
+          15,
+          "SY"
+        ],
+        [
+          "2015/11/10",
+          35,
+          "SY"
+        ],
+        [
+          "2015/11/11",
+          38,
+          "SY"
+        ],
+        [
+          "2015/11/12",
+          22,
+          "SY"
+        ],
+        [
+          "2015/11/13",
+          16,
+          "SY"
+        ],
+        [
+          "2015/11/14",
+          7,
+          "SY"
+        ],
+        [
+          "2015/11/15",
+          2,
+          "SY"
+        ],
+        [
+          "2015/11/16",
+          17,
+          "SY"
+        ],
+        [
+          "2015/11/17",
+          33,
+          "SY"
+        ],
+        [
+          "2015/11/18",
+          40,
+          "SY"
+        ],
+        [
+          "2015/11/19",
+          32,
+          "SY"
+        ],
+        [
+          "2015/11/20",
+          26,
+          "SY"
+        ],
+        [
+          "2015/11/21",
+          35,
+          "SY"
+        ],
+        [
+          "2015/11/22",
+          4,
+          "SY"
+        ],
+        [
+          "2015/11/23",
+          32,
+          "SY"
+        ],
+        [
+          "2015/11/24",
+          26,
+          "SY"
+        ],
+        [
+          "2015/11/25",
+          22,
+          "SY"
+        ],
+        [
+          "2015/11/26",
+          16,
+          "SY"
+        ],
+        [
+          "2015/11/27",
+          22,
+          "SY"
+        ],
+        [
+          "2015/11/28",
+          10,
+          "SY"
+        ],
+        [
+          "2015/11/08",
+          10,
+          "DD"
+        ],
+        [
+          "2015/11/09",
+          15,
+          "DD"
+        ],
+        [
+          "2015/11/10",
+          35,
+          "DD"
+        ],
+        [
+          "2015/11/11",
+          38,
+          "DD"
+        ],
+        [
+          "2015/11/12",
+          22,
+          "DD"
+        ],
+        [
+          "2015/11/13",
+          16,
+          "DD"
+        ],
+        [
+          "2015/11/14",
+          7,
+          "DD"
+        ],
+        [
+          "2015/11/15",
+          2,
+          "DD"
+        ],
+        [
+          "2015/11/16",
+          17,
+          "DD"
+        ],
+        [
+          "2015/11/17",
+          33,
+          "DD"
+        ],
+        [
+          "2015/11/18",
+          4,
+          "DD"
+        ],
+        [
+          "2015/11/19",
+          32,
+          "DD"
+        ],
+        [
+          "2015/11/20",
+          26,
+          "DD"
+        ],
+        [
+          "2015/11/21",
+          35,
+          "DD"
+        ],
+        [
+          "2015/11/22",
+          40,
+          "DD"
+        ],
+        [
+          "2015/11/23",
+          32,
+          "DD"
+        ],
+        [
+          "2015/11/24",
+          26,
+          "DD"
+        ],
+        [
+          "2015/11/25",
+          22,
+          "DD"
+        ],
+        [
+          "2015/11/26",
+          16,
+          "DD"
+        ],
+        [
+          "2015/11/27",
+          22,
+          "DD"
+        ],
+        [
+          "2015/11/28",
+          10,
+          "DD"
+        ]
+      ]
+    }]
+}
+        chart_29453355789830.setOption(option);
+    </script>
+  </body>
+</html>
