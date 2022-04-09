@@ -176,7 +176,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             if {$type eq "str"} {
                 # possible values...
                 lappend validvalue {white|black|red|blue|green|transparent|inherit}
-                lappend validvalue {^#.+$}
+                lappend validvalue {^#[a-zA-Z0-9]{3,6}$}
                 lappend validvalue {^rgb\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+)\)$}
                 lappend validvalue {^rgba\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+),\s*(?:1|0?\.[0-9]+)\)$}
                 lappend validvalue {^hsl\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?%)\s*,\s*(\d+(?:\.\d+)?%)\)$}
@@ -431,6 +431,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatCSYS {
             # possible values...
             set validvalue {cartesian2d polar geo}
+
+            if {[InfoNameProc 2 "themeriverseries"]} {
+                set validvalue {single}
+            }
+
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
