@@ -48,7 +48,7 @@
                # Add themeRiver chart + singleAxis option.
                # Add themeRiver examples.
 # 09-04-2022 : v1.8.1
-               # Fix bug on adding multiple axis (xAxis, yAxis...).
+               # Fix bug on adding multiple axis (xAxis, yAxis...). Not included in version 1.7
 
 package require Tcl 8.6
 package require huddle 0.3
