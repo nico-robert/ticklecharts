@@ -395,3 +395,6 @@ Release :
     - Add `themeRiver` examples.
 *  **09-04-2022** : 1.8.1
     - Fix bug on adding multiple axis (xAxis, yAxis...). Not included in version `1.7`
+*  **11-04-2022** : 1.9
+    - Add `sankey` chart.
+    - Add `sankey` examples.
