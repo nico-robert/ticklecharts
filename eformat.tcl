@@ -175,7 +175,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
             if {$type eq "str"} {
                 # possible values...
-                lappend validvalue {white|black|red|blue|green|transparent|inherit}
+                lappend validvalue {white|black|red|blue|green|transparent|inherit|source|gradient}
                 lappend validvalue {^#[a-zA-Z0-9]{3,6}$}
                 lappend validvalue {^rgb\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+)\)$}
                 lappend validvalue {^rgba\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+),\s*(?:1|0?\.[0-9]+)\)$}
@@ -656,6 +656,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatFocus {
             # possible values...
             set validvalue {none self series ancestor descendant}
+
+            if {[InfoNameProc 2 "sankeyseries"]} {
+                append validvalue " adjacency"
+            }
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -827,6 +831,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
                     error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
                 }
+            }
+        }
+
+        formatNodeAlign {
+            # possible values...
+            set validvalue {left right justify}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                       for this key '$key' in $nameproc"
             }
         }
 
