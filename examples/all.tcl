@@ -61,6 +61,11 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] theme
     source $chartfile
 }
 
+# sankey
+foreach chartfile [glob -directory [file join [file dirname [info script]] sankey] -types f *.tcl] {
+    source $chartfile
+}
+
 # layout
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile

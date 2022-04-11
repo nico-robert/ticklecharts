@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>sankey_orient_vertical</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_24451557570001" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_24451557568352 = echarts.init(document.getElementById('id_24451557570001'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [{
+      "type": "sankey",
+      "name": "sankeyseries_1",
+      "zlevel": 0,
+      "z": 2,
+      "left": "5%",
+      "top": "5%",
+      "right": "20%",
+      "bottom": "10%",
+      "width": "auto",
+      "height": "auto",
+      "nodeWidth": 20,
+      "nodeGap": 8,
+      "nodeAlign": "justify",
+      "layoutIterations": 32,
+      "orient": "vertical",
+      "draggable": true,
+      "label": {
+        "show": true,
+        "position": "top",
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "lineStyle": {
+        "color": "source",
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "curveness": 0.5,
+        "opacity": 1
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "adjacency",
+        "blurScope": "coordinateSystem"
+      },
+      "data": [
+        {"name": "a"},
+        {"name": "b"},
+        {"name": "a1"},
+        {"name": "b1"},
+        {"name": "c"},
+        {"name": "e"}
+      ],
+      "links": [
+        {
+          "source": "a",
+          "target": "a1",
+          "value": 5
+        },
+        {
+          "source": "e",
+          "target": "b",
+          "value": 3
+        },
+        {
+          "source": "a",
+          "target": "b1",
+          "value": 3
+        },
+        {
+          "source": "b1",
+          "target": "a1",
+          "value": 1
+        },
+        {
+          "source": "b1",
+          "target": "c",
+          "value": 2
+        },
+        {
+          "source": "b",
+          "target": "c",
+          "value": 1
+        }
+      ],
+      "silent": false
+    }]
+}
+        chart_24451557568352.setOption(option);
+    </script>
+  </body>
+</html>
