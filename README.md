@@ -331,7 +331,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] parallel
 - [ ] lines
 - [ ] graph
-- [ ] sankey
+- [x] sankey
 - [x] funnel
 - [ ] gauge
 - [ ] pictorialBar
