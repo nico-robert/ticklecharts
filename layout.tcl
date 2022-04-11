@@ -161,8 +161,8 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # set position in serie instead of grid... for 'funnel' chart
-                    if {[dict get $opts @S=type] eq "funnel"} {
+                    # set position in serie instead of grid... for 'funnel' & 'sankey' chart
+                    if {[dict get $opts @S=type] eq "funnel" || [dict get $opts @S=type] eq "sankey"} {
                         set g 1
                         foreach val {top bottom left right width height} {
                             if {[info exists [set val]]} {
@@ -263,14 +263,15 @@ oo::define ticklecharts::Gridlayout {
             error "'Radar' mode should not be added first..."
         }
 
-        # Check if pie, sunburst, themeriver chart type exists in first place
+        # Check if pie, sunburst, themeriver, sankey chart type exists in first place
         # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
             if {!$_indexchart} {
                 switch -exact -- [dict get $_options @D=series @S=type]  {
                     pie        {error "'Pie' chart should not be added first..."}
                     sunburst   {error "'Sunburst' chart should not be added first..."}
-                    themeRiver {error "'themeRiver' chart should not be added first..."}
+                    themeRiver {error "'ThemeRiver' chart should not be added first..."}
+                    sankey     {error "'Sankey' chart should not be added first..."}
                 }
             }
         }

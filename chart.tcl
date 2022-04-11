@@ -16,6 +16,7 @@ oo::class create ticklecharts::chart {
     variable _indexsunburstseries   ; # index sunburst serie
     variable _indextreeseries       ; # index tree serie
     variable _indexthemeriverseries ; # index themeriver serie
+    variable _indexsankeyseries     ; # index sankey serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -507,6 +508,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddSankeySeries {args} {
+        # Add data serie chart (use only for Sankey chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions sankeyseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-sankey
+        #
+        # Returns nothing     
+        incr _indexsankeyseries
+
+        set options [ticklecharts::sankeyseries $_indexsankeyseries $args]
+        set f [ticklecharts::OptsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -565,7 +585,7 @@ oo::define ticklecharts::chart {
 
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries Render
-    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis
+    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries 
+    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render
 }
 

@@ -721,3 +721,70 @@ proc ticklecharts::themeriverseries {index value} {
     return $options
 
 }
+
+proc ticklecharts::sankeyseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-sankey
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::sankeyseries below.
+    #
+    # return dict sankeyseries options
+
+    setdef options -type                    -validvalue {}                  -type str               -default "sankey"
+    setdef options -id                      -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -name                    -validvalue {}                  -type str               -default "sankeyseries_${index}"
+    setdef options -zlevel                  -validvalue {}                  -type num               -default 0
+    setdef options -z                       -validvalue {}                  -type num               -default 2
+    setdef options -left                    -validvalue formatLeft          -type num|str           -default "5%"
+    setdef options -top                     -validvalue formatTop           -type num|str           -default "5%"
+    setdef options -right                   -validvalue formatRight         -type num|str           -default "20%"
+    setdef options -bottom                  -validvalue formatBottom        -type num|str           -default "5%"
+    setdef options -width                   -validvalue {}                  -type num|str           -default "auto"
+    setdef options -height                  -validvalue {}                  -type num|str           -default "auto"
+    setdef options -nodeWidth               -validvalue {}                  -type num               -default 20
+    setdef options -nodeGap                 -validvalue {}                  -type num               -default 8
+    setdef options -nodeAlign               -validvalue formatNodeAlign     -type str               -default "justify"
+    setdef options -layoutIterations        -validvalue {}                  -type num               -default 32
+    setdef options -orient                  -validvalue formatOrient        -type str               -default "horizontal"
+    setdef options -draggable               -validvalue {}                  -type bool              -default "True"
+    setdef options -levels                  -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsSankeyItem $value]
+    setdef options -label                   -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
+    setdef options -labelLayout             -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
+    setdef options -lineStyle               -validvalue {}                  -type dict|null         -default [ticklecharts::lineStyle $value]
+    setdef options -itemStyle               -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -validvalue formatSelectedMode  -type bool|str|null     -default "nothing"
+    setdef options -data                    -validvalue {}                  -type list.o            -default [ticklecharts::sankeyItem $value -data]
+    setdef options -nodes                   -validvalue {}                  -type list.o|null       -default [ticklecharts::sankeyItem $value -nodes]
+    setdef options -links                   -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -links]
+    setdef options -edges                   -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -edges]
+    setdef options -silent                  -validvalue {}                  -type bool              -default "False"
+    setdef options -animation               -validvalue {}                  -type bool|null         -default "nothing"
+    setdef options -animationThreshold      -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -animationDuration       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelay          -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationDurationUpdate -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    # not supported yet...
+    # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    if {![dict exists $value -data] && ![dict exists $value -nodes]} {
+        error "key -data or -nodes not present..."
+    }
+
+    set value [dict remove $value -levels \
+                                  -label \
+                                  -lineStyle \
+                                  -labelLayout -itemStyle \
+                                  -emphasis -blur -select -data -nodes -links -edges]
+    
+
+    set options [merge $options $value]
+
+    return $options
+ 
+}

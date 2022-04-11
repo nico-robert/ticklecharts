@@ -3,6 +3,102 @@
 #
 namespace eval ticklecharts {}
 
+proc ticklecharts::levelsSankeyItem {value} {
+
+    if {![dict exists $value -levels]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value -levels] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options depth       -validvalue {}  -type num|null    -default "nothing"
+        setdef options label       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options lineStyle   -validvalue {}  -type dict|null   -default [ticklecharts::lineStyle $item]
+        setdef options emphasis    -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur        -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select      -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+
+        set item [dict remove $item label lineStyle itemStyle emphasis blur select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::sankeyItem {value key} {
+
+    if {![dict exists $value $key]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value $key] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name        -validvalue {}  -type str|null    -default "nothing"
+        setdef options value       -validvalue {}  -type num|null    -default "nothing"
+        setdef options depth       -validvalue {}  -type num|null    -default "nothing"
+        setdef options label       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis    -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur        -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select      -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+
+        set item [dict remove $item label itemStyle emphasis blur select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::linksItem {value key} {
+
+    if {![dict exists $value $key]} {
+        return "nothing"
+    }
+
+    set layer 0
+
+    foreach item [dict get $value $key] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options source      -validvalue {}  -type str|null    -default "nothing"
+        setdef options target      -validvalue {}  -type str|null    -default "nothing"
+        setdef options value       -validvalue {}  -type num|null    -default "nothing"
+        setdef options lineStyle   -validvalue {}  -type dict|null   -default [ticklecharts::lineStyle $item]
+        setdef options emphasis    -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur        -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select      -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+
+        set item [dict remove $item lineStyle emphasis blur select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::themeriverItem {value} {
 
     if {![dict exists $value -data]} {
@@ -636,6 +732,10 @@ proc ticklecharts::itemStyle {value} {
     if {[InfoNameProc 2 "treeseries"]} {
         setdef options borderColor      -validvalue formatColor   -type str|null        -default "#c23531"
         setdef options borderWidth      -validvalue {}            -type str|num|null    -default 1.5
+    }
+
+    if {[InfoNameProc 2 "sankeyseries"]} {
+        setdef options borderColor      -validvalue formatColor   -type str|null        -default "inherit"
     }
     
     set options [merge $options [dict get $value $key]]
@@ -2082,14 +2182,11 @@ proc ticklecharts::lineStyle {value} {
     setdef options shadowColor    -validvalue formatColor         -type str|null               -default "null"
     setdef options shadowOffsetX  -validvalue {}                  -type num                    -default 0
     setdef options shadowOffsetY  -validvalue {}                  -type num                    -default 0
+    setdef options curveness      -validvalue {}                  -type num|null               -default "nothing"
     setdef options opacity        -validvalue formatOpacity       -type num                    -default 1
     #...
     
-    if {[InfoNameProc 2 "legend"]} {
-        set options [dict remove $options color width type \
-                                          dashOffset cap join \
-                                          miterLimit shadowBlur opacity]
-                                          
+    if {[InfoNameProc 2 "legend"]} {                                          
         setdef options color      -validvalue formatColor         -type str|null       -default "inherit"
         setdef options width      -validvalue {}                  -type str|num|null   -default "auto"
         setdef options type       -validvalue formatLineStyleType -type list.n|num|str -default "inherit"
