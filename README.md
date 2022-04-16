@@ -398,3 +398,6 @@ Release :
 *  **11-04-2022** : 1.9
     - Add `sankey` chart.
     - Add `sankey` examples.
+*  **16-04-2022** : 1.9.1
+    - Added procedure to check if the options match the default values, output `warning` message if option name doesn't exist or not supported.
+    - Update chart examples to avoid warnings messages.

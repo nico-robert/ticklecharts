@@ -52,6 +52,10 @@
 # 11-04-2022 : v1.9
                # Add sankey chart.
                # Add sankey examples.
+# 16-04-2022 : v1.9.1
+               # Added procedure to check if the options match the default values,
+               # output warning message if option name doesn't exist or not supported.
+               # Update chart examples to avoid warnings messages.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -71,7 +75,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.9
+    variable version 1.9.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
@@ -82,8 +86,8 @@ namespace eval ticklecharts {
 
 }
 
-namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type 
-namespace import ticklecharts::InfoNameProc ticklecharts::formatEcharts
-namespace import ticklecharts::EchartsOptsTheme
+namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type \
+                 ticklecharts::InfoNameProc ticklecharts::formatEcharts \
+                 ticklecharts::EchartsOptsTheme
 
 package provide ticklecharts $::ticklecharts::version
