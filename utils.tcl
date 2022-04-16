@@ -311,14 +311,45 @@ proc ticklecharts::MatchType {mytype type keyt} {
     return 0
 }
 
+proc ticklecharts::keyCompare {d other} {
+    # Compare keys... output warning message if key name doesn't exist 
+    # in key default option...
+    #
+    # d      - dict
+    # other  - list values
+    #
+    # return nothing
+
+    if {![ticklecharts::Isdict $other] || $other eq ""} {
+        return
+    }
+
+    lassign [info level 2] infoproc
+
+    set keys1 [dict keys $d]
+
+    foreach k [dict keys $other] {
+        if {[string match -nocase *item $k]} {continue}
+        if {$k ni $keys1} {
+            puts "warning ($infoproc): $k is not in '[join $keys1 ", "]' or not supported..."
+        }
+    }
+
+    return
+}
+
 proc ticklecharts::merge {d other} {
     # merge 2 dictionnaries and control the type of value
     # An error exception is raised if type of value doesn't match
     #
-    # d      - dict
-    # other  - 2nd dict
+    # d      - dict (default option)
+    # other  - list values
     #
-    # Returns dictionary
+    # Returns a new dictionary
+
+    # Compare keys... output warning message if key name doesn't exist 
+    # in key default option...
+    ticklecharts::keyCompare $d $other
 
     set mydict [dict create]
     
