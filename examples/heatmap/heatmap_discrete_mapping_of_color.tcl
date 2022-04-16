@@ -2,6 +2,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'center' by 'middle' for visualMap top flag
+# v3.0 : delete calculable & realtime keys it's not a option... for visualMap(piecewise)
+#        delete -animation in AddHeatmapSeries method it's not a key option
+#        + rename 'render' to 'Render' (Note : The first letter in capital letter)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -148,9 +151,9 @@ lassign [generateData] data xdata ydata
 
 set chart [ticklecharts::chart new]
 
+# delete 'calculable "true"' & 'realtime "false"' in SetOptions(-visualMap) method
 $chart SetOptions -tooltip {position top} \
-                  -visualMap [list type "piecewise" calculable true \
-                                   realtime false \
+                  -visualMap [list type "piecewise" \
                                    min 0 max 1 left right top middle splitNumber 8 inRange [list color [list {#313695 #4575b4 #74add1 #abd9e9
                                                                           #e0f3f8 #ffffbf
                                                                           #fee090 #fdae61
@@ -161,16 +164,16 @@ $chart SetOptions -tooltip {position top} \
 $chart Xaxis -type "category" -data [list $xdata]
 $chart Yaxis -type "category" -data [list $ydata] -boundaryGap "True"
 
+# delete '-animation false' in AddHeatmapSeries method
 $chart AddHeatmapSeries -name "Gaussian" \
                         -data $data \
                         -progressive 1000 \
-                        -animation false \
                         -emphasis {itemStyle {borderColor #333 borderWidth 1}}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] \
+$chart Render -outfile [file join $dirname $fbasename.html] \
               -title $fbasename \
               -jschartvar "mychart" \
               -divid "id_chart" \

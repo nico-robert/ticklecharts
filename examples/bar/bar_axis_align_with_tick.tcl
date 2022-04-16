@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete -chartWidth key it's not a key option...
+#        + rename 'render' to 'Render' (Note : The first letter in capital letter)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -11,12 +14,13 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "shadow"}
                
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] -axisTick {show "True" alignWithLabel "True"}
 $chart Yaxis
+
+# delete '-chartWidth "60%"' in AddBarSeries method
 $chart AddBarSeries -name "Direct" \
-               -chartWidth "60%" \
                -data [list {10 52 200 334 390 330 220}]
 
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete borderColor in SingleAxis(-splitLine) it's not a key option.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -8,8 +11,7 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip {trigger "axis" axisPointer {type line lineStyle {color "rgba(0,0,0,0.2)" width 1 type solid}}} \
                   -legend [list data [list {"DQ" "TY" "SS" "QG" "SY" "DD"}]]
                 
-$chart SingleAxis -top 50 -bottom 50 -axisTick {} -axisLabel {} -type "time" -axisPointer {animation true label {show true}} \
-                  -splitLine {show true lineStyle {type dashed opacity 0.2}}
+$chart SingleAxis -top 50 -bottom 50 -axisTick {} -axisLabel {} -type "time" -axisPointer {animation true label {show true}}
 
 $chart AddThemeRiverSeries -emphasis {itemStyle {shadowBlur 20 shadowColor "rgba(0, 0, 0, 0.8)"}} \
                            -data {

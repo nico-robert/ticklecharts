@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete 'show' key it's not a key option... in areaStyle flag
+#        + rename 'render' to 'Render' (Note : The first letter in capital letter)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -67,6 +71,7 @@ $chart AddRadarSeries -emphasis {lineStyle {width 4}} \
                                             ] \
                                      ]
 
+# delete 'show "true"' in AddRadarSeries(areaStyle) method
 $chart AddRadarSeries -radarIndex 1 \
                       -dataradaritem [list \
                                             [list name "Data C" \
@@ -78,7 +83,7 @@ $chart AddRadarSeries -radarIndex 1 \
                                             ] \
                                             [list name "Data D" \
                                                   value [list {100 93 50 90 70 60}] \
-                                                  areaStyle [list show true color $js_RadialGradient] \
+                                                  areaStyle [list color $js_RadialGradient] \
                                             ] \
                                      ]
 
@@ -88,4 +93,4 @@ $chart AddRadarSeries -radarIndex 1 \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

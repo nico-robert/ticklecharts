@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete borderColor in SetOptions(-legend) it's not a key option.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -21,7 +24,7 @@ set data2 {
 set chart [ticklecharts::chart new]
 
 $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"} \
-                  -legend {top 2% left 3% orient vertical dataLegendItem {{name "tree1" icon "rect"} {name "tree2" icon "rect"}} borderColor "#c23531"} \
+                  -legend {top 2% left 3% orient vertical dataLegendItem {{name "tree1" icon "rect"} {name "tree2" icon "rect"}}} \
                 
 $chart AddTreeSeries -name "tree1" -top "5%" -left "7%" -bottom "2%" -right "60%" -symbolSize 7 \
                      -label {position "left" verticalAlign "middle" align "right"} \

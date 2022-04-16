@@ -1,11 +1,14 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete AddSankeySeries(-layout) it's not a key option.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 set chart [ticklecharts::chart new]
                
-$chart AddSankeySeries -layout "none" -emphasis {focus "adjacency"} \
+$chart AddSankeySeries -emphasis {focus "adjacency"} \
                        -data {{name a} {name b} {name a1} {name a2} {name b1} {name c}} \
                        -links {
                            {source a target a1 value 5}

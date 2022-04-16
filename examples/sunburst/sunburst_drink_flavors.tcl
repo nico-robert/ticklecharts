@@ -1,5 +1,10 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete align in SetOptions(-title) textStyle method, it's not a key option.
+#        add subtextStyle in SetOptions(-title).
+#        delete silent in AddSunburstSeries(levels) label, it's not a key option.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -15,13 +20,14 @@ set data {
 {name "Nutty<n?>Cocoa" itemStyle {color "#a87b64"} children {{name "Nutty" itemStyle {color "#c78869"} children {{name "Peanuts" value 1 itemStyle {color "#d4ad12"}} {name "Hazelnut" value 1 itemStyle {color "#9d5433"}} {name "Almond" value 1 itemStyle {color "#c89f83"}}}} {name "Cocoa" itemStyle {color "#bb764c"} children {{name "Chocolate" value 1 itemStyle {color "#692a19"}} {name "Dark Chocolate" value 1 itemStyle {color "#470604"}}}}}}
 {name "Sweet" itemStyle {color "#e65832"} children {{name "Brown Sugar" itemStyle {color "#d45a59"} children {{name "Molasses" value 1 itemStyle {color "#310d0f"}} {name "Maple Syrup" value 1 itemStyle {color "#ae341f"}} {name "Caramelized" value 1 itemStyle {color "#d78823"}} {name "Honey" value 1 itemStyle {color "#da5c1f"}}}} {name "Vanilla" value 1 itemStyle {color "#f89a80"}} {name "Vanillin" value 1 itemStyle {color "#f37674"}} {name "Overall Sweet" value 1 itemStyle {color "#e75b68"}} {name "Sweet Aromatics" value 1 itemStyle {color "#d0545f"}}}}
 }
-
+ 
 set chart [ticklecharts::chart new]
 
 $chart SetOptions -title {
                             text "WORLD COFFEE RESEARCH SENSORY LEXICON"
                             subtext "Source: https://worldcoffeeresearch.org/work/sensory-lexicon/"
-                            textStyle {fontSize 14 align "center"}
+                            textStyle {fontSize 14}
+                            subtextStyle {align "center"}
                             sublink "https://worldcoffeeresearch.org/work/sensory-lexicon/"
                         } \
                   
@@ -34,7 +40,7 @@ $chart AddSunburstSeries -radius [list {0 80%}] \
                                 {} \
                                 [list radius [list {15% 35%}] itemStyle {borderWidth 2} label {rotate "tangential"}] \
                                 [list radius [list {35% 70%}] label {align "right"}] \
-                                [list radius [list {70% 72%}] label {position "outside" padding 3 silent "false"} itemStyle {borderWidth 3}] \
+                                [list radius [list {70% 72%}] label {position "outside" padding 3} itemStyle {borderWidth 3}] \
                          ]
 
 set fbasename [file rootname [file tail [info script]]]

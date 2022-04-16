@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : delete 'show' key it's not a key option... in emphasis flag
+#        + rename 'render' to 'Render' (Note : The first letter in capital letter)
 
 set data {
   {
@@ -80,19 +83,20 @@ $chart SetOptions -title {text "Life Expectancy and GDP by Country" left "5%" to
 $chart Xaxis -splitLine {show True lineStyle {type dashed}} -type "value"
 $chart Yaxis -splitLine {show True lineStyle {type dashed}} -scale "True"
 
+# delete 'show "true"' in AddRadarSeries(emphasis) method
 $chart AddScatterSeries -name "1990" \
                         -symbolSize $jssymbolSize \
                         -data [lindex $data 0] \
-                        -emphasis [list show true focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
+                        -emphasis [list focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
                         -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem borderColor null opacity 0.75]
 
 $chart AddScatterSeries -name "2015" \
                         -symbolSize $jssymbolSize \
                         -data [lindex $data 1] \
-                        -emphasis [list show true focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
+                        -emphasis [list focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
                         -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem1 borderColor null opacity 0.75]
                         
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename  
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename  
