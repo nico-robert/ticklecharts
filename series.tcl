@@ -479,7 +479,6 @@ proc ticklecharts::scatterseries {index value} {
         set value [dict remove $value {*}$lflag]
     } else {
         set value [dict remove $value {*}$lflag]
-    
     }
         
     set options [merge $options $value]

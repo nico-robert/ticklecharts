@@ -113,12 +113,12 @@ proc ticklecharts::themeriverItem {value} {
 
         lassign $item date value name
 
-        setdef options date   -validvalue {}   -type str|num  -default $date
-        setdef options value  -validvalue {}   -type num      -default $value
-        setdef options name   -validvalue {}   -type str      -default $name
+        setdef options date   -validvalue {}   -type str|num  -default "nothing"
+        setdef options value  -validvalue {}   -type num      -default "nothing"
+        setdef options name   -validvalue {}   -type str      -default "nothing"
 
         # simply to check if the data in my list item are correct...
-        merge $options $item
+        merge $options [dict create date $date value $value name $name]
 
         lappend opts [list $date $value $name]
         set options {}
@@ -756,6 +756,11 @@ proc ticklecharts::emphasis {value} {
 
     set d [dict get $value $key]
 
+    lassign [split $::ticklecharts::echarts_version "."] major minor patch
+    if {[format {%s.%s} $major $minor] >= 5.3} {
+        setdef options disabled  -validvalue {} -type bool|null -default "nothing"
+    }
+
     setdef options scale     -validvalue {}              -type bool|null -default "True"
     setdef options focus     -validvalue formatFocus     -type str|null  -default "none"
     setdef options blurScope -validvalue formatBlurScope -type str|null  -default "coordinateSystem"
@@ -1086,6 +1091,7 @@ proc ticklecharts::setYAxis {value} {
     setdef options -splitLine       -validvalue {}                  -type dict|null           -default [ticklecharts::splitLine $value]
     setdef options -minorSplitLine  -validvalue {}                  -type dict|null           -default [ticklecharts::minorSplitLine $value]
     setdef options -splitArea       -validvalue {}                  -type dict|null           -default [ticklecharts::splitArea $value]
+    setdef options -axisPointer     -validvalue {}                  -type dict|null           -default [ticklecharts::axisPointer $value]
     setdef options -zlevel          -validvalue {}                  -type num                 -default 0
     setdef options -z               -validvalue {}                  -type num                 -default 0
     
@@ -1815,6 +1821,10 @@ proc ticklecharts::labelLine {value} {
         setdef options maxSurfaceAngle  -validvalue {} -type num|null  -default "nothing"
     }
 
+    if {[InfoNameProc 2 "funnelseries"]} {
+        setdef options length           -validvalue {} -type num|null  -default "nothing"
+    }
+
     set options [merge $options $d]
 
     return $options
@@ -2254,6 +2264,11 @@ proc ticklecharts::textStyle {value key} {
     setdef options overflow             -validvalue formatOverflow       -type str|null       -default "null"
     setdef options ellipsis             -validvalue {}                   -type str            -default "..."
     #...
+
+    if {$key eq "subtextStyle"} {
+        setdef options align         -validvalue formatTextAlign         -type str|null  -default "nothing"
+        setdef options verticalAlign -validvalue formatVerticalTextAlign -type str|null  -default "nothing" 
+    }
 
     set options [merge $options [dict get $value $key]]
 
