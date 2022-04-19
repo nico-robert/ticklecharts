@@ -243,6 +243,8 @@ proc ticklecharts::theme {value} {
             dict set ticklecharts::opts_theme graphLineWidth             1
             dict set ticklecharts::opts_theme axisXgridlineShow          false
             dict set ticklecharts::opts_theme axisYgridlineShow          true
+            dict set ticklecharts::opts_theme datazoomBackgroundColor    "rgba(47,69,84,0)"
+            dict set ticklecharts::opts_theme datazoomFillColor          "rgba(47,69,84,0.25)"
         }
         default {error "theme not specified..."}
     }
