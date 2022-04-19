@@ -3,6 +3,10 @@
 #
 namespace eval ticklecharts {}
 
+# This class allows you to add multiple charts on the same div...
+# The charts are not necessarily of the same type.
+# The first chart needs to be a graph with an x/y axis.
+
 oo::class create ticklecharts::Gridlayout {
     variable _layout ; # huddle
     variable _indexchart ; # grid index chart
@@ -28,7 +32,7 @@ oo::class create ticklecharts::Gridlayout {
         set _options    {}
         set _indexchart -1
 
-        lappend _options {*}[ticklecharts::OptsToEchartsHuddle $opts_global]
+        lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
 
     }
 }
@@ -52,7 +56,8 @@ oo::define ticklecharts::Gridlayout {
         # -right  - Distance between grid component and the right side of the container. (% or number)
         # -width  - Width of grid component. Adaptive by default. (% or number)
         # -height - Height of grid component. Adaptive by default. (% or number)
-        # -center - Center position of Polar coordinate, the first of which is the horizontal position, and the second is the vertical position (array)
+        # -center - Center position of Polar coordinate, the first of which is the horizontal position, 
+        #           and the second is the vertical position. (array)
         #
         # Returns nothing
         foreach {key value} $args {
@@ -96,7 +101,7 @@ oo::define ticklecharts::Gridlayout {
         set g 0
         set layoutkeys {
                 series radiusAxis angleAxis xAxis yAxis grid title polar
-                radar legend tooltip visualMap toolbox singleAxis
+                radar legend tooltip visualMap toolbox singleAxis dataZoom
             }
 
         foreach {key opts} [$chart options] {
