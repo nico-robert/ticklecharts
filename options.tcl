@@ -687,6 +687,42 @@ proc ticklecharts::markPointItem {value} {
 
 }
 
+proc ticklecharts::dataBackground {value} {
+
+    if {![dict exists $value dataBackground]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value dataBackground]
+
+    setdef options lineStyle -validvalue {}  -type dict|null -default [ticklecharts::lineStyle $d]
+    setdef options areaStyle -validvalue {}  -type dict|null -default [ticklecharts::areaStyle $d]
+
+    set d [dict remove $d lineStyle areaStyle]
+
+    set options [merge $options $d]
+
+    return $options
+}
+
+proc ticklecharts::selectedDataBackground {value} {
+
+    if {![dict exists $value selectedDataBackground]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value selectedDataBackground]
+
+    setdef options lineStyle -validvalue {}  -type dict|null -default [ticklecharts::lineStyle $d]
+    setdef options areaStyle -validvalue {}  -type dict|null -default [ticklecharts::areaStyle $d]
+
+    set d [dict remove $d lineStyle areaStyle]
+
+    set options [merge $options $d]
+
+    return $options
+}
+
 proc ticklecharts::itemStyle {value} {
 
     if {[dict exists $value itemStyle]} {
@@ -1650,9 +1686,17 @@ proc ticklecharts::areaStyle {value} {
     } else {
         return "nothing"
     }
+
+    set opacity 0.5
     
     if {[InfoNameProc 3 "splitArea"]} {
         set color [EchartsOptsTheme splitAreaColor]
+    } elseif {[InfoNameProc 3 "dataBackground"]} {
+        set color [EchartsOptsTheme datazoomFillColor]
+        set opacity 0.2
+    } elseif {[InfoNameProc 3 "selectedDataBackground"]} {
+        set color "#8fb0f7"
+        set opacity 0.2
     } else {
         set color "null"
     }
@@ -1662,7 +1706,7 @@ proc ticklecharts::areaStyle {value} {
     setdef options shadowColor   -validvalue formatColor   -type str|null               -default "nothing"
     setdef options shadowOffsetX -validvalue {}            -type num                    -default 0
     setdef options shadowOffsetY -validvalue {}            -type num                    -default 0
-    setdef options opacity       -validvalue formatOpacity -type num                    -default 0.5
+    setdef options opacity       -validvalue formatOpacity -type num                    -default $opacity
     #...
 
     set options [merge $options [dict get $value $key]]
@@ -2176,6 +2220,12 @@ proc ticklecharts::lineStyle {value} {
     } elseif {[InfoNameProc 2 "lineseries"]} {
         set color     "nothing"
         set linewidth [EchartsOptsTheme lineWidth]
+    } elseif {[InfoNameProc 3 "dataBackground"]} {
+        set color     [EchartsOptsTheme datazoomFillColor]
+        set linewidth 0.5
+    } elseif {[InfoNameProc 3 "selectedDataBackground"]} {
+        set color "#8fb0f7"
+        set linewidth 0.5
     } else {
         set color     [EchartsOptsTheme axisLineColor]
         set linewidth [EchartsOptsTheme graphLineWidth]
@@ -2235,14 +2285,18 @@ proc ticklecharts::textStyle {value key} {
     if {$::ticklecharts::theme ne "basic" && [InfoNameProc 2 "legend"]} {
         set fontSize 12
         set fontWeight "normal"
+    } elseif {$::ticklecharts::theme ne "basic" && [InfoNameProc 2 "dataZoom"]} {
+        set fontSize 12
+        set fontWeight "bolder"
+    } elseif {$::ticklecharts::theme ne "basic" && [InfoNameProc 2 "visualMap"]} {
+        set fontSize 12
+        set fontWeight "bolder"
+    } elseif {$::ticklecharts::theme ne "basic" && $key eq "subtextStyle"} {
+        set fontSize 13
+        set fontWeight "normal"
     } else {
         set fontSize 18
         set fontWeight "bolder"
-    }
-
-    if {$::ticklecharts::theme ne "basic" && $key eq "subtextStyle"} {
-        set fontSize 13
-        set fontWeight "normal"
     }
 
     setdef options color                -validvalue formatColor          -type str|null       -default $color
@@ -2531,11 +2585,15 @@ proc ticklecharts::controller {value} {
 
 proc ticklecharts::handleStyle {value} {
 
-    if {![dict exists $value handleStyle]} {
+    if {[dict exists $value handleStyle]} {
+        set key "handleStyle"
+    } elseif {[dict exists $value -handleStyle]} {
+        set key "-handleStyle"
+    } else {
         return "nothing"
     }
     
-    set d [dict get $value handleStyle]
+    set d [dict get $value $key]
 
     setdef options color            -validvalue formatColor      -type str|null            -default "nothing"
     setdef options borderColor      -validvalue formatColor      -type str|null            -default "nothing"
@@ -2543,6 +2601,43 @@ proc ticklecharts::handleStyle {value} {
     setdef options borderType       -validvalue formatBorderType -type str|num|list.d|null -default "solid"
     setdef options borderDashOffset -validvalue {}               -type num|null            -default "nothing"
     setdef options borderCap        -validvalue formatCap        -type str|null            -default "butt"
+    setdef options borderMiterLimit -validvalue {}               -type num|null            -default 10
+    setdef options shadowBlur       -validvalue {}               -type num|null            -default "nothing"
+    setdef options shadowColor      -validvalue formatColor      -type str|null            -default "nothing"
+    setdef options shadowOffsetX    -validvalue {}               -type num|null            -default "nothing"
+    setdef options shadowOffsetY    -validvalue {}               -type num|null            -default "nothing"
+    setdef options opacity          -validvalue formatOpacity    -type num|null            -default "nothing"
+    #...
+
+    if {[InfoNameProc 2 "dataZoom"]} {
+        setdef options color            -validvalue formatColor  -type str|null            -default "#fff"
+        setdef options borderColor      -validvalue formatColor  -type str|null            -default "#ACB8D1"
+        setdef options borderWidth      -validvalue {}           -type num|null            -default 0
+        setdef options borderDashOffset -validvalue {}           -type num|null            -default 0
+        setdef options borderJoin       -validvalue formatJoin   -type str                 -default "bevel"
+    }
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::moveHandleStyle {value} {
+
+    if {![dict exists $value -moveHandleStyle]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value -moveHandleStyle]
+
+    setdef options color            -validvalue formatColor      -type str|null            -default "#D2DBEE"
+    setdef options borderColor      -validvalue formatColor      -type str|null            -default "#000"
+    setdef options borderWidth      -validvalue {}               -type num|null            -default 0
+    setdef options borderType       -validvalue formatBorderType -type str|num|list.d|null -default "solid"
+    setdef options borderDashOffset -validvalue {}               -type num|null            -default "nothing"
+    setdef options borderCap        -validvalue formatCap        -type str|null            -default "butt"
+    setdef options borderJoin       -validvalue formatJoin       -type str                 -default "bevel"
     setdef options borderMiterLimit -validvalue {}               -type num|null            -default 10
     setdef options shadowBlur       -validvalue {}               -type num|null            -default "nothing"
     setdef options shadowColor      -validvalue formatColor      -type str|null            -default "nothing"
@@ -2646,7 +2741,7 @@ proc ticklecharts::feature {value} {
     
     set d [dict get $value feature]
 
-    setdef options dataZoom     -validvalue {} -type dict|null  -default [ticklecharts::dataZoom $d]
+    setdef options dataZoom     -validvalue {} -type dict|null  -default [ticklecharts::toolBoxdataZoom $d]
     setdef options dataView     -validvalue {} -type dict|null  -default [ticklecharts::dataView $d]
     setdef options magicType    -validvalue {} -type dict|null  -default [ticklecharts::magicType $d]
     setdef options brush        -validvalue {} -type dict|null  -default [ticklecharts::brush $d]
@@ -2746,7 +2841,7 @@ proc ticklecharts::dataView {value} {
 
 }
 
-proc ticklecharts::dataZoom {value} {
+proc ticklecharts::toolBoxdataZoom {value} {
 
     if {![dict exists $value dataZoom]} {
         return "nothing"
@@ -2955,15 +3050,27 @@ proc ticklecharts::iconStyle {value key} {
 
 proc ticklecharts::brushStyle {value} {
 
-    if {![dict exists $value brushStyle]} {
+    if {[dict exists $value brushStyle]} {
+        set key "brushStyle"
+    } elseif {[dict exists $value -brushStyle]} {
+        set key "-brushStyle"
+    } else {
         return "nothing"
     }
     
-    set d [dict get $value brushStyle]
+    set d [dict get $value $key]
 
-    setdef options color            -validvalue formatColor      -type str|jsfunc|null -default "nothing"
+    if {[InfoNameProc 2 "dataZoom"]} {
+        set color "rgba(135,175,274,0.15)"
+        set borderwidth 0
+    } else {
+        set color "nothing"
+        set borderwidth 1
+    }
+
+    setdef options color            -validvalue formatColor      -type str|jsfunc|null -default $color
     setdef options borderColor      -validvalue formatColor      -type str|null        -default "#000"
-    setdef options borderWidth      -validvalue {}               -type num|null        -default 1
+    setdef options borderWidth      -validvalue {}               -type num|null        -default $borderwidth
     setdef options borderType       -validvalue formatBorderType -type str|num|list.n  -default "solid"
     setdef options borderDashOffset -validvalue {}               -type num|null        -default 0
     setdef options borderCap        -validvalue formatCap        -type str             -default "butt"

@@ -39,7 +39,7 @@ oo::class create ticklecharts::chart {
         set _indexlineseries 0
         set _indexbarseries  0
 
-        lappend _options {*}[ticklecharts::OptsToEchartsHuddle $opts_global]
+        lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
     }
 }
 
@@ -116,6 +116,8 @@ oo::define ticklecharts::chart {
 
             if {[string match {*series} $key]} {
                 $_echartshchart append $key $opts
+            } elseif {[string match {*dataZoom} $key]} {
+                $_echartshchart append $key $opts
             } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
                 $_echartshchart append $key $opts
             } else {
@@ -179,7 +181,7 @@ oo::define ticklecharts::chart {
         }
     
         set options [ticklecharts::setXAxis $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=xAxis [list {*}$f]
 
@@ -202,7 +204,7 @@ oo::define ticklecharts::chart {
         }
     
         set options [ticklecharts::setYAxis $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=yAxis [list {*}$f]
         
@@ -225,7 +227,7 @@ oo::define ticklecharts::chart {
         }
         
         set options [ticklecharts::SetRadiusAxis $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @L=radiusAxis [list {*}$f]
 
@@ -248,7 +250,7 @@ oo::define ticklecharts::chart {
         }
         
         set options [ticklecharts::SetAngleAxis $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @L=angleAxis [list {*}$f]
 
@@ -266,7 +268,7 @@ oo::define ticklecharts::chart {
         # Returns nothing      
         
         set options [ticklecharts::SetGraphic $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @L=graphic [list {*}$f]
 
@@ -289,7 +291,7 @@ oo::define ticklecharts::chart {
         }
         
         set options [ticklecharts::SetRadarCoordinate $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=radar [list {*}$f]
 
@@ -312,13 +314,12 @@ oo::define ticklecharts::chart {
         }
         
         set options [ticklecharts::SetSingleAxis $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=singleAxis [list {*}$f]
 
     }
-    
-    
+
     method AddBarSeries {args} {
         # Add data serie chart (use only for bar chart)
         #
@@ -332,7 +333,7 @@ oo::define ticklecharts::chart {
         incr _indexbarseries
 
         set options [ticklecharts::barseries $_indexbarseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -351,7 +352,7 @@ oo::define ticklecharts::chart {
         incr _indexlineseries
 
         set options [ticklecharts::lineseries $_indexlineseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -370,7 +371,7 @@ oo::define ticklecharts::chart {
         incr _indexpieseries
 
         set options [ticklecharts::pieseries $_indexpieseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -389,7 +390,7 @@ oo::define ticklecharts::chart {
         incr _indexfunnelseries
 
         set options [ticklecharts::funnelseries $_indexfunnelseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -408,7 +409,7 @@ oo::define ticklecharts::chart {
         incr _indexradarseries
 
         set options [ticklecharts::radarseries $_indexradarseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -427,7 +428,7 @@ oo::define ticklecharts::chart {
         incr _indexscatterseries
 
         set options [ticklecharts::scatterseries $_indexscatterseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -446,7 +447,7 @@ oo::define ticklecharts::chart {
         incr _indexheatmapseries
 
         set options [ticklecharts::heatmapseries $_indexheatmapseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -465,7 +466,7 @@ oo::define ticklecharts::chart {
         incr _indexsunburstseries
 
         set options [ticklecharts::sunburstseries $_indexsunburstseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -484,7 +485,7 @@ oo::define ticklecharts::chart {
         incr _indextreeseries
 
         set options [ticklecharts::treeseries $_indextreeseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -503,7 +504,7 @@ oo::define ticklecharts::chart {
         incr _indexthemeriverseries
 
         set options [ticklecharts::themeriverseries $_indexthemeriverseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -522,7 +523,7 @@ oo::define ticklecharts::chart {
         incr _indexsankeyseries
 
         set options [ticklecharts::sankeyseries $_indexsankeyseries $args]
-        set f [ticklecharts::OptsToEchartsHuddle $options]
+        set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
 
@@ -540,6 +541,7 @@ oo::define ticklecharts::chart {
         # -grid      - grid options      https://echarts.apache.org/en/option.html#grid
         # -visualMap - visualMap options https://echarts.apache.org/en/option.html#visualMap
         # -toolbox   - toolbox options   https://echarts.apache.org/en/option.html#toolbox
+        # -dataZoom  - dataZoom options  https://echarts.apache.org/en/option.html#dataZoom
         #
         # Returns nothing    
         set opts {}
@@ -571,9 +573,15 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -toolbox]} {
             lappend opts "@L=toolbox" [ticklecharts::toolbox $args]
         }
+
+        if {[dict exists $args -dataZoom]} {
+            foreach itemZ [ticklecharts::dataZoom $args] {
+                lappend opts "@D=dataZoom" $itemZ
+            }
+        }
         
         foreach {key value} $opts {
-            set f [ticklecharts::OptsToEchartsHuddle $value]
+            set f [ticklecharts::optsToEchartsHuddle $value]
             lappend _options $key [list {*}$f]
         }
 
@@ -584,8 +592,8 @@ oo::define ticklecharts::chart {
     forward Render my render
 
     # export method
-    export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries
-    export AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries 
-    export Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render
+    export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
+           AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
+           Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render
 }
 
