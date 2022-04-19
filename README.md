@@ -230,7 +230,6 @@ $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 # demo layout line + bar + pie...
 set num  {1 2 3 4 5}
 set num1 {2 3.6 6 2 10}
-set num2 {4 6.6 8 10 15}
 
 set js [ticklecharts::jsfunc new {function (value, index) {
                                 return value + ' (C°)';
@@ -299,7 +298,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] radiusAxis
 - [x] angleAxis
 - [x] radar
-- [ ] dataZoom
+- [x] dataZoom
 - [x] visualMap
 - [x] tooltip
 - [ ] axisPointer
@@ -401,3 +400,7 @@ Release :
 *  **16-04-2022** : 1.9.1
     - Added procedure to check if the options match the default values, output `warning` message if option name doesn't exist or not supported.
     - Update chart examples to avoid warnings messages.
+*  **19-04-2022** : 1.9.2
+    - Add `dataZoom` option (For zooming a specific area...)
+    - Add or update chart examples to include `dataZoom` option.
+    - Fix bug for theming features.

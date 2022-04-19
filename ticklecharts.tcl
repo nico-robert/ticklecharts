@@ -56,6 +56,10 @@
                # Added procedure to check if the options match the default values,
                # output warning message if option name doesn't exist or not supported.
                # Update chart examples to avoid warnings messages.
+# 19-04-2022 : v1.9.2
+               # Add dataZoom option (For zooming a specific area)
+               # Add or update chart examples to include `dataZoom` option.
+               # Fix bug for theming features.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -75,7 +79,7 @@ source [file join $dir theme.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.9.1
+    variable version 1.9.2
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
