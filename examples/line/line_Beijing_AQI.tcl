@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Add dataZoom
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -34,8 +37,12 @@ try {
                                     {gt 300 color "#AC3B2A"}
                                 }
                                 outOfRange {color "#999"}
-                                }
-                
+                                } \
+                    -dataZoom {
+                                {type "slider" show "True" startValue "2014-06-01"}
+                                {type "inside"}
+                            }
+
     $chart Xaxis -data [list [lmap a $datajson {lindex $a 0}]]
     $chart Yaxis
 

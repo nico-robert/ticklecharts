@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : change position label right for second Yaxis (default left)
 #       + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Add dataZoom + toolbox
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -12,7 +13,12 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -title {text "Rainfall and Flow Relationship" left "center"} \
                   -grid {bottom 80} \
                   -tooltip {trigger "axis" axisPointer {type cross animation "false" label {backgroundColor "#505765"}}} \
-                  -legend {left 10}
+                  -legend {left 10} \
+                  -toolbox {feature {dataZoom {yAxisIndex "none"} restore {} saveAsImage {}}} \
+                  -dataZoom {
+                                {type "inside" start 65 end 85}
+                                {type "slider" show "True" realtime "True" start 65 end 85}
+                            }
                             
                 
 $chart Xaxis -boundaryGap "False" \
