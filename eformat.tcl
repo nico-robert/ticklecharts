@@ -757,7 +757,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatFilterMode {
             # possible values...
-            set validvalue {filter empty}
+            set validvalue {filter weakFilter empty none}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -840,6 +840,25 @@ proc ticklecharts::formatEcharts {formattype value key} {
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatMaxMin {
+            # possible values...
+            if {![expr {$value >= 0 && $value <= 100}]} {
+                error "'$value' should be between '0' and '100' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatZoomMW {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {shift ctrl alt}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
             }
         }
 
