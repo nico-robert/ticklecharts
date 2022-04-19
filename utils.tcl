@@ -170,7 +170,7 @@ proc ticklecharts::Type value {
     }
 }
 
-proc ticklecharts::OptsToEchartsHuddle {options} {
+proc ticklecharts::optsToEchartsHuddle {options} {
     # Transform a dict to echartshuddle format...
     # Level 1
     # 
@@ -189,12 +189,12 @@ proc ticklecharts::OptsToEchartsHuddle {options} {
         switch -exact -- $type {
             dict -
             dict.o {
-                append opts [format " ${htype}=$key {%s}" [ticklecharts::DictToEchartsHuddle $value]]
+                append opts [format " ${htype}=$key {%s}" [ticklecharts::dictToEchartsHuddle $value]]
             }
             list.o {
                 set l {}
                 foreach val $value {
-                    lappend l [ticklecharts::DictToEchartsHuddle $val]
+                    lappend l [ticklecharts::dictToEchartsHuddle $val]
                 }
                 append opts [format " ${htype}=$key {%s}" [list @AO $l]]
             }
@@ -210,7 +210,7 @@ proc ticklecharts::OptsToEchartsHuddle {options} {
     return $opts
 }
 
-proc ticklecharts::DictToEchartsHuddle {options} {
+proc ticklecharts::dictToEchartsHuddle {options} {
     # Transform a dict to echartshuddle format...
     # Level 2
     # 
@@ -228,10 +228,10 @@ proc ticklecharts::DictToEchartsHuddle {options} {
        
         switch -exact -- $type {
             "dict" {
-                append opts [format " ${htype}=$subkey %s" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
+                append opts [format " ${htype}=$subkey %s" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
             }
             "dict.o" {
-                append opts [format " ${htype}=$subkey {%s}" [list [ticklecharts::DictToEchartsHuddle $svalue]]]
+                append opts [format " ${htype}=$subkey {%s}" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
             }
             "list.s" {
                 append opts [format " ${htype}=$subkey {%s}" $svalue]
@@ -246,13 +246,13 @@ proc ticklecharts::DictToEchartsHuddle {options} {
                     if {[lindex $val end] eq "list.o"} {
                         set tt {}
                         foreach vv [join [lrange $val 0 end-1]] {
-                            lappend tt [ticklecharts::DictToEchartsHuddle $vv]
+                            lappend tt [ticklecharts::dictToEchartsHuddle $vv]
                         }
                         lappend l [list @D $tt]
                         continue
                     }
                     
-                    lappend l [ticklecharts::DictToEchartsHuddle $val]
+                    lappend l [ticklecharts::dictToEchartsHuddle $val]
                 }
                 append opts [format " ${htype}=$subkey {%s}" [list @AO $l]]
             }
@@ -318,7 +318,7 @@ proc ticklecharts::keyCompare {d other} {
     # d      - dict
     # other  - list values
     #
-    # return nothing
+    # Returns nothing
 
     if {![ticklecharts::Isdict $other] || $other eq ""} {
         return
@@ -329,7 +329,8 @@ proc ticklecharts::keyCompare {d other} {
     set keys1 [dict keys $d]
 
     foreach k [dict keys $other] {
-        if {[string match -nocase *item $k]} {continue}
+        # special case : insert 'dummy' as name of key for theming...
+        if {[string match -nocase *item $k] || [string match -nocase *dummy $k]} {continue}
         if {$k ni $keys1} {
             puts "warning ($infoproc): $k is not in '[join $keys1 ", "]' or not supported..."
         }
