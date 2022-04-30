@@ -8,9 +8,11 @@ namespace eval ticklecharts {}
 # The first chart needs to be a graph with an x/y axis.
 
 oo::class create ticklecharts::Gridlayout {
-    variable _layout ; # huddle
+    variable _layout     ; # huddle
     variable _indexchart ; # grid index chart
-    variable _options ; # list options chart
+    variable _options    ; # list options chart
+    variable _keyglob    ; # global key options
+    variable _dataset    ; 
 
     constructor {args} {
         # Initializes a new layout Class.
@@ -30,6 +32,8 @@ oo::class create ticklecharts::Gridlayout {
         # global options : animation, chart color...
         set opts_global [ticklecharts::globaloptions $args]
         set _options    {}
+        set _keyglob    {}
+        set _dataset    {}
         set _indexchart -1
 
         lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
@@ -43,6 +47,21 @@ oo::define ticklecharts::Gridlayout {
         # Gets huddle object
         return $_layout
     }
+
+    method globalKeyOptions {} {
+        # Gets global key options
+        return $_keyglob
+    }
+
+    method dataset {} {
+        # Gets global key options
+        return $_dataset
+    }
+
+    method gettype {} {
+        # Gets type class
+        return "gridlayout"
+    }   
 
     method Add {chart {args ""}} {
         # Add charts to layout
@@ -101,7 +120,7 @@ oo::define ticklecharts::Gridlayout {
         set g 0
         set layoutkeys {
                 series radiusAxis angleAxis xAxis yAxis grid title polar
-                radar legend tooltip visualMap toolbox singleAxis dataZoom
+                radar legend tooltip visualMap toolbox singleAxis dataZoom dataset
             }
 
         foreach {key opts} [$chart options] {
@@ -138,12 +157,12 @@ oo::define ticklecharts::Gridlayout {
                 *series  {
                     # force index axis chart... if exists...
                     set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
-                    if {[dict exists $opts $xindex]} {
+                    if {[dict exists $opts $xindex] && [dict get $opts $xindex] eq "nothing"} {
                         dict set opts @N=xAxisIndex $_indexchart
                     }
 
                     set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
-                    if {[dict exists $opts $yindex]} {
+                    if {[dict exists $opts $yindex] && [dict get $opts $yindex] eq "nothing"} {
                         dict set opts @N=yAxisIndex $_indexchart
                     }
                     
@@ -198,13 +217,12 @@ oo::define ticklecharts::Gridlayout {
 
                 }
                 *visualMap {
-                    set seriesindex [lsearch -inline [dict keys $opts] *seriesIndex]
                     dict set opts @N=seriesIndex $_indexchart
                 }
                 *xAxis -
                 *yAxis  {
                     set gridindex [lsearch -inline [dict keys $opts] *gridIndex]
-                    dict set opts @N=gridIndex $_indexchart
+                    dict set opts $gridindex $_indexchart
                 }
                 *singleAxis -
                 *grid  {
@@ -219,15 +237,20 @@ oo::define ticklecharts::Gridlayout {
                                 "num" {dict set opts @N=$val $myvalue}
                                 default {error "$val must be a str or a float... now is $mytype"}
                             }
-
                         }
                     }
                 }
             }
 
-            # remove global options 
+            # remove key global options 
             # priority to constructor...
             lassign [split $key "="] type k
+            if {$k in [my globalKeyOptions]} {
+                puts "warning(ticklecharts::Gridlayout): '$k' in chart class is already\
+                     activated with 'SetGlobalOptions' method\
+                     it is not taken into account..."
+                continue
+            }
             if {$k ni $layoutkeys} {continue}
 
             lappend _options $key $opts
@@ -317,7 +340,7 @@ oo::define ticklecharts::Gridlayout {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         #
-        # return full path html file + stdout.
+        # Returns full path html file + stdout.
 
         set opts_html [ticklecharts::htmloptions $args]
         my layoutToHuddle ; # transform to huddle
@@ -339,11 +362,69 @@ oo::define ticklecharts::Gridlayout {
         return $outputfile
 
     }
+
+    method SetGlobalOptions {args} {
+        # Set global options for all charts class
+        #
+        # Returns nothing
+        set c [ticklecharts::chart new]
+        $c SetOptions {*}$args
+
+        set mykeys    [$c keys]
+        set myoptions [$c options]
+
+        dict for {key info} $args {
+            set k [string map {"-" ""} $key]
+            if {$k in $mykeys} {
+                set kk [dict keys $myoptions *$k]
+                lappend _options $kk [dict get $myoptions $kk]
+                lappend _keyglob $k
+            }
+        }
+
+        # check if chart has dataset.
+        # save is yes...
+        if {[$c dataset] ne ""} {
+            set _dataset [$c dataset]
+        }
+
+        # destroy...
+        $c destroy
+
+        return ""
+        
+    }
+
     # To keep the same logic of naming methods for ticklecharts 
     # the first letter in capital letter...
     forward Render my render
 
     # export method
-    export Add Render
+    export Add Render SetGlobalOptions
     
+}
+
+proc ticklecharts::gridlayoutHasDataSetObj {dts} {
+    # Check if gridlayout has dataset class
+    # only for chart class
+    #
+    # dts - upvar
+    #
+    # Returns True if 'dataset' class is present, False otherwise.
+
+
+    upvar 1 $dts dataset
+
+    foreach obj [concat [ticklecharts::listNs] "::"] {
+        if {[ticklecharts::IsaObject $obj]} {
+            if {[info object class $obj] eq "::ticklecharts::Gridlayout"} {
+                if {[$obj dataset] ne ""} {
+                    set dataset [$obj dataset]
+                    return 1
+                }
+            }
+        }
+    } 
+
+    return 0
 }
