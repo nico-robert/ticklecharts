@@ -6,6 +6,7 @@ namespace eval ticklecharts {}
 oo::class create ticklecharts::chart {
     variable _echartshchart         ; # huddle
     variable _options               ; # list options chart
+    variable _dataset               ; # dataset chart
     variable _indexlineseries       ; # index line serie
     variable _indexbarseries        ; # index bar serie
     variable _indexpieseries        ; # index pie serie
@@ -36,8 +37,12 @@ oo::class create ticklecharts::chart {
         # global options : animation, chart color...
         set opts_global    [ticklecharts::globaloptions $args]
         set _options       {}
-        set _indexlineseries 0
-        set _indexbarseries  0
+        set _dataset       {}
+        
+        # Guess if current script has a 'Gridlayout' dataset.
+        if {[ticklecharts::gridlayoutHasDataSetObj dataset]} {
+            set _dataset $dataset
+        }
 
         lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
     }
@@ -53,6 +58,17 @@ oo::define ticklecharts::chart {
     method options {} {
         # Gets chart list options
         return $_options
+    }
+
+    method gettype {} {
+        # Gets type class
+        return "chart"
+    }   
+
+    method dataset {} {
+        # Returns if chart instance 
+        # includes dataset
+        return $_dataset
     }
     
     method ismixed {} {
@@ -118,6 +134,8 @@ oo::define ticklecharts::chart {
                 $_echartshchart append $key $opts
             } elseif {[string match {*dataZoom} $key]} {
                 $_echartshchart append $key $opts
+            } elseif {[string match {*dataset} $key]} {
+                $_echartshchart append $key $opts
             } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
                 $_echartshchart append $key $opts
             } else {
@@ -141,7 +159,7 @@ oo::define ticklecharts::chart {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         #
-        # return full path html file + stdout.
+        # Returns full path html file + stdout.
         
         set opts_html [ticklecharts::htmloptions $args]
         my chartToHuddle ; # transform to huddle
@@ -534,6 +552,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         # 
+        # -dataset   - dataset options   https://echarts.apache.org/en/option.html#dataset
         # -title     - title options     https://echarts.apache.org/en/option.html#title
         # -polar     - polar options     https://echarts.apache.org/en/option.html#polar
         # -legend    - legend options    https://echarts.apache.org/en/option.html#legend
@@ -545,6 +564,27 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing    
         set opts {}
+
+        if {[dict exists $args -dataset]} {
+            set itemD [dict get $args -dataset]
+            if {![ticklecharts::IsaObject $itemD] && [$itemD gettype] ne "dataset"} {
+                error "key value -dataset should be a 'dataset' Class..."
+            }
+
+            lappend opts "@D=dataset" [$itemD get]
+            if {[$itemD transformed] ne "nothing"} {
+                foreach item [$itemD transformed] {
+                    # check if transform values are not null
+                    set itemT [lindex $item 1 0]
+                    if {![ticklecharts::dictIsNotNothing $itemT]} {
+                        lappend opts "@D=dataset" $item
+                    }
+                }
+            }
+
+            # set dataset chart instance.
+            set _dataset $itemD
+        }
     
         if {[dict exists $args -title]} {
             lappend opts "@D=title" [ticklecharts::title $args]

@@ -62,12 +62,26 @@ proc ticklecharts::barseries {index value} {
     setdef options -animationDelayUpdate    -validvalue {}                   -type num|jsfunc|null -default "nothing"
     # not supported yet...
 
-    # setdef options -dimensions             -validvalue {} -type list.d|null      -default "nothing"
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data] || [dict exists $value -databaritem]} {
+            error "'chart' Class cannot contain '-data' or '-databaritem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class... if need
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options  -seriesLayoutBy -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options  -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $value]
+        setdef options  -datasetIndex   -validvalue {}                 -type num|null         -default "nothing"
+
+    }
       
     if {[dict exists $value -databaritem]} {
         set options [dict remove $options -data]
@@ -78,7 +92,7 @@ proc ticklecharts::barseries {index value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint \
                                   -labelLayout -itemStyle -backgroundStyle \
-                                  -emphasis -blur -select -tooltip]
+                                  -emphasis -blur -select -tooltip -encode]
                                 
     set options [merge $options $value]
 
@@ -147,13 +161,26 @@ proc ticklecharts::lineseries {index value} {
     setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null -default "nothing"
     # not supported yet...
 
-    # setdef options -dimensions             -validvalue {} -type list.d|null      -default "nothing"
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
     
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data] || [dict exists $value -datalineitem]} {
+            error "'chart' Class cannot contain '-data' or '-datalineitem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options   -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $value]
+        setdef options   -datasetIndex   -validvalue {}                 -type num|null         -default "nothing"
+
+    }
     
     if {[dict exists $value -datalineitem]} {
         set options [dict remove $options -data]
@@ -164,7 +191,7 @@ proc ticklecharts::lineseries {index value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle\
-                                  -emphasis -blur -select -tooltip]
+                                  -emphasis -blur -select -tooltip -encode]
                                 
     set options [merge $options $value]
     
@@ -214,7 +241,6 @@ proc ticklecharts::pieseries {index value} {
     setdef options -select                  -validvalue {}                 -type dict|null       -default [ticklecharts::select $value]
     setdef options -center                  -validvalue {}                 -type list.d          -default [list {"50%" "50%"}]
     setdef options -radius                  -validvalue {}                 -type list.d|num|str  -default [list {0 "75%"}]
-    setdef options -data                    -validvalue {}                 -type list.o          -default [ticklecharts::PieItem $value]
     setdef options -markPoint               -validvalue {}                 -type dict|null       -default [ticklecharts::markPoint $value]
     setdef options -markLine                -validvalue {}                 -type dict|null       -default [ticklecharts::markLine $value]
     setdef options -markArea                -validvalue {}                 -type dict|null       -default [ticklecharts::markArea $value]
@@ -233,12 +259,29 @@ proc ticklecharts::pieseries {index value} {
 
     # not supported yet...
 
-    # setdef options -dimensions             -validvalue {} -type list.d|null      -default "nothing"
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -datapieitem]} {
+            error "'chart' Class cannot contain '-datapieitem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions    -validvalue {} -type list.d|null  -default "nothing"
+        setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
+
+    } else {
+        # set data options when dataset class doesn't exist...
+        setdef options   -data          -validvalue {} -type list.o       -default [ticklecharts::PieItem $value]
+    }
 
     set value [dict remove $value -label \
                                   -labelLine \
@@ -247,7 +290,7 @@ proc ticklecharts::pieseries {index value} {
                                   -markLine -markArea \
                                   -emptyCircleStyle \
                                   -labelLayout -itemStyle \
-                                  -emphasis -blur -select -universalTransition -tooltip]
+                                  -emphasis -blur -select -universalTransition -tooltip -encode]
     
 
     set options [merge $options $value]
@@ -312,12 +355,26 @@ proc ticklecharts::funnelseries {index value} {
 
     # not supported yet...
 
-    # setdef options -dimensions             -validvalue {} -type list.d|null      -default "nothing"
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data]} {
+            error "'chart' Class cannot contain '-data' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class... if need
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
+
+    }
 
     set value [dict remove $value -label \
                                   -labelLine \
@@ -325,7 +382,7 @@ proc ticklecharts::funnelseries {index value} {
                                   -markPoint \
                                   -markLine -markArea \
                                   -labelLayout -itemStyle \
-                                  -emphasis -blur -select -universalTransition -tooltip]
+                                  -emphasis -blur -select -universalTransition -encode -tooltip]
     
 
     set options [merge $options $value]
@@ -461,21 +518,35 @@ proc ticklecharts::scatterseries {index value} {
     
     # not supported yet...
 
-    # setdef options -dimensions             -validvalue {} -type list.d|null      -default "nothing"
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data]} {
+            error "'chart' Class cannot contain '-data' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
+
+    }
     
     set lflag {-label -labelLine -lineStyle
                -markPoint -markLine \
                -labelLayout -itemStyle -markArea 
-               -emphasis -blur -select -tooltip -rippleEffect}
+               -emphasis -blur -select -tooltip -rippleEffect -encode}
     
     # does not remove '-labelLayout' for js function.
     if {[dict exists $value -labelLayout] && [Type [dict get $value -labelLayout]] eq "jsfunc"} {
-        set lflag [lsearch -inline -all -not -exact $lflag -labelLayout]
+        set lflag [lsearch -inline -all -not -exact $lflag "-labelLayout"]
         set value [dict remove $value {*}$lflag]
     } else {
         set value [dict remove $value {*}$lflag]
@@ -528,16 +599,31 @@ proc ticklecharts::heatmapseries {index value} {
         
     # not supported yet...
 
-    # setdef options -encode                 -validvalue {} -type dict|null        -default "nothing"
-    # setdef options -seriesLayoutBy         -validvalue {} -type str|null         -default "nothing"
-    # setdef options -datasetIndex           -validvalue {} -type num|null         -default "nothing"
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data]} {
+            error "'chart' Class cannot contain '-data' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class... if need
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
+
+    }
     
     set value [dict remove $value -label \
                                   -labelLine \
                                   -labelLayout -itemStyle -markLine -markPoint -markArea \
-                                  -emphasis -blur -select -universalTransition -tooltip]
+                                  -emphasis -blur -select -universalTransition -encode -tooltip]
         
     set options [merge $options $value]
 

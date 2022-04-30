@@ -1084,6 +1084,16 @@ proc ticklecharts::setXAxis {value} {
     setdef options -axisPointer    -validvalue {}                  -type dict|null           -default [ticklecharts::axisPointer $value]
     setdef options -zlevel         -validvalue {}                  -type num                 -default 0
     setdef options -z              -validvalue {}                  -type num                 -default 0
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data]} {
+            error "'chart' Class cannot contain XAxis 'data' when a class dataset is present"
+        }
+    }
     
     set options [merge $options $value]
 
@@ -1130,6 +1140,16 @@ proc ticklecharts::setYAxis {value} {
     setdef options -axisPointer     -validvalue {}                  -type dict|null           -default [ticklecharts::axisPointer $value]
     setdef options -zlevel          -validvalue {}                  -type num                 -default 0
     setdef options -z               -validvalue {}                  -type num                 -default 0
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data]} {
+            error "'chart' Class cannot contain YAxis 'data' when a class dataset is present"
+        }
+    }
     
     set options [merge $options $value]
 
@@ -3104,6 +3124,74 @@ proc ticklecharts::leaves {value} {
     #...
 
     set d [dict remove $d label itemStyle emphasis blur]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::encode {value} {
+
+    if {![dict exists $value -encode]} {
+        return "nothing"
+    }
+
+    lassign [info level 1] chart
+    
+    set d [dict get $value -encode]
+
+    setdef options x          -validvalue {}  -type str|list.d|null  -default "nothing"
+    setdef options y          -validvalue {}  -type str|list.d|null  -default "nothing"
+    setdef options itemName   -validvalue {}  -type str|null         -default "nothing"
+    setdef options value      -validvalue {}  -type str|null         -default "nothing"
+    setdef options radius     -validvalue {}  -type num|null         -default "nothing"
+    setdef options angle      -validvalue {}  -type num|null         -default "nothing"
+    setdef options tooltip    -validvalue {}  -type list.d|str|null  -default "nothing"
+    #...
+
+    # Special case when dimensions are double values...
+    # If I understand Echarts documentation
+    # 'value' should be a string value
+    set dataset [$chart dataset]
+    if {[dict exists $d value]} {
+        set v [dict get $d value] 
+        foreach dimension [$dataset dim] {
+            lassign $dimension datadim type
+            if {($v in $datadim) && ([Type $v] ne "str")} {
+                # force string representation
+                dict set d value [string cat $v "<s!>"]
+                break
+            }
+        }
+    }
+
+    if {[dict exists $d tooltip]} {
+        set v [dict get $d tooltip]
+        if {[Type $v] eq "num"} {
+            # force string representation
+            dict set d tooltip [string cat $v "<s!>"]
+        }
+    }
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::config {value} {
+
+    if {![dict exists $value config]} {
+        return "nothing"
+    }
+    
+    set d [dict get $value config]
+
+    setdef options dimension  -validvalue {}  -type str|null   -default "nothing"
+    setdef options order      -validvalue {}  -type str|null   -default "nothing"
+    setdef options value      -validvalue {}  -type num|null   -default "nothing"
+    #...
 
     set options [merge $options $d]
 
