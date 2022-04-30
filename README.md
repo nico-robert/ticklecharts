@@ -311,7 +311,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] timeline
 - [x] graphic
 - [ ] calendar
-- [ ] dataset
+- [x] dataset
 - [ ] aria
 - **Series :**
 - [x] line
@@ -404,3 +404,6 @@ Release :
     - Add `dataZoom` option (For zooming a specific area...)
     - Add or update chart examples to include `dataZoom` option.
     - Fix bug for theming features.
+*  **30-04-2022** : 1.9.3
+    - Add `dataset` option.
+    - Add chart examples to include `dataset` option.

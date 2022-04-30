@@ -60,6 +60,9 @@
                # Add dataZoom option (For zooming a specific area)
                # Add or update chart examples to include `dataZoom` option.
                # Fix bug for theming features.
+# 30-04-2022 : v1.9.3
+               # Add `dataset` option
+               # Add chart examples to include `dataset` option.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -76,10 +79,11 @@ source [file join $dir global_options.tcl]
 source [file join $dir series.tcl]
 source [file join $dir options.tcl]
 source [file join $dir theme.tcl]
+source [file join $dir dataset.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.9.2
+    variable version 1.9.3
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
