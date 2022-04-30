@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>sort_data_in_bar_chart</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_278604872248247" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_278604872246943 = echarts.init(document.getElementById('id_278604872248247'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [
+    {
+      "dimensions": [
+        "name",
+        "age",
+        "profession",
+        "score",
+        "date"
+      ],
+      "source": [
+        [
+          "Hannah Krause",
+          41,
+          "Engineer",
+          314,
+          "2011-02-12"
+        ],
+        [
+          "Zhao Qian",
+          20,
+          "Teacher",
+          351,
+          "2011-03-01"
+        ],
+        [
+          "Jasmin Krause",
+          52,
+          "Musician",
+          287,
+          "2011-02-14"
+        ],
+        [
+          "Li Lei",
+          37,
+          "Teacher",
+          219,
+          "2011-02-18"
+        ],
+        [
+          "Karle Neumann",
+          25,
+          "Engineer",
+          253,
+          "2011-04-02"
+        ],
+        [
+          "Adrian Groß",
+          19,
+          "Teacher",
+          "-",
+          "2011-01-16"
+        ],
+        [
+          "Mia Neumann",
+          71,
+          "Engineer",
+          165,
+          "2011-03-19"
+        ],
+        [
+          "Böhm Fuchs",
+          36,
+          "Musician",
+          318,
+          "2011-02-24"
+        ],
+        [
+          "Han Meimei",
+          67,
+          "Engineer",
+          366,
+          "2011-03-12"
+        ]
+      ]
+    },
+    {"transform": {
+        "type": "sort",
+        "config": {
+          "dimension": "score",
+          "order": "desc"
+        },
+        "print": false
+      }}
+  ],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLabel": {
+        "show": true,
+        "interval": 0,
+        "inside": false,
+        "rotate": 30,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "bar",
+      "name": "barseries_1",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "encode": {
+        "x": "name",
+        "y": "score"
+      },
+      "datasetIndex": 1
+    }]
+}
+        chart_278604872246943.setOption(option);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>default_arrangement</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_278604884753003" class="chart-container" style="width:900px; height:900px;"></div>
+    <script>
+        var chart_278604884751737 = echarts.init(document.getElementById('id_278604884753003'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [{
+      "dimensions": [
+        "product",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017"
+      ],
+      "source": [
+        [
+          "Milk Tea",
+          86.5,
+          92.1,
+          85.7,
+          83.1,
+          73.4,
+          55.1
+        ],
+        [
+          "Matcha Latte",
+          41.1,
+          30.4,
+          65.1,
+          53.3,
+          83.8,
+          98.7
+        ],
+        [
+          "Cheese Cocoa",
+          24.1,
+          67.2,
+          79.5,
+          86.4,
+          65.2,
+          82.5
+        ],
+        [
+          "Walnut Brownie",
+          55.2,
+          67.1,
+          69.2,
+          72.4,
+          53.9,
+          39.1
+        ]
+      ]
+    }],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [
+    {
+      "type": "pie",
+      "name": "pieseries_1",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "25%",
+        "30%"
+      ],
+      "radius": "20%",
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true
+    },
+    {
+      "type": "pie",
+      "name": "pieseries_2",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "75%",
+        "30%"
+      ],
+      "radius": "20%",
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "encode": {
+        "itemName": "product",
+        "value": "2013"
+      }
+    },
+    {
+      "type": "pie",
+      "name": "pieseries_3",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "25%",
+        "75%"
+      ],
+      "radius": "20%",
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "encode": {
+        "itemName": "product",
+        "value": "2014"
+      }
+    },
+    {
+      "type": "pie",
+      "name": "pieseries_4",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "75%",
+        "75%"
+      ],
+      "radius": "20%",
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "encode": {
+        "itemName": "product",
+        "value": "2015"
+      }
+    }
+  ]
+}
+        chart_278604884751737.setOption(option);
+    </script>
+  </body>
+</html>

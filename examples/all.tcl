@@ -70,3 +70,8 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] sanke
 foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
     source $chartfile
 }
+
+# dataset
+foreach chartfile [glob -directory [file join [file dirname [info script]] dataset] -types f *.tcl] {
+    source $chartfile
+}

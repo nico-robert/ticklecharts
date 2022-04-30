@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>partition_data_to_pies</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_278604938277502" class="chart-container" style="width:900px; height:900px;"></div>
+    <script>
+        var chart_278604938276205 = echarts.init(document.getElementById('id_278604938277502'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [
+    {"source": [
+        [
+          "Product",
+          "Sales",
+          "Price",
+          "Year"
+        ],
+        [
+          "Cake",
+          123,
+          32,
+          2011
+        ],
+        [
+          "Cereal",
+          231,
+          14,
+          2011
+        ],
+        [
+          "Tofu",
+          235,
+          5,
+          2011
+        ],
+        [
+          "Dumpling",
+          341,
+          25,
+          2011
+        ],
+        [
+          "Biscuit",
+          122,
+          29,
+          2011
+        ],
+        [
+          "Cake",
+          143,
+          30,
+          2012
+        ],
+        [
+          "Cereal",
+          201,
+          19,
+          2012
+        ],
+        [
+          "Tofu",
+          255,
+          7,
+          2012
+        ],
+        [
+          "Dumpling",
+          241,
+          27,
+          2012
+        ],
+        [
+          "Biscuit",
+          102,
+          34,
+          2012
+        ],
+        [
+          "Cake",
+          153,
+          28,
+          2013
+        ],
+        [
+          "Cereal",
+          181,
+          21,
+          2013
+        ],
+        [
+          "Tofu",
+          395,
+          4,
+          2013
+        ],
+        [
+          "Dumpling",
+          281,
+          31,
+          2013
+        ],
+        [
+          "Biscuit",
+          92,
+          39,
+          2013
+        ],
+        [
+          "Cake",
+          223,
+          29,
+          2014
+        ],
+        [
+          "Cereal",
+          211,
+          17,
+          2014
+        ],
+        [
+          "Tofu",
+          345,
+          3,
+          2014
+        ],
+        [
+          "Dumpling",
+          211,
+          35,
+          2014
+        ],
+        [
+          "Biscuit",
+          72,
+          24,
+          2014
+        ]
+      ]},
+    {"transform": {
+        "type": "filter",
+        "config": {
+          "dimension": "Year",
+          "value": 2011
+        },
+        "print": false
+      }},
+    {"transform": {
+        "type": "filter",
+        "config": {
+          "dimension": "Year",
+          "value": 2012
+        },
+        "print": false
+      }},
+    {"transform": {
+        "type": "filter",
+        "config": {
+          "dimension": "Year",
+          "value": 2013
+        },
+        "print": false
+      }}
+  ],
+  "series": [
+    {
+      "type": "pie",
+      "name": "pieseries_1",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "50%",
+        "25%"
+      ],
+      "radius": 50,
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "datasetIndex": 1
+    },
+    {
+      "type": "pie",
+      "name": "pieseries_2",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": 50,
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "datasetIndex": 2
+    },
+    {
+      "type": "pie",
+      "name": "pieseries_3",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        "50%",
+        "75%"
+      ],
+      "radius": 50,
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "datasetIndex": 3
+    }
+  ]
+}
+        chart_278604938276205.setOption(option);
+    </script>
+  </body>
+</html>

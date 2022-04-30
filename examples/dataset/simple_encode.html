@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>simple_encode</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_278604861725755" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_278604861724482 = echarts.init(document.getElementById('id_278604861725755'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [{"source": [
+        [
+          "score",
+          "amount",
+          "product"
+        ],
+        [
+          89.3,
+          58212,
+          "Matcha Latte"
+        ],
+        [
+          57.1,
+          78254,
+          "Milk Tea"
+        ],
+        [
+          74.4,
+          41032,
+          "Cheese Cocoa"
+        ],
+        [
+          50.1,
+          12755,
+          "Cheese Brownie"
+        ],
+        [
+          89.7,
+          20145,
+          "Matcha Cocoa"
+        ],
+        [
+          68.1,
+          79146,
+          "Tea"
+        ],
+        [
+          19.6,
+          91852,
+          "Orange Juice"
+        ],
+        [
+          10.6,
+          101852,
+          "Lemon Juice"
+        ],
+        [
+          32.7,
+          20112,
+          "Walnut Brownie"
+        ]
+      ]}],
+  "visualMap": [{
+      "type": "continuous",
+      "min": 10,
+      "max": 100,
+      "calculable": false,
+      "realtime": true,
+      "inverse": false,
+      "precision": 0,
+      "itemWidth": 20,
+      "itemHeight": 140,
+      "align": "auto",
+      "text": [
+        "High Score",
+        "Low Score"
+      ],
+      "textGap": 10,
+      "show": true,
+      "dimension": 0,
+      "hoverLink": true,
+      "inRange": {"color": [
+          "#65B581",
+          "#FFCE34",
+          "#FD665F"
+        ]},
+      "zlevel": 0,
+      "z": 4,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "orient": "horizontal",
+      "padding": 5,
+      "backgroundColor": "rgba(0,0,0,0)",
+      "borderColor": "#ccc",
+      "borderWidth": 0,
+      "handleSize": "120%",
+      "indicatorIcon": "circle",
+      "indicatorSize": "50%"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "name": "amount",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "category",
+      "name": "category",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "bar",
+      "name": "barseries_1",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "encode": {
+        "x": "amount",
+        "y": "product"
+      }
+    }]
+}
+        chart_278604861724482.setOption(option);
+    </script>
+  </body>
+</html>
