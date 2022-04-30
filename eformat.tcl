@@ -862,6 +862,44 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatTransform {
+            # possible values...
+            set validvalue {filter sort}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatDimType {
+            # possible values...
+            set validvalue {number float int ordinal time}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatSeriesLayout {
+            # possible values...
+            set validvalue {row column}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatSourceHeader {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {undefined auto}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
     }
 
     return
