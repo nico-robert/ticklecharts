@@ -73,7 +73,7 @@ oo::define ticklecharts::ehuddle {
                                 }
                             } else {
                                 foreach val {*}$data {
-                                    lappend listv [huddle list {*}[lmap a $val {huddle number $a}]]
+                                    lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
                                 }
                             }
                             set value [huddle list {*}$listv]
@@ -90,18 +90,33 @@ oo::define ticklecharts::ehuddle {
                                 }
                             } else {
                                 foreach val {*}$data {
-                                    lappend listv [huddle list {*}[lmap a $val {
-                                        if {[string is double -strict $a]} {
-                                            ticklecharts::ehuddle_num $a
+                                    lappend listv [huddle list {*}[lmap v $val {
+                                        if {[string is double -strict $v]} {
+                                            ticklecharts::ehuddle_num $v
                                         } else {
-                                            huddle string $a
+                                            huddle string $v
                                         }
                                     }]]
                                 }
                             }
                             set value [huddle list {*}$listv]
                         }
-                "@DO" {set value [huddle list $data]}
+
+                "@LJ" {
+                    set subH {}
+                    foreach var {*}$data {
+                        lassign $var k vvv 
+                        lassign [split $k "="] type kk
+                        switch -exact -- $type {
+                            "@LS"   {set h [huddle list {*}[join $vvv]]}
+                            "@L"    {lappend subH [huddle create {*}[my set $k $vvv]]}
+                            default {error "no @LJ type '$type' specified for '$keyvalue'"}
+                        }
+                    }
+
+                    set value [huddle append h {*}$subH]
+
+                    }
                 "@JS" {set value [huddle jsfunc [$data get]]}
 
                 default {error "1 Unknown type '$type' specified for '$keyvalue'"}
@@ -145,7 +160,7 @@ oo::define ticklecharts::ehuddle {
                                     }
                                 } else {
                                     foreach val {*}$info {
-                                        lappend listv [huddle list {*}[lmap a $val {huddle number $a}]]
+                                        lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
                                     }
                                 }
                                 set value [huddle list {*}$listv]
@@ -162,11 +177,11 @@ oo::define ticklecharts::ehuddle {
                                     }
                                 } else {
                                     foreach val {*}$info {
-                                        lappend listv [huddle list {*}[lmap a $val {
-                                            if {[string is double -strict $a]} {
-                                                ticklecharts::ehuddle_num $a
+                                        lappend listv [huddle list {*}[lmap v $val {
+                                            if {[string is double -strict $v]} {
+                                                ticklecharts::ehuddle_num $v
                                             } else {
-                                                huddle string $a
+                                                huddle string $v
                                             }
 
                                         }]]

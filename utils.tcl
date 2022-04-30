@@ -63,12 +63,13 @@ proc ticklecharts::HuddleType {type} {
         list.s {set htype @LS}
         list.n {set htype @LN}
         list.d {set htype @LD}
+        list.j {set htype @LJ}
         null   {set htype @NULL}
         dict   {set htype @L}
         list.o {set htype @DO}
         dict.o {set htype @LO}
         jsfunc {set htype @JS}
-        default {error "no type for $type"}
+        default {error "no type for '$type'"}
     }
 
     return $htype
@@ -121,8 +122,7 @@ proc ticklecharts::TclType value {
         return list
     }
 
-    if {[ticklecharts::IsaObject $value] && 
-        [string match {*jsfunc} [ticklecharts::TypeClass $value]]} {
+    if {[ticklecharts::IsaObject $value] && [$value gettype] eq "jsfunc"} {
         return jsfunc
     }
 
@@ -200,6 +200,13 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             }
             list.s {
                 append opts [format " ${htype}=$key {%s}" $value]
+            }
+            list.j {
+                set l {}
+                foreach val $value {
+                    lappend l [ticklecharts::dictToEchartsHuddle [dict create $key $val]]
+                }
+                append opts [format " ${htype}=$key {%s}" [list $l]]
             }
             default {
                 append opts [format " ${htype}=$key {%s}" [list $value]]
@@ -467,7 +474,7 @@ proc ticklecharts::InfoNameProc {level name} {
     # level  - level number
     # name   - name proc without namespace
     #
-    # Returns True if name match with current namespace/level, False otherwise .
+    # Returns True if name match with current namespace/level, False otherwise.
 
     lassign [info level $level] infonameproc
 
@@ -482,4 +489,31 @@ proc ticklecharts::EchartsOptsTheme {name} {
     # Returns value.
 
     return [dict get $::ticklecharts::opts_theme $name]
+}
+
+proc ticklecharts::dictIsNotNothing {d} {
+    # Check if the dictionary contains only null values
+    #
+    # d   - dict
+    #
+    # Returns True if all values are null, False otherwise.
+
+    dict for {key info} $d {
+        if {$info ne "null"} {
+            return 0
+        }
+    }
+
+    return 1
+}
+
+proc ticklecharts::listNs {{parentns ::}} {
+    # From https://wiki.tcl-lang.org/page/namespace
+    #
+    # Returns list of all namespaces.
+    set result {}
+    foreach ns [namespace children $parentns] {
+            lappend result {*}[listNs $ns] $ns
+    }
+    return $result
 }
