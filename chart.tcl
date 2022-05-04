@@ -4,20 +4,21 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart         ; # huddle
-    variable _options               ; # list options chart
-    variable _dataset               ; # dataset chart
-    variable _indexlineseries       ; # index line serie
-    variable _indexbarseries        ; # index bar serie
-    variable _indexpieseries        ; # index pie serie
-    variable _indexfunnelseries     ; # index funnel serie
-    variable _indexradarseries      ; # index radar serie
-    variable _indexscatterseries    ; # index scatter serie
-    variable _indexheatmapseries    ; # index heatmap serie
-    variable _indexsunburstseries   ; # index sunburst serie
-    variable _indextreeseries       ; # index tree serie
-    variable _indexthemeriverseries ; # index themeriver serie
-    variable _indexsankeyseries     ; # index sankey serie
+    variable _echartshchart           ; # huddle
+    variable _options                 ; # list options chart
+    variable _dataset                 ; # dataset chart
+    variable _indexlineseries         ; # index line serie
+    variable _indexbarseries          ; # index bar serie
+    variable _indexpieseries          ; # index pie serie
+    variable _indexfunnelseries       ; # index funnel serie
+    variable _indexradarseries        ; # index radar serie
+    variable _indexscatterseries      ; # index scatter serie
+    variable _indexheatmapseries      ; # index heatmap serie
+    variable _indexsunburstseries     ; # index sunburst serie
+    variable _indextreeseries         ; # index tree serie
+    variable _indexthemeriverseries   ; # index themeriver serie
+    variable _indexsankeyseries       ; # index sankey serie
+    variable _indexpictorialbarseries ; # index sankey serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -44,6 +45,12 @@ oo::class create ticklecharts::chart {
             set _dataset $dataset
         }
 
+        # shared _index* variable for chart class...
+        set ns [info object namespace [self class]]
+        foreach var [info vars _index*] {
+           my eval [list namespace upvar $ns $var $var]
+        } 
+
         lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
     }
 }
@@ -63,7 +70,7 @@ oo::define ticklecharts::chart {
     method gettype {} {
         # Gets type class
         return "chart"
-    }   
+    }
 
     method dataset {} {
         # Returns if chart instance 
@@ -159,7 +166,7 @@ oo::define ticklecharts::chart {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         #
-        # Returns full path html file + stdout.
+        # Returns full path html file.
         
         set opts_html [ticklecharts::htmloptions $args]
         my chartToHuddle ; # transform to huddle
@@ -180,6 +187,14 @@ oo::define ticklecharts::chart {
 
         return $outputfile
 
+    }
+
+    method toJSON {} {
+        # Returns json chart data.
+        my chartToHuddle ; # transform to huddle
+        
+        # ehuddle jsondump
+        return [[my get] toJSON]
     }
 
     method Xaxis {args} {
@@ -546,6 +561,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddPictorialBarSeries {args} {
+        # Add data serie chart (use only for pictorialBar chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions pictorialbarseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-pictorialBar
+        #
+        # Returns nothing     
+        incr _indexpictorialbarseries
+
+        set options [ticklecharts::pictorialbarseries $_indexpictorialbarseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -634,6 +668,6 @@ oo::define ticklecharts::chart {
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
-           Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render
+           Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries
 }
 
