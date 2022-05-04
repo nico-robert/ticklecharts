@@ -302,6 +302,65 @@ proc ticklecharts::BarItem {value} {
         setdef options blur             -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
         setdef options tooltip          -validvalue {}               -type dict|null   -default "nothing"
 
+        set item [dict remove $item label labelLine itemStyle emphasis blur]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::pictorialBarItem {value} {
+
+    if {![dict exists $value -data]} {
+        error "key -data not present..."
+    }
+
+    foreach item [dict get $value -data] {
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options name                    -validvalue {}                    -type str|null          -default "nothing"
+        setdef options value                   -validvalue {}                    -type num|null          -default "nothing"
+        setdef options groupId                 -validvalue {}                    -type str|null          -default "nothing"
+        setdef options symbol                  -validvalue formatItemSymbol      -type str|jsfunc|null   -default "nothing"
+        setdef options symbolSize              -validvalue {}                    -type num|list.d|null   -default "nothing"
+        setdef options symbolPosition          -validvalue formatSymbolPosition  -type str|null          -default "nothing"
+        setdef options symbolOffset            -validvalue {}                    -type list.d|null       -default "nothing"
+        setdef options symbolRotate            -validvalue {}                    -type num|null          -default "nothing"
+        setdef options symbolRepeat            -validvalue formatsymbolRepeat    -type bool|str|num|null -default "nothing"
+        setdef options symbolRepeatDirection   -validvalue formatsymbolRepeatDir -type str|null          -default "nothing"
+        setdef options symbolMargin            -validvalue {}                    -type str|num|null      -default "nothing"
+        setdef options symbolClip              -validvalue {}                    -type bool|null         -default "nothing"
+        setdef options symbolBoundingData      -validvalue {}                    -type num|null          -default "nothing"
+        setdef options symbolPatternSize       -validvalue {}                    -type num|null          -default "nothing"
+        setdef options hoverAnimation          -validvalue {}                    -type bool|null         -default "nothing"
+        setdef options z                       -validvalue {}                    -type num|null          -default "nothing"
+        setdef options animation               -validvalue {}                    -type bool|null         -default "nothing"
+        setdef options animationThreshold      -validvalue {}                    -type num|null          -default "nothing"
+        setdef options animationDuration       -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+        setdef options animationEasing         -validvalue formatAEasing         -type str|null          -default "nothing"
+        setdef options animationDelay          -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+        setdef options animationDurationUpdate -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+        setdef options animationEasingUpdate   -validvalue formatAEasing         -type str|null          -default "nothing"
+        setdef options animationDelayUpdate    -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+        setdef options labelLine               -validvalue {}                    -type dict|null         -default [ticklecharts::labelLine $item]
+        setdef options itemStyle               -validvalue {}                    -type dict|null         -default [ticklecharts::itemStyle $item]
+        setdef options emphasis                -validvalue {}                    -type dict|null         -default [ticklecharts::emphasis $item]
+        setdef options blur                    -validvalue {}                    -type dict|null         -default [ticklecharts::blur $item]
+        setdef options select                  -validvalue {}                    -type dict|null         -default [ticklecharts::select $item]
+
+        set item [dict remove $item labelLine itemStyle emphasis blur select]
+        
         lappend opts [merge $options $item]
         set options {}
 
@@ -329,8 +388,8 @@ proc ticklecharts::LineItem {value} {
 
         setdef options name             -validvalue {}               -type str|null    -default "nothing"
         setdef options value            -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbol           -validvalue formatItemSymbol -type str         -default [EchartsOptsTheme symbol]
-        setdef options symbolSize       -validvalue {}               -type num         -default [EchartsOptsTheme symbolSize]
+        setdef options symbol           -validvalue formatItemSymbol -type str|null    -default "nothing"
+        setdef options symbolSize       -validvalue {}               -type num|null    -default "nothing"
         setdef options symbolRotate     -validvalue {}               -type num|null    -default "nothing"
         setdef options symbolKeepAspect -validvalue {}               -type bool        -default "False"
         setdef options symbolOffset     -validvalue {}               -type list.n|null -default "nothing"
@@ -340,6 +399,8 @@ proc ticklecharts::LineItem {value} {
         setdef options emphasis         -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
         setdef options blur             -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
         setdef options tooltip          -validvalue {}               -type dict|null   -default "nothing"
+
+        set item [dict remove $item label labelLine itemStyle emphasis blur]
 
         lappend opts [merge $options $item]
         set options {}
@@ -382,6 +443,8 @@ proc ticklecharts::RadarItem {value} {
         setdef options blur             -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
         setdef options select           -validvalue {}               -type dict|null   -default [ticklecharts::select $item]
         setdef options tooltip          -validvalue {}               -type dict|null   -default "nothing"
+
+        set item [dict remove $item label itemStyle lineStyle areaStyle emphasis blur select]
 
         lappend opts [merge $options $item]
         set options {}
@@ -449,6 +512,8 @@ proc ticklecharts::PieItem {value} {
         setdef options blur      -validvalue {} -type dict|null   -default [ticklecharts::blur $item]
         setdef options tooltip   -validvalue {} -type dict|null   -default "nothing"
 
+        set item [dict remove $item label labelLine itemStyle emphasis blur]
+
         lappend opts [merge $options $item]
         set options {}
 
@@ -483,6 +548,8 @@ proc ticklecharts::FunnelItem {value} {
         setdef options blur      -validvalue {} -type dict|null -default [ticklecharts::blur $item]
         setdef options select    -validvalue {} -type dict|null -default [ticklecharts::select $item]
         setdef options tooltip   -validvalue {} -type dict|null -default "nothing"
+
+        set item [dict remove $item label labelLine itemStyle emphasis blur select]
 
         lappend opts [merge $options $item]
         set options {}
@@ -589,6 +656,8 @@ proc ticklecharts::markAreaItem {value} {
             setdef options label      -validvalue {} -type dict|null    -default [ticklecharts::label $item]
             setdef options emphasis   -validvalue {} -type dict|null    -default [ticklecharts::emphasis $item]
             setdef options blur       -validvalue {} -type dict|null    -default [ticklecharts::blur $item]
+
+            set item [dict remove $item label itemStyle emphasis blur]
 
             lappend subopts [merge $options $item]
             set options {} 
@@ -773,6 +842,10 @@ proc ticklecharts::itemStyle {value} {
     if {[InfoNameProc 2 "sankeyseries"]} {
         setdef options borderColor      -validvalue formatColor   -type str|null        -default "inherit"
     }
+
+    if {[InfoNameProc 2 "barseries"]} {
+        setdef options borderRadius     -validvalue {}            -type num|null        -default "nothing"
+    }
     
     set options [merge $options [dict get $value $key]]
 
@@ -807,6 +880,8 @@ proc ticklecharts::emphasis {value} {
     setdef options areaStyle -validvalue {}              -type dict|null -default [ticklecharts::areaStyle $d]
     setdef options endLabel  -validvalue {}              -type dict|null -default [ticklecharts::endLabel  $d]
     #...
+
+    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel]
 
     set options [merge $options $d]
 
@@ -885,6 +960,8 @@ proc ticklecharts::blur {value} {
     setdef options endLabel  -validvalue {} -type dict|null -default [ticklecharts::endLabel  $d]
     #...
 
+    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel]
+
     set options [merge $options $d]
 
     return $options
@@ -910,6 +987,8 @@ proc ticklecharts::select {value} {
     setdef options areaStyle -validvalue {} -type dict|null -default [ticklecharts::areaStyle $d]
     setdef options endLabel  -validvalue {} -type dict|null -default [ticklecharts::endLabel  $d]
     #...
+
+    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel]
 
     set options [merge $options $d]
 
@@ -1848,6 +1927,8 @@ proc ticklecharts::markLineItem {value} {
                 setdef options emphasis         -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $info]
                 setdef options blur             -validvalue {}               -type dict|null       -default [ticklecharts::blur $info]
 
+                set info [dict remove $info lineStyle label emphasis blur]
+
                 lappend opts [merge $options $info]
 
             }
@@ -2041,6 +2122,7 @@ proc ticklecharts::label {value} {
     set d [dict get $value $key]
     
     setdef options show                 -validvalue {}                      -type bool            -default "True"
+    setdef options offset               -validvalue {}                      -type list.n|null     -default "nothing"
     setdef options position             -validvalue formatPosition          -type str|list.d|null -default "nothing"
     setdef options distance             -validvalue {}                      -type num|null        -default "nothing"
     setdef options rotate               -validvalue formatRotate            -type num             -default 0
