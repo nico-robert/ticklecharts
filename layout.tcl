@@ -61,7 +61,7 @@ oo::define ticklecharts::Gridlayout {
     method gettype {} {
         # Gets type class
         return "gridlayout"
-    }   
+    }
 
     method Add {chart {args ""}} {
         # Add charts to layout
@@ -340,7 +340,7 @@ oo::define ticklecharts::Gridlayout {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         #
-        # Returns full path html file + stdout.
+        # Returns full path html file.
 
         set opts_html [ticklecharts::htmloptions $args]
         my layoutToHuddle ; # transform to huddle
@@ -361,6 +361,14 @@ oo::define ticklecharts::Gridlayout {
 
         return $outputfile
 
+    }
+
+    method toJSON {} {
+        # Returns json chart data.
+        my layoutToHuddle ; # transform to huddle
+        
+        # ehuddle jsondump
+        return [[my get] toJSON]
     }
 
     method SetGlobalOptions {args} {
@@ -411,8 +419,6 @@ proc ticklecharts::gridlayoutHasDataSetObj {dts} {
     # dts - upvar
     #
     # Returns True if 'dataset' class is present, False otherwise.
-
-
     upvar 1 $dts dataset
 
     foreach obj [concat [ticklecharts::listNs] "::"] {
