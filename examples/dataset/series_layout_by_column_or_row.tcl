@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : destroy layout class (problem source all.tcl...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -45,3 +48,6 @@ set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
 $layout Render -outfile [file join $dirname $fbasename.html] -title $fbasename
+
+# problem source all.tcl
+$layout destroy
