@@ -75,3 +75,8 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] layou
 foreach chartfile [glob -directory [file join [file dirname [info script]] dataset] -types f *.tcl] {
     source $chartfile
 }
+
+# pictorialBar
+foreach chartfile [glob -directory [file join [file dirname [info script]] pictorialBar] -types f *.tcl] {
+    source $chartfile
+}
