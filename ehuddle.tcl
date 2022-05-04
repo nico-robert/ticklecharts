@@ -119,7 +119,7 @@ oo::define ticklecharts::ehuddle {
                     }
                 "@JS" {set value [huddle jsfunc [$data get]]}
 
-                default {error "1 Unknown type '$type' specified for '$keyvalue'"}
+                default {error "(1) Unknown type '$type' specified for '$keyvalue'"}
             }
 
             lassign [info level 0] obj
@@ -205,10 +205,11 @@ oo::define ticklecharts::ehuddle {
                                     "@S"    - 
                                     "@N"    - 
                                     "@NULL" -
+                                    "@JS"   -
                                     "@LS"   - 
                                     "@LD"   - 
                                     "@LN"  {lappend subdata {*}[my set $k $val]}
-                                    default {error "6 Unknown type '$subtype' specified for '$subkeyvalue1'"}
+                                    default {error "(6) Unknown type '$subtype' specified for '$subkeyvalue1'"}
                                 }
                             }
 
@@ -221,7 +222,7 @@ oo::define ticklecharts::ehuddle {
                     }
                     "@JS" {set value [huddle jsfunc [$info get]]}
 
-                    default {error "2 Unknown type '$type' specified for '$subkeyvalue'"}
+                    default {error "(2) Unknown type '$type' specified for '$subkeyvalue'"}
                 }
 
                 if {!$lko} {
@@ -265,10 +266,11 @@ oo::define ticklecharts::ehuddle {
                                                                 "@S"    - 
                                                                 "@N"    - 
                                                                 "@NULL" -
+                                                                "@JS"   -
                                                                 "@LS"   - 
                                                                 "@LD"   - 
                                                                 "@LN"  {lappend subdata {*}[my set $subkeyvald $subvald]}
-                                                                default {error "7 Unknown type '$subtype' specified for '$subkeyvalue1'"}
+                                                                default {error "(7) Unknown type '$subtype' specified for '$subkeyvalue1'"}
                                                             }
 
                                                             if {$subdata ne ""} {
@@ -310,10 +312,11 @@ oo::define ticklecharts::ehuddle {
                                     "@S"    -
                                     "@N"    -
                                     "@NULL" -
+                                    "@JS"   -
                                     "@LS"   -
                                     "@LD"   -
                                     "@LN"  {lappend subdata {*}[my set $k $val]}
-                                    default {error "5 Unknown type '$subtype' specified for '$subkeyvalue1'"}
+                                    default {error "(5) Unknown type '$subtype' specified for '$subkeyvalue1'"}
                                 }
                             }
 
@@ -329,7 +332,7 @@ oo::define ticklecharts::ehuddle {
                         }
                     }
 
-                    default {error "3 Unknown type '$type' specified for '$subkey'"}
+                    default {error "(3) Unknown type '$type' specified for '$subkey'"}
                 }
             }
         }
@@ -348,7 +351,7 @@ oo::define ticklecharts::ehuddle {
                     set h [huddle create $keyvalue [huddle list {*}$lhuddle]]
                 }
                 
-            default {error "4 Unknown type '$type' specified for '$key'"}
+            default {error "(4) Unknown type '$type' specified for '$key'"}
         }
 
         if {[ticklecharts::IsaObject $obj]} {
@@ -430,7 +433,7 @@ oo::define ticklecharts::ehuddle {
         } else {
             return 0
         }
-    }  
+    }
 
     method toJSON {} {
         # Transform huddle to JSON
