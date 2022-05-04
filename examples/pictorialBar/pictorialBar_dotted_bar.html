@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>pictorialBar_dotted_bar</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_78785683434098" class="chart-container" style="width:1200px; height:900px;"></div>
+    <script>
+        var chart_78785683429808 = echarts.init(document.getElementById('id_78785683434098'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "#0f375f",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "textStyle": {
+        "color": "#ccc",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "line",
+        "bar"
+      ]
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "shadow",
+        "axis": "auto",
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "04-05-2022",
+        "05-05-2022",
+        "06-05-2022",
+        "07-05-2022",
+        "08-05-2022",
+        "09-05-2022",
+        "10-05-2022",
+        "11-05-2022",
+        "12-05-2022",
+        "13-05-2022",
+        "14-05-2022",
+        "15-05-2022",
+        "16-05-2022",
+        "17-05-2022",
+        "18-05-2022",
+        "19-05-2022",
+        "20-05-2022",
+        "21-05-2022",
+        "22-05-2022"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#ccc",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#ccc",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "miterLimit": 10,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "line",
+      "name": "line",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 15,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": true,
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "smooth": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "data": [
+        {
+          "value": 199.64355966059657,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 226.37337102851524,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 348.2492221278368,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 134.61700050840946,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 138.24608863249705,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 309.7406726841539,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 241.88385859219537,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 184.91117674154748,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 292.95163848109155,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 224.90431444016485,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 222.65986484599293,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 164.67820078352383,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 171.19788740351697,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 72.58242176500262,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 61.09213412790193,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 199.72049538033107,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 262.9623662973579,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 97.47537695685186,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 377.25559220521507,
+          "symbolKeepAspect": false
+        }
+      ]
+    },
+    {
+      "type": "bar",
+      "name": "bar",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "itemStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "#14c8d4"},
+                {offset: 1,color: "#43eec6"}]),
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1,
+        "borderRadius": 5
+      },
+      "sampling": "max",
+      "cursor": "pointer",
+      "barWidth": 10,
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        113.83862705614354,
+        123.502283042065,
+        154.37578826880818,
+        30.802868693509545,
+        4.113413022883894,
+        167.87897076824632,
+        69.62410065793622,
+        169.75160109333302,
+        186.98791954060454,
+        132.22423276501905,
+        74.13271417568097,
+        95.82131593293572,
+        77.6636838343291,
+        29.35938734065713,
+        49.539569974662534,
+        163.94572349448956,
+        66.59108533830899,
+        12.119078734945077,
+        183.30421558735156
+      ],
+      "zlevel": 0,
+      "z": -12,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "line",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "itemStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0,color: "rgba(20,200,212,0.5)"},
+                {offset: 0.2,color: "rgba(20,200,212,0.2)"},
+                {offset: 1,color: "rgba(20,200,212,0)"}]),
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "sampling": "max",
+      "cursor": "pointer",
+      "barWidth": 10,
+      "barMinWidth": null,
+      "barGap": "-100%",
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": -12,
+      "silent": false,
+      "data": [
+        {
+          "value": 199.64355966059657,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 226.37337102851524,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 348.2492221278368,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 134.61700050840946,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 138.24608863249705,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 309.7406726841539,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 241.88385859219537,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 184.91117674154748,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 292.95163848109155,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 224.90431444016485,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 222.65986484599293,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 164.67820078352383,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 171.19788740351697,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 72.58242176500262,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 61.09213412790193,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 199.72049538033107,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 262.9623662973579,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 97.47537695685186,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 377.25559220521507,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        }
+      ]
+    },
+    {
+      "type": "pictorialBar",
+      "name": "dotted",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "cursor": "pointer",
+      "itemStyle": {
+        "color": "#0f375f",
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "symbol": "rect",
+      "symbolSize": [
+        12,
+        4
+      ],
+      "symbolPosition": "start",
+      "symbolKeepAspect": true,
+      "symbolRepeat": true,
+      "symbolRepeatDirection": "start",
+      "symbolMargin": 1,
+      "data": [
+        {"value": 199.64355966059657},
+        {"value": 226.37337102851524},
+        {"value": 348.2492221278368},
+        {"value": 134.61700050840946},
+        {"value": 138.24608863249705},
+        {"value": 309.7406726841539},
+        {"value": 241.88385859219537},
+        {"value": 184.91117674154748},
+        {"value": 292.95163848109155},
+        {"value": 224.90431444016485},
+        {"value": 222.65986484599293},
+        {"value": 164.67820078352383},
+        {"value": 171.19788740351697},
+        {"value": 72.58242176500262},
+        {"value": 61.09213412790193},
+        {"value": 199.72049538033107},
+        {"value": 262.9623662973579},
+        {"value": 97.47537695685186},
+        {"value": 377.25559220521507}
+      ],
+      "zlevel": 0,
+      "z": -10,
+      "silent": false
+    }
+  ]
+}
+        chart_78785683429808.setOption(option);
+    </script>
+  </body>
+</html>
