@@ -111,6 +111,8 @@ set obj [ticklecharts::dataset new -source $data -sourceHeader "True"]
 # Add 'obj' dataset to chart class. 
 $chart SetOptions -dataset $obj
 # Add line series.
+$chart Xaxis
+$chart Yaxis
 $chart AddLineSeries -seriesLayoutBy "row"
 ```
 Useful methods :
