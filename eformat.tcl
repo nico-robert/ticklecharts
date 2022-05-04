@@ -192,8 +192,8 @@ proc ticklecharts::formatEcharts {formattype value key} {
                     error "$key ($nameproc). Color can be represented in RGB, for example 'rgb(128, 128, 128)'.\
                         RGBA can be used when you need alpha channel, for example 'rgba(128, 128, 128, 0.5)'.\
                         You may also use hexadecimal format, for example '#ccc'"
-                }         
-            }         
+                }
+            }
         }
 
         formatFontStyle {
@@ -897,6 +897,35 @@ proc ticklecharts::formatEcharts {formattype value key} {
                     error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
                 }
+            }
+        }
+
+        formatSymbolPosition {
+            # possible values...
+            set validvalue {start end center}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatsymbolRepeat {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {fixed}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatsymbolRepeatDirs {
+            # possible values...
+            set validvalue {start end}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
             }
         }
 
