@@ -63,6 +63,9 @@
 # 30-04-2022 : v1.9.3
                # Add `dataset` option
                # Add chart examples to include `dataset` option.
+# 04-05-2022 : v1.9.4
+               # Add `pictorialBar` chart.
+               # Add pictorialBar examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -83,7 +86,7 @@ source [file join $dir dataset.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.9.3
+    variable version 1.9.4
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

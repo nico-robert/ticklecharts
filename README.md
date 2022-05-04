@@ -76,7 +76,7 @@ $chart Render -width "1200px" -height "800px" -render "svg"
 ```
 Data :
 -------------------------
-`-data` in _series_ can be written like this : 
+`-data` in _series_, can be written like this : 
 ```tcl
 # Demo
 $chart AddLineSeries -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
@@ -85,7 +85,7 @@ $chart AddLineSeries -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # And now -data in Xaxis method can be deleted and written like this :
 $chart Xaxis
 ```
-With `-datalineitem` (for _lineseries_) flag :
+`-datalineitem` (for _lineseries_) flag :
 ```tcl
 # Additional options on the graph... see ticklecharts::LineItem in options.tcl
 $chart AddLineSeries -datalineitem {
@@ -97,6 +97,21 @@ $chart AddLineSeries -datalineitem {
                                 {name "Sat" value 147}
                                 {name "Sun" value 260}
                                 }
+```
+With `dataset` class :
+```tcl
+set data {
+        {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
+        {"value" 150 230 224 218 135 147 260}
+        }
+
+# Init dataset class.
+set obj [ticklecharts::dataset new -source $data -sourceHeader "True"]
+
+# Add 'obj' dataset to chart class. 
+$chart SetOptions -dataset $obj
+# Add line series.
+$chart AddLineSeries -seriesLayoutBy "row"
 ```
 Useful methods :
 -------------------------
@@ -166,7 +181,7 @@ $chart Xaxis -axisLabel [list show "True" \
                               showMinLabel "null" \
                               ... ]
 
-# json result :
+# Echarts 'json' result :
 "axisLabel": {
   "show": true,
   "margin": 8,
@@ -333,7 +348,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] sankey
 - [x] funnel
 - [ ] gauge
-- [ ] pictorialBar
+- [x] pictorialBar
 - [x] themeRiver
 - [ ] custom
 
@@ -407,3 +422,6 @@ Release :
 *  **30-04-2022** : 1.9.3
     - Add `dataset` option.
     - Add chart examples to include `dataset` option.
+*  **04-05-2022** : 1.9.4
+    - Add `pictorialBar` chart.
+    - Add `pictorialBar` examples.
