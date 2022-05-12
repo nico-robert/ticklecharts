@@ -60,8 +60,8 @@ proc ticklecharts::barseries {index value} {
     setdef options -animationDurationUpdate -validvalue {}                   -type num|jsfunc|null -default "nothing"
     setdef options -animationEasingUpdate   -validvalue formatAEasing        -type str|null        -default "nothing"
     setdef options -animationDelayUpdate    -validvalue {}                   -type num|jsfunc|null -default "nothing"
-    # not supported yet...
 
+    # not supported yet...
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -159,8 +159,8 @@ proc ticklecharts::lineseries {index value} {
     setdef options -animationDurationUpdate -validvalue {}                  -type num|jsfunc|null -default "nothing"
     setdef options -animationEasingUpdate   -validvalue formatAEasing       -type str|null        -default "nothing"
     setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null -default "nothing"
-    # not supported yet...
 
+    # not supported yet...
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
     
@@ -194,7 +194,7 @@ proc ticklecharts::lineseries {index value} {
                                   -emphasis -blur -select -tooltip -encode]
                                 
     set options [merge $options $value]
-    
+
     return $options
 
 }
@@ -258,7 +258,6 @@ proc ticklecharts::pieseries {index value} {
     setdef options -universalTransition     -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
 
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -354,7 +353,6 @@ proc ticklecharts::funnelseries {index value} {
     setdef options -universalTransition     -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
 
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -433,7 +431,6 @@ proc ticklecharts::radarseries {index value} {
     setdef options -universalTransition     -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
 
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -517,7 +514,6 @@ proc ticklecharts::scatterseries {index value} {
     }        
     
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -598,7 +594,6 @@ proc ticklecharts::heatmapseries {index value} {
     setdef options -silent               -validvalue {}                 -type bool             -default "False"
         
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -854,6 +849,7 @@ proc ticklecharts::sankeyseries {index value} {
     setdef options -animationDurationUpdate -validvalue {}                  -type num|jsfunc|null   -default "nothing"
     setdef options -animationEasingUpdate   -validvalue formatAEasing       -type str|null          -default "nothing"
     setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+
     # not supported yet...
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -936,7 +932,6 @@ proc ticklecharts::pictorialbarseries {index value} {
     setdef options -animationDelayUpdate    -validvalue {}                    -type num|jsfunc|null   -default "nothing"
 
     # not supported yet...
-
     # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
@@ -962,6 +957,84 @@ proc ticklecharts::pictorialbarseries {index value} {
                                   -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -tooltip -encode -data]
+                                
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::candlestickseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-candlesticks
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::candlestickseries below.
+    #
+    # return dict candlestickseries options
+
+    setdef options -type                    -validvalue {}                    -type str               -default "candlestick"
+    setdef options -id                      -validvalue {}                    -type str|null          -default "nothing"
+    setdef options -name                    -validvalue {}                    -type str               -default "candlestickseries_${index}"
+    setdef options -coordinateSystem        -validvalue formatCSYS            -type str               -default "cartesian2d"
+    setdef options -xAxisIndex              -validvalue {}                    -type num|null          -default "nothing"
+    setdef options -yAxisIndex              -validvalue {}                    -type num|null          -default "nothing"
+    setdef options -colorBy                 -validvalue formatColorBy         -type str               -default "series"
+    setdef options -legendHoverLink         -validvalue {}                    -type bool              -default "True"
+    setdef options -hoverAnimation          -validvalue {}                    -type bool|null         -default "nothing"
+    setdef options -layout                  -validvalue formatOrient          -type str|null          -default "nothing"
+    setdef options -barWidth                -validvalue {}                    -type str|num|null      -default "nothing"
+    setdef options -barMaxWidth             -validvalue {}                    -type str|num|null      -default "nothing"
+    setdef options -barMinWidth             -validvalue {}                    -type str|num|null      -default "null"
+    setdef options -itemStyle               -validvalue {}                    -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -validvalue {}                    -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -validvalue {}                    -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -validvalue {}                    -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -validvalue formatSelectedMode    -type bool|str|null     -default "nothing"
+    setdef options -large                   -validvalue {}                    -type bool              -default "False"
+    setdef options -largeThreshold          -validvalue {}                    -type num               -default 400
+    setdef options -progressive             -validvalue {}                    -type num|null          -default "nothing"
+    setdef options -progressiveThreshold    -validvalue {}                    -type num|null          -default "nothing"
+    setdef options -progressiveChunkMode    -validvalue formatPChunkMode      -type str|null          -default "nothing"
+    setdef options -data                    -validvalue {}                    -type list.d            -default {}
+    setdef options -markPoint               -validvalue {}                    -type dict|null         -default [ticklecharts::markPoint $value]
+    setdef options -markLine                -validvalue {}                    -type dict|null         -default [ticklecharts::markLine $value]
+    setdef options -markArea                -validvalue {}                    -type dict|null         -default [ticklecharts::markArea $value]
+    setdef options -clip                    -validvalue {}                    -type bool              -default "True"
+    setdef options -zlevel                  -validvalue {}                    -type num               -default 0
+    setdef options -z                       -validvalue {}                    -type num               -default 2
+    setdef options -silent                  -validvalue {}                    -type bool              -default "False"
+    setdef options -animationDuration       -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -validvalue formatAEasing         -type str|null          -default "nothing"
+    setdef options -animationDelay          -validvalue {}                    -type num|jsfunc|null   -default "nothing"
+
+    # not supported yet...
+    # setdef options -dataGroupId            -validvalue {} -type str|null         -default "nothing"
+    # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    # check if chart includes a dataset class
+    lassign [info level 1] chart
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data] || [dict exists $value -datacandlestickitem]} {
+            error "'chart' Class cannot contain '-data' or 'datacandlestickitem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class... if need
+        # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
+        setdef options  -encode         -validvalue {} -type dict|null        -default [ticklecharts::encode $value]
+
+    }
+
+    if {[dict exists $value -datacandlestickitem]} {
+        set options [dict remove $options -data]
+        # setdef options -data -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value]
+    }
+          
+    set value [dict remove $value -markPoint -markLine -markArea \
+                                  -labelLayout -itemStyle \
+                                  -emphasis -blur -select -tooltip -encode]
                                 
     set options [merge $options $value]
 
