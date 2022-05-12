@@ -80,3 +80,8 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] datas
 foreach chartfile [glob -directory [file join [file dirname [info script]] pictorialBar] -types f *.tcl] {
     source $chartfile
 }
+
+# candlestick
+foreach chartfile [glob -directory [file join [file dirname [info script]] candlestick] -types f *.tcl] {
+    source $chartfile
+}
