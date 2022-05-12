@@ -18,7 +18,8 @@ oo::class create ticklecharts::chart {
     variable _indextreeseries         ; # index tree serie
     variable _indexthemeriverseries   ; # index themeriver serie
     variable _indexsankeyseries       ; # index sankey serie
-    variable _indexpictorialbarseries ; # index sankey serie
+    variable _indexpictorialbarseries ; # index pictorialbar serie
+    variable _indexcandlestickseries  ; # index candlestick serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -46,10 +47,12 @@ oo::class create ticklecharts::chart {
         }
 
         # shared _index* variable for chart class...
-        set ns [info object namespace [self class]]
-        foreach var [info vars _index*] {
-           my eval [list namespace upvar $ns $var $var]
-        } 
+        if {[info exists ::argv0] && ([info script] eq "$::argv0")} {
+            set ns [info object namespace [self class]]
+            foreach var [info vars _index*] {
+                my eval [list namespace upvar $ns $var $var]
+            }
+        }
 
         lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
     }
@@ -580,6 +583,25 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
     }
+
+    method AddCandlestickSeries {args} {
+        # Add data serie chart (use only for candlestick chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions candlestickseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-candlesticks
+        #
+        # Returns nothing     
+        incr _indexcandlestickseries
+
+        set options [ticklecharts::candlestickseries $_indexcandlestickseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -668,6 +690,7 @@ oo::define ticklecharts::chart {
     # export method
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
-           Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries
+           Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
+           AddCandlestickSeries
 }
 
