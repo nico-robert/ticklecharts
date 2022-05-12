@@ -378,16 +378,9 @@ oo::define ticklecharts::Gridlayout {
         set c [ticklecharts::chart new]
         $c SetOptions {*}$args
 
-        set mykeys    [$c keys]
-        set myoptions [$c options]
-
-        dict for {key info} $args {
-            set k [string map {"-" ""} $key]
-            if {$k in $mykeys} {
-                set kk [dict keys $myoptions *$k]
-                lappend _options $kk [dict get $myoptions $kk]
-                lappend _keyglob $k
-            }
+        foreach {key info} [$c options] {
+            lappend _options $key $info
+            lappend _keyglob [string map {"-" ""} $key]
         }
 
         # check if chart has dataset.

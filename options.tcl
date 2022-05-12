@@ -716,7 +716,7 @@ proc ticklecharts::markPointItem {value} {
         setdef options type       -validvalue {}               -type str|null        -default "nothing"
         setdef options valueIndex -validvalue {}               -type num|null        -default "nothing"
         setdef options valueDim   -validvalue {}               -type str|null        -default "nothing"
-        setdef options coord      -validvalue {}               -type list.n|null     -default "nothing"
+        setdef options coord      -validvalue {}               -type list.d|null     -default "nothing"
         setdef options xAxis      -validvalue {}               -type num|null        -default "nothing"
         setdef options yAxis      -validvalue {}               -type num|null        -default "nothing"
         setdef options value      -validvalue {}               -type num|null        -default "nothing"
@@ -846,6 +846,11 @@ proc ticklecharts::itemStyle {value} {
     if {[InfoNameProc 2 "barseries"]} {
         setdef options borderRadius     -validvalue {}            -type num|null        -default "nothing"
     }
+
+    if {[InfoNameProc 2 "candlestickseries"]} {
+        setdef options color0           -validvalue formatColor   -type str|null        -default "nothing"
+        setdef options borderColor0     -validvalue formatColor   -type str|null        -default "nothing"
+    }
     
     set options [merge $options [dict get $value $key]]
 
@@ -914,26 +919,21 @@ proc ticklecharts::markPoint {value} {
         dict set d emphasis lineStyle "nothing"
         dict set d emphasis areaStyle "nothing"
         dict set d emphasis endLabel  "nothing"
-        dict set value -markPoint $d
     }
-    
-    setdef options emphasis -validvalue {} -type dict|null -default [ticklecharts::emphasis $d]
     
     if {[dict exists $d blur]} {
         dict set d blur labelLine "nothing"
         dict set d blur lineStyle "nothing"
         dict set d blur areaStyle "nothing"
         dict set d blur endLabel  "nothing"
-        dict set value -markPoint $d
     }
     
-    setdef options blur -validvalue {} -type dict|null   -default [ticklecharts::blur $d]
-    setdef options data -validvalue {} -type list.o|null -default [ticklecharts::markPointItem $d]
+    setdef options emphasis -validvalue {} -type dict|null   -default [ticklecharts::emphasis $d]
+    setdef options blur     -validvalue {} -type dict|null   -default [ticklecharts::blur $d]
+    setdef options data     -validvalue {} -type list.o|null -default [ticklecharts::markPointItem $d]
     #...
     
-    if {[dict exists $d data]} {
-        set d [dict remove $d data]
-    }
+    set d [dict remove $d data blur label itemStyle emphasis]
     
     set options [merge $options $d]
 
@@ -1718,6 +1718,7 @@ proc ticklecharts::splitLine {value} {
     setdef options symbolOffset    -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
     #...
+    set d [dict remove $d lineStyle]
 
     set options [merge $options $d]
 
@@ -1749,11 +1750,14 @@ proc ticklecharts::minorSplitLine {value} {
         return "nothing"
     }
 
-    setdef options show      -validvalue {} -type bool      -default "False"
-    setdef options lineStyle -validvalue {} -type dict|null -default [ticklecharts::lineStyle [dict get $value -minorSplitLine]]
-    #...
+    set d [dict get $value -minorSplitLine]
 
-    set options [merge $options [dict get $value -minorSplitLine]]
+    setdef options show      -validvalue {} -type bool      -default "False"
+    setdef options lineStyle -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+    #...
+    set d [dict remove $d lineStyle]
+
+    set options [merge $options $d]
 
     return $options
 
@@ -1765,12 +1769,15 @@ proc ticklecharts::splitArea {value} {
         return "nothing"
     }
 
+    set d [dict get $value -splitArea]
+
     setdef options interval  -validvalue {} -type num       -default 0
     setdef options show      -validvalue {} -type bool      -default "False"
-    setdef options areaStyle -validvalue {} -type dict|null -default [ticklecharts::areaStyle [dict get $value -splitArea]]
+    setdef options areaStyle -validvalue {} -type dict|null -default [ticklecharts::areaStyle $d]
     #...
+    set d [dict remove $d lineStyle]
 
-    set options [merge $options [dict get $value -splitArea]]
+    set options [merge $options $d]
 
     return $options
 
@@ -1836,6 +1843,7 @@ proc ticklecharts::axisLine {value} {
     setdef options symbolOffset    -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
     #...
+    set d [dict remove $d lineStyle]
     
     set options [merge $options $d]
     
@@ -1970,6 +1978,8 @@ proc ticklecharts::labelLine {value} {
         setdef options length           -validvalue {} -type num|null  -default "nothing"
     }
 
+    set d [dict remove $d lineStyle]
+
     set options [merge $options $d]
 
     return $options
@@ -2022,6 +2032,7 @@ proc ticklecharts::axisTick {value} {
     setdef options length          -validvalue {}             -type num            -default 5
     setdef options lineStyle       -validvalue {}             -type dict|null      -default [ticklecharts::lineStyle $d]
     #...
+    set d [dict remove $d lineStyle]
 
     set options [merge $options $d]
 
@@ -2041,6 +2052,7 @@ proc ticklecharts::minorTick {value} {
     setdef options length      -validvalue {} -type num       -default 3
     setdef options lineStyle   -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
     #...
+    set d [dict remove $d lineStyle]
 
     set options [merge $options $d]
 
@@ -2962,7 +2974,7 @@ proc ticklecharts::toolBoxdataZoom {value} {
     setdef options brushStyle  -validvalue {}               -type dict|null                -default [ticklecharts::brushStyle $d]
     #...
 
-    set d [dict remove $d title iconStyle emphasis brushStyle]
+    set d [dict remove $d title iconStyle emphasis icon brushStyle]
 
     set options [merge $options $d]
 
@@ -3219,22 +3231,21 @@ proc ticklecharts::encode {value} {
         return "nothing"
     }
 
-    lassign [info level 1] chart
-    
     set d [dict get $value -encode]
 
-    setdef options x          -validvalue {}  -type str|list.d|null  -default "nothing"
-    setdef options y          -validvalue {}  -type str|list.d|null  -default "nothing"
-    setdef options itemName   -validvalue {}  -type str|null         -default "nothing"
-    setdef options value      -validvalue {}  -type str|null         -default "nothing"
-    setdef options radius     -validvalue {}  -type num|null         -default "nothing"
-    setdef options angle      -validvalue {}  -type num|null         -default "nothing"
-    setdef options tooltip    -validvalue {}  -type list.d|str|null  -default "nothing"
+    setdef options x          -validvalue {}  -type str|num|list.d|null  -default "nothing"
+    setdef options y          -validvalue {}  -type str|num|list.d|null  -default "nothing"
+    setdef options itemName   -validvalue {}  -type str|null             -default "nothing"
+    setdef options value      -validvalue {}  -type str|null             -default "nothing"
+    setdef options radius     -validvalue {}  -type num|null             -default "nothing"
+    setdef options angle      -validvalue {}  -type num|null             -default "nothing"
+    setdef options tooltip    -validvalue {}  -type list.d|str|null      -default "nothing"
     #...
 
     # Special case when dimensions are double values...
     # If I understand Echarts documentation
     # 'value' should be a string value
+    set chart [lindex [info level 1] 0]
     set dataset [$chart dataset]
     if {[dict exists $d value]} {
         set v [dict get $d value] 
