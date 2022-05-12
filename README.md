@@ -161,13 +161,17 @@ $chart AddBarSeries  -data [list {4 5 6 7}]
 # Delete bar series :
 $chart deleteseries 1
 ```
+3. Gets _json_ data :
+```tcl
+$chart toJSON
+```
 
 Javascript function :
 -------------------------
 Add a `javascript` function to `json` :
 ```tcl
 # Initializes a new jsfunc Class
-ticklecharts::jsfunc new {function}
+ticklecharts::jsfunc new {args}
 ```
 This function will be able to be inserted directly into the `JSON` data and will also create a new type `jsfunc`.
 ```tcl
@@ -245,8 +249,8 @@ $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 
 ```tcl
 # demo layout line + bar + pie...
-set num  {1 2 3 4 5}
-set num1 {2 3.6 6 2 10}
+set data0 {1 2 3 4 5}
+set data1 {2 3.6 6 2 10}
 
 set js [ticklecharts::jsfunc new {function (value, index) {
                                 return value + ' (C°)';
@@ -259,10 +263,10 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
                  -tooltip {show "True"} \
                  -legend {top "56%" left "20%"}    
     
-$line Xaxis -data [list $num] -boundaryGap "False"
+$line Xaxis -data [list $data0] -boundaryGap "False"
 $line Yaxis
-$line AddLineSeries -data [list $num]  -areaStyle {} -smooth true
-$line AddLineSeries -data [list $num1] -smooth true
+$line AddLineSeries -data [list $data0]  -areaStyle {} -smooth true
+$line AddLineSeries -data [list $data1] -smooth true
 
 set bar [ticklecharts::chart new]
 
@@ -341,7 +345,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] treemap
 - [x] sunburst
 - [ ] boxplot
-- [ ] candlestick
+- [x] candlestick
 - [x] heatmap
 - [ ] map
 - [ ] parallel
@@ -354,7 +358,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] themeRiver
 - [ ] custom
 
-#### Photo gallery :
+#### Gallery :
 ![Photo gallery](images/all.gif)
 
 License :
@@ -392,7 +396,7 @@ Release :
 *  **20-03-2022** : 1.5.2
     - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
     - Update chart examples to include toolbox utility.
-    - Add examples with json data from [github apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `tls`, `json` packages from Tcllib)
+    - Add examples with json data from [github apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `json` packages from Tcllib) + `tls` package.
     - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
@@ -427,3 +431,6 @@ Release :
 *  **04-05-2022** : 1.9.4
     - Add `pictorialBar` chart.
     - Add `pictorialBar` examples.
+*  **12-05-2022** : 1.9.5
+    - Add `candlestick` chart.
+    - Add `candlestick` examples.
