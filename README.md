@@ -200,8 +200,9 @@ $chart Xaxis -axisLabel [list show "True" \
 ```
 Performance :
 -------------------------
-Since version 2, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).
-You may be processing important data and if you want to gain speed, this command can be useful :
+Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).
+Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value.
+You may be processing important data and if you want to gain speed, this command can be useful, below how to use it :
 ```tcl
 package require ticklecharts
 
@@ -216,7 +217,7 @@ source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200
 #    pure Tcl |   25354915 microseconds per iteration 
 #    critcl   |   3514165  microseconds per iteration (≃7x faster)
 ```
-`Note` : _No advantage to use this command with small data..._  
+`Note` : _No advantage to use this command with small data..._
 
 Examples :
 -------------------------
@@ -455,7 +456,5 @@ Release :
     - Add `candlestick` chart.
     - Add `candlestick` examples.
 *  **26-05-2022** : 2.0.1
-    - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.  
-    Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value (See [performance](#Performance) section for how to use it).  
-    `Note` : If a huddle type is added, it will not be supported, additional changes are expected.
+    - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
     - ***Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
