@@ -455,7 +455,7 @@ Release :
     - Add `candlestick` chart.
     - Add `candlestick` examples.
 *  **26-05-2022** : 2.0.1
-    - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
-    Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value (See [performance](#Performance) section for how to use it).
+    - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.  
+    Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value (See [performance](#Performance) section for how to use it).  
     `Note` : If a huddle type is added, it will not be supported, additional changes are expected.
     - ***Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
