@@ -81,23 +81,9 @@ oo::define ticklecharts::ehuddle {
                 "@LD"   {
                             set listv {}
                             if {[llength {*}$data] == 1} {
-                                foreach val [lindex {*}$data 0] {
-                                    if {[string is double -strict $val]} {
-                                        lappend listv [ticklecharts::ehuddle_num $val]
-                                    } else {
-                                        lappend listv [huddle string $val]
-                                    }
-                                }
+                                set listv [ticklecharts::ehuddleListInsert $data]
                             } else {
-                                foreach val {*}$data {
-                                    lappend listv [huddle list {*}[lmap v $val {
-                                        if {[string is double -strict $v]} {
-                                            ticklecharts::ehuddle_num $v
-                                        } else {
-                                            huddle string $v
-                                        }
-                                    }]]
-                                }
+                                set listv [ticklecharts::ehuddleListMap $data]
                             }
                             set value [huddle list {*}$listv]
                         }
@@ -168,24 +154,9 @@ oo::define ticklecharts::ehuddle {
                     "@LD"   {
                                 set listv {}
                                 if {[llength {*}$info] == 1} {
-                                    foreach val [lindex {*}$info 0] {
-                                        if {[string is double -strict $val]} {
-                                            lappend listv [ticklecharts::ehuddle_num $val]
-                                        } else {
-                                            lappend listv [huddle string $val]
-                                        }
-                                    }
+                                    set listv [ticklecharts::ehuddleListInsert $info]
                                 } else {
-                                    foreach val {*}$info {
-                                        lappend listv [huddle list {*}[lmap v $val {
-                                            if {[string is double -strict $v]} {
-                                                ticklecharts::ehuddle_num $v
-                                            } else {
-                                                huddle string $v
-                                            }
-
-                                        }]]
-                                    }
+                                    set listv [ticklecharts::ehuddleListMap $info]
                                 }
                                 set value [huddle list {*}$listv]
                             }
@@ -464,6 +435,42 @@ proc ticklecharts::ehuddle_num val {
     return [format "HUDDLE {num %s}" $val]
 }
 
+proc ticklecharts::ehuddleListMap data {
+    # Map tcl list to huddle format list
+    #
+    # Returns huddle list
+    set listv {}
+
+    foreach val {*}$data {
+        lappend listv [huddle list {*}[lmap v $val {
+            if {[string is double -strict $v]} {
+                ticklecharts::ehuddle_num $v
+            } else {
+                huddle string $v
+            }
+        }]]
+    }
+
+    return $listv
+}
+
+proc ticklecharts::ehuddleListInsert data {
+    # Transform tcl list to huddle list
+    #
+    # Returns huddle list
+    set listv {}
+
+    foreach val [lindex {*}$data 0] {
+        if {[string is double -strict $val]} {
+            lappend listv [ticklecharts::ehuddle_num $val]
+        } else {
+            lappend listv [huddle string $val]
+        }
+    }
+
+    return $listv
+}
+
 # Add jsfunc as hudlle type
 huddle addType ::huddle::types::jsfunc
 
@@ -473,7 +480,7 @@ if {[package present huddle] == 0.3} {
         # patch huddle 0.3 = huddle::jsondump
         # typo $data should be $huddle_object
         # unwrap $huddle_object for avoid to have this error below :
-        # 'can't read "types(callback:mytype)": no such element in array'
+        # 'can't read "types(callback:tag)": no such element in array'
         #
         variable types
         set nextoff "$begin$offset"
