@@ -6,6 +6,9 @@ package require ticklecharts
 # set theme if you want...
 # set ::ticklecharts::theme "basic"
 
+# Replaces some huddle/ehuddle procedures by C procedures...
+# ticklecharts::eHuddleCritcl 1
+
 # bar
 foreach chartfile [glob -directory [file join [file dirname [info script]] bar] -types f *.tcl] {
     source $chartfile

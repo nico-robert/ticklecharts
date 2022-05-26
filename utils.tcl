@@ -12,7 +12,7 @@ proc ticklecharts::htmlmap {htmloptions} {
     #
     # -width      - size chart
     # -height     - size chart
-    # -render     - 'canvas' or 'svg'
+    # -renderer   - 'canvas' or 'svg'
     # -jschartvar - name js variable chart
     # -divid      - name id div html
     # -title      - title html
@@ -23,7 +23,7 @@ proc ticklecharts::htmlmap {htmloptions} {
 
     lappend mapoptions [format {%%width%% %s}      [lrange [dict get $htmloptions -width]  0 end-1]]
     lappend mapoptions [format {%%height%% %s}     [lrange [dict get $htmloptions -height] 0 end-1]]
-    lappend mapoptions [format {%%render%% %s}     [lrange [dict get $htmloptions -render] 0 end-1]]
+    lappend mapoptions [format {%%renderer%% %s}   [lrange [dict get $htmloptions -renderer] 0 end-1]]
     lappend mapoptions [format {%%jsecharts%% %s}  [lrange [dict get $htmloptions -jsecharts]  0 end-1]]
     lappend mapoptions [format {%%jschartvar%% %s} [lrange [dict get $htmloptions -jschartvar]  0 end-1]]
     lappend mapoptions [format {%%divid%% %s}      [lrange [dict get $htmloptions -divid]  0 end-1]]
@@ -516,4 +516,58 @@ proc ticklecharts::listNs {{parentns ::}} {
             lappend result {*}[listNs $ns] $ns
     }
     return $result
+}
+
+proc ticklecharts::eHuddleCritcl {bool} {
+    # Replaces some huddle procedures by C functions,
+    # with help of critcl package https://andreas-kupries.github.io/critcl/
+    #
+    # bool - true or false 
+    #
+    # Returns Nothing
+    if {$bool} {
+        if {![catch {uplevel 1 [list source [file join $::ticklecharts::dir ehuddlecrit.tcl]]} infocrit]} {
+            # Replace 'if {[isHuddle $key]} {...}' by 'if {[huddle::isHuddle $key]} {...}'
+            # Problem if full namespace is not included... 
+            proc ::huddle::types::dict::create {args} {
+                if {[llength $args] % 2} {error {wrong # args: should be "huddle create ?key value ...?"}}
+                set resultL [dict create]
+                
+                foreach {key value} $args {
+                    if {[huddle::isHuddle $key]} {
+                        foreach {tag src} [unwrap $key] break
+                        if {$tag ne "string"} {error "The key '$key' must a string literal or huddle string" }
+                        set key $src
+                    }
+                    dict set resultL $key [argument_to_node $value]
+                }
+                return [wrap [list D $resultL]]
+            }
+
+            # JsonDump
+            rename ::huddle::jsondump "" ; # delete proc
+            rename ticklecharts::critJsonDump ::huddle::jsondump
+            # RetrieveHuddle
+            rename ::huddle::retrieve_huddle "" ; # delete proc
+            rename critRetrieveHuddle ::huddle::retrieve_huddle
+            # IsHuddle
+            rename ::huddle::isHuddle "" ; # delete proc
+            rename critIsHuddle ::huddle::isHuddle
+            # huddle list
+            rename ::huddle::types::list::List "" ; # delete proc
+            rename ticklecharts::critHList ::huddle::types::list::List
+
+            # ehuddle procedures :
+            rename ::ticklecharts::ehuddleListMap "" ; # delete proc
+            rename critHuddleListMap ::ticklecharts::ehuddleListMap
+
+            rename ::ticklecharts::ehuddleListInsert "" ; # delete proc
+            rename critHuddleListInsert ::ticklecharts::ehuddleListInsert
+
+        } else {
+            puts "warning : $infocrit"
+        }
+    }
+
+    return
 }
