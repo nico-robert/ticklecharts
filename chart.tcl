@@ -162,7 +162,7 @@ oo::define ticklecharts::chart {
         # -title      - header title html
         # -width      - size html canvas
         # -height     - size html canvas
-        # -render     - 'canvas' or 'svg'
+        # -renderer   - 'canvas' or 'svg'
         # -jschartvar - name chart var
         # -divid      - name id var
         # -outfile    - full path html (by default in [info script]/render.html)

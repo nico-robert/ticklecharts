@@ -54,12 +54,12 @@ oo::define ticklecharts::Gridlayout {
     }
 
     method dataset {} {
-        # Gets global key options
+        # Gets dataset
         return $_dataset
     }
 
     method gettype {} {
-        # Gets type class
+        # Returns type of class
         return "gridlayout"
     }
 
@@ -333,7 +333,7 @@ oo::define ticklecharts::Gridlayout {
         # -title      - header title html
         # -width      - size html canvas
         # -height     - size html canvas
-        # -render     - 'canvas' or 'svg'
+        # -renderer   - 'canvas' or 'svg'
         # -jschartvar - name chart var
         # -divid      - name id var
         # -outfile    - full path html (by default in [info script]/render.html)
@@ -392,7 +392,7 @@ oo::define ticklecharts::Gridlayout {
         # destroy...
         $c destroy
 
-        return ""
+        return
         
     }
 

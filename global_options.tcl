@@ -49,7 +49,7 @@ proc ticklecharts::htmloptions {value} {
     setdef options -title      -validvalue {}             -type str.n     -default "ticklEcharts !!!"
     setdef options -width      -validvalue {}             -type str.n|num -default "900px"
     setdef options -height     -validvalue {}             -type str.n|num -default "500px"
-    setdef options -render     -validvalue formatRenderer -type str.n     -default "canvas"
+    setdef options -renderer   -validvalue formatRenderer -type str.n     -default "canvas"
     setdef options -jschartvar -validvalue {}             -type str.n     -default [format "chart_%s" [clock clicks]]
     setdef options -divid      -validvalue {}             -type str.n     -default [format "id_%s"    [clock clicks]]
     setdef options -outfile    -validvalue {}             -type str.n     -default [file join [file dirname [info script]] render.html]
