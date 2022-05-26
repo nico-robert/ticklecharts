@@ -8,7 +8,7 @@
   <body>
     <div id="%divid%" class="chart-container" style="width:%width%; height:%height%;"></div>
     <script>
-        var %jschartvar% = echarts.init(document.getElementById('%divid%'), null, {renderer: '%render%'});
+        var %jschartvar% = echarts.init(document.getElementById('%divid%'), null, {renderer: '%renderer%'});
         %json%
         %jschartvar%.setOption(%jsvar%);
     </script>
