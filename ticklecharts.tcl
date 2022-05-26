@@ -69,6 +69,15 @@
 # 12-05-2022 : v1.9.5
                # Add `candlestick` chart.
                # Add candlestick examples.
+# 12-05-2022 : v1.9.5
+               # Add `candlestick` chart.
+               # Add candlestick examples.
+# 26-05-2022 : v2.0.1
+               # Replaces some huddle/ehuddle procedures by C functions,
+               # with help of critcl package https://andreas-kupries.github.io/critcl/
+               # Critcl package should be available and this commmand 'ticklecharts::eHuddleCritcl' should be set to valide Tcl boolean value.
+               # Note : If a huddle type is added, it will not be supported, additional changes are expected.
+               # Incompatibility -render flag renamed to -renderer (flag option to set `canvas` or `svg` renderer).
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -89,7 +98,7 @@ source [file join $dir dataset.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 1.9.5
+    variable version 2.0.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

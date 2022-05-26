@@ -63,7 +63,7 @@ $chart Render
 | _-title_ | header title html
 | _-width_ | size html canvas  (default value : `900px`)
 | _-height_ | size html canvas (default value : `500px`)
-| _-render_ | 'canvas' or 'svg' (default value : `canvas`)
+| _-renderer_ | 'canvas' or 'svg' (default value : `canvas`)
 | _-jschartvar_ | name chart var (default value : `chart_[clock clicks]`) 
 | _-divid_ | name id var (default value : `id_[clock clicks]`) 
 | _-outfile_ | full path html (output by default in `[info script]/render.html`)
@@ -72,7 +72,7 @@ $chart Render
 
 ```tcl
 # Demo
-$chart Render -width "1200px" -height "800px" -render "svg"
+$chart Render -width "1200px" -height "800px" -renderer "svg"
 ```
 Data :
 -------------------------
@@ -198,6 +198,26 @@ $chart Xaxis -axisLabel [list show "True" \
   ...
 }
 ```
+Performance :
+-------------------------
+Since version 2, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).
+You may be processing important data and if you want to gain speed, this command can be useful :
+```tcl
+package require ticklecharts
+
+# load critcl package
+# compile & replace...
+# Note : A warning message may be displayed on your console
+# if there was a problem compiling or loading critcl package
+ticklecharts::eHuddleCritcl True
+
+source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200,000
+#             | This run (Mac Os Core i7)
+#    pure Tcl |   25354915 microseconds per iteration 
+#    critcl   |   3514165  microseconds per iteration (≃7x faster)
+```
+`Note` : _No advantage to use this command with small data..._  
+
 Examples :
 -------------------------
 See **[examples](/examples)** for all demos (from [apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
@@ -434,3 +454,8 @@ Release :
 *  **12-05-2022** : 1.9.5
     - Add `candlestick` chart.
     - Add `candlestick` examples.
+*  **26-05-2022** : 2.0.1
+    - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
+    Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value (See [performance](#Performance) section for how to use it).
+    `Note` : If a huddle type is added, it will not be supported, additional changes are expected.
+    - ***Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
