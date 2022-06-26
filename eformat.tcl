@@ -248,6 +248,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatExpandTriggerOn {
+            # possible values...
+            set validvalue {mousemove click}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
         formatTriggerOn {
             # possible values...
             set validvalue {mousemove click mousemove|click none}
@@ -434,6 +442,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
             if {[InfoNameProc 2 "themeriverseries"]} {
                 set validvalue {single}
+            }
+
+            if {[InfoNameProc 2 "parallelseries"]} {
+                set validvalue {parallel}
             }
 
             if {$value ni $validvalue} {
@@ -923,6 +935,59 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatsymbolRepeatDirs {
             # possible values...
             set validvalue {start end}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatBrushIndex -
+        formatToolBox {
+            set type [Type $value]
+            set validvalue {rect polygon keep clear}
+
+            if {$type eq "list"} {
+                foreach val $value {
+                    if {$val ni $validvalue} {
+                        error "'$value' should be '[join $validvalue "' or '"]' \
+                                for this key '$key' in $nameproc"
+                    }
+                }
+            }
+        }
+
+        formatBrushLink {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {all none}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatBrushTypes {
+            # possible values...
+            set validvalue {rect polygon lineX lineY}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatBrushMode {
+            # possible values...
+            set validvalue {single multiple}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatBrushMode {
+            # possible values...
+            set validvalue {debounces fixRate}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
