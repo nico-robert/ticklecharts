@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>parallel_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_353362986185982" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_353362986183995 = echarts.init(document.getElementById('id_353362986185982'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "parallelAxis": [
+    {
+      "dim": 0,
+      "parallelIndex": 0,
+      "realtime": true,
+      "type": "value",
+      "name": "Price",
+      "nameLocation": "end"
+    },
+    {
+      "dim": 1,
+      "parallelIndex": 0,
+      "realtime": true,
+      "type": "value",
+      "name": "Net Weight",
+      "nameLocation": "end"
+    },
+    {
+      "dim": 2,
+      "parallelIndex": 0,
+      "realtime": true,
+      "type": "value",
+      "name": "Amount",
+      "nameLocation": "end"
+    },
+    {
+      "dim": 3,
+      "parallelIndex": 0,
+      "realtime": true,
+      "type": "category",
+      "name": "Score",
+      "nameLocation": "end",
+      "data": [
+        "Excellent",
+        "Good",
+        "OK",
+        "Bad"
+      ]
+    }
+  ],
+  "series": [{
+      "type": "parallel",
+      "coordinateSystem": "parallel",
+      "name": "parallelseries_1",
+      "parallelIndex": 0,
+      "colorBy": "series",
+      "lineStyle": {
+        "width": 4,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "inactiveOpacity": 0.05,
+      "activeOpacity": 1,
+      "realtime": true,
+      "progressive": 500,
+      "data": [
+        [
+          12.99,
+          100,
+          82,
+          "Good"
+        ],
+        [
+          9.99,
+          80,
+          77,
+          "OK"
+        ],
+        [
+          20,
+          120,
+          60,
+          "Excellent"
+        ]
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_353362986183995.setOption(option);
+    </script>
+  </body>
+</html>

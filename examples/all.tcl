@@ -88,3 +88,8 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] picto
 foreach chartfile [glob -directory [file join [file dirname [info script]] candlestick] -types f *.tcl] {
     source $chartfile
 }
+
+# parallel
+foreach chartfile [glob -directory [file join [file dirname [info script]] parallel] -types f *.tcl] {
+    source $chartfile
+}
