@@ -33,7 +33,7 @@ oo::class create ticklecharts::dataset {
         setdef options -id                   -validvalue {}                 -type str|null          -default "nothing"
         setdef options -sourceHeader         -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
         setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [my dimensions $args]
-        setdef options -source               -validvalue {}                 -type list.d            -default [my setSource $args]
+        setdef options -source               -validvalue {}                 -type list.d            -default [dict get $args -source]
         setdef options -transform            -validvalue {}                 -type dict|null         -default [my transform $args]
         setdef options -fromDatasetIndex     -validvalue {}                 -type num|null          -default "nothing"
         setdef options -fromDatasetId        -validvalue {}                 -type str|null          -default "nothing"
@@ -83,7 +83,8 @@ oo::define ticklecharts::dataset {
         set d {}
 
         foreach dim [dict get $value -dimensions] {
-            if {[ticklecharts::Isdict $dim] && [llength $dim] > 2} {
+            if {[ticklecharts::Isdict $dim] && [llength $dim] > 2 && 
+               ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
 
                 setdef options name   -validvalue {}            -type str|null  -default "nothing"
                 setdef options value  -validvalue {}            -type num|null  -default "nothing"
@@ -132,19 +133,4 @@ oo::define ticklecharts::dataset {
         return
 
     }
-
-    method setSource {value} {
-        # source dataset
-        #
-        # value - dict
-        #
-        # Returns source
-
-        if {![dict exists $value -source]} {
-            error "'-source' should be specified..."
-        }
-
-        return [dict get $value -source]
-    }
 }
-
