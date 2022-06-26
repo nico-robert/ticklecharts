@@ -234,20 +234,20 @@ proc ticklecharts::dictToEchartsHuddle {options} {
         set htype [ticklecharts::HuddleType $type]
        
         switch -exact -- $type {
-            "dict" {
+            dict {
                 append opts [format " ${htype}=$subkey %s" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
             }
-            "dict.o" {
+            dict.o {
                 append opts [format " ${htype}=$subkey {%s}" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
             }
-            "list.s" {
+            list.s {
                 append opts [format " ${htype}=$subkey {%s}" $svalue]
             }
-            "list.d" -
-            "list.n" {
+            list.d -
+            list.n {
                 append opts [format " ${htype}=$subkey {{%s}}" $svalue]
             }
-            "list.o" {
+            list.o {
                 set l {}
                 foreach val $svalue {
                     if {[lindex $val end] eq "list.o"} {
@@ -513,7 +513,7 @@ proc ticklecharts::listNs {{parentns ::}} {
     # Returns list of all namespaces.
     set result {}
     foreach ns [namespace children $parentns] {
-            lappend result {*}[listNs $ns] $ns
+        lappend result {*}[listNs $ns] $ns
     }
     return $result
 }
