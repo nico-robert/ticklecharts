@@ -200,8 +200,8 @@ $chart Xaxis -axisLabel [list show "True" \
 ```
 Performance :
 -------------------------
-Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).
-Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value.
+Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).  
+Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value.  
 You may be processing important data and if you want to gain speed, this command can be useful, below how to use it :
 ```tcl
 package require ticklecharts
@@ -215,7 +215,7 @@ ticklecharts::eHuddleCritcl True
 source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200,000
 #             | This run (Mac Os Core i7)
 #    pure Tcl |   25354915 microseconds per iteration 
-#    critcl   |   3514165  microseconds per iteration (≃7x faster)
+#    critcl   |    3514165 microseconds per iteration (≃7x faster)
 ```
 `Note` : _No advantage to use this command with small data..._
 
@@ -345,10 +345,10 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] tooltip
 - [ ] axisPointer
 - [x] toolbox
-- [ ] brush
+- [x] brush
 - [ ] geo
-- [ ] parallel
-- [ ] parallelAxis
+- [x] parallel
+- [x] parallelAxis
 - [x] singleAxis
 - [ ] timeline
 - [x] graphic
@@ -369,7 +369,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] candlestick
 - [x] heatmap
 - [ ] map
-- [ ] parallel
+- [x] parallel
 - [ ] lines
 - [ ] graph
 - [x] sankey
@@ -458,3 +458,7 @@ Release :
 *  **26-05-2022** : 2.0.1
     - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
     - ***Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
+*  **26-06-2022** : 2.1
+    - Add `parallel` chart.
+    - Add `parallel` examples.
+    - Add `brush` option (To select part of data from a chart to display in detail...)

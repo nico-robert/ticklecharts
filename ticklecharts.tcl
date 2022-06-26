@@ -78,6 +78,10 @@
                # Critcl package should be available and this commmand 'ticklecharts::eHuddleCritcl' should be set to valide Tcl boolean value.
                # Note : If a huddle type is added, it will not be supported, additional changes are expected.
                # Incompatibility -render flag renamed to -renderer (flag option to set `canvas` or `svg` renderer).
+# 26-06-2022 : v2.1
+               # Add `parallel` chart.
+               # Add `parallel` examples. 
+               # Add `brush` option (To select part of data from a chart to display in detail...)
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -98,7 +102,7 @@ source [file join $dir dataset.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.0.1
+    variable version 2.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
