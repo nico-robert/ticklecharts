@@ -121,6 +121,7 @@ oo::define ticklecharts::Gridlayout {
         set layoutkeys {
                 series radiusAxis angleAxis xAxis yAxis grid title polar
                 radar legend tooltip visualMap toolbox singleAxis dataZoom dataset
+                parallelAxis parallel brush
             }
 
         foreach {key opts} [$chart options] {
@@ -242,15 +243,15 @@ oo::define ticklecharts::Gridlayout {
                 }
             }
 
-            # remove key global options 
-            # priority to constructor...
-            lassign [split $key "="] type k
-            if {$k in [my globalKeyOptions]} {
-                puts "warning(ticklecharts::Gridlayout): '$k' in chart class is already\
+            if {$key in [my globalKeyOptions]} {
+                puts "warning(ticklecharts::Gridlayout): '$key' in chart class is already\
                      activated with 'SetGlobalOptions' method\
                      it is not taken into account..."
                 continue
             }
+            # remove key global options 
+            # priority to constructor...
+            lassign [split $key "="] type k
             if {$k ni $layoutkeys} {continue}
 
             lappend _options $key $opts
@@ -376,11 +377,17 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns nothing
         set c [ticklecharts::chart new]
+        set c_opts [$c keys]
         $c SetOptions {*}$args
 
         foreach {key info} [$c options] {
+            # remove key global options 
+            # priority to layout class...
+            lassign [split $key "="] type k
+            if {$k in $c_opts} {continue}
+
             lappend _options $key $info
-            lappend _keyglob [string map {"-" ""} $key]
+            lappend _keyglob $key
         }
 
         # check if chart has dataset.
