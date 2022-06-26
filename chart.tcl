@@ -20,6 +20,7 @@ oo::class create ticklecharts::chart {
     variable _indexsankeyseries       ; # index sankey serie
     variable _indexpictorialbarseries ; # index pictorialbar serie
     variable _indexcandlestickseries  ; # index candlestick serie
+    variable _indexparallelseries     ; # index parallel serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -144,6 +145,8 @@ oo::define ticklecharts::chart {
                 $_echartshchart append $key $opts
             } elseif {[string match {*dataZoom} $key]} {
                 $_echartshchart append $key $opts
+            } elseif {[string match {*parallelAxis} $key]} {
+                $_echartshchart append $key $opts
             } elseif {[string match {*dataset} $key]} {
                 $_echartshchart append $key $opts
             } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
@@ -216,7 +219,7 @@ oo::define ticklecharts::chart {
             error "radiusAxis or angleAxis not supported with 'Xaxis'"
         }
     
-        set options [ticklecharts::setXAxis $args]
+        set options [ticklecharts::setXAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=xAxis [list {*}$f]
@@ -239,7 +242,7 @@ oo::define ticklecharts::chart {
             error "radiusAxis or angleAxis not supported with 'Yaxis'"
         }
     
-        set options [ticklecharts::setYAxis $args]
+        set options [ticklecharts::setYAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=yAxis [list {*}$f]
@@ -368,7 +371,7 @@ oo::define ticklecharts::chart {
         # Returns nothing      
         incr _indexbarseries
 
-        set options [ticklecharts::barseries $_indexbarseries $args]
+        set options [ticklecharts::barseries $_indexbarseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -387,7 +390,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexlineseries
 
-        set options [ticklecharts::lineseries $_indexlineseries $args]
+        set options [ticklecharts::lineseries $_indexlineseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -406,7 +409,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexpieseries
 
-        set options [ticklecharts::pieseries $_indexpieseries $args]
+        set options [ticklecharts::pieseries $_indexpieseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -425,7 +428,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexfunnelseries
 
-        set options [ticklecharts::funnelseries $_indexfunnelseries $args]
+        set options [ticklecharts::funnelseries $_indexfunnelseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -463,7 +466,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexscatterseries
 
-        set options [ticklecharts::scatterseries $_indexscatterseries $args]
+        set options [ticklecharts::scatterseries $_indexscatterseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -482,7 +485,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexheatmapseries
 
-        set options [ticklecharts::heatmapseries $_indexheatmapseries $args]
+        set options [ticklecharts::heatmapseries $_indexheatmapseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -577,7 +580,7 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexpictorialbarseries
 
-        set options [ticklecharts::pictorialbarseries $_indexpictorialbarseries $args]
+        set options [ticklecharts::pictorialbarseries $_indexpictorialbarseries [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -596,7 +599,26 @@ oo::define ticklecharts::chart {
         # Returns nothing     
         incr _indexcandlestickseries
 
-        set options [ticklecharts::candlestickseries $_indexcandlestickseries $args]
+        set options [ticklecharts::candlestickseries $_indexcandlestickseries [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+    }
+
+    method AddParallelSeries {args} {
+        # Add data serie chart (use only for parallel chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions parallelseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-parallel
+        #
+        # Returns nothing     
+        incr _indexparallelseries
+
+        set options [ticklecharts::parallelseries $_indexparallelseries $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -608,15 +630,18 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         # 
-        # -dataset   - dataset options   https://echarts.apache.org/en/option.html#dataset
-        # -title     - title options     https://echarts.apache.org/en/option.html#title
-        # -polar     - polar options     https://echarts.apache.org/en/option.html#polar
-        # -legend    - legend options    https://echarts.apache.org/en/option.html#legend
-        # -tooltip   - polar options     https://echarts.apache.org/en/option.html#tooltip
-        # -grid      - grid options      https://echarts.apache.org/en/option.html#grid
-        # -visualMap - visualMap options https://echarts.apache.org/en/option.html#visualMap
-        # -toolbox   - toolbox options   https://echarts.apache.org/en/option.html#toolbox
-        # -dataZoom  - dataZoom options  https://echarts.apache.org/en/option.html#dataZoom
+        # -dataset       - dataset options   https://echarts.apache.org/en/option.html#dataset
+        # -title         - title options     https://echarts.apache.org/en/option.html#title
+        # -polar         - polar options     https://echarts.apache.org/en/option.html#polar
+        # -legend        - legend options    https://echarts.apache.org/en/option.html#legend
+        # -tooltip       - polar options     https://echarts.apache.org/en/option.html#tooltip
+        # -grid          - grid options      https://echarts.apache.org/en/option.html#grid
+        # -visualMap     - visualMap options https://echarts.apache.org/en/option.html#visualMap
+        # -toolbox       - toolbox options   https://echarts.apache.org/en/option.html#toolbox
+        # -dataZoom      - dataZoom options  https://echarts.apache.org/en/option.html#dataZoom
+        # -parallel      - parallel options  https://echarts.apache.org/en/option.html#parallel
+        # -parallelAxis  - parallel options  https://echarts.apache.org/en/option.html#parallelAxis
+        # -brush         - brush options     https://echarts.apache.org/en/option.html#brush
         #
         # Returns nothing    
         set opts {}
@@ -675,12 +700,27 @@ oo::define ticklecharts::chart {
                 lappend opts "@D=dataZoom" $itemZ
             }
         }
-        
+
+        if {[dict exists $args -parallel]} {
+            lappend opts "@D=parallel" [ticklecharts::parallel $args]
+        }
+
+        if {[dict exists $args -parallelAxis]} {
+            foreach itemP [ticklecharts::parallelAxis $args] {
+                lappend opts "@D=parallelAxis" $itemP
+            }
+        }
+
+        if {[dict exists $args -brush]} {
+            lappend opts "@L=brush" [ticklecharts::brushopts $args]
+        }
+      
         foreach {key value} $opts {
             set f [ticklecharts::optsToEchartsHuddle $value]
             lappend _options $key [list {*}$f]
         }
 
+        return
     }
 
     # To keep the same logic of naming methods for ticklecharts 
@@ -691,6 +731,6 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries
+           AddCandlestickSeries AddParallelSeries
 }
 
