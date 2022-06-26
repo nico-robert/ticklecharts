@@ -338,6 +338,8 @@ proc ticklecharts::visualMap {value} {
             setdef options splitNumber     -validvalue {}                   -type num|null        -default 5
             setdef options pieces          -validvalue {}                   -type list.o|null     -default [ticklecharts::piecesItem $d]
             setdef options categories      -validvalue {}                   -type list.s|null     -default "nothing"
+            setdef options realtime        -validvalue {}                   -type bool|null       -default "nothing"
+            setdef options orient          -validvalue formatOrient         -type str|null        -default "nothing"
             setdef options min             -validvalue {}                   -type num|null        -default "nothing"
             setdef options max             -validvalue {}                   -type num|null        -default "nothing"
             setdef options minOpen         -validvalue {}                   -type bool|null       -default "nothing"
@@ -547,5 +549,132 @@ proc ticklecharts::dataZoom {value} {
     }
     
     return $opts
+
+}
+
+proc ticklecharts::parallel {value} {
+    # options : https://echarts.apache.org/en/option.html#parallel
+    #
+    # value - Options described in proc ticklecharts::parallel below.
+    #
+    # return dict parallel options
+
+    set d [dict get $value -parallel]
+
+    setdef options id                  -validvalue {}                    -type str|null      -default "nothing"
+    setdef options zlevel              -validvalue {}                    -type num|null      -default "nothing"
+    setdef options z                   -validvalue {}                    -type num           -default 2
+    setdef options left                -validvalue formatLeft            -type str|num|null  -default "nothing"
+    setdef options top                 -validvalue formatTop             -type str|num|null  -default "nothing"
+    setdef options right               -validvalue formatRight           -type str|num|null  -default "auto"
+    setdef options bottom              -validvalue formatBottom          -type str|num|null  -default "nothing"
+    setdef options width               -validvalue {}                    -type str|num|null  -default "auto"
+    setdef options height              -validvalue {}                    -type str|num|null  -default "auto"
+    setdef options layout              -validvalue formatOrient          -type str           -default "horizontal"
+    setdef options axisExpandable      -validvalue {}                    -type bool          -default "False"
+    setdef options axisExpandCenter    -validvalue {}                    -type num|null      -default "nothing"
+    setdef options axisExpandCount     -validvalue {}                    -type num|null      -default "nothing"
+    setdef options axisExpandWidth     -validvalue {}                    -type num|null      -default 50
+    setdef options axisExpandTriggerOn -validvalue formatExpandTriggerOn -type str           -default "click"
+    setdef options parallelAxisDefault -validvalue {}                    -type dict|null     -default [ticklecharts::parallelAxisDefault $d]
+    #...
+
+    # remove key
+    set d [dict remove $d parallelAxisDefault]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::parallelAxis {value} {
+    # options : https://echarts.apache.org/en/option.html#parallelAxis
+    #
+    # value - Options described in proc ticklecharts::parallelAxis below.
+    #
+    # return dict parallelAxis options
+
+    foreach item [dict get $value -parallelAxis] {
+
+        if {[llength $item] % 2} {
+            error "item must be even..."
+        }
+
+        setdef options id              -validvalue {}                  -type str|null            -default "nothing"
+        setdef options dim             -validvalue {}                  -type num                 -default 0
+        setdef options parallelIndex   -validvalue {}                  -type num                 -default 0
+        setdef options realtime        -validvalue {}                  -type bool                -default "True"
+        setdef options areaSelectStyle -validvalue {}                  -type dict|null           -default [ticklecharts::areaSelectStyle $item]
+        setdef options type            -validvalue formatType          -type str|null            -default "value"
+        setdef options name            -validvalue {}                  -type str|null            -default "nothing"
+        setdef options nameLocation    -validvalue formatNameLocation  -type str|null            -default "end"
+        setdef options nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $item]
+        setdef options nameGap         -validvalue {}                  -type num|null            -default "nothing"
+        setdef options nameRotate      -validvalue {}                  -type num|null            -default "nothing"
+        setdef options inverse         -validvalue {}                  -type bool|null           -default "nothing"
+        setdef options boundaryGap     -validvalue {}                  -type bool|list.d|null    -default "nothing"
+        setdef options min             -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
+        setdef options max             -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
+        setdef options scale           -validvalue {}                  -type bool|null           -default "nothing"
+        setdef options splitNumber     -validvalue {}                  -type num|null            -default "nothing"
+        setdef options minInterval     -validvalue {}                  -type num|null            -default "nothing"
+        setdef options maxInterval     -validvalue {}                  -type num|null            -default "nothing"
+        setdef options interval        -validvalue {}                  -type num|null            -default "nothing"
+        setdef options logBase         -validvalue {}                  -type num|null            -default "nothing"
+        setdef options silent          -validvalue {}                  -type bool|null           -default "nothing"
+        setdef options triggerEvent    -validvalue {}                  -type bool|null           -default "nothing"
+        setdef options axisLine        -validvalue {}                  -type dict|null           -default [ticklecharts::axisLine $item]
+        setdef options axisTick        -validvalue {}                  -type dict|null           -default [ticklecharts::axisTick $item]
+        setdef options minorTick       -validvalue {}                  -type dict|null           -default [ticklecharts::minorTick $item]
+        setdef options axisLabel       -validvalue {}                  -type dict|null           -default [ticklecharts::axisLabel $item]
+        setdef options data            -validvalue {}                  -type list.d|null         -default "nothing"
+        #...
+
+        # remove key
+        set item [dict remove $item areaSelectStyle NameTextStyle axisLine axisTick minorTick axisLabel]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    } 
+
+    return $opts
+
+}
+
+proc ticklecharts::brushopts {value} {
+    # options : https://echarts.apache.org/en/option.html#brush
+    #
+    # value - Options described in proc ticklecharts::brush below.
+    #
+    # return dict brush options
+
+    set d [dict get $value -brush]
+
+    setdef options id                  -validvalue {}                    -type str|null             -default "nothing"
+    setdef options toolbox             -validvalue formatToolBox         -type list.s               -default [list {rect polygon keep clear}]
+    setdef options brushLink           -validvalue formatBrushLink       -type str|list.n|null      -default "all"
+    setdef options geoIndex            -validvalue formatBrushIndex      -type str|list.n|num|null  -default "nothing"
+    setdef options xAxisIndex          -validvalue formatBrushIndex      -type str|list.n|num|null  -default "nothing"
+    setdef options yAxisIndex          -validvalue formatBrushIndex      -type str|list.n|num|null  -default "nothing"
+    setdef options brushType           -validvalue formatBrushType       -type str                  -default "rect"
+    setdef options brushMode           -validvalue formatBrushMode       -type str                  -default "single"
+    setdef options transformable       -validvalue {}                    -type bool|null            -default "True"
+    setdef options brushStyle          -validvalue {}                    -type dict|null            -default [ticklecharts::brushStyle $d]
+    setdef options throttleType        -validvalue formatThrottle        -type str                  -default "fixRate"
+    setdef options throttleDelay       -validvalue {}                    -type num|null             -default "nothing"
+    setdef options removeOnClick       -validvalue {}                    -type bool|null            -default "True"
+    setdef options inBrush             -validvalue {}                    -type dict|null            -default [ticklecharts::brushVisual "inBrush" $d]
+    setdef options outOfBrush          -validvalue {}                    -type dict|null            -default [ticklecharts::brushVisual "outOfBrush" $d]
+    setdef options z                   -validvalue {}                    -type num                  -default 10000
+    #...
+    
+    # remove key
+    set d [dict remove $d brushStyle inBrush outOfBrush]
+
+    set options [merge $options $d]
+
+    return $options
 
 }

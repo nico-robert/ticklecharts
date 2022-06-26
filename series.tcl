@@ -3,10 +3,11 @@
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::barseries {index value} {
+proc ticklecharts::barseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-bar
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::barseries below.
     #
     # return dict barseries options
@@ -66,7 +67,6 @@ proc ticklecharts::barseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -78,7 +78,7 @@ proc ticklecharts::barseries {index value} {
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options  -seriesLayoutBy -validvalue formatSeriesLayout -type str|null         -default "nothing"
-        setdef options  -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $value]
+        setdef options  -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -validvalue {}                 -type num|null         -default "nothing"
 
     }
@@ -100,10 +100,11 @@ proc ticklecharts::barseries {index value} {
 
 }
 
-proc ticklecharts::lineseries {index value} {
+proc ticklecharts::lineseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-line
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::lineseries below.
     #
     # return dict barseries options
@@ -165,7 +166,6 @@ proc ticklecharts::lineseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
     
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -177,7 +177,7 @@ proc ticklecharts::lineseries {index value} {
         # set dimensions in dataset class...
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null         -default "nothing"
-        setdef options   -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $value]
+        setdef options   -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -validvalue {}                 -type num|null         -default "nothing"
 
     }
@@ -199,10 +199,11 @@ proc ticklecharts::lineseries {index value} {
 
 }
 
-proc ticklecharts::pieseries {index value} {
+proc ticklecharts::pieseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-pie
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::pieseries below.
     #
     # return dict pieseries options
@@ -262,7 +263,6 @@ proc ticklecharts::pieseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -270,11 +270,10 @@ proc ticklecharts::pieseries {index value} {
             error "'chart' Class cannot contain '-datapieitem' when a class dataset is present"
         }
 
-        set options [dict remove $options -data]
         # set dimensions in dataset class...
         # setdef options -dimensions    -validvalue {} -type list.d|null  -default "nothing"
         setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
-        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
 
     } else {
@@ -298,10 +297,11 @@ proc ticklecharts::pieseries {index value} {
 
 }
 
-proc ticklecharts::funnelseries {index value} {
+proc ticklecharts::funnelseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-funnel
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::funnelseries below.
     #
     # return dict funnelseries options
@@ -357,7 +357,6 @@ proc ticklecharts::funnelseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -369,7 +368,7 @@ proc ticklecharts::funnelseries {index value} {
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
-        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
 
     }
@@ -447,12 +446,13 @@ proc ticklecharts::radarseries {index value} {
 
 }
 
-proc ticklecharts::scatterseries {index value} {
+proc ticklecharts::scatterseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-scatter
     # or
     # options : https://echarts.apache.org/en/option.html#series-effectScatter
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::scatterseries below.
     #
     # return dict scatterseries or effectScatterseries options
@@ -518,7 +518,6 @@ proc ticklecharts::scatterseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -530,7 +529,7 @@ proc ticklecharts::scatterseries {index value} {
         # set dimensions in dataset class...
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
-        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
 
     }
@@ -554,10 +553,11 @@ proc ticklecharts::scatterseries {index value} {
 
 }
 
-proc ticklecharts::heatmapseries {index value} {
+proc ticklecharts::heatmapseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-heatmap
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::heatmapseries below.
     #
     # return dict heatmapseries options
@@ -598,7 +598,6 @@ proc ticklecharts::heatmapseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -610,7 +609,7 @@ proc ticklecharts::heatmapseries {index value} {
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options   -seriesLayoutBy -validvalue formatSeriesLayout -type str|null     -default "nothing"
-        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $value]
+        setdef options   -encode         -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -validvalue {}                 -type num|null     -default "nothing"
 
     }
@@ -870,10 +869,11 @@ proc ticklecharts::sankeyseries {index value} {
  
 }
 
-proc ticklecharts::pictorialbarseries {index value} {
+proc ticklecharts::pictorialbarseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-pictorialBar
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::pictorialbarseries below.
     #
     # return dict pictorialbarseries options
@@ -936,7 +936,6 @@ proc ticklecharts::pictorialbarseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -948,7 +947,7 @@ proc ticklecharts::pictorialbarseries {index value} {
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
         setdef options  -seriesLayoutBy -validvalue formatSeriesLayout -type str|null         -default "nothing"
-        setdef options  -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $value]
+        setdef options  -encode         -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
 
     }
           
@@ -964,10 +963,11 @@ proc ticklecharts::pictorialbarseries {index value} {
 
 }
 
-proc ticklecharts::candlestickseries {index value} {
+proc ticklecharts::candlestickseries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-candlesticks
     #
     # index - index series.
+    # chart - self.
     # value - Options described in proc ticklecharts::candlestickseries below.
     #
     # return dict candlestickseries options
@@ -1012,7 +1012,6 @@ proc ticklecharts::candlestickseries {index value} {
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
 
     # check if chart includes a dataset class
-    lassign [info level 1] chart
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
@@ -1023,7 +1022,7 @@ proc ticklecharts::candlestickseries {index value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -validvalue {} -type list.d|null      -default "nothing"
-        setdef options  -encode         -validvalue {} -type dict|null        -default [ticklecharts::encode $value]
+        setdef options  -encode         -validvalue {} -type dict|null        -default [ticklecharts::encode $chart $value]
 
     }
 
@@ -1040,4 +1039,54 @@ proc ticklecharts::candlestickseries {index value} {
 
     return $options
 
+}
+
+proc ticklecharts::parallelseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-parallel
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::parallelseries below.
+    #
+    # return dict parallelseries options
+
+    setdef options -type                    -validvalue {}                  -type str               -default "parallel"
+    setdef options -id                      -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -coordinateSystem        -validvalue formatCSYS          -type str               -default "parallel"
+    setdef options -name                    -validvalue {}                  -type str               -default "parallelseries_${index}"
+    setdef options -parallelIndex           -validvalue {}                  -type num               -default 0
+    setdef options -colorBy                 -validvalue formatColorBy       -type str               -default "series"
+    setdef options -lineStyle               -validvalue {}                  -type dict|null         -default [ticklecharts::lineStyle $value]
+    setdef options -emphasis                -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -inactiveOpacity         -validvalue {}                  -type num               -default 0.05
+    setdef options -activeOpacity           -validvalue {}                  -type num               -default 1
+    setdef options -realtime                -validvalue {}                  -type bool              -default "True"
+    setdef options -smooth                  -validvalue {}                  -type bool|num|null     -default "nothing"
+    setdef options -progressive             -validvalue {}                  -type num               -default 500
+    setdef options -progressiveThreshold    -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -progressiveChunkMode    -validvalue formatPChunkMode    -type str|null          -default "nothing"
+    setdef options -data                    -validvalue {}                  -type list.d            -default {}
+    setdef options -zlevel                  -validvalue {}                  -type num               -default 0
+    setdef options -z                       -validvalue {}                  -type num               -default 2
+    setdef options -silent                  -validvalue {}                  -type bool              -default "False"
+    setdef options -animation               -validvalue {}                  -type bool|null         -default "nothing"
+    setdef options -animationThreshold      -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -animationDuration       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelay          -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationDurationUpdate -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+
+    if {[dict exists $value -dataParallelItem]} {
+        set options [dict remove $options -data]
+        setdef options -data -validvalue {} -type list.o -default [ticklecharts::ParallelItem $value]
+        set value [dict remove $value -data]
+    }
+
+    set value [dict remove $value -lineStyle -emphasis]
+    
+    set options [merge $options $value]
+
+    return $options
+ 
 }
