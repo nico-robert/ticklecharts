@@ -82,6 +82,8 @@
                # Add `parallel` chart.
                # Add `parallel` examples. 
                # Add `brush` option (To select part of data from a chart to display in detail...)
+# 27-06-2022 : v2.1.1
+               # Add parallelAxis as method instead of a option. Update examples to reflect this change.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -102,7 +104,7 @@ source [file join $dir dataset.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.1
+    variable version 2.1.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

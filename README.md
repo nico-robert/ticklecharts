@@ -462,3 +462,5 @@ Release :
     - Add `parallel` chart.
     - Add `parallel` examples.
     - Add `brush` option (To select part of data from a chart to display in detail...)
+*  **27-06-2022** : 2.1.1
+    - Add `parallelAxis` as method instead of a option. Update examples to reflect this change.
