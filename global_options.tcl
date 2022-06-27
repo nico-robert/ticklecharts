@@ -588,61 +588,6 @@ proc ticklecharts::parallel {value} {
 
 }
 
-proc ticklecharts::parallelAxis {value} {
-    # options : https://echarts.apache.org/en/option.html#parallelAxis
-    #
-    # value - Options described in proc ticklecharts::parallelAxis below.
-    #
-    # return dict parallelAxis options
-
-    foreach item [dict get $value -parallelAxis] {
-
-        if {[llength $item] % 2} {
-            error "item must be even..."
-        }
-
-        setdef options id              -validvalue {}                  -type str|null            -default "nothing"
-        setdef options dim             -validvalue {}                  -type num                 -default 0
-        setdef options parallelIndex   -validvalue {}                  -type num                 -default 0
-        setdef options realtime        -validvalue {}                  -type bool                -default "True"
-        setdef options areaSelectStyle -validvalue {}                  -type dict|null           -default [ticklecharts::areaSelectStyle $item]
-        setdef options type            -validvalue formatType          -type str|null            -default "value"
-        setdef options name            -validvalue {}                  -type str|null            -default "nothing"
-        setdef options nameLocation    -validvalue formatNameLocation  -type str|null            -default "end"
-        setdef options nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $item]
-        setdef options nameGap         -validvalue {}                  -type num|null            -default "nothing"
-        setdef options nameRotate      -validvalue {}                  -type num|null            -default "nothing"
-        setdef options inverse         -validvalue {}                  -type bool|null           -default "nothing"
-        setdef options boundaryGap     -validvalue {}                  -type bool|list.d|null    -default "nothing"
-        setdef options min             -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
-        setdef options max             -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
-        setdef options scale           -validvalue {}                  -type bool|null           -default "nothing"
-        setdef options splitNumber     -validvalue {}                  -type num|null            -default "nothing"
-        setdef options minInterval     -validvalue {}                  -type num|null            -default "nothing"
-        setdef options maxInterval     -validvalue {}                  -type num|null            -default "nothing"
-        setdef options interval        -validvalue {}                  -type num|null            -default "nothing"
-        setdef options logBase         -validvalue {}                  -type num|null            -default "nothing"
-        setdef options silent          -validvalue {}                  -type bool|null           -default "nothing"
-        setdef options triggerEvent    -validvalue {}                  -type bool|null           -default "nothing"
-        setdef options axisLine        -validvalue {}                  -type dict|null           -default [ticklecharts::axisLine $item]
-        setdef options axisTick        -validvalue {}                  -type dict|null           -default [ticklecharts::axisTick $item]
-        setdef options minorTick       -validvalue {}                  -type dict|null           -default [ticklecharts::minorTick $item]
-        setdef options axisLabel       -validvalue {}                  -type dict|null           -default [ticklecharts::axisLabel $item]
-        setdef options data            -validvalue {}                  -type list.d|null         -default "nothing"
-        #...
-
-        # remove key
-        set item [dict remove $item areaSelectStyle NameTextStyle axisLine axisTick minorTick axisLabel]
-
-        lappend opts [merge $options $item]
-        set options {}
-
-    } 
-
-    return $opts
-
-}
-
 proc ticklecharts::brushopts {value} {
     # options : https://echarts.apache.org/en/option.html#brush
     #
