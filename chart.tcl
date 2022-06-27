@@ -359,6 +359,30 @@ oo::define ticklecharts::chart {
 
     }
 
+    method ParallelAxis {args} {
+        # Init Radius axis chart (available only for polar chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions SetParallelAxis
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#parallelAxis
+        #
+        # Returns nothing    
+        set mykeys [my keys]
+    
+        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
+            error "xAxis or yAxis not supported with 'parallelAxis'"
+        }
+        
+        set options [ticklecharts::SetParallelAxis $args]
+        foreach axis $options {
+            set f [ticklecharts::optsToEchartsHuddle $axis]
+            lappend _options @D=parallelAxis [list {*}$f]
+        }
+
+    }
+
     method AddBarSeries {args} {
         # Add data serie chart (use only for bar chart)
         #
@@ -640,7 +664,6 @@ oo::define ticklecharts::chart {
         # -toolbox       - toolbox options   https://echarts.apache.org/en/option.html#toolbox
         # -dataZoom      - dataZoom options  https://echarts.apache.org/en/option.html#dataZoom
         # -parallel      - parallel options  https://echarts.apache.org/en/option.html#parallel
-        # -parallelAxis  - parallel options  https://echarts.apache.org/en/option.html#parallelAxis
         # -brush         - brush options     https://echarts.apache.org/en/option.html#brush
         #
         # Returns nothing    
@@ -705,12 +728,6 @@ oo::define ticklecharts::chart {
             lappend opts "@D=parallel" [ticklecharts::parallel $args]
         }
 
-        if {[dict exists $args -parallelAxis]} {
-            foreach itemP [ticklecharts::parallelAxis $args] {
-                lappend opts "@D=parallelAxis" $itemP
-            }
-        }
-
         if {[dict exists $args -brush]} {
             lappend opts "@L=brush" [ticklecharts::brushopts $args]
         }
@@ -731,6 +748,6 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries AddParallelSeries
+           AddCandlestickSeries AddParallelSeries ParallelAxis
 }
 
