@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Add ParallelAxis as method instead of a option.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -120,21 +123,22 @@ set chart [ticklecharts::chart new -backgroundColor "#333"]
                
 $chart SetOptions -legend [list bottom 30 data [list [list Beijing Shanghai Guangzhou]] itemGap 20 textStyle {color #fff fontSize 14}] \
                   -tooltip {padding 10 backgroundColor #222 borderColor #777 borderWidth 1} \
-                  -parallelAxis [list [list dim 0 name [dict get [lindex $schema 0] text] inverse "True" max 31 nameLocation "start"] \
-                                      [list dim 1 name [dict get [lindex $schema 1] text] ] \
-                                      [list dim 2 name [dict get [lindex $schema 2] text] ] \
-                                      [list dim 3 name [dict get [lindex $schema 3] text] ] \
-                                      [list dim 4 name [dict get [lindex $schema 4] text] ] \
-                                      [list dim 5 name [dict get [lindex $schema 5] text] ] \
-                                      [list dim 6 name [dict get [lindex $schema 6] text] ] \
-                                      [list dim 7 name [dict get [lindex $schema 7] text] type "category" data [list [list "优" "良" "轻度污染" "中度污染" "重度污染" "严重污染"]]] \
-                                ] \
                   -visualMap [list type "continuous" show "True" min 0 max 150 dimension 2 inRange [list color [list [lreverse {"#d94e5d" "#eac736" "#50a3ba"}]]]] \
                   -parallel {left 5% right 18% bottom 100 parallelAxisDefault {
                                                                                 type value name "AQI指数" nameLocation "end" nameGap 20 nameTextStyle {color #fff fontSize 12 verticalAlign "middle"}
                                                                                 axisLine {show "True" lineStyle {color "#aaa"}} axisTick {lineStyle {color "#777"}} splitLine {show "False"}
                                                                                 axisLabel {color #fff}
                                                                                }}
+
+$chart ParallelAxis [list [list -dim 0 -name [dict get [lindex $schema 0] text] -inverse "True" -max 31 -nameLocation "start"] \
+                                      [list -dim 1 -name [dict get [lindex $schema 1] text] ] \
+                                      [list -dim 2 -name [dict get [lindex $schema 2] text] ] \
+                                      [list -dim 3 -name [dict get [lindex $schema 3] text] ] \
+                                      [list -dim 4 -name [dict get [lindex $schema 4] text] ] \
+                                      [list -dim 5 -name [dict get [lindex $schema 5] text] ] \
+                                      [list -dim 6 -name [dict get [lindex $schema 6] text] ] \
+                                      [list -dim 7 -name [dict get [lindex $schema 7] text] -type "category" -data [list [list "优" "良" "轻度污染" "中度污染" "重度污染" "严重污染"]]] \
+                                ]
 
 $chart AddParallelSeries -name "Beijing"   -lineStyle {width 1 opacity 0.5} -data [list {*}$dataBJ]
 $chart AddParallelSeries -name "Shanghai"  -lineStyle {width 1 opacity 0.5} -data [list {*}$dataSH]
