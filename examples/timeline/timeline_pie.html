@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>timeline_pie</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_341694368708812" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_341694368707586 = echarts.init(document.getElementById('id_341694368708812'), null, {renderer: 'canvas'});
+        var option = {
+  "baseOption": {
+    "series": [{
+        "type": "pie",
+        "name": "pieseries_1",
+        "colorBy": "data",
+        "legendHoverLink": true,
+        "selectedOffset": 10,
+        "clockwise": true,
+        "startAngle": 90,
+        "minAngle": 0,
+        "minShowLabelAngle": 0,
+        "roseType": "radius",
+        "avoidLabelOverlap": true,
+        "stillShowZeroSum": true,
+        "cursor": "pointer",
+        "zlevel": 0,
+        "z": 2,
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "width": "auto",
+        "height": "auto",
+        "showEmptyCircle": true,
+        "center": [
+          "50%",
+          "50%"
+        ],
+        "radius": [
+          "30%",
+          "55%"
+        ],
+        "silent": false,
+        "animationType": "expansion",
+        "animationTypeUpdate": "transition",
+        "animation": true,
+        "data": [
+          {
+            "name": "C++",
+            "value": 403,
+            "selected": false
+          },
+          {
+            "name": "Tcl",
+            "value": 478,
+            "selected": false
+          },
+          {
+            "name": "Python",
+            "value": 413,
+            "selected": false
+          },
+          {
+            "name": "Java",
+            "value": 434,
+            "selected": false
+          },
+          {
+            "name": "Perl",
+            "value": 359,
+            "selected": false
+          },
+          {
+            "name": "JavaScript",
+            "value": 413,
+            "selected": false
+          }
+        ]
+      }],
+    "timeline": {
+      "show": true,
+      "type": "slider",
+      "axisType": "category",
+      "loop": true,
+      "playInterval": 1000,
+      "realtime": true,
+      "controlPosition": "left",
+      "z": 2,
+      "padding": 5,
+      "orient": "horizontal",
+      "itemSymbol": "emptyCircle",
+      "symbolSize": 10,
+      "data": [
+        {"value": "Data 2019"},
+        {"value": "Data 2020"},
+        {"value": "Data 2021"},
+        {"value": "Data 2022"}
+      ]
+    }
+  },
+  "options": [
+    {
+      "backgroundColor": "rgba(0,0,0,0)",
+      "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "animation": true,
+      "animationDuration": 1000,
+      "animationDurationUpdate": 500,
+      "animationEasing": "cubicInOut",
+      "animationEasingUpdate": "cubicInOut",
+      "animationThreshold": 2000,
+      "progressiveThreshold": 3000,
+      "title": [{
+          "show": true,
+          "text": "Data 2019",
+          "target": "blank",
+          "subtarget": "blank",
+          "textAlign": null,
+          "textVerticalAlign": "auto",
+          "padding": 5,
+          "itemGap": 10,
+          "z": 2,
+          "left": "auto",
+          "top": "auto",
+          "right": "auto",
+          "bottom": "auto",
+          "backgroundColor": "transparent",
+          "borderColor": "transparent",
+          "borderWidth": 1,
+          "borderRadius": 0
+        }],
+      "series": [{
+          "type": "pie",
+          "name": "pieseries_1",
+          "colorBy": "data",
+          "legendHoverLink": true,
+          "selectedOffset": 10,
+          "clockwise": true,
+          "startAngle": 90,
+          "minAngle": 0,
+          "minShowLabelAngle": 0,
+          "roseType": "radius",
+          "avoidLabelOverlap": true,
+          "stillShowZeroSum": true,
+          "cursor": "pointer",
+          "zlevel": 0,
+          "z": 2,
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": "auto",
+          "height": "auto",
+          "showEmptyCircle": true,
+          "center": [
+            "50%",
+            "50%"
+          ],
+          "radius": [
+            "30%",
+            "55%"
+          ],
+          "silent": false,
+          "animationType": "expansion",
+          "animationTypeUpdate": "transition",
+          "animation": true,
+          "data": [
+            {
+              "name": "C++",
+              "value": 403,
+              "selected": false
+            },
+            {
+              "name": "Tcl",
+              "value": 478,
+              "selected": false
+            },
+            {
+              "name": "Python",
+              "value": 413,
+              "selected": false
+            },
+            {
+              "name": "Java",
+              "value": 434,
+              "selected": false
+            },
+            {
+              "name": "Perl",
+              "value": 359,
+              "selected": false
+            },
+            {
+              "name": "JavaScript",
+              "value": 413,
+              "selected": false
+            }
+          ]
+        }]
+    },
+    {
+      "backgroundColor": "rgba(0,0,0,0)",
+      "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "animation": true,
+      "animationDuration": 1000,
+      "animationDurationUpdate": 500,
+      "animationEasing": "cubicInOut",
+      "animationEasingUpdate": "cubicInOut",
+      "animationThreshold": 2000,
+      "progressiveThreshold": 3000,
+      "title": [{
+          "show": true,
+          "text": "Data 2020",
+          "target": "blank",
+          "subtarget": "blank",
+          "textAlign": null,
+          "textVerticalAlign": "auto",
+          "padding": 5,
+          "itemGap": 10,
+          "z": 2,
+          "left": "auto",
+          "top": "auto",
+          "right": "auto",
+          "bottom": "auto",
+          "backgroundColor": "transparent",
+          "borderColor": "transparent",
+          "borderWidth": 1,
+          "borderRadius": 0
+        }],
+      "series": [{
+          "type": "pie",
+          "name": "pieseries_1",
+          "colorBy": "data",
+          "legendHoverLink": true,
+          "selectedOffset": 10,
+          "clockwise": true,
+          "startAngle": 90,
+          "minAngle": 0,
+          "minShowLabelAngle": 0,
+          "roseType": "radius",
+          "avoidLabelOverlap": true,
+          "stillShowZeroSum": true,
+          "cursor": "pointer",
+          "zlevel": 0,
+          "z": 2,
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": "auto",
+          "height": "auto",
+          "showEmptyCircle": true,
+          "center": [
+            "50%",
+            "50%"
+          ],
+          "radius": [
+            "30%",
+            "55%"
+          ],
+          "silent": false,
+          "animationType": "expansion",
+          "animationTypeUpdate": "transition",
+          "animation": true,
+          "data": [
+            {
+              "name": "C++",
+              "value": 439,
+              "selected": false
+            },
+            {
+              "name": "Tcl",
+              "value": 384,
+              "selected": false
+            },
+            {
+              "name": "Python",
+              "value": 457,
+              "selected": false
+            },
+            {
+              "name": "Java",
+              "value": 351,
+              "selected": false
+            },
+            {
+              "name": "Perl",
+              "value": 466,
+              "selected": false
+            },
+            {
+              "name": "JavaScript",
+              "value": 498,
+              "selected": false
+            }
+          ]
+        }]
+    },
+    {
+      "backgroundColor": "rgba(0,0,0,0)",
+      "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "animation": true,
+      "animationDuration": 1000,
+      "animationDurationUpdate": 500,
+      "animationEasing": "cubicInOut",
+      "animationEasingUpdate": "cubicInOut",
+      "animationThreshold": 2000,
+      "progressiveThreshold": 3000,
+      "title": [{
+          "show": true,
+          "text": "Data 2021",
+          "target": "blank",
+          "subtarget": "blank",
+          "textAlign": null,
+          "textVerticalAlign": "auto",
+          "padding": 5,
+          "itemGap": 10,
+          "z": 2,
+          "left": "auto",
+          "top": "auto",
+          "right": "auto",
+          "bottom": "auto",
+          "backgroundColor": "transparent",
+          "borderColor": "transparent",
+          "borderWidth": 1,
+          "borderRadius": 0
+        }],
+      "series": [{
+          "type": "pie",
+          "name": "pieseries_1",
+          "colorBy": "data",
+          "legendHoverLink": true,
+          "selectedOffset": 10,
+          "clockwise": true,
+          "startAngle": 90,
+          "minAngle": 0,
+          "minShowLabelAngle": 0,
+          "roseType": "radius",
+          "avoidLabelOverlap": true,
+          "stillShowZeroSum": true,
+          "cursor": "pointer",
+          "zlevel": 0,
+          "z": 2,
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": "auto",
+          "height": "auto",
+          "showEmptyCircle": true,
+          "center": [
+            "50%",
+            "50%"
+          ],
+          "radius": [
+            "30%",
+            "55%"
+          ],
+          "silent": false,
+          "animationType": "expansion",
+          "animationTypeUpdate": "transition",
+          "animation": true,
+          "data": [
+            {
+              "name": "C++",
+              "value": 412,
+              "selected": false
+            },
+            {
+              "name": "Tcl",
+              "value": 479,
+              "selected": false
+            },
+            {
+              "name": "Python",
+              "value": 498,
+              "selected": false
+            },
+            {
+              "name": "Java",
+              "value": 493,
+              "selected": false
+            },
+            {
+              "name": "Perl",
+              "value": 415,
+              "selected": false
+            },
+            {
+              "name": "JavaScript",
+              "value": 491,
+              "selected": false
+            }
+          ]
+        }]
+    },
+    {
+      "backgroundColor": "rgba(0,0,0,0)",
+      "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "animation": true,
+      "animationDuration": 1000,
+      "animationDurationUpdate": 500,
+      "animationEasing": "cubicInOut",
+      "animationEasingUpdate": "cubicInOut",
+      "animationThreshold": 2000,
+      "progressiveThreshold": 3000,
+      "title": [{
+          "show": true,
+          "text": "Data 2022",
+          "target": "blank",
+          "subtarget": "blank",
+          "textAlign": null,
+          "textVerticalAlign": "auto",
+          "padding": 5,
+          "itemGap": 10,
+          "z": 2,
+          "left": "auto",
+          "top": "auto",
+          "right": "auto",
+          "bottom": "auto",
+          "backgroundColor": "transparent",
+          "borderColor": "transparent",
+          "borderWidth": 1,
+          "borderRadius": 0
+        }],
+      "series": [{
+          "type": "pie",
+          "name": "pieseries_1",
+          "colorBy": "data",
+          "legendHoverLink": true,
+          "selectedOffset": 10,
+          "clockwise": true,
+          "startAngle": 90,
+          "minAngle": 0,
+          "minShowLabelAngle": 0,
+          "roseType": "radius",
+          "avoidLabelOverlap": true,
+          "stillShowZeroSum": true,
+          "cursor": "pointer",
+          "zlevel": 0,
+          "z": 2,
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": "auto",
+          "height": "auto",
+          "showEmptyCircle": true,
+          "center": [
+            "50%",
+            "50%"
+          ],
+          "radius": [
+            "30%",
+            "55%"
+          ],
+          "silent": false,
+          "animationType": "expansion",
+          "animationTypeUpdate": "transition",
+          "animation": true,
+          "data": [
+            {
+              "name": "C++",
+              "value": 454,
+              "selected": false
+            },
+            {
+              "name": "Tcl",
+              "value": 410,
+              "selected": false
+            },
+            {
+              "name": "Python",
+              "value": 416,
+              "selected": false
+            },
+            {
+              "name": "Java",
+              "value": 457,
+              "selected": false
+            },
+            {
+              "name": "Perl",
+              "value": 400,
+              "selected": false
+            },
+            {
+              "name": "JavaScript",
+              "value": 411,
+              "selected": false
+            }
+          ]
+        }]
+    }
+  ]
+}
+        chart_341694368707586.setOption(option);
+    </script>
+  </body>
+</html>
