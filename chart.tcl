@@ -360,7 +360,7 @@ oo::define ticklecharts::chart {
     }
 
     method ParallelAxis {args} {
-        # Init Radius axis chart (available only for polar chart)
+        # Init ParallelAxis (available only for parallel chart)
         #
         # args - Options described below.
         #
@@ -729,7 +729,7 @@ oo::define ticklecharts::chart {
         }
 
         if {[dict exists $args -brush]} {
-            lappend opts "@L=brush" [ticklecharts::brushopts $args]
+            lappend opts "@L=brush" [ticklecharts::brush $args]
         }
       
         foreach {key value} $opts {

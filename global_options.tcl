@@ -102,6 +102,13 @@ proc ticklecharts::title {value} {
     setdef options shadowOffsetY     -validvalue {}                      -type num|null   -default "nothing"
     #...
 
+    # force string representation for 'text' and 'subtext' keys if exists...
+    foreach key {text subtext} {
+        if {[dict exists $d $key]} {
+            dict set d $key [string cat [dict get $d $key] "<s!>"]
+        }
+    }
+
     set options [merge $options $d]
 
     return $options
@@ -150,7 +157,15 @@ proc ticklecharts::tooltip {value} {
     #
     # return dict tooltip options
 
-    set d [dict get $value -tooltip]
+    if {[dict exists $value tooltip]} {
+        set key "tooltip"
+    } elseif {[dict exists $value -tooltip]} {
+        set key "-tooltip"
+    } else {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
 
     setdef options show               -validvalue {}               -type bool                   -default "True"
     setdef options trigger            -validvalue formatTrigger    -type str|null               -default "item"
@@ -442,11 +457,11 @@ proc ticklecharts::dataZoom {value} {
     foreach item [dict get $value -dataZoom] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         if {![dict exists $item type]} {
-            error "dataZoom type shoud be specified... 'inside' or 'slider'"
+            error "dataZoom 'type' shoud be specified... 'inside' or 'slider'"
         }
 
         switch -exact -- [dict get $item type] {
@@ -588,7 +603,7 @@ proc ticklecharts::parallel {value} {
 
 }
 
-proc ticklecharts::brushopts {value} {
+proc ticklecharts::brush {value} {
     # options : https://echarts.apache.org/en/option.html#brush
     #
     # value - Options described in proc ticklecharts::brush below.

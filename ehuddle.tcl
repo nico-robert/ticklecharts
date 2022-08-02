@@ -46,7 +46,7 @@ oo::define ticklecharts::ehuddle {
         # Returns huddle
 
         if {[llength $args] % 2} {
-            error "bad args... llength shoud be greater than 1"
+            error "args list must have an even number of elements..."
         }
 
         set lhuddle {}
@@ -350,8 +350,14 @@ oo::define ticklecharts::ehuddle {
         set newhuddle [ticklecharts::ehuddle new]
         lassign [split $key "="] type valkey
         
+        set listk {}
         foreach {k val} $value {
-            $newhuddle set $k $val
+            if {($k in $listk) && [string match {*@D=*} $k]} {
+                $newhuddle append $k $val
+            } else {
+                $newhuddle set $k $val
+            }
+            lappend listk $k
         }
         
         if {$valkey in [my keys]} {
