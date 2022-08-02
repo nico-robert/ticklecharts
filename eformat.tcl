@@ -994,6 +994,65 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatTimelineType {
+            # possible values...
+            set validvalue {slider}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatTimelineAxisType {
+            # possible values...
+            set validvalue {time category value}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatTimelineMerge {
+            set type [Type $value]
+
+            if {$type eq "list"} {
+                foreach val {*}$value {
+                    formatEcharts formatTimelineMerge $val $key
+                }
+            }
+            if {$type eq "str"} {
+                # possible values...
+                set validvalue {xAxis series}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatTimelinePosition {
+            # possible values...
+            set validvalue {left right}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatTimelineIcon {
+            set validvalue {image://* path://*}
+            set match 0
+            foreach val $validvalue {
+                if {[string match $val $value]} {
+                    set match 1 ; break
+                }
+            }
+            if {!$match} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
     }
 
     return
