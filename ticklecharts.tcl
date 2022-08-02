@@ -69,9 +69,6 @@
 # 12-05-2022 : v1.9.5
                # Add `candlestick` chart.
                # Add candlestick examples.
-# 12-05-2022 : v1.9.5
-               # Add `candlestick` chart.
-               # Add candlestick examples.
 # 26-05-2022 : v2.0.1
                # Replaces some huddle/ehuddle procedures by C functions,
                # with help of critcl package https://andreas-kupries.github.io/critcl/
@@ -84,6 +81,9 @@
                # Add `brush` option (To select part of data from a chart to display in detail...)
 # 27-06-2022 : v2.1.1
                # Add parallelAxis as method instead of a option. Update examples to reflect this change.
+# 02-08-2022 : v2.2
+               # Add `timeline` option (provides switching between charts)
+               # Add timeline examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -101,10 +101,11 @@ source [file join $dir series.tcl]
 source [file join $dir options.tcl]
 source [file join $dir theme.tcl]
 source [file join $dir dataset.tcl]
+source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.1.1
+    variable version 2.2
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

@@ -350,7 +350,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] parallel
 - [x] parallelAxis
 - [x] singleAxis
-- [ ] timeline
+- [x] timeline
 - [x] graphic
 - [ ] calendar
 - [x] dataset
@@ -464,3 +464,6 @@ Release :
     - Add `brush` option (To select part of data from a chart to display in detail...)
 *  **27-06-2022** : 2.1.1
     - Add `parallelAxis` as method instead of a option. Update examples to reflect this change.
+*  **02-08-2022** : 2.2
+    - Add `timeline` option (provides switching between charts).
+    - Add `timeline` examples.
