@@ -54,7 +54,7 @@ proc ticklecharts::theme {value} {
             dict set ticklecharts::opts_theme timelineLineColor          "#293c55"
             dict set ticklecharts::opts_theme timelineLineWidth          1
             dict set ticklecharts::opts_theme timelineItemColor          "#293c55"
-            dict set ticklecharts::opts_theme timelineItemColorE         "#a9334c"
+            dict set ticklecharts::opts_theme timelineItemColorE         "#293c55"
             dict set ticklecharts::opts_theme timelineCheckColor         "#e43c59"
             dict set ticklecharts::opts_theme timelineCheckBorderColor   "#c23531"
             dict set ticklecharts::opts_theme timelineItemBorderWidth    1
@@ -206,7 +206,7 @@ proc ticklecharts::theme {value} {
             dict set ticklecharts::opts_theme tooltipAxisWidth           1
             dict set ticklecharts::opts_theme timelineLineColor          "#eeeeee"
             dict set ticklecharts::opts_theme timelineLineWidth          1
-            dict set ticklecharts::opts_theme timelineItemColor          "#dd6b66"
+            dict set ticklecharts::opts_theme timelineItemColor          "#a9334c"
             dict set ticklecharts::opts_theme timelineItemColorE         "#a9334c"
             dict set ticklecharts::opts_theme timelineCheckColor         "#e43c59"
             dict set ticklecharts::opts_theme timelineCheckBorderColor   "#c23531"
@@ -243,6 +243,17 @@ proc ticklecharts::theme {value} {
             dict set ticklecharts::opts_theme graphLineWidth             1
             dict set ticklecharts::opts_theme axisXgridlineShow          false
             dict set ticklecharts::opts_theme axisYgridlineShow          true
+            dict set ticklecharts::opts_theme timelineLineColor          "#dae1f5"
+            dict set ticklecharts::opts_theme timelineLineWidth          1
+            dict set ticklecharts::opts_theme timelineItemColor          "#a4b1d7"
+            dict set ticklecharts::opts_theme timelineItemColorE         "#a4b1d7"
+            dict set ticklecharts::opts_theme timelineCheckColor         "#316bf3"
+            dict set ticklecharts::opts_theme timelineCheckBorderColor   "#ffffff"
+            dict set ticklecharts::opts_theme timelineItemBorderWidth    1
+            dict set ticklecharts::opts_theme timelineControlColor       "#a4b1d7"
+            dict set ticklecharts::opts_theme timelineControlBorderColor "#a4b1d7"
+            dict set ticklecharts::opts_theme timelineControlBorderWidth 0.5
+            dict set ticklecharts::opts_theme timelineLabelColor         "#eeeeee"
             dict set ticklecharts::opts_theme datazoomBackgroundColor    "rgba(47,69,84,0)"
             dict set ticklecharts::opts_theme datazoomFillColor          "rgba(47,69,84,0.25)"
         }
