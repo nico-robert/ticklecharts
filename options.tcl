@@ -12,7 +12,7 @@ proc ticklecharts::levelsSankeyItem {value} {
     foreach item [dict get $value -levels] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options depth       -validvalue {}  -type num|null    -default "nothing"
@@ -43,7 +43,7 @@ proc ticklecharts::sankeyItem {value key} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name        -validvalue {}  -type str|null    -default "nothing"
@@ -75,7 +75,7 @@ proc ticklecharts::linksItem {value key} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options source      -validvalue {}  -type str|null    -default "nothing"
@@ -140,7 +140,7 @@ proc ticklecharts::treeItem {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name                    -validvalue {}            -type str|null        -default "nothing"
@@ -183,7 +183,7 @@ proc ticklecharts::LegendItem {value} {
     foreach item [dict get $value dataLegendItem] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name         -validvalue {}               -type str|null     -default "nothing"
@@ -217,7 +217,7 @@ proc ticklecharts::sunburstItem {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name        -validvalue {}  -type str|null    -default "nothing"
@@ -248,7 +248,7 @@ proc ticklecharts::levelsItem {value} {
     foreach item [dict get $value -levels] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options radius      -validvalue {}  -type list.d|null -default "nothing"
@@ -283,7 +283,7 @@ proc ticklecharts::BarItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name             -validvalue {}               -type str|null    -default "nothing"
@@ -324,7 +324,7 @@ proc ticklecharts::pictorialBarItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name                    -validvalue {}                    -type str|null          -default "nothing"
@@ -381,7 +381,7 @@ proc ticklecharts::LineItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name             -validvalue {}               -type str|null    -default "nothing"
@@ -422,7 +422,7 @@ proc ticklecharts::RadarItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name             -validvalue {}               -type str|null    -default "nothing"
@@ -462,7 +462,7 @@ proc ticklecharts::IndicatorItem {value} {
     foreach item [dict get $value -indicatoritem] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         if {![dict exists $item name]} {
@@ -496,7 +496,7 @@ proc ticklecharts::PieItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name      -validvalue {} -type str|null    -default "nothing"
@@ -534,7 +534,7 @@ proc ticklecharts::FunnelItem {value} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name      -validvalue {} -type str|null  -default "nothing"
@@ -563,7 +563,7 @@ proc ticklecharts::ParallelItem {value} {
     foreach item [dict get $value -dataParallelItem] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options name           -validvalue {}                  -type str|null        -default "nothing"
@@ -603,7 +603,7 @@ proc ticklecharts::RichItem {value} {
     foreach {key item} [dict get $value richitem] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options color         -validvalue formatColor             -type str|null    -default "#fff"
@@ -674,7 +674,7 @@ proc ticklecharts::markAreaItem {value} {
         foreach item $listitem {
 
             if {[llength $item] % 2} {
-                error "item must be even..."
+                error "item list must have an even number of elements..."
             }
 
             setdef options type       -validvalue {} -type str|null     -default "nothing"
@@ -714,7 +714,7 @@ proc ticklecharts::piecesItem {value} {
     foreach item [dict get $value pieces] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options label -validvalue {}          -type str|null -default "nothing"
@@ -787,6 +787,39 @@ proc ticklecharts::markPointItem {value} {
     }
 
     return [list {*}$opts]
+
+}
+
+proc ticklecharts::timelineItem {value} {
+
+    if {![dict exists $value -data]} {
+        error "key data not present..."
+    }
+
+    set d [dict get $value -data]
+
+    if {![dict exists $d value]} {
+        error "key 'value' must be present in -data"
+    }
+
+    if {[llength $value] % 2} {
+        error "value list must have an even number of elements..."
+    }
+
+    # force string value for this key below
+    dict set d value [string cat [dict get $d value] "<s!>"]
+
+    setdef options value            -validvalue {}               -type str|null    -default "nothing"
+    setdef options symbol           -validvalue formatItemSymbol -type str|null    -default "nothing"
+    setdef options symbolSize       -validvalue {}               -type num|null    -default "nothing"
+    setdef options tooltip          -validvalue {}               -type dict|null   -default [ticklecharts::tooltip $d]
+
+    set d [dict remove $d tooltip]
+    
+
+    set options [merge $options $d]
+
+    return $options
 
 }
 
@@ -885,7 +918,12 @@ proc ticklecharts::itemStyle {value} {
         setdef options color0           -validvalue formatColor   -type str|null        -default "nothing"
         setdef options borderColor0     -validvalue formatColor   -type str|null        -default "nothing"
     }
-    
+
+    if {[InfoNameProc 2 "timelineOpts"]} {
+        setdef options color           -validvalue formatColor   -type str|null        -default [EchartsOptsTheme timelineItemColorE]
+        setdef options borderColor     -validvalue formatColor   -type str|null        -default "nothing"
+    }
+
     set options [merge $options [dict get $value $key]]
 
     return $options
@@ -1061,7 +1099,7 @@ proc ticklecharts::SetRadiusAxis {value} {
     setdef options -type           -validvalue formatType          -type str|null            -default "nothing"
     setdef options -name           -validvalue {}                  -type str|null            -default "nothing"
     setdef options -nameLocation   -validvalue formatNameLocation  -type str|null            -default "nothing"
-    setdef options -nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $value]
+    setdef options -nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -validvalue {}                  -type num|null            -default "nothing"
     setdef options -nameRotate     -validvalue {}                  -type num|null            -default "nothing"
     setdef options -inverse        -validvalue {}                  -type bool|null           -default "nothing"
@@ -1172,7 +1210,7 @@ proc ticklecharts::setXAxis {chart value} {
     setdef options -offset         -validvalue {}                  -type num                 -default 0
     setdef options -name           -validvalue {}                  -type str|null            -default "nothing"
     setdef options -nameLocation   -validvalue formatNameLocation  -type str                 -default "end"
-    setdef options -nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $value]
+    setdef options -nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -validvalue {}                  -type num                 -default 15
     setdef options -nameRotate     -validvalue {}                  -type num                 -default 0
     setdef options -inverse        -validvalue {}                  -type bool                -default "False"
@@ -1227,7 +1265,7 @@ proc ticklecharts::setYAxis {chart value} {
     setdef options -data            -validvalue {}                  -type list.d|null         -default "nothing"
     setdef options -name            -validvalue {}                  -type str|null            -default "nothing"
     setdef options -nameLocation    -validvalue formatNameLocation  -type str                 -default "end"
-    setdef options -nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $value]
+    setdef options -nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap         -validvalue {}                  -type num                 -default 15
     setdef options -nameRotate      -validvalue {}                  -type num                 -default 0
     setdef options -inverse         -validvalue {}                  -type bool                -default "False"
@@ -1283,7 +1321,7 @@ proc ticklecharts::SetSingleAxis {value} {
     setdef options -type           -validvalue formatType         -type str|null            -default "value"
     setdef options -name           -validvalue {}                 -type str|null            -default "nothing"
     setdef options -nameLocation   -validvalue formatNameLocation -type str                 -default "end"
-    setdef options -nameTextStyle  -validvalue {}                 -type dict|null           -default [ticklecharts::NameTextStyle $value]
+    setdef options -nameTextStyle  -validvalue {}                 -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -validvalue {}                 -type num                 -default 15
     setdef options -nameRotate     -validvalue {}                 -type num                 -default 0
     setdef options -inverse        -validvalue {}                 -type bool                -default "False"
@@ -1313,7 +1351,7 @@ proc ticklecharts::SetParallelAxis {value} {
     foreach item {*}$value {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options -id              -validvalue {}                  -type str|null            -default "nothing"
@@ -1324,7 +1362,7 @@ proc ticklecharts::SetParallelAxis {value} {
         setdef options -type            -validvalue formatType          -type str|null            -default "value"
         setdef options -name            -validvalue {}                  -type str|null            -default "nothing"
         setdef options -nameLocation    -validvalue formatNameLocation  -type str|null            -default "end"
-        setdef options -nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $item]
+        setdef options -nameTextStyle   -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $item]
         setdef options -nameGap         -validvalue {}                  -type num|null            -default "nothing"
         setdef options -nameRotate      -validvalue {}                  -type num|null            -default "nothing"
         setdef options -inverse         -validvalue {}                  -type bool|null           -default "nothing"
@@ -1384,7 +1422,7 @@ proc ticklecharts::childrenElements {value key} {
         }
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         set typegraphic [dict get $item type]
@@ -1668,7 +1706,7 @@ proc ticklecharts::keyframeAnimation {value type} {
     foreach item [dict get $value keyframeAnimation] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options duration  -validvalue {}            -type num|null    -default "nothing"
@@ -1697,7 +1735,7 @@ proc ticklecharts::keyframes {value type} {
     foreach item [dict get $value keyframes] {
 
         if {[llength $item] % 2} {
-            error "item must be even..."
+            error "item list must have an even number of elements..."
         }
 
         setdef options percent -validvalue {}            -type num|null  -default "nothing"
@@ -1821,13 +1859,15 @@ proc ticklecharts::universalTransition {value} {
         return "nothing"
     }
 
+    set d [dict get $value -universalTransition]
+
     setdef options enabled     -validvalue {}                -type bool            -default "False"
     setdef options seriesKey   -validvalue {}                -type str|list.d|null -default "nothing"
     setdef options divideShape -validvalue formatDivideShape -type str|null        -default "nothing"
     setdef options delay       -validvalue {}                -type jsfunc|null     -default "nothing"
     #...
 
-    set options [merge $options [dict get $value -universalTransition]]
+    set options [merge $options $d]
 
     return $options
 
@@ -1895,6 +1935,8 @@ proc ticklecharts::areaStyle {value} {
     } else {
         set color "null"
     }
+
+    set d [dict get $value $key]
     
     setdef options color         -validvalue formatColor   -type list.s|str|jsfunc|null -default $color
     setdef options shadowBlur    -validvalue {}            -type num                    -default 0
@@ -1904,7 +1946,7 @@ proc ticklecharts::areaStyle {value} {
     setdef options opacity       -validvalue formatOpacity -type num                    -default $opacity
     #...
 
-    set options [merge $options [dict get $value $key]]
+    set options [merge $options $d]
 
     return $options
 }
@@ -2087,6 +2129,8 @@ proc ticklecharts::labelLayout {value} {
         return "nothing"
     }
 
+    set d [dict get $value -labelLayout]
+
     setdef options hideOverlap     -validvalue {}                      -type bool|null    -default "nothing"
     setdef options moveOverlap     -validvalue formatMoveOverlap       -type str|null     -default "shiftX"
     setdef options x               -validvalue {}                      -type num|str|null -default "nothing"
@@ -2103,7 +2147,7 @@ proc ticklecharts::labelLayout {value} {
     setdef options labelLinePoints -validvalue {}                      -type list.n|null  -default "nothing"
     #...
 
-    set options [merge $options [dict get $value -labelLayout]]
+    set options [merge $options $d]
 
     return $options
 }
@@ -2184,6 +2228,8 @@ proc ticklecharts::axisLabel {value} {
     if {![dict exists $value $key]} {
         return "nothing"
     }
+
+    set d [dict get $value $key]
         
     setdef options show                 -validvalue {}                      -type bool            -default [EchartsOptsTheme axisLabelShow]
     setdef options interval             -validvalue formatInterval          -type num|str|jsfunc  -default "auto"
@@ -2227,7 +2273,7 @@ proc ticklecharts::axisLabel {value} {
     setdef options ellipsis             -validvalue {}                      -type str             -default "..."
     #...
 
-    set options [merge $options [dict get $value $key]]
+    set options [merge $options $d]
 
     return $options
 
@@ -2331,6 +2377,8 @@ proc ticklecharts::endLabel {value} {
         return "nothing"
     }
 
+    set d [dict get $value $key]
+
     setdef options show                 -validvalue {}                      -type bool            -default "False"
     setdef options distance             -validvalue {}                      -type num             -default 5
     setdef options rotate               -validvalue {}                      -type num             -default 0
@@ -2370,7 +2418,7 @@ proc ticklecharts::endLabel {value} {
     setdef options valueAnimation       -validvalue {}                      -type bool|null       -default "nothing"
     #...
 
-    set options [merge $options [dict get $value $key]]
+    set options [merge $options $d]
 
     return $options
 
@@ -2453,6 +2501,9 @@ proc ticklecharts::lineStyle {value} {
     } elseif {[InfoNameProc 3 "selectedDataBackground"]} {
         set color "#8fb0f7"
         set linewidth 0.5
+    } elseif {[InfoNameProc 3 "timelineOpts"]} {
+        set color [EchartsOptsTheme timelineLineColor]
+        set linewidth [EchartsOptsTheme timelineLineColor]
     } else {
         set color     [EchartsOptsTheme axisLineColor]
         set linewidth [EchartsOptsTheme graphLineWidth]
@@ -2557,7 +2608,7 @@ proc ticklecharts::textStyle {value key} {
 
 }
 
-proc ticklecharts::NameTextStyle {value} {
+proc ticklecharts::nameTextStyle {value} {
 
     if {[dict exists $value nameTextStyle]} {
         set key "nameTextStyle"
@@ -2975,7 +3026,7 @@ proc ticklecharts::feature {value} {
     setdef options dataZoom     -validvalue {} -type dict|null  -default [ticklecharts::toolBoxdataZoom $d]
     setdef options dataView     -validvalue {} -type dict|null  -default [ticklecharts::dataView $d]
     setdef options magicType    -validvalue {} -type dict|null  -default [ticklecharts::magicType $d]
-    setdef options brush        -validvalue {} -type dict|null  -default [ticklecharts::brush $d]
+    setdef options brush        -validvalue {} -type dict|null  -default [ticklecharts::brushopts $d]
     setdef options restore      -validvalue {} -type dict|null  -default [ticklecharts::restore $d]
     setdef options saveAsImage  -validvalue {} -type dict|null  -default [ticklecharts::saveAsImage $d]
     #...
@@ -3126,7 +3177,7 @@ proc ticklecharts::magicType {value} {
 
 }
 
-proc ticklecharts::brush {value} {
+proc ticklecharts::brushopts {value} {
 
     if {![dict exists $value brush]} {
         return "nothing"
@@ -3419,7 +3470,7 @@ proc ticklecharts::parallelAxisDefault {value} {
     setdef options type           -validvalue formatType          -type str|null            -default "value"
     setdef options name           -validvalue {}                  -type str|null            -default "nothing"
     setdef options nameLocation   -validvalue formatNameLocation  -type str|null            -default "end"
-    setdef options nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::NameTextStyle $d]
+    setdef options nameTextStyle  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $d]
     setdef options nameGap        -validvalue {}                  -type num|null            -default "nothing"
     setdef options nameRotate     -validvalue {}                  -type num|null            -default "nothing"
     setdef options inverse        -validvalue {}                  -type bool|null           -default "nothing"
@@ -3506,6 +3557,170 @@ proc ticklecharts::brushVisual {key value} {
     setdef options colorSaturation  -validvalue {}               -type str|null        -default "nothing"
     setdef options colorHue         -validvalue {}               -type str|null        -default "nothing"
     #...
+
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::timelineOpts {value} {
+
+    if {$::ticklecharts::theme ne "basic"} {
+        if {![dict exists $value -checkpointStyle]} {
+            dict set value -checkpointStyle [dict create dummy null]
+        }
+        if {![dict exists $value -controlStyle]} {
+            dict set value -controlStyle [dict create dummy null]
+        }
+        if {![dict exists $value -label]} {
+            dict set value -label [dict create dummy null]
+        }
+        if {![dict exists $value -itemStyle]} {
+            dict set value -itemStyle [dict create dummy null]
+        }
+    }
+
+    setdef options -show                -validvalue {}                      -type bool                 -default "True"
+    setdef options -type                -validvalue formatTimelineType      -type str                  -default "slider"
+    setdef options -axisType            -validvalue formatTimelineAxisType  -type str                  -default "time"
+    setdef options -currentIndex        -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -autoPlay            -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -rewind              -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -loop                -validvalue {}                      -type bool                 -default "True"
+    setdef options -playInterval        -validvalue {}                      -type num                  -default 1000
+    setdef options -realtime            -validvalue {}                      -type bool                 -default "True"
+    setdef options -replaceMerge        -validvalue formatTimelineMerge     -type str|list.s|null      -default "nothing"
+    setdef options -controlPosition     -validvalue formatTimelinePosition  -type str                  -default "left"
+    setdef options -zlevel              -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -z                   -validvalue {}                      -type num                  -default 2
+    setdef options -left                -validvalue formatLeft              -type str|num|null         -default "nothing"
+    setdef options -top                 -validvalue formatTop               -type str|num|null         -default "nothing"
+    setdef options -right               -validvalue formatRight             -type str|num|null         -default "nothing"
+    setdef options -bottom              -validvalue formatBottom            -type str|num|null         -default "nothing"
+    setdef options -padding             -validvalue {}                      -type num|list.n           -default 5
+    setdef options -orient              -validvalue formatOrient            -type str                  -default "horizontal"
+    setdef options -inverse             -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -itemSymbol          -validvalue formatItemSymbol        -type str|null             -default "emptyCircle"
+    setdef options -symbolSize          -validvalue {}                      -type num|list.n           -default 10
+    setdef options -symbolRotate        -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -symbolKeepAspect    -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -symbolOffset        -validvalue {}                      -type list.n|null          -default "nothing"
+    setdef options -lineStyle           -validvalue {}                      -type dict|null            -default [ticklecharts::lineStyle $value]
+    setdef options -label               -validvalue {}                      -type dict|null            -default [ticklecharts::label $value]
+    setdef options -itemStyle           -validvalue {}                      -type dict|null            -default [ticklecharts::itemStyle $value]
+    setdef options -checkpointStyle     -validvalue {}                      -type dict|null            -default [ticklecharts::checkpointStyle $value]
+    setdef options -controlStyle        -validvalue {}                      -type dict|null            -default [ticklecharts::controlStyle $value]
+    setdef options -progress            -validvalue {}                      -type dict|null            -default [ticklecharts::progress $value]
+    setdef options -emphasis            -validvalue {}                      -type dict|null            -default [ticklecharts::emphasis $value]
+    #...
+    
+    # remove key
+    if {[llength $value]} {
+        set value [dict remove $value -lineStyle -label -itemStyle -checkpointStyle -controlStyle -progress -emphasis]
+    }
+
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::checkpointStyle {value} {
+
+    if {![dict exists $value -checkpointStyle]} {
+        return "nothing"
+    }
+
+    set d [dict get $value -checkpointStyle]
+
+    setdef options symbol            -validvalue formatItemSymbol -type str         -default "circle"
+    setdef options symbolSize        -validvalue {}               -type num         -default 13
+    setdef options symbolRotate      -validvalue {}               -type num|null    -default "nothing"
+    setdef options symbolKeepAspect  -validvalue {}               -type bool        -default "False"
+    setdef options symbolOffset      -validvalue {}               -type list.n|null -default "nothing"
+    setdef options color             -validvalue formatColor      -type str|null    -default [EchartsOptsTheme timelineCheckColor]
+    setdef options borderColor       -validvalue formatColor      -type str|null    -default [EchartsOptsTheme timelineCheckBorderColor]
+    setdef options borderWidth       -validvalue {}               -type num|null    -default 2
+    setdef options borderType        -validvalue formatBorderType -type str|null    -default "solid"
+    setdef options borderDashOffset  -validvalue {}               -type num|null    -default "nothing"
+    setdef options borderCap         -validvalue formatCap        -type str         -default "butt"
+    setdef options borderJoin        -validvalue formatJoin       -type str         -default "bevel"
+    setdef options borderMiterLimit  -validvalue {}               -type num         -default 10
+    setdef options shadowBlur        -validvalue {}               -type num|null    -default 2
+    setdef options shadowColor       -validvalue formatColor      -type str|null    -default "rgba(0, 0, 0, 0.3)"
+    setdef options shadowOffsetX     -validvalue {}               -type num|null    -default 1
+    setdef options shadowOffsetY     -validvalue {}               -type num|null    -default 1
+    setdef options opacity           -validvalue formatOpacity    -type num|null    -default "nothing"
+    setdef options animation         -validvalue {}               -type bool|null   -default "True"
+    setdef options animationDuration -validvalue {}               -type num|null    -default 300
+    setdef options animationEasing   -validvalue formatAEasing    -type str|null    -default "quinticInOut"
+    #...
+
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::controlStyle {value} {
+
+    if {![dict exists $value -controlStyle]} {
+        return "nothing"
+    }
+
+    set d [dict get $value -controlStyle]
+
+    setdef options show             -validvalue {}                  -type bool        -default "True"
+    setdef options showPlayBtn      -validvalue {}                  -type bool        -default "True"
+    setdef options showNextBtn      -validvalue {}                  -type bool        -default "True"
+    setdef options itemSize         -validvalue {}                  -type num         -default 22
+    setdef options itemGap          -validvalue {}                  -type num         -default 12
+
+    if {[dict exists $value orient] && [dict get $value orient] eq "vertical"} {
+        setdef options position  -validvalue {}  -type str  -default "top"
+    } else {
+        setdef options position  -validvalue {}  -type str  -default "left"
+    }
+
+    setdef options playIcon          -validvalue formatTimelineIcon  -type str|null    -default "nothing"
+    setdef options stopIcon          -validvalue formatTimelineIcon  -type str|null    -default "nothing"
+    setdef options prevIcon          -validvalue formatTimelineIcon  -type str|null    -default "nothing"
+    setdef options color             -validvalue formatColor         -type str|null    -default [EchartsOptsTheme timelineItemColor]
+    setdef options borderColor       -validvalue formatColor         -type str|null    -default [EchartsOptsTheme timelineItemColor]
+    setdef options borderWidth       -validvalue {}                  -type num|null    -default 1
+    setdef options borderType        -validvalue formatBorderType    -type str|null    -default "solid"
+    setdef options borderDashOffset  -validvalue {}                  -type num|null    -default "nothing"
+    setdef options borderCap         -validvalue formatCap           -type str         -default "butt"
+    setdef options borderJoin        -validvalue formatJoin          -type str         -default "bevel"
+    setdef options borderMiterLimit  -validvalue {}                  -type num         -default 10
+    setdef options shadowBlur        -validvalue {}                  -type num|null    -default "nothing"
+    setdef options shadowColor       -validvalue formatColor         -type str|null    -default "nothing"
+    setdef options shadowOffsetX     -validvalue {}                  -type num|null    -default "nothing"
+    setdef options shadowOffsetY     -validvalue {}                  -type num|null    -default "nothing"
+    setdef options opacity           -validvalue formatOpacity       -type num|null    -default "nothing"
+    #...
+    
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::progress {value} {
+
+    if {![dict exists $value -progress]} {
+        return "nothing"
+    }
+
+    set d [dict get $value -progress]
+
+    setdef options label       -validvalue {}  -type dict|null   -default [ticklecharts::label $d]
+    setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $d]
+    setdef options lineStyle   -validvalue {}  -type dict|null   -default [ticklecharts::lineStyle $d]
+
+    #...
+    set d [dict remove $d label itemStyle lineStyle]
 
     set options [merge $options $d]
     
