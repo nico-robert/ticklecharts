@@ -32,9 +32,9 @@ oo::class create ticklecharts::dataset {
 
         setdef options -id                   -validvalue {}                 -type str|null          -default "nothing"
         setdef options -sourceHeader         -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
-        setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [my dimensions $args]
+        setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [[self] dimensions $args]
         setdef options -source               -validvalue {}                 -type list.d            -default [dict get $args -source]
-        setdef options -transform            -validvalue {}                 -type dict|null         -default [my transform $args]
+        setdef options -transform            -validvalue {}                 -type dict|null         -default [[self] transform $args]
         setdef options -fromDatasetIndex     -validvalue {}                 -type num|null          -default "nothing"
         setdef options -fromDatasetId        -validvalue {}                 -type str|null          -default "nothing"
         setdef options -fromTransformResult  -validvalue {}                 -type num|null          -default "nothing"
@@ -113,7 +113,7 @@ oo::define ticklecharts::dataset {
         # Returns nothing
 
         if {![dict exists $value -transform]} {
-            return
+            return {}
         }
 
         foreach item [dict get $value -transform] {
@@ -130,7 +130,7 @@ oo::define ticklecharts::dataset {
 
         set _transform $opts
 
-        return
+        return {}
 
     }
 }

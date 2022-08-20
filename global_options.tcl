@@ -109,6 +109,9 @@ proc ticklecharts::title {value} {
         }
     }
 
+    # remove key
+    set d [dict remove $d textStyle]
+
     set options [merge $options $d]
 
     return $options
@@ -157,11 +160,7 @@ proc ticklecharts::tooltip {value} {
     #
     # return dict tooltip options
 
-    if {[dict exists $value tooltip]} {
-        set key "tooltip"
-    } elseif {[dict exists $value -tooltip]} {
-        set key "-tooltip"
-    } else {
+    if {![ticklecharts::keyDictExists "tooltip" $value key]} {
         return "nothing"
     }
 
@@ -192,6 +191,9 @@ proc ticklecharts::tooltip {value} {
     setdef options extraCssText       -validvalue {}               -type str|null               -default "nothing"
     setdef options order              -validvalue formatOrder      -type str|null               -default "seriesAsc"
     #...
+
+    # remove key
+    set d [dict remove $d axisPointer textStyle]
 
     set options [merge $options $d]
 
@@ -260,6 +262,9 @@ proc ticklecharts::legend {value} {
         set options [dict remove $options data]
         setdef options data -validvalue {} -type list.o -default [ticklecharts::LegendItem $d]
     }
+
+    # remove key
+    set d [dict remove $d itemStyle lineStyle textStyle]
 
     set options [merge $options $d]
     
@@ -396,10 +401,10 @@ proc ticklecharts::visualMap {value} {
             error "Type name shoud be 'continuous' or 'piecewise'"
         }
     }
-    
-    # remove key
-    set d [dict remove $d pieces]
     #...
+
+    # remove key
+    set d [dict remove $d pieces inRange outOfRange controller textStyle handleStyle indicatorStyle]
 
     set options [merge $options $d]
     
