@@ -26,7 +26,6 @@ oo::class create ticklecharts::Gridlayout {
         # -others          - animation sub options see : global_options.tcl
         # -theme           - name theme see : theme.tcl
         #
-        set _layout    [ticklecharts::ehuddle new]
         # theme options
         set opts_theme [ticklecharts::theme $args]
         # global options : animation, chart color...
@@ -301,15 +300,21 @@ oo::define ticklecharts::Gridlayout {
                     sunburst   {error "'Sunburst' chart should not be added first..."}
                     themeRiver {error "'ThemeRiver' chart should not be added first..."}
                     sankey     {error "'Sankey' chart should not be added first..."}
+                    gauge      {error "'Gauge' chart should not be added first..."}
                 }
             }
         }
+
+        return {}
     }
 
     method layoutToHuddle {} {
         # Transform list layout to hudlle
         #
         # Returns nothing
+
+        # init ehuddle.
+        set _layout [ticklecharts::ehuddle new]
 
         foreach {key opts} $_options {
             lassign [split $key "="] type value
@@ -324,6 +329,9 @@ oo::define ticklecharts::Gridlayout {
         if {[$_layout llengthkeys "tooltip"] > 1} {
             error "several tooltip not supported..."
         }
+
+        return {}
+
     }
     
     method render {args} {
@@ -399,7 +407,7 @@ oo::define ticklecharts::Gridlayout {
         # destroy...
         $c destroy
 
-        return
+        return {}
         
     }
 
