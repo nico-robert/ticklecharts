@@ -84,6 +84,12 @@
 # 02-08-2022 : v2.2
                # Add `timeline` option (provides switching between charts)
                # Add timeline examples.
+# 20-08-2022 : v2.3
+               # Add `gauge` chart.
+               # Add `gauge` examples.
+               # Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
+               # Cosmetic changes.
+               # Add `toJSON` method for `timeline`class.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -93,6 +99,7 @@ set dir [file dirname [file normalize [info script]]]
 source [file join $dir utils.tcl]
 source [file join $dir chart.tcl]
 source [file join $dir ehuddle.tcl]
+source [file join $dir huddle_patch.tcl]
 source [file join $dir eformat.tcl]
 source [file join $dir jsfunc.tcl]
 source [file join $dir layout.tcl]
@@ -105,7 +112,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.2
+    variable version 2.3
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

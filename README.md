@@ -5,7 +5,7 @@ Tcl wrapper for [Apache ECharts](https://echarts.apache.org/en/index.html) (Java
 Dependencies :
 -------------------------
 
-`huddle` package from [Tcllib](https://www.tcl.tk/software/tcllib/)
+`huddle` package from [Tcllib](https://core.tcl-lang.org/tcllib/doc/trunk/embedded/index.md)
 
 Usage :
 -------------------------
@@ -201,7 +201,7 @@ $chart Xaxis -axisLabel [list show "True" \
 Performance :
 -------------------------
 Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).  
-Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide Tcl boolean value.  
+Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide `Tcl_boolean` value.  
 You may be processing important data and if you want to gain speed, this command can be useful, below how to use it :
 ```tcl
 package require ticklecharts
@@ -374,7 +374,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] graph
 - [x] sankey
 - [x] funnel
-- [ ] gauge
+- [x] gauge
 - [x] pictorialBar
 - [x] themeRiver
 - [ ] custom
@@ -421,7 +421,7 @@ Release :
     - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
-    the first letter in capital letter... Note : `render` method is still active.
+    the first letter in capital letter... _Note_ : `render` method is still active.
 *  **02-04-2022** : 1.5.3
     - Add `-validvalue` flag to respect the values by default according to the Echarts documentation (especially for string types).
     - Update examples to reflect the changes.
@@ -467,3 +467,9 @@ Release :
 *  **02-08-2022** : 2.2
     - Add `timeline` option (provides switching between charts).
     - Add `timeline` examples.
+*  **20-08-2022** : 2.3
+    - Add `gauge` chart.
+    - Add `gauge` examples.
+    - Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
+    - Cosmetic changes.
+    - Add `toJSON` method for `timeline`class.
