@@ -328,10 +328,25 @@ proc ticklecharts::keyCompare {d other} {
     # Returns nothing
 
     if {![ticklecharts::Isdict $other] || $other eq ""} {
-        return
+        return {}
     }
 
-    lassign [info level 2] infoproc
+    set catch 0
+
+    if {![catch {info level 3} proclevel]} {
+        if {![string match -nocase ticklecharts::* [lindex $proclevel 0]]} {
+            set proclevel [info level 2]
+        }
+    } else {
+        set proclevel [info level 2] ; set catch 1
+    }
+
+    set infoproc [lindex $proclevel 0]
+
+    if {[string match {::oo::Obj[0-9]*} $infoproc] && !$catch} {
+        set method [lindex [info level 2] 1] ; # name method I hope... 
+        set infoproc "ticklecharts::[$infoproc gettype]::$method"
+    }
 
     set keys1 [dict keys $d]
 
@@ -339,11 +354,11 @@ proc ticklecharts::keyCompare {d other} {
         # special case : insert 'dummy' as name of key for theming...
         if {[string match -nocase *item $k] || [string match -nocase *dummy $k]} {continue}
         if {$k ni $keys1} {
-            puts "warning ($infoproc): $k is not in '[join $keys1 ", "]' or not supported..."
+            puts "warning ($infoproc): \"$k\" flag is not in '[join $keys1 ", "]' or not supported..."
         }
     }
 
-    return
+    return {}
 }
 
 proc ticklecharts::merge {d other} {
@@ -507,6 +522,26 @@ proc ticklecharts::dictIsNotNothing {d} {
     return 1
 }
 
+proc ticklecharts::keyDictExists {basekey d key} {
+    # Check if keyname exists in dict
+    #
+    # d   - dict
+    # key - upvar name
+    #
+    # Returns True if key name match, False otherwise.
+
+    upvar 1 $key name
+
+    foreach bkey [list $basekey [format {-%s} $basekey]] {
+        if {[dict exists $d $bkey]} {
+            set name $bkey
+            return 1
+        }
+    }
+
+    return 0
+}
+
 proc ticklecharts::listNs {{parentns ::}} {
     # From https://wiki.tcl-lang.org/page/namespace
     #
@@ -569,5 +604,5 @@ proc ticklecharts::eHuddleCritcl {bool} {
         }
     }
 
-    return
+    return {}
 }
