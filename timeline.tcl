@@ -14,7 +14,6 @@ oo::class create ticklecharts::timeline {
 
     constructor {args} {
         # Initializes a new timeline Class.
-        set _base [ticklecharts::ehuddle new]
         set opts_theme [ticklecharts::theme $args]
         set _data    {}
         set _charts  {}
@@ -43,6 +42,8 @@ oo::define ticklecharts::timeline {
 
         set _opts {}
         lappend _opts "@L=timeline" [ticklecharts::timelineOpts $args]
+
+        return {}
     }
 
     method Add {chart args} {
@@ -60,12 +61,17 @@ oo::define ticklecharts::timeline {
 
         lappend _data [ticklecharts::timelineItem $args]
         lappend _charts $chart
+
+        return {}
     }
 
     method timelineToHuddle {} {
         # Transform list to ehudlle
         #
         # Returns nothing
+
+        # init ehuddle.
+        set _base [ticklecharts::ehuddle new]
 
         # timeline data
         set key      [lindex $_opts 0]
@@ -121,6 +127,16 @@ oo::define ticklecharts::timeline {
             $_base append "@D=options" $option
         }
 
+        return {}
+
+    }
+
+    method toJSON {} {
+        # Returns json timeline data.
+        my timelineToHuddle ; # transform to huddle
+        
+        # ehuddle jsondump
+        return [[my get] toJSON]
     }
 
     method render {args} {
