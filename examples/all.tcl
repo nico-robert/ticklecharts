@@ -98,3 +98,8 @@ foreach chartfile [glob -directory [file join [file dirname [info script]] paral
 foreach chartfile [glob -directory [file join [file dirname [info script]] timeline] -types f *.tcl] {
     source $chartfile
 }
+
+# gauge
+foreach chartfile [glob -directory [file join [file dirname [info script]] gauge] -types f *.tcl] {
+    source $chartfile
+}

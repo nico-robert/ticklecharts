@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>gauge_clock</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_122752269091354" class="chart-container" style="width:1200px; height:900px;"></div>
+    <script>
+        var chart_122752269090058 = echarts.init(document.getElementById('id_122752269091354'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "series": [
+    {
+      "type": "gauge",
+      "name": "hour",
+      "colorBy": "data",
+      "zlevel": 0,
+      "z": 2,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": "75%",
+      "legendHoverLink": true,
+      "startAngle": 90,
+      "endAngle": -270,
+      "clockwise": true,
+      "min": 0,
+      "max": 12,
+      "splitNumber": 12,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "color": [[1, 'rgba(0,0,0,0.7)']],
+          "width": 15,
+          "shadowBlur": 15,
+          "shadowColor": "rgba(0, 0, 0, 0.5)",
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "roundCap": false
+      },
+      "splitLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "width": 1,
+          "shadowBlur": 3,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 1,
+          "shadowOffsetY": 2
+        }
+      },
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "formatter": function (value) {
+                if (value === 0) {
+                return '';
+                }
+                return value + '';
+          },
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 50,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "...",
+        "distance": 30
+      },
+      "pointer": {
+        "show": true,
+        "showAbove": true,
+        "icon": "path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v115c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.4,0.7,2.9,0.7z",
+        "offsetCenter": [
+          0,
+          "8%"
+        ],
+        "length": "55%",
+        "width": 12,
+        "itemStyle": {
+          "color": "#C0911F",
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 8,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 2,
+          "shadowOffsetY": 4,
+          "opacity": 1
+        }
+      },
+      "anchor": {
+        "show": true,
+        "showAbove": false,
+        "size": 120,
+        "icon": "path://M 74.28 22.2 L 61.68 22.2 L 61.68 1.2 L 74.28 1.2 L 74.28 3.66 L 64.53 3.66 L 64.53 10.05 L 72.93 10.05 L 72.93 12.45 L 64.53 12.45 L 64.53 19.74 L 74.28 19.74 L 74.28 22.2 Z M 94.29 22.2 L 91.59 22.2 L 91.59 0 L 94.29 0 L 94.29 9.09 Q 95.13 7.86 96.42 7.05 A 5.272 5.272 0 0 1 98.557 6.297 A 6.779 6.779 0 0 1 99.45 6.24 Q 101.466 6.24 102.704 7.167 A 3.978 3.978 0 0 1 103.395 7.83 A 5.521 5.521 0 0 1 104.476 10.043 Q 104.672 10.836 104.697 11.763 A 10.129 10.129 0 0 1 104.7 12.03 L 104.7 22.2 L 102 22.2 L 102 12.33 A 5.887 5.887 0 0 0 101.899 11.208 Q 101.72 10.283 101.22 9.63 A 2.526 2.526 0 0 0 99.373 8.626 A 3.594 3.594 0 0 0 99.03 8.61 A 3.969 3.969 0 0 0 97.016 9.17 A 5.276 5.276 0 0 0 96.405 9.585 Q 95.16 10.56 94.29 11.88 L 94.29 22.2 Z M 48.3 20.7 L 46.44 22.5 L 38.37 14.19 L 38.37 22.2 L 35.67 22.2 L 35.67 0 L 38.37 0 L 38.37 12.69 L 45.42 6.3 L 46.98 8.01 L 40.95 13.35 L 48.3 20.7 Z M 151.29 20.94 L 152.43 18.69 Q 153.21 19.35 154.395 19.785 A 7.222 7.222 0 0 0 156.678 20.216 A 8.239 8.239 0 0 0 156.93 20.22 A 8.134 8.134 0 0 0 157.855 20.171 Q 158.811 20.061 159.4 19.705 A 2.321 2.321 0 0 0 159.465 19.665 A 2.235 2.235 0 0 0 159.925 19.277 A 1.516 1.516 0 0 0 160.32 18.24 A 2.137 2.137 0 0 0 160.226 17.596 A 1.864 1.864 0 0 0 160.005 17.13 Q 159.69 16.65 158.85 16.185 Q 158.091 15.765 156.72 15.284 A 31.082 31.082 0 0 0 156.42 15.18 A 13.985 13.985 0 0 1 155.101 14.657 Q 153.871 14.09 153.135 13.395 A 3.397 3.397 0 0 1 152.147 11.596 A 5.038 5.038 0 0 1 152.04 10.53 A 3.636 3.636 0 0 1 153.224 7.825 A 5.239 5.239 0 0 1 153.615 7.485 A 5.33 5.33 0 0 1 155.426 6.571 Q 156.193 6.343 157.112 6.272 A 11.258 11.258 0 0 1 157.98 6.24 A 12.238 12.238 0 0 1 159.314 6.309 Q 160.028 6.388 160.65 6.555 A 11.631 11.631 0 0 1 161.89 6.962 A 9.333 9.333 0 0 1 162.75 7.35 L 162 9.57 A 7.358 7.358 0 0 0 160.9 9.04 A 9.058 9.058 0 0 0 160.155 8.79 A 7.507 7.507 0 0 0 158.81 8.536 A 9.551 9.551 0 0 0 157.86 8.49 A 6.19 6.19 0 0 0 156.979 8.548 Q 156.053 8.682 155.49 9.12 Q 154.952 9.538 154.771 10.01 A 1.359 1.359 0 0 0 154.68 10.5 A 1.476 1.476 0 0 0 155.129 11.565 A 2.125 2.125 0 0 0 155.31 11.73 Q 155.93 12.232 157.71 12.82 A 25.298 25.298 0 0 0 157.77 12.84 Q 160.338 13.696 161.56 14.709 A 4.484 4.484 0 0 1 161.91 15.03 A 4.079 4.079 0 0 1 163.075 17.804 A 5.369 5.369 0 0 1 163.08 18.03 A 4.162 4.162 0 0 1 162.761 19.685 Q 162.371 20.595 161.505 21.256 A 4.986 4.986 0 0 1 161.385 21.345 Q 159.963 22.364 157.728 22.528 A 12.127 12.127 0 0 1 156.84 22.56 A 11.997 11.997 0 0 1 155.082 22.437 A 9.284 9.284 0 0 1 153.645 22.11 A 9.265 9.265 0 0 1 152.493 21.665 Q 151.899 21.385 151.424 21.041 A 5.468 5.468 0 0 1 151.29 20.94 Z M 2.7 16.83 L 2.7 9.51 L 0 9.51 L 0 7.17 L 2.76 7.17 L 3.33 2.25 L 5.4 2.25 L 5.4 7.17 L 9.72 7.17 L 9.72 9.51 L 5.4 9.51 L 5.4 17.04 A 6.468 6.468 0 0 0 5.45 17.879 Q 5.592 18.961 6.135 19.47 Q 6.87 20.16 7.89 20.16 Q 8.64 20.16 9.315 19.92 A 7.72 7.72 0 0 0 10.268 19.509 A 6.83 6.83 0 0 0 10.56 19.35 L 11.31 21.51 A 5.564 5.564 0 0 1 10.825 21.767 Q 10.343 21.994 9.69 22.215 Q 8.67 22.56 7.56 22.56 A 5.498 5.498 0 0 1 6.005 22.351 A 4.18 4.18 0 0 1 4.005 21.075 A 4.835 4.835 0 0 1 3.037 19.304 Q 2.808 18.575 2.735 17.694 A 10.433 10.433 0 0 1 2.7 16.83 Z M 141.03 16.83 L 141.03 9.51 L 138.33 9.51 L 138.33 7.17 L 141.09 7.17 L 141.66 2.25 L 143.73 2.25 L 143.73 7.17 L 148.05 7.17 L 148.05 9.51 L 143.73 9.51 L 143.73 17.04 A 6.468 6.468 0 0 0 143.78 17.879 Q 143.922 18.961 144.465 19.47 Q 145.2 20.16 146.22 20.16 Q 146.97 20.16 147.645 19.92 A 7.72 7.72 0 0 0 148.598 19.509 A 6.83 6.83 0 0 0 148.89 19.35 L 149.64 21.51 A 5.564 5.564 0 0 1 149.155 21.767 Q 148.673 21.994 148.02 22.215 Q 147 22.56 145.89 22.56 A 5.498 5.498 0 0 1 144.335 22.351 A 4.18 4.18 0 0 1 142.335 21.075 A 4.835 4.835 0 0 1 141.367 19.304 Q 141.138 18.575 141.065 17.694 A 10.433 10.433 0 0 1 141.03 16.83 Z M 32.28 7.17 L 31.47 9.45 Q 30.63 9.03 29.865 8.835 A 6.163 6.163 0 0 0 28.952 8.677 A 7.906 7.906 0 0 0 28.17 8.64 A 4.767 4.767 0 0 0 25.994 9.133 A 4.84 4.84 0 0 0 24.645 10.155 Q 23.292 11.593 23.224 14.072 A 9.682 9.682 0 0 0 23.22 14.34 A 7.558 7.558 0 0 0 23.432 16.158 A 6.435 6.435 0 0 0 23.82 17.28 Q 24.42 18.6 25.485 19.38 A 4.039 4.039 0 0 0 27.636 20.148 A 5.072 5.072 0 0 0 27.99 20.16 A 8.526 8.526 0 0 0 28.862 20.118 Q 29.459 20.056 29.94 19.905 A 9.479 9.479 0 0 0 30.78 19.594 Q 31.215 19.41 31.68 19.17 L 32.52 21.45 A 8.561 8.561 0 0 1 31.135 22.052 A 10.287 10.287 0 0 1 30.435 22.26 Q 29.298 22.555 27.856 22.56 A 14.342 14.342 0 0 1 27.81 22.56 A 8.041 8.041 0 0 1 25.698 22.293 A 6.622 6.622 0 0 1 23.925 21.525 Q 22.26 20.49 21.36 18.645 Q 20.46 16.8 20.46 14.4 Q 20.46 12.15 21.375 10.29 Q 22.29 8.43 24 7.335 A 6.92 6.92 0 0 1 26.9 6.309 A 8.883 8.883 0 0 1 28.02 6.24 A 12.393 12.393 0 0 1 29.115 6.286 Q 29.676 6.336 30.166 6.44 A 7.191 7.191 0 0 1 30.345 6.48 Q 31.35 6.72 32.28 7.17 Z M 88.2 7.17 L 87.39 9.45 Q 86.55 9.03 85.785 8.835 A 6.163 6.163 0 0 0 84.872 8.677 A 7.906 7.906 0 0 0 84.09 8.64 A 4.767 4.767 0 0 0 81.914 9.133 A 4.84 4.84 0 0 0 80.565 10.155 Q 79.212 11.593 79.144 14.072 A 9.682 9.682 0 0 0 79.14 14.34 A 7.558 7.558 0 0 0 79.352 16.158 A 6.435 6.435 0 0 0 79.74 17.28 Q 80.34 18.6 81.405 19.38 A 4.039 4.039 0 0 0 83.556 20.148 A 5.072 5.072 0 0 0 83.91 20.16 A 8.526 8.526 0 0 0 84.782 20.118 Q 85.379 20.056 85.86 19.905 A 9.479 9.479 0 0 0 86.7 19.594 Q 87.135 19.41 87.6 19.17 L 88.44 21.45 A 8.561 8.561 0 0 1 87.055 22.052 A 10.287 10.287 0 0 1 86.355 22.26 Q 85.218 22.555 83.776 22.56 A 14.342 14.342 0 0 1 83.73 22.56 A 8.041 8.041 0 0 1 81.618 22.293 A 6.622 6.622 0 0 1 79.845 21.525 Q 78.18 20.49 77.28 18.645 Q 76.38 16.8 76.38 14.4 Q 76.38 12.15 77.295 10.29 Q 78.21 8.43 79.92 7.335 A 6.92 6.92 0 0 1 82.82 6.309 A 8.883 8.883 0 0 1 83.94 6.24 A 12.393 12.393 0 0 1 85.035 6.286 Q 85.596 6.336 86.086 6.44 A 7.191 7.191 0 0 1 86.265 6.48 Q 87.27 6.72 88.2 7.17 Z M 120.03 7.86 L 120.03 6.6 L 122.49 6.6 L 122.49 18.42 A 3.645 3.645 0 0 0 122.52 18.911 Q 122.597 19.475 122.869 19.761 A 0.89 0.89 0 0 0 123.045 19.905 Q 123.6 20.25 124.26 20.25 L 123.69 22.35 Q 120.881 22.35 120.241 20.124 A 4.076 4.076 0 0 1 120.21 20.01 A 6.392 6.392 0 0 1 119.277 21.038 A 8.549 8.549 0 0 1 118.335 21.765 A 4.478 4.478 0 0 1 116.849 22.396 Q 116.244 22.538 115.538 22.557 A 8.162 8.162 0 0 1 115.32 22.56 Q 113.37 22.56 111.78 21.57 A 6.884 6.884 0 0 1 109.556 19.312 A 8.377 8.377 0 0 1 109.245 18.765 A 8.168 8.168 0 0 1 108.456 16.382 A 10.993 10.993 0 0 1 108.3 14.49 A 9.943 9.943 0 0 1 108.599 12.009 A 8.39 8.39 0 0 1 109.245 10.29 Q 110.19 8.43 111.855 7.335 A 6.689 6.689 0 0 1 115.213 6.253 A 8.216 8.216 0 0 1 115.68 6.24 A 6.775 6.775 0 0 1 117.118 6.387 A 5.611 5.611 0 0 1 118.125 6.705 A 7.801 7.801 0 0 1 119.411 7.393 A 6.631 6.631 0 0 1 120.03 7.86 Z M 50.85 17.31 L 50.85 0 L 53.55 0 L 53.55 17.04 Q 53.55 18.012 53.793 18.682 A 2.392 2.392 0 0 0 54.225 19.44 A 2.209 2.209 0 0 0 55.6 20.183 A 3.217 3.217 0 0 0 56.1 20.22 Q 56.67 20.22 57.225 20.085 A 6.658 6.658 0 0 0 57.664 19.963 Q 57.945 19.874 58.17 19.77 L 58.83 21.96 A 5.445 5.445 0 0 1 58.349 22.145 Q 57.967 22.273 57.495 22.38 A 7.145 7.145 0 0 1 56.548 22.526 A 9.154 9.154 0 0 1 55.74 22.56 A 6.259 6.259 0 0 1 54.273 22.394 A 5.263 5.263 0 0 1 53.25 22.035 A 3.805 3.805 0 0 1 51.653 20.605 A 4.757 4.757 0 0 1 51.495 20.34 Q 50.85 19.17 50.85 17.31 Z M 130.56 22.2 L 127.86 22.2 L 127.86 6.6 L 130.47 6.6 L 130.47 9.99 Q 130.86 9 131.52 8.145 Q 132.18 7.29 133.17 6.765 A 4.445 4.445 0 0 1 134.574 6.308 A 5.838 5.838 0 0 1 135.48 6.24 Q 135.93 6.24 136.38 6.285 A 5.692 5.692 0 0 1 136.696 6.325 Q 136.942 6.364 137.13 6.42 L 136.32 9.21 Q 135.776 8.981 135.04 8.97 A 4.979 4.979 0 0 0 134.97 8.97 A 3.887 3.887 0 0 0 132.981 9.524 A 4.682 4.682 0 0 0 132.855 9.6 Q 131.857 10.226 131.214 11.533 A 6.878 6.878 0 0 0 131.205 11.55 Q 130.676 12.632 130.581 14.198 A 11.727 11.727 0 0 0 130.56 14.91 L 130.56 22.2 Z M 16.71 22.2 L 14.01 22.2 L 14.01 6.6 L 16.71 6.6 L 16.71 22.2 Z M 119.79 18.21 L 119.79 9.84 Q 118.98 9.27 118.005 8.925 Q 117.03 8.58 115.95 8.58 A 4.777 4.777 0 0 0 114.459 8.806 A 4.207 4.207 0 0 0 113.415 9.315 Q 112.32 10.05 111.69 11.355 Q 111.06 12.66 111.06 14.4 A 7.67 7.67 0 0 0 111.218 15.986 A 6.103 6.103 0 0 0 111.69 17.385 A 5.281 5.281 0 0 0 112.622 18.749 A 4.709 4.709 0 0 0 113.43 19.425 Q 114.54 20.16 115.92 20.16 Q 117.06 20.16 118.08 19.605 Q 119.1 19.05 119.79 18.21 Z M 14.051 3.386 A 1.792 1.792 0 0 0 15.36 3.93 A 2.453 2.453 0 0 0 15.809 3.891 A 1.694 1.694 0 0 0 16.74 3.405 A 1.733 1.733 0 0 0 17.167 2.665 A 2.253 2.253 0 0 0 17.25 2.04 A 2.176 2.176 0 0 0 17.25 2.016 A 1.818 1.818 0 0 0 16.695 0.705 Q 16.14 0.15 15.36 0.15 Q 14.49 0.15 13.98 0.66 Q 13.47 1.17 13.47 2.04 A 1.797 1.797 0 0 0 13.618 2.766 A 1.993 1.993 0 0 0 14.025 3.36 A 2.242 2.242 0 0 0 14.051 3.386 Z",
+        "offsetCenter": [
+          0,
+          "-35%"
+        ],
+        "keepAspect": true,
+        "itemStyle": {
+          "color": "#707177",
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "opacity": 1
+        }
+      },
+      "title": {
+        "show": true,
+        "offsetCenter": [
+          0,
+          "30%"
+        ],
+        "keepAspect": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "backgroundColor": "transparent",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "..."
+      },
+      "detail": {
+        "show": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontFamily": "sans-serif",
+        "fontSize": 30,
+        "lineHeight": 30,
+        "backgroundColor": "transparent",
+        "borderColor": "#ccc",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "width": 100,
+        "height": 40,
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "...",
+        "offsetCenter": [
+          0,
+          "40%"
+        ]
+      },
+      "silent": false,
+      "data": [{"value": 10}]
+    },
+    {
+      "type": "gauge",
+      "name": "minute",
+      "colorBy": "data",
+      "zlevel": 0,
+      "z": 2,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": "75%",
+      "legendHoverLink": true,
+      "startAngle": 90,
+      "endAngle": -270,
+      "clockwise": true,
+      "min": 0,
+      "max": 60,
+      "splitNumber": 10,
+      "axisLine": {
+        "show": false,
+        "roundCap": false
+      },
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "axisTick": {
+        "show": false,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisLabel": {
+        "show": false,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "pointer": {
+        "show": true,
+        "showAbove": true,
+        "icon": "path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v115c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.4,0.7,2.9,0.7z",
+        "offsetCenter": [
+          0,
+          "8%"
+        ],
+        "length": "70%",
+        "width": 8,
+        "itemStyle": {
+          "color": "#C0911F",
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 8,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 2,
+          "shadowOffsetY": 4,
+          "opacity": 1
+        }
+      },
+      "anchor": {
+        "show": true,
+        "showAbove": false,
+        "size": 20,
+        "offsetCenter": [
+          0,
+          0
+        ],
+        "keepAspect": true,
+        "itemStyle": {
+          "borderColor": "#C0911F",
+          "borderWidth": 15,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 8,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 2,
+          "shadowOffsetY": 4,
+          "opacity": 1
+        }
+      },
+      "title": {
+        "show": true,
+        "offsetCenter": [
+          0,
+          "-40%"
+        ],
+        "keepAspect": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "backgroundColor": "transparent",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "..."
+      },
+      "detail": {
+        "show": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontFamily": "sans-serif",
+        "fontSize": 30,
+        "lineHeight": 30,
+        "backgroundColor": "transparent",
+        "borderColor": "#ccc",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "width": 100,
+        "height": 40,
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "...",
+        "offsetCenter": [
+          0,
+          "40%"
+        ]
+      },
+      "silent": false,
+      "data": [{"value": 30}]
+    },
+    {
+      "type": "gauge",
+      "name": "second",
+      "colorBy": "data",
+      "zlevel": 0,
+      "z": 2,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": "75%",
+      "legendHoverLink": true,
+      "startAngle": 90,
+      "endAngle": -270,
+      "clockwise": true,
+      "min": 0,
+      "max": 60,
+      "splitNumber": 10,
+      "axisLine": {
+        "show": false,
+        "roundCap": false
+      },
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "axisTick": {
+        "show": false,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisLabel": {
+        "show": false,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "pointer": {
+        "show": true,
+        "showAbove": true,
+        "icon": "path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v115c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.4,0.7,2.9,0.7z",
+        "offsetCenter": [
+          0,
+          "8%"
+        ],
+        "length": "70%",
+        "width": 8,
+        "itemStyle": {
+          "color": "#C0911F",
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 8,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 2,
+          "shadowOffsetY": 4,
+          "opacity": 1
+        }
+      },
+      "anchor": {
+        "show": true,
+        "showAbove": false,
+        "size": 20,
+        "offsetCenter": [
+          0,
+          0
+        ],
+        "keepAspect": true,
+        "itemStyle": {
+          "borderColor": "#C0911F",
+          "borderWidth": 15,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderCap": "butt",
+          "borderJoin": "bevel",
+          "borderMiterLimit": 10,
+          "shadowBlur": 8,
+          "shadowColor": "rgba(0, 0, 0, 0.3)",
+          "shadowOffsetX": 2,
+          "shadowOffsetY": 4,
+          "opacity": 1
+        }
+      },
+      "title": {
+        "show": true,
+        "offsetCenter": [
+          0,
+          "-40%"
+        ],
+        "keepAspect": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "backgroundColor": "transparent",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "..."
+      },
+      "detail": {
+        "show": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontFamily": "sans-serif",
+        "fontSize": 30,
+        "lineHeight": 30,
+        "backgroundColor": "transparent",
+        "borderColor": "#ccc",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "width": 100,
+        "height": 40,
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "...",
+        "offsetCenter": [
+          0,
+          "40%"
+        ]
+      },
+      "silent": false,
+      "animationEasingUpdate": "bounceOut",
+      "data": [{"value": 18}]
+    }
+  ]
+}
+        chart_122752269090058.setOption(option);
+    </script>
+  </body>
+</html>

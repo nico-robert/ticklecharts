@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>gauge_grogress</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_122752232942719" class="chart-container" style="width:1200px; height:900px;"></div>
+    <script>
+        var chart_122752232941421 = echarts.init(document.getElementById('id_122752232942719'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "series": [{
+      "type": "gauge",
+      "name": "gauge_1",
+      "colorBy": "data",
+      "zlevel": 0,
+      "z": 2,
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": "75%",
+      "legendHoverLink": true,
+      "startAngle": 180,
+      "endAngle": 0,
+      "clockwise": true,
+      "min": 0,
+      "max": 240,
+      "splitNumber": 12,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "width": 18,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "roundCap": true
+      },
+      "progress": {
+        "show": true,
+        "overlap": true,
+        "width": 18,
+        "roundCap": true,
+        "clip": false
+      },
+      "splitLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#999",
+          "width": 3,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "length": 12
+      },
+      "axisTick": {
+        "show": false,
+        "interval": "auto",
+        "length": 5,
+        "lineStyle": {
+          "color": "#999",
+          "width": 2,
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "splitNumber": 2
+      },
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "color": "#999",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 20,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "...",
+        "distance": 30
+      },
+      "pointer": {
+        "show": true,
+        "showAbove": true,
+        "icon": "path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z",
+        "offsetCenter": [
+          0,
+          0
+        ],
+        "length": "75%",
+        "width": 16
+      },
+      "itemStyle": {
+        "color": "#58D9F9",
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "shadowBlur": 10,
+        "shadowColor": "rgba(0,138,255,0.45)",
+        "shadowOffsetX": 2,
+        "shadowOffsetY": 2,
+        "opacity": 1
+      },
+      "title": {
+        "show": false,
+        "offsetCenter": [
+          0,
+          "20%"
+        ],
+        "keepAspect": false,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "backgroundColor": "transparent",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "..."
+      },
+      "detail": {
+        "show": true,
+        "color": "#464646",
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontFamily": "sans-serif",
+        "fontSize": 30,
+        "lineHeight": 40,
+        "backgroundColor": "#fff",
+        "borderColor": "#999",
+        "borderWidth": 2,
+        "borderType": "solid",
+        "borderRadius": 8,
+        "shadowColor": "transparent",
+        "width": "60%",
+        "height": 40,
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "...",
+        "valueAnimation": true,
+        "offsetCenter": [
+          0,
+          "35%"
+        ],
+        "formatter": function (value) {
+                return '{value|' + value.toFixed(0) + '}{unit|km/h}';
+            },
+        "rich": {
+          "value": {
+            "color": "#777",
+            "fontStyle": "normal",
+            "fontWeight": "bolder",
+            "fontFamily": "sans-serif",
+            "fontSize": 50,
+            "borderType": "solid",
+            "textBorderType": "solid",
+            "textShadowColor": "transparent"
+          },
+          "unit": {
+            "color": "#999",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "fontSize": 20,
+            "borderType": "solid",
+            "padding": [
+              0,
+              0,
+              -20,
+              10
+            ],
+            "textBorderType": "solid",
+            "textShadowColor": "transparent"
+          }
+        }
+      },
+      "silent": false,
+      "data": [{"value": 100}]
+    }]
+}
+        chart_122752232941421.setOption(option);
+    </script>
+  </body>
+</html>
