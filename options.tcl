@@ -594,6 +594,35 @@ proc ticklecharts::ParallelItem {value} {
 
 }
 
+proc ticklecharts::gaugeItem {value} {
+
+    foreach item [dict get $value -dataGaugeItem] {
+
+        if {[llength $item] % 2} {
+            error "item list must have an even number of elements..."
+        }
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        setdef options name           -validvalue {}                  -type str|null        -default "nothing"
+        setdef options value          -validvalue {}                  -type num             -default {}
+        setdef options detail         -validvalue {}                  -type dict|null       -default [ticklecharts::detail $item]
+        setdef options title          -validvalue {}                  -type dict|null       -default [ticklecharts::titleGauge $item]
+        setdef options itemStyle      -validvalue {}                  -type dict|null       -default [ticklecharts::itemStyle $item]
+
+        set item [dict remove $item itemStyle detail title]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::RichItem {value} {
 
     if {![dict exists $value richitem]} {
@@ -861,11 +890,7 @@ proc ticklecharts::selectedDataBackground {value} {
 
 proc ticklecharts::itemStyle {value} {
 
-    if {[dict exists $value itemStyle]} {
-        set key "itemStyle"
-    } elseif {[dict exists $value -itemStyle]} {
-        set key "-itemStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "itemStyle" $value key]} {
         return "nothing"
     }
     
@@ -924,6 +949,11 @@ proc ticklecharts::itemStyle {value} {
         setdef options borderColor     -validvalue formatColor   -type str|null        -default "nothing"
     }
 
+    if {[InfoNameProc 3 "anchor"]} {
+        # gauge series...
+        setdef options borderColor   -validvalue formatColor  -type str|null  -default "nothing"
+    }
+
     set options [merge $options [dict get $value $key]]
 
     return $options
@@ -932,11 +962,7 @@ proc ticklecharts::itemStyle {value} {
 
 proc ticklecharts::emphasis {value} {
 
-    if {[dict exists $value emphasis]} {
-        set key "emphasis"
-    } elseif {[dict exists $value -emphasis]} {
-        set key "-emphasis"
-    } else {
+    if {![ticklecharts::keyDictExists "emphasis" $value key]} {
         return "nothing"
     }
 
@@ -1014,11 +1040,7 @@ proc ticklecharts::markPoint {value} {
 
 proc ticklecharts::blur {value} {
 
-    if {[dict exists $value blur]} {
-        set key "blur"
-    } elseif {[dict exists $value -blur]} {
-        set key "-blur"
-    } else {
+    if {![ticklecharts::keyDictExists "blur" $value key]} {
         return "nothing"
     }
 
@@ -1042,11 +1064,7 @@ proc ticklecharts::blur {value} {
 
 proc ticklecharts::select {value} {
 
-    if {[dict exists $value select]} {
-        set key "select"
-    } elseif {[dict exists $value -select]} {
-        set key "-select"
-    } else {
+    if {![ticklecharts::keyDictExists "select" $value key]} {
         return "nothing"
     }
 
@@ -1810,10 +1828,7 @@ proc ticklecharts::typeAnimation {value key} {
 
 proc ticklecharts::splitLine {value} {
 
-
-    if {[dict exists $value splitLine]} {
-        set key "splitLine"
-    } else {
+    if {![ticklecharts::keyDictExists "splitLine" $value key]} {
         set key "-splitLine"
     }
 
@@ -1844,6 +1859,13 @@ proc ticklecharts::splitLine {value} {
     setdef options symbolSize      -validvalue {}               -type list.n|null     -default "nothing"
     setdef options symbolOffset    -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        # add flag length series-gauge.splitLine
+        setdef options length    -validvalue {} -type num|null -default "nothing"
+        setdef options distance  -validvalue {} -type num|null -default "nothing"
+    }
+
     #...
     set d [dict remove $d lineStyle]
 
@@ -1914,11 +1936,7 @@ proc ticklecharts::splitArea {value} {
 
 proc ticklecharts::areaStyle {value} {
 
-    if {[dict exists $value areaStyle]} {
-        set key "areaStyle"
-    } elseif {[dict exists $value -areaStyle]} {
-        set key "-areaStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "areaStyle" $value key]} {
         return "nothing"
     }
 
@@ -1954,9 +1972,7 @@ proc ticklecharts::areaStyle {value} {
 
 proc ticklecharts::axisLine {value} {
 
-    if {[dict exists $value axisLine]} {
-        set key "axisLine"
-    } else {
+    if {![ticklecharts::keyDictExists "axisLine" $value key]} {
         set key "-axisLine"
     }
 
@@ -1979,6 +1995,13 @@ proc ticklecharts::axisLine {value} {
     setdef options symbolSize      -validvalue {}               -type list.n|null     -default "nothing"
     setdef options symbolOffset    -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        setdef options show      -validvalue {} -type bool -default "True"
+        setdef options roundCap  -validvalue {} -type bool -default "False"
+        # remove flag from dict options... not present in series-gauge.axisLine
+        set options [dict remove $options onZero onZeroAxisIndex symbol symbolSize symbolOffset]
+    }
     #...
 
     set d [dict remove $d lineStyle]
@@ -1991,11 +2014,7 @@ proc ticklecharts::axisLine {value} {
 
 proc ticklecharts::markLine {value} {
 
-    if {[dict exists $value markLine]} {
-        set key "markLine"
-    } elseif {[dict exists $value -markLine]} {
-        set key "-markLine"
-    } else {
+    if {![ticklecharts::keyDictExists "markLine" $value key]} {
         return "nothing"
     }
     
@@ -2089,11 +2108,7 @@ proc ticklecharts::markLineItem {value} {
 
 proc ticklecharts::labelLine {value} {
 
-    if {[dict exists $value labelLine]} {
-        set key "labelLine"
-    } elseif {[dict exists $value -labelLine]} {
-        set key "-labelLine"
-    } else {
+    if {![ticklecharts::keyDictExists "labelLine" $value key]} {
         return "nothing"
     }
 
@@ -2154,9 +2169,7 @@ proc ticklecharts::labelLayout {value} {
 
 proc ticklecharts::axisTick {value} {
 
-    if {[dict exists $value axisTick]} {
-        set key "axisTick"
-    } else {
+    if {![ticklecharts::keyDictExists "axisTick" $value key]} {
         set key "-axisTick"
     }
 
@@ -2178,6 +2191,12 @@ proc ticklecharts::axisTick {value} {
     setdef options interval        -validvalue formatInterval -type str|num|jsfunc -default "auto"
     setdef options length          -validvalue {}             -type num            -default 5
     setdef options lineStyle       -validvalue {}             -type dict|null      -default [ticklecharts::lineStyle $d]
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        # add flag 'distance' series-gauge.axisTick
+        setdef options splitNumber  -validvalue {} -type num|null -default "nothing"
+        setdef options distance     -validvalue {} -type num|null -default "nothing"
+    }
     #...
     set d [dict remove $d lineStyle]
 
@@ -2188,11 +2207,7 @@ proc ticklecharts::axisTick {value} {
 
 proc ticklecharts::minorTick {value} {
 
-    if {[dict exists $value minorTick]} {
-        set key "minorTick"
-    } elseif {[dict exists $value -minorTick]} {
-        set key "-minorTick"
-    } else {
+    if {![ticklecharts::keyDictExists "minorTick" $value key]} {
         return "nothing"
     }
 
@@ -2213,9 +2228,7 @@ proc ticklecharts::minorTick {value} {
 
 proc ticklecharts::axisLabel {value} {
 
-    if {[dict exists $value axisLabel]} {
-        set key "axisLabel"
-    } else {
+    if {![ticklecharts::keyDictExists "axisLabel" $value key]} {
         set key "-axisLabel"
     }
 
@@ -2271,6 +2284,12 @@ proc ticklecharts::axisLabel {value} {
     setdef options textShadowOffsetY    -validvalue {}                      -type num             -default 0
     setdef options overflow             -validvalue formatOverflow          -type str             -default "truncate"
     setdef options ellipsis             -validvalue {}                      -type str             -default "..."
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        # add flag 'distance' series-gauge.axisLabel
+        setdef options distance  -validvalue {} -type num|null -default "nothing"
+    }
+
     #...
 
     set options [merge $options $d]
@@ -2282,11 +2301,7 @@ proc ticklecharts::axisLabel {value} {
 proc ticklecharts::label {value} {
 
 
-    if {[dict exists $value label]} {
-        set key "label"
-    } elseif {[dict exists $value -label]} {
-        set key "-label"
-    } else {
+    if {![ticklecharts::keyDictExists "label" $value key]} {
         return "nothing"
     }
 
@@ -2369,11 +2384,7 @@ proc ticklecharts::label {value} {
 
 proc ticklecharts::endLabel {value} {
 
-    if {[dict exists $value endLabel]} {
-        set key "endLabel"
-    } elseif {[dict exists $value -endLabel]} {
-        set key "-endLabel"
-    } else {
+    if {![ticklecharts::keyDictExists "endLabel" $value key]} {
         return "nothing"
     }
 
@@ -2426,11 +2437,7 @@ proc ticklecharts::endLabel {value} {
 
 proc ticklecharts::axisName {value} {
 
-    if {[dict exists $value axisName]} {
-        set key "axisName"
-    } elseif {[dict exists $value -axisName]} {
-        set key "-axisName"
-    } else {
+    if {![ticklecharts::keyDictExists "axisName" $value key]} {
         return "nothing"
     }
 
@@ -2481,11 +2488,7 @@ proc ticklecharts::lineStyle {value} {
         }
     }
 
-    if {[dict exists $value lineStyle]} {
-        set key "lineStyle"
-    } elseif {[dict exists $value -lineStyle]} {
-        set key "-lineStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "lineStyle" $value key]} {
         return "nothing"
     }
         
@@ -2534,6 +2537,11 @@ proc ticklecharts::lineStyle {value} {
         setdef options miterLimit -validvalue {}                  -type num|str        -default "inherit"
         setdef options shadowBlur -validvalue {}                  -type num|str        -default "inherit"
         setdef options opacity    -validvalue formatOpacity       -type num|str        -default "inherit"
+    }
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        # remove flag from dict options... not present in series-gauge.axisLine
+        set options [dict remove $options type dashOffset cap join miterLimit opacity]
     }
 
     set options [merge $options [dict get $value $key]]
@@ -2610,11 +2618,7 @@ proc ticklecharts::textStyle {value key} {
 
 proc ticklecharts::nameTextStyle {value} {
 
-    if {[dict exists $value nameTextStyle]} {
-        set key "nameTextStyle"
-    } elseif {[dict exists $value -nameTextStyle]} {
-        set key "-nameTextStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "nameTextStyle" $value key]} {
         return "nothing"
     }
 
@@ -2765,11 +2769,7 @@ proc ticklecharts::emptyCircleStyle {value} {
 
 proc ticklecharts::axisPointer {value} {
 
-    if {[dict exists $value axisPointer]} {
-        set key "axisPointer"
-    } elseif {[dict exists $value -axisPointer]} {
-        set key "-axisPointer"
-    } else {
+    if {![ticklecharts::keyDictExists "axisPointer" $value key]} {
         return "nothing"
     }
     
@@ -2867,11 +2867,7 @@ proc ticklecharts::controller {value} {
 
 proc ticklecharts::handleStyle {value} {
 
-    if {[dict exists $value handleStyle]} {
-        set key "handleStyle"
-    } elseif {[dict exists $value -handleStyle]} {
-        set key "-handleStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "handleStyle" $value key]} {
         return "nothing"
     }
     
@@ -3332,11 +3328,7 @@ proc ticklecharts::iconStyle {value key} {
 
 proc ticklecharts::brushStyle {value} {
 
-    if {[dict exists $value brushStyle]} {
-        set key "brushStyle"
-    } elseif {[dict exists $value -brushStyle]} {
-        set key "-brushStyle"
-    } else {
+    if {![ticklecharts::keyDictExists "brushStyle" $value key]} {
         return "nothing"
     }
     
@@ -3719,9 +3711,173 @@ proc ticklecharts::progress {value} {
     setdef options itemStyle   -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $d]
     setdef options lineStyle   -validvalue {}  -type dict|null   -default [ticklecharts::lineStyle $d]
 
+
+    if {[InfoNameProc 2 "gaugeseries"]} {
+        setdef options show     -validvalue {} -type bool -default "False"
+        setdef options overlap  -validvalue {} -type bool -default "True"
+        setdef options width    -validvalue {} -type num  -default 10
+        setdef options roundCap -validvalue {} -type bool -default "False"
+        setdef options clip     -validvalue {} -type bool -default "False"
+        # remove flag from dict options... not present in series-gauge.progress
+        set options [dict remove $options label lineStyle]
+    }
+
     #...
     set d [dict remove $d label itemStyle lineStyle]
 
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::pointer {value} {
+
+    if {![dict exists $value -pointer]} {
+        return "nothing"
+    }
+
+    set d [dict get $value -pointer]
+
+    setdef options show         -validvalue {}               -type bool      -default "True"
+    setdef options showAbove    -validvalue {}               -type bool      -default "True"
+    setdef options icon         -validvalue formatItemSymbol -type str|null  -default "nothing"
+    setdef options offsetCenter -validvalue {}               -type list.d    -default [list {0 0}]
+    setdef options length       -validvalue {}               -type str|num   -default "60%"
+    setdef options width        -validvalue {}               -type num       -default 6
+    setdef options keepAspect   -validvalue {}               -type bool|null -default "nothing"
+    setdef options itemStyle    -validvalue {}               -type dict|null -default [ticklecharts::itemStyle $d]
+
+    #...
+    set d [dict remove $d label itemStyle]
+
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::anchor {value} {
+
+    if {![dict exists $value -anchor]} {
+        return "nothing"
+    }
+
+    set d [dict get $value -anchor]
+
+    setdef options show         -validvalue {}               -type bool      -default "True"
+    setdef options showAbove    -validvalue {}               -type bool      -default "False"
+    setdef options size         -validvalue {}               -type num       -default 6
+    setdef options icon         -validvalue formatItemSymbol -type str|null  -default "nothing"
+    setdef options offsetCenter -validvalue {}               -type list.d    -default [list {0 0}]    
+    setdef options keepAspect   -validvalue {}               -type bool|null -default "False"
+    setdef options itemStyle    -validvalue {}               -type dict|null -default [ticklecharts::itemStyle $d]
+
+    #...
+    set d [dict remove $d label itemStyle]
+
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::titleGauge {value} {
+
+    if {![ticklecharts::keyDictExists "title" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options show                 -validvalue {}                   -type bool                -default "True"
+    setdef options offsetCenter         -validvalue {}                   -type list.d              -default [list {0 "20%"}]    
+    setdef options keepAspect           -validvalue {}                   -type bool|null           -default "False"
+    setdef options itemStyle            -validvalue {}                   -type dict|null           -default [ticklecharts::itemStyle $d]
+    setdef options color                -validvalue formatColor          -type str|null            -default "#464646"
+    setdef options fontStyle            -validvalue formatFontStyle      -type str|null            -default "normal"
+    setdef options fontWeight           -validvalue formatFontWeight     -type str|null            -default "normal"
+    setdef options fontFamily           -validvalue {}                   -type str|null            -default "sans-serif"
+    setdef options fontSize             -validvalue {}                   -type num|null            -default 16
+    setdef options lineHeight           -validvalue {}                   -type num|null            -default "nothing"
+    setdef options backgroundColor      -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options borderColor          -validvalue formatColor          -type str|null            -default "nothing"
+    setdef options borderWidth          -validvalue {}                   -type num|null            -default "nothing"
+    setdef options borderType           -validvalue formatBorderType     -type str|null            -default "solid"
+    setdef options borderDashOffset     -validvalue {}                   -type num|null            -default "nothing"
+    setdef options borderRadius         -validvalue {}                   -type num|list.n|null     -default "nothing"
+    setdef options padding              -validvalue {}                   -type num|list.n|null     -default "nothing"
+    setdef options shadowColor          -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options shadowBlur           -validvalue {}                   -type num|null            -default "nothing"
+    setdef options shadowOffsetX        -validvalue {}                   -type num|null            -default "nothing"
+    setdef options shadowOffsetY        -validvalue {}                   -type num|null            -default "nothing"
+    setdef options width                -validvalue {}                   -type num|str|null        -default "nothing"
+    setdef options height               -validvalue {}                   -type num|str|null        -default "nothing"
+    setdef options textBorderColor      -validvalue formatColor          -type str|null            -default "nothing"
+    setdef options textBorderWidth      -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textBorderType       -validvalue formatTextBorderType -type str|num|list.n|null -default "solid"
+    setdef options textBorderDashOffset -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textShadowColor      -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options textShadowOffsetX    -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textShadowOffsetY    -validvalue {}                   -type num|null            -default "nothing"
+    setdef options overflow             -validvalue formatOverflow       -type str                 -default "none"
+    setdef options ellipsis             -validvalue {}                   -type str                 -default "..."
+    setdef options valueAnimation       -validvalue {}                   -type bool|null           -default "nothing"
+    #...
+
+    set d [dict remove $d itemStyle]
+
+    set options [merge $options $d]
+    
+    return $options
+
+}
+
+proc ticklecharts::detail {value} {
+
+    if {![ticklecharts::keyDictExists "detail" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options show                 -validvalue {}                   -type bool                -default "True"
+    setdef options color                -validvalue formatColor          -type str|null            -default "#464646"
+    setdef options fontStyle            -validvalue formatFontStyle      -type str|null            -default "normal"
+    setdef options fontWeight           -validvalue formatFontWeight     -type str|null            -default "bold"
+    setdef options fontFamily           -validvalue {}                   -type str|null            -default "sans-serif"
+    setdef options fontSize             -validvalue {}                   -type num|null            -default 30
+    setdef options lineHeight           -validvalue {}                   -type num|null            -default 30
+    setdef options backgroundColor      -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options borderColor          -validvalue formatColor          -type str|null            -default "#ccc"
+    setdef options borderWidth          -validvalue {}                   -type num|null            -default "nothing"
+    setdef options borderType           -validvalue formatBorderType     -type str|null            -default "solid"
+    setdef options borderDashOffset     -validvalue {}                   -type num|null            -default "nothing"
+    setdef options borderRadius         -validvalue {}                   -type num|list.n|null     -default "nothing"
+    setdef options padding              -validvalue {}                   -type num|list.n|null     -default "nothing"
+    setdef options shadowColor          -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options shadowBlur           -validvalue {}                   -type num|null            -default "nothing"
+    setdef options shadowOffsetX        -validvalue {}                   -type num|null            -default "nothing"
+    setdef options shadowOffsetY        -validvalue {}                   -type num|null            -default "nothing"
+    setdef options width                -validvalue {}                   -type num|str|null        -default 100
+    setdef options height               -validvalue {}                   -type num|str|null        -default 40
+    setdef options textBorderColor      -validvalue formatColor          -type str|null            -default "nothing"
+    setdef options textBorderWidth      -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textBorderType       -validvalue formatTextBorderType -type str|num|list.n|null -default "solid"
+    setdef options textBorderDashOffset -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textShadowColor      -validvalue formatColor          -type str|null            -default "transparent"
+    setdef options textShadowOffsetX    -validvalue {}                   -type num|null            -default "nothing"
+    setdef options textShadowOffsetY    -validvalue {}                   -type num|null            -default "nothing"
+    setdef options overflow             -validvalue formatOverflow       -type str                 -default "none"
+    setdef options ellipsis             -validvalue {}                   -type str                 -default "..."
+    setdef options valueAnimation       -validvalue {}                   -type bool|null           -default "nothing"
+    setdef options offsetCenter         -validvalue {}                   -type list.d              -default [list {0 "40%"}] 
+    setdef options formatter            -validvalue {}                   -type str|jsfunc|null     -default "nothing"
+    setdef options rich                 -validvalue {}                   -type dict|null           -default [ticklecharts::RichItem $d]
+    #...
+
+    set d [dict remove $d rich]
+    
     set options [merge $options $d]
     
     return $options

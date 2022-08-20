@@ -1090,3 +1090,67 @@ proc ticklecharts::parallelseries {index value} {
     return $options
  
 }
+
+proc ticklecharts::gaugeseries {index value} {
+    # options : https://echarts.apache.org/en/option.html#series-gauge
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::gaugeseries below.
+    #
+    # return dict gaugeseries options
+
+    setdef options -type                    -validvalue {}                  -type str               -default "gauge"
+    setdef options -id                      -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -name                    -validvalue {}                  -type str               -default "gauge_${index}"
+    setdef options -colorBy                 -validvalue formatColorBy       -type str               -default "data"
+    setdef options -zlevel                  -validvalue {}                  -type num               -default 0
+    setdef options -z                       -validvalue {}                  -type num               -default 2
+    setdef options -center                  -validvalue {}                  -type list.d            -default [list {"50%" "50%"}]
+    setdef options -radius                  -validvalue {}                  -type str|num           -default "75%"
+    setdef options -legendHoverLink         -validvalue {}                  -type bool              -default "True"
+    setdef options -startAngle              -validvalue formatStartangle    -type num               -default 225
+    setdef options -endAngle                -validvalue formatEndangle      -type num               -default -45
+    setdef options -clockwise               -validvalue {}                  -type bool              -default "True"
+    setdef options -data                    -validvalue {}                  -type list.n            -default {}
+    setdef options -min                     -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -max                     -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -splitNumber             -validvalue {}                  -type num               -default 10
+    setdef options -axisLine                -validvalue {}                  -type dict|null         -default [ticklecharts::axisLine $value]
+    setdef options -progress                -validvalue {}                  -type dict|null         -default [ticklecharts::progress $value]
+    setdef options -splitLine               -validvalue {}                  -type dict|null         -default [ticklecharts::splitLine $value]
+    setdef options -axisTick                -validvalue {}                  -type dict|null         -default [ticklecharts::axisTick $value]
+    setdef options -axisLabel               -validvalue {}                  -type dict|null         -default [ticklecharts::axisLabel $value]
+    setdef options -pointer                 -validvalue {}                  -type dict|null         -default [ticklecharts::pointer $value]
+    setdef options -anchor                  -validvalue {}                  -type dict|null         -default [ticklecharts::anchor $value]
+    setdef options -itemStyle               -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -title                   -validvalue {}                  -type dict|null         -default [ticklecharts::titleGauge $value]
+    setdef options -detail                  -validvalue {}                  -type dict|null         -default [ticklecharts::detail $value]
+    setdef options -markPoint               -validvalue {}                  -type dict|null         -default [ticklecharts::markPoint $value]
+    setdef options -markLine                -validvalue {}                  -type dict|null         -default [ticklecharts::markLine $value]
+    setdef options -markArea                -validvalue {}                  -type dict|null         -default [ticklecharts::markArea $value]    
+    setdef options -silent                  -validvalue {}                  -type bool              -default "False"
+    setdef options -animation               -validvalue {}                  -type bool|null         -default "nothing"
+    setdef options -animationThreshold      -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -animationDuration       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelay          -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationDurationUpdate -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+
+    if {[dict exists $value -dataGaugeItem]} {
+        set options [dict remove $options -data]
+        setdef options -data -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value]
+        set value [dict remove $value -data]
+    }
+
+    set value [dict remove $value -axisLine -progress -splitLine -axisTick \
+                                  -axisLabel -pointer -anchor -itemStyle \
+                                  -emphasis -titleGauge -detail -markPoint -markLine -markArea]
+    
+    set options [merge $options $value]
+
+    return $options
+ 
+}

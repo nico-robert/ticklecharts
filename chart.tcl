@@ -21,6 +21,7 @@ oo::class create ticklecharts::chart {
     variable _indexpictorialbarseries ; # index pictorialbar serie
     variable _indexcandlestickseries  ; # index candlestick serie
     variable _indexparallelseries     ; # index parallel serie
+    variable _indexgaugeseries        ; # index gauge serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -34,7 +35,6 @@ oo::class create ticklecharts::chart {
         # -others          - animation sub options see : global_options.tcl
         # -theme           - name theme see : theme.tcl
         #
-        set _echartshchart [ticklecharts::ehuddle new]
         # theme options
         set opts_theme     [ticklecharts::theme $args]
         # global options : animation, chart color...
@@ -130,7 +130,7 @@ oo::define ticklecharts::chart {
 
         if {$k} {set _options [lreplace $_options $j [expr {$j + 1}]]}
 
-        return
+        return {}
     }
 
     method chartToHuddle {} {
@@ -138,6 +138,9 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
         set mixed [my ismixed]
+
+        # init ehuddle.
+        set _echartshchart [ticklecharts::ehuddle new]
         
         foreach {key opts} $_options {
 
@@ -155,6 +158,8 @@ oo::define ticklecharts::chart {
                 $_echartshchart set $key $opts
             }
         }
+
+        return {}
     }
 
     method render {args} {
@@ -224,6 +229,8 @@ oo::define ticklecharts::chart {
         
         lappend _options @D=xAxis [list {*}$f]
 
+        return {}
+
     }
 
     method Yaxis {args} {
@@ -246,6 +253,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=yAxis [list {*}$f]
+
+        return {}
         
     }
     
@@ -270,6 +279,8 @@ oo::define ticklecharts::chart {
         
         lappend _options @L=radiusAxis [list {*}$f]
 
+        return {}
+
     }
     
     method AngleAxis {args} {
@@ -293,6 +304,8 @@ oo::define ticklecharts::chart {
         
         lappend _options @L=angleAxis [list {*}$f]
 
+        return {}
+
     }
 
     method AddGraphic {args} {
@@ -310,6 +323,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @L=graphic [list {*}$f]
+
+        return {}
 
     }
 
@@ -334,6 +349,8 @@ oo::define ticklecharts::chart {
         
         lappend _options @D=radar [list {*}$f]
 
+        return {}
+
     }
 
     method SingleAxis {args} {
@@ -356,6 +373,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
         
         lappend _options @D=singleAxis [list {*}$f]
+
+        return {}
 
     }
 
@@ -381,6 +400,8 @@ oo::define ticklecharts::chart {
             lappend _options @D=parallelAxis [list {*}$f]
         }
 
+        return {}
+
     }
 
     method AddBarSeries {args} {
@@ -399,6 +420,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
     
@@ -419,6 +442,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddPieSeries {args} {
@@ -437,6 +462,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
 
@@ -457,6 +484,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddRadarSeries {args} {
@@ -475,6 +504,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
     
@@ -495,6 +526,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddHeatmapSeries {args} {
@@ -513,6 +546,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
 
@@ -533,6 +568,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddTreeSeries {args} {
@@ -551,6 +588,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
 
@@ -571,6 +610,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddSankeySeries {args} {
@@ -589,6 +630,8 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
 
@@ -609,6 +652,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddCandlestickSeries {args} {
@@ -628,6 +673,8 @@ oo::define ticklecharts::chart {
 
         lappend _options @D=series [list {*}$f]
 
+        return {}
+
     }
 
     method AddParallelSeries {args} {
@@ -646,6 +693,29 @@ oo::define ticklecharts::chart {
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
+
+    method AddGaugeSeries {args} {
+        # Add data serie chart (use only for gauge chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions gaugeseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-gauge
+        #
+        # Returns nothing     
+        incr _indexgaugeseries
+
+        set options [ticklecharts::gaugeseries $_indexgaugeseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
 
     }
     
@@ -737,7 +807,7 @@ oo::define ticklecharts::chart {
             lappend _options $key [list {*}$f]
         }
 
-        return
+        return {}
     }
 
     # To keep the same logic of naming methods for ticklecharts 
@@ -748,6 +818,6 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries AddParallelSeries ParallelAxis
+           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries
 }
 
