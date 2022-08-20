@@ -180,6 +180,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 lappend validvalue {^rgb\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+)\)$}
                 lappend validvalue {^rgba\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+),\s*(?:1|0?\.[0-9]+)\)$}
                 lappend validvalue {^hsl\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?%)\s*,\s*(\d+(?:\.\d+)?%)\)$}
+                lappend validvalue {^auto$}
 
                 set match 0
                 foreach re $validvalue {
@@ -232,7 +233,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatOverflow {
             # possible values...
-            set validvalue {truncate break breakAll}
+            set validvalue {truncate break breakAll none}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -485,6 +486,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             if {![expr {$value >= 0 && $value <= 360}]} {
                 error "'$value' should be between '0' and '360' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatEndangle {
+            # possible values...
+            if {![expr {$value <= 0 && $value >= -360}]} {
+                error "'$value' should be between '0' and '-360' \
                         for this key '$key' in $nameproc"
             }
         }
