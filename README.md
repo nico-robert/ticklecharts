@@ -198,6 +198,22 @@ $chart Xaxis -axisLabel [list show "True" \
   ...
 }
 ```
+*  **formatter** :
+    - Accepts a _javascript_ function_ most times. For basic _format_, `formatter` supports string template like this :
+    > formatter `'{b0}: {c0}<br />{b1}: {c1}'`
+    
+    - In Tcl you can use _substitution_ e.g.:
+    > formatter `{"{b0}: {c0}<br />{b1}: {c1}"}`
+    
+    - Or use list map to replace some `Tcl` special chars e.g.:
+    > formatter `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
+
+    | Symbol        | Map      |
+    | ------------- | ---------|
+    | `{`           | <0123>   |
+    | `}`           | <0125>   |
+    | `[`           | <091>    |
+    | `]`           | <093>    |
 Performance :
 -------------------------
 Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).  
@@ -238,9 +254,6 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" c
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
 
-# 2 choices to set 'formatter' flag 
-# special char '<0123>' to replace this '{' and '<0125>' to replace this '}'
-# or 
 # ticklecharts::jsfunc...
 $chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50 \
                                    -axisLabel {formatter "<0123>value<0125> ml"}
@@ -273,10 +286,11 @@ $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 set data0 {1 2 3 4 5}
 set data1 {2 3.6 6 2 10}
 
-set js [ticklecharts::jsfunc new {function (value, index) {
-                                return value + ' (C°)';
-                                },
-                                }]
+set js [ticklecharts::jsfunc new {
+                function (value, index) {
+                    return value + ' (C°)';
+                },
+            }]
 
 set line [ticklecharts::chart new]
                   
@@ -473,3 +487,5 @@ Release :
     - Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
     - Cosmetic changes.
     - Add `toJSON` method for `timeline`class.
+*  **20-08-2022** : 2.3.1
+    - Code refactoring

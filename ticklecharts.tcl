@@ -90,6 +90,8 @@
                # Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
                # Cosmetic changes.
                # Add `toJSON` method for `timeline`class.
+# 05-09-2022 : v2.3.1
+               # Code refactoring
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -112,7 +114,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.3
+    variable version 2.3.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
