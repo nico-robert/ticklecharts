@@ -172,7 +172,7 @@ proc ticklecharts::Type value {
 
 proc ticklecharts::optsToEchartsHuddle {options} {
     # Transform a dict to echartshuddle format...
-    # Level 1
+    # Level one
     # 
     # options - dict options
     #
@@ -219,7 +219,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
 
 proc ticklecharts::dictToEchartsHuddle {options} {
     # Transform a dict to echartshuddle format...
-    # Level 2
+    # Level two
     # 
     # options - dict options
     #
@@ -269,7 +269,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
         }
         
     }
-    
+
     return $opts
 }
 
@@ -374,16 +374,17 @@ proc ticklecharts::merge {d other} {
     # in key default option...
     ticklecharts::keyCompare $d $other
 
-    set mydict [dict create]
+    set _dict [dict create]
     
     dict for {key info} $d {
         lassign $info value type validvalue
-        
+
         # force string value for this key below
         # if value is boolean or double...
         if {$key eq "-name" || $key eq "name"} {
             if {[dict exists $other $key]} {
                 set namevalue [dict get $other $key]
+                # Force string representation.
                 if {[Type $namevalue] ne "str"} {
                     dict set other $key [string cat $namevalue "<s!>"]
                 }
@@ -399,20 +400,21 @@ proc ticklecharts::merge {d other} {
                 error "bad type 1 for this key '$key'= $mytype should be :$type"
             }
 
-            if {$typekey eq "dict" || $typekey eq "dict.o"} {
-                dict set mydict $key $value $typekey
-            } else {
-                set value [dict get $other $key]
-                
-                # Verification of certain values (especially for string types)
-                formatEcharts $validvalue $value $key
-
-                if {$typekey eq "str"} {
-                    set value [ticklecharts::MapSpaceString $value]
-                }
-            
-                dict set mydict $key $value $typekey
+            # REMINDER: use 'dict remove' for this...
+            if {$typekey in [list "dict" "dict.o" "list.o"]} {
+                error "dict, dict.o, list.o shouldn't not be present in 'other' dict..."
             }
+
+            set value [dict get $other $key]
+
+            # Verification of certain values (especially for string types)
+            formatEcharts $validvalue $value $key
+
+            if {$typekey eq "str"} {
+                set value [ticklecharts::MapSpaceString $value]
+            }
+
+            dict set _dict $key $value $typekey
 
         } else {
         
@@ -427,11 +429,11 @@ proc ticklecharts::merge {d other} {
                 set value [ticklecharts::MapSpaceString $value]
             }
                     
-            dict set mydict $key $value $typekey
+            dict set _dict $key $value $typekey
         }
     }
     
-    return $mydict
+    return $_dict
 }
 
 proc ticklecharts::MapSpaceString {value} {

@@ -122,6 +122,9 @@ oo::define ticklecharts::dataset {
             setdef options config -validvalue {}              -type dict|null -default [ticklecharts::config $item]
             setdef options print  -validvalue {}              -type bool      -default "False"
 
+            # Remove key(s)
+            set item [dict remove $item config]
+
             lappend opts [list -transform [list [merge $options $item] dict]]
             
             set options {}

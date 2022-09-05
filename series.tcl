@@ -84,7 +84,9 @@ proc ticklecharts::barseries {index chart value} {
     }
       
     if {[dict exists $value -databaritem]} {
-        set options [dict remove $options -data]
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-databaritem'..."
+        }
         setdef options -data -validvalue {} -type list.o -default [ticklecharts::BarItem $value]
     }
     
@@ -92,7 +94,7 @@ proc ticklecharts::barseries {index chart value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine \
                                   -labelLayout -itemStyle -backgroundStyle \
-                                  -emphasis -blur -select -tooltip -encode]
+                                  -emphasis -blur -select -tooltip -encode -databaritem]
                                 
     set options [merge $options $value]
 
@@ -183,7 +185,9 @@ proc ticklecharts::lineseries {index chart value} {
     }
     
     if {[dict exists $value -datalineitem]} {
-        set options [dict remove $options -data]
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-datalineitem'..."
+        }
         setdef options -data -validvalue {} -type list.o -default [ticklecharts::LineItem $value]
     }
     
@@ -191,7 +195,7 @@ proc ticklecharts::lineseries {index chart value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle\
-                                  -emphasis -blur -select -tooltip -encode]
+                                  -emphasis -blur -select -tooltip -encode -datalineitem]
                                 
     set options [merge $options $value]
 
@@ -284,7 +288,7 @@ proc ticklecharts::pieseries {index chart value} {
     set value [dict remove $value -label \
                                   -labelLine \
                                   -markPoint \
-                                  -data \
+                                  -datapieitem \
                                   -markLine -markArea \
                                   -emptyCircleStyle \
                                   -labelLayout -itemStyle \
@@ -360,7 +364,7 @@ proc ticklecharts::funnelseries {index chart value} {
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
-        if {[dict exists $value -data]} {
+        if {[dict exists $value -datafunnelitem]} {
             error "'chart' Class cannot contain '-data' when a class dataset is present"
         }
 
@@ -375,7 +379,7 @@ proc ticklecharts::funnelseries {index chart value} {
 
     set value [dict remove $value -label \
                                   -labelLine \
-                                  -data \
+                                  -datafunnelitem \
                                   -markPoint \
                                   -markLine -markArea \
                                   -labelLayout -itemStyle \
@@ -435,7 +439,7 @@ proc ticklecharts::radarseries {index value} {
 
     set value [dict remove $value -label \
                                   -lineStyle \
-                                  -data \
+                                  -dataradaritem \
                                   -areaStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -universalTransition -tooltip]
@@ -1026,8 +1030,11 @@ proc ticklecharts::candlestickseries {index chart value} {
 
     }
 
+    # not supported
     if {[dict exists $value -datacandlestickitem]} {
-        set options [dict remove $options -data]
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-datacandlestickitem'..."
+        }
         # setdef options -data -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value]
     }
           
@@ -1078,9 +1085,10 @@ proc ticklecharts::parallelseries {index value} {
     setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
 
     if {[dict exists $value -dataParallelItem]} {
-        set options [dict remove $options -data]
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-dataParallelItem'..."
+        }
         setdef options -data -validvalue {} -type list.o -default [ticklecharts::ParallelItem $value]
-        set value [dict remove $value -data]
     }
 
     set value [dict remove $value -lineStyle -emphasis]
@@ -1140,14 +1148,15 @@ proc ticklecharts::gaugeseries {index value} {
     setdef options -animationDelayUpdate    -validvalue {}                  -type num|jsfunc|null   -default "nothing"
 
     if {[dict exists $value -dataGaugeItem]} {
-        set options [dict remove $options -data]
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-dataGaugeItem'..."
+        }
         setdef options -data -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value]
-        set value [dict remove $value -data]
     }
 
     set value [dict remove $value -axisLine -progress -splitLine -axisTick \
                                   -axisLabel -pointer -anchor -itemStyle \
-                                  -emphasis -titleGauge -detail -markPoint -markLine -markArea]
+                                  -emphasis -title -detail -markPoint -markLine -markArea]
     
     set options [merge $options $value]
 

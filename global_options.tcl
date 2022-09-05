@@ -109,8 +109,8 @@ proc ticklecharts::title {value} {
         }
     }
 
-    # remove key
-    set d [dict remove $d textStyle]
+    # Remove key(s)
+    set d [dict remove $d textStyle subtextStyle]
 
     set options [merge $options $d]
 
@@ -259,12 +259,11 @@ proc ticklecharts::legend {value} {
     #...
 
     if {[dict exists $d dataLegendItem]} {
-        set options [dict remove $options data]
         setdef options data -validvalue {} -type list.o -default [ticklecharts::LegendItem $d]
     }
 
     # remove key
-    set d [dict remove $d itemStyle lineStyle textStyle]
+    set d [dict remove $d itemStyle lineStyle textStyle dataLegendItem]
 
     set options [merge $options $d]
     
