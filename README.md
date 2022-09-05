@@ -487,5 +487,5 @@ Release :
     - Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
     - Cosmetic changes.
     - Add `toJSON` method for `timeline`class.
-*  **20-08-2022** : 2.3.1
+*  **05-09-2022** : 2.3.1
     - Code refactoring
