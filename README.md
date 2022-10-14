@@ -385,7 +385,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [ ] map
 - [x] parallel
 - [ ] lines
-- [ ] graph
+- [x] graph
 - [x] sankey
 - [x] funnel
 - [x] gauge
@@ -489,3 +489,6 @@ Release :
     - Add `toJSON` method for `timeline`class.
 *  **05-09-2022** : 2.3.1
     - Code refactoring
+*  **14-10-2022** : 2.4
+    - Add `graph` chart.
+    - Add `graph` examples.

@@ -92,6 +92,9 @@
                # Add `toJSON` method for `timeline`class.
 # 05-09-2022 : v2.3.1
                # Code refactoring
+# 14-10-2022 : v2.4
+               # Add `graph` chart.
+               # Add `graph` examples.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -114,7 +117,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.3.1
+    variable version 2.4
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
