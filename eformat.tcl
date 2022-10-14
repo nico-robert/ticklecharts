@@ -448,6 +448,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
             if {[InfoNameProc 2 "parallelseries"]} {
                 set validvalue {parallel}
             }
+        
+            if {[InfoNameProc 2 "graphseries"]} {
+                lappend validvalue {calendar none}
+            }
 
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
@@ -676,7 +680,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     
         formatFocus {
             # possible values...
-            set validvalue {none self series ancestor descendant}
+            set validvalue {none self series ancestor descendant adjacency}
 
             if {[InfoNameProc 2 "sankeyseries"]} {
                 append validvalue " adjacency"
@@ -746,6 +750,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
                     error "'$value' should be '[join $validvalue "' or '"]' \
                             for this key '$key' in $nameproc"
                 }
+            }
+        }
+
+        formatEdgeLabelPosition {
+            # possible values...
+            set validvalue {start middle end}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
             }
         }
 
@@ -822,6 +835,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatLayout {
             # possible values...
             set validvalue {orthogonal radial}
+
+            if {[InfoNameProc 2 "graphseries"]} {
+                set validvalue {none circular force}
+            }
+
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"

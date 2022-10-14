@@ -22,6 +22,7 @@ oo::class create ticklecharts::chart {
     variable _indexcandlestickseries  ; # index candlestick serie
     variable _indexparallelseries     ; # index parallel serie
     variable _indexgaugeseries        ; # index gauge serie
+    variable _indexgraphseries        ; # index graph serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -718,6 +719,27 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddGraphSeries {args} {
+        # Add data serie chart (use only for graph chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions graphseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-graph
+        #
+        # Returns nothing     
+        incr _indexgraphseries
+
+        set options [ticklecharts::graphseries $_indexgraphseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -818,6 +840,6 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries
+           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries
 }
 
