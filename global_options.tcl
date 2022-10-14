@@ -303,7 +303,7 @@ proc ticklecharts::visualMap {value} {
     set d [dict get $value -visualMap]
 
     if {![dict exists $d type]} {
-        error "visualMap type shoud be specified... 'continuous' or 'piecewise'"
+        error "visualMap type should be specified... 'continuous' or 'piecewise'"
     }
 
     switch -exact -- [dict get $d type] {
@@ -397,7 +397,7 @@ proc ticklecharts::visualMap {value} {
             #...
         }
         default {
-            error "Type name shoud be 'continuous' or 'piecewise'"
+            error "Type name should be 'continuous' or 'piecewise'"
         }
     }
     #...
@@ -461,11 +461,11 @@ proc ticklecharts::dataZoom {value} {
     foreach item [dict get $value -dataZoom] {
 
         if {[llength $item] % 2} {
-            error "item list must have an even number of elements..."
+            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
         }
 
         if {![dict exists $item type]} {
-            error "dataZoom 'type' shoud be specified... 'inside' or 'slider'"
+            error "dataZoom 'type' should be specified... 'inside' or 'slider'"
         }
 
         switch -exact -- [dict get $item type] {
@@ -555,7 +555,7 @@ proc ticklecharts::dataZoom {value} {
                 #...
             }
             default {
-                error "Type name shoud be 'inside' or 'slider'"
+                error "Type name should be 'inside' or 'slider'"
             }
         }
 
