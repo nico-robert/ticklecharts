@@ -9,97 +9,36 @@ package require ticklecharts
 # Replaces some huddle/ehuddle procedures by C procedures...
 # ticklecharts::eHuddleCritcl 1
 
-# bar
-foreach chartfile [glob -directory [file join [file dirname [info script]] bar] -types f *.tcl] {
-    source $chartfile
+set charts {
+    bar
+    line
+    pie
+    funnel
+    radar
+    scatter
+    heatmap
+    graphic
+    sunburst
+    tree
+    themeriver
+    sankey
+    layout
+    dataset
+    pictorialBar
+    candlestick
+    parallel
+    timeline
+    gauge
+    graph
 }
 
-# line
-foreach chartfile [glob -directory [file join [file dirname [info script]] line] -types f *.tcl] {
-    source $chartfile
-}
+set dir [file dirname [info script]]
 
-# pie
-foreach chartfile [glob -directory [file join [file dirname [info script]] pie] -types f *.tcl] {
-    source $chartfile
-}
-
-# funnel
-foreach chartfile [glob -directory [file join [file dirname [info script]] funnel] -types f *.tcl] {
-    source $chartfile
-}
-
-# radar
-foreach chartfile [glob -directory [file join [file dirname [info script]] radar] -types f *.tcl] {
-    source $chartfile
-}
-
-# scatter
-foreach chartfile [glob -directory [file join [file dirname [info script]] scatter] -types f *.tcl] {
-    source $chartfile
-}
-
-# heatmap
-foreach chartfile [glob -directory [file join [file dirname [info script]] heatmap] -types f *.tcl] {
-    source $chartfile
-}
-
-# graphic
-foreach chartfile [glob -directory [file join [file dirname [info script]] graphic] -types f *.tcl] {
-    source $chartfile
-}
-
-# sunburst
-foreach chartfile [glob -directory [file join [file dirname [info script]] sunburst] -types f *.tcl] {
-    source $chartfile
-}
-
-# tree
-foreach chartfile [glob -directory [file join [file dirname [info script]] tree] -types f *.tcl] {
-    source $chartfile
-}
-
-# themeRiver
-foreach chartfile [glob -directory [file join [file dirname [info script]] themeriver] -types f *.tcl] {
-    source $chartfile
-}
-
-# sankey
-foreach chartfile [glob -directory [file join [file dirname [info script]] sankey] -types f *.tcl] {
-    source $chartfile
-}
-
-# layout
-foreach chartfile [glob -directory [file join [file dirname [info script]] layout] -types f *.tcl] {
-    source $chartfile
-}
-
-# dataset
-foreach chartfile [glob -directory [file join [file dirname [info script]] dataset] -types f *.tcl] {
-    source $chartfile
-}
-
-# pictorialBar
-foreach chartfile [glob -directory [file join [file dirname [info script]] pictorialBar] -types f *.tcl] {
-    source $chartfile
-}
-
-# candlestick
-foreach chartfile [glob -directory [file join [file dirname [info script]] candlestick] -types f *.tcl] {
-    source $chartfile
-}
-
-# parallel
-foreach chartfile [glob -directory [file join [file dirname [info script]] parallel] -types f *.tcl] {
-    source $chartfile
-}
-
-# timeline
-foreach chartfile [glob -directory [file join [file dirname [info script]] timeline] -types f *.tcl] {
-    source $chartfile
-}
-
-# gauge
-foreach chartfile [glob -directory [file join [file dirname [info script]] gauge] -types f *.tcl] {
-    source $chartfile
+# all charts...
+foreach fc [split $charts "\n"] {
+    set chart [string trim $fc]
+    if {[string length $chart] == 0 || [string first "#" $chart] > -1} {continue}
+    foreach chartfile [glob -directory [file join $dir $chart] -types f *.tcl] {
+        source $chartfile
+    }
 }

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>graph_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_399076177229881" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_399076177228229 = echarts.init(document.getElementById('id_399076177229881'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 1500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "quinticInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "Basic Graph",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [{
+      "type": "graph",
+      "name": "graphseries_1",
+      "legendHoverLink": true,
+      "coordinateSystem": null,
+      "zoom": 1,
+      "layout": "none",
+      "roam": true,
+      "nodeScaleRatio": 0.6,
+      "symbolSize": 50,
+      "symbolKeepAspect": true,
+      "edgeSymbol": [
+        "circle",
+        "arrow"
+      ],
+      "edgeSymbolSize": [
+        4,
+        10
+      ],
+      "cursor": "pointer",
+      "lineStyle": {
+        "width": 2,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "curveness": 0,
+        "opacity": 0.9
+      },
+      "label": {
+        "show": true,
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "edgeLabel": {
+        "position": "middle",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 20,
+        "backgroundColor": "transparent",
+        "borderType": "solid",
+        "shadowColor": "transparent",
+        "width": 100,
+        "height": 40,
+        "textBorderType": "solid",
+        "textShadowColor": "transparent",
+        "overflow": "none",
+        "ellipsis": "..."
+      },
+      "selectedMode": false,
+      "data": [
+        {
+          "name": "Node 1",
+          "x": 300,
+          "y": 300,
+          "symbolKeepAspect": false
+        },
+        {
+          "name": "Node 2",
+          "x": 800,
+          "y": 300,
+          "symbolKeepAspect": false
+        },
+        {
+          "name": "Node 3",
+          "x": 550,
+          "y": 100,
+          "symbolKeepAspect": false
+        },
+        {
+          "name": "Node 4",
+          "x": 550,
+          "y": 500,
+          "symbolKeepAspect": false
+        }
+      ],
+      "links": [
+        {
+          "source": 0,
+          "target": 1,
+          "lineStyle": {
+            "width": 5,
+            "type": "solid",
+            "dashOffset": 0,
+            "cap": "butt",
+            "join": "bevel",
+            "miterLimit": 10,
+            "shadowBlur": 0,
+            "shadowColor": null,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "curveness": 0.2,
+            "opacity": 1
+          },
+          "symbolSize": [
+            5,
+            20
+          ],
+          "label": {
+            "show": true,
+            "rotate": 0,
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "lineHeight": 12,
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderRadius": 2,
+            "shadowColor": "transparent",
+            "shadowBlur": 0,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "textBorderColor": null,
+            "textBorderWidth": 0,
+            "textBorderType": "solid",
+            "textBorderDashOffset": 0,
+            "textShadowColor": "transparent",
+            "textShadowBlur": 0,
+            "textShadowOffsetX": 0,
+            "textShadowOffsetY": 0,
+            "overflow": "none",
+            "ellipsis": "..."
+          }
+        },
+        {
+          "source": "Node 2",
+          "target": "Node 1",
+          "lineStyle": {
+            "width": 1,
+            "type": "solid",
+            "dashOffset": 0,
+            "cap": "butt",
+            "join": "bevel",
+            "miterLimit": 10,
+            "shadowBlur": 0,
+            "shadowColor": null,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "curveness": 0.2,
+            "opacity": 1
+          },
+          "label": {
+            "show": true,
+            "rotate": 0,
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+            "fontFamily": "sans-serif",
+            "lineHeight": 12,
+            "borderWidth": 0,
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderRadius": 2,
+            "shadowColor": "transparent",
+            "shadowBlur": 0,
+            "shadowOffsetX": 0,
+            "shadowOffsetY": 0,
+            "textBorderColor": null,
+            "textBorderWidth": 0,
+            "textBorderType": "solid",
+            "textBorderDashOffset": 0,
+            "textShadowColor": "transparent",
+            "textShadowBlur": 0,
+            "textShadowOffsetX": 0,
+            "textShadowOffsetY": 0,
+            "overflow": "none",
+            "ellipsis": "..."
+          }
+        },
+        {
+          "source": "Node 1",
+          "target": "Node 3"
+        },
+        {
+          "source": "Node 2",
+          "target": "Node 3"
+        },
+        {
+          "source": "Node 2",
+          "target": "Node 4"
+        },
+        {
+          "source": "Node 1",
+          "target": "Node 4"
+        }
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_399076177228229.setOption(option);
+    </script>
+  </body>
+</html>
