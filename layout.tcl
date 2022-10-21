@@ -185,8 +185,8 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # set position in serie instead of grid... for 'funnel' & 'sankey' chart
-                    if {[dict get $opts @S=type] eq "funnel" || [dict get $opts @S=type] eq "sankey"} {
+                    # set position in serie instead of grid... for 'funnel', 'sankey' or 'wordCloud' chart
+                    if {[dict get $opts @S=type] in {"sankey" "funnel" "wordCloud"}} {
                         set g 1
                         foreach val {top bottom left right width height} {
                             if {[info exists [set val]]} {
@@ -291,7 +291,7 @@ oo::define ticklecharts::Gridlayout {
             error "'Radar' mode should not be added first..."
         }
 
-        # Check if pie, sunburst, themeriver, sankey chart type exists in first place
+        # Check if pie, sunburst, themeriver, sankey... chart type exists in first place
         # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
             if {!$_indexchart} {
@@ -301,6 +301,7 @@ oo::define ticklecharts::Gridlayout {
                     themeRiver {error "'ThemeRiver' chart should not be added first..."}
                     sankey     {error "'Sankey' chart should not be added first..."}
                     gauge      {error "'Gauge' chart should not be added first..."}
+                    wordCloud  {error "'wordCloud' should not be added first..."}
                 }
             }
         }
@@ -327,7 +328,7 @@ oo::define ticklecharts::Gridlayout {
         }
         
         if {[$_layout llengthkeys "tooltip"] > 1} {
-            error "several tooltip not supported..."
+            error "several 'tooltip' not supported..."
         }
 
         return {}
@@ -348,6 +349,7 @@ oo::define ticklecharts::Gridlayout {
         # -outfile    - full path html (by default in [info script]/render.html)
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
+        # -script     - list data (jsfunc), jsfunc.
         #
         # Returns full path html file.
 
