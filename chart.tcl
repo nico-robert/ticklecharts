@@ -23,6 +23,7 @@ oo::class create ticklecharts::chart {
     variable _indexparallelseries     ; # index parallel serie
     variable _indexgaugeseries        ; # index gauge serie
     variable _indexgraphseries        ; # index graph serie
+    variable _indexwordCloudseries    ; # index wordCloud serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -177,6 +178,7 @@ oo::define ticklecharts::chart {
         # -outfile    - full path html (by default in [info script]/render.html)
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
+        # -script     - list data (jsfunc), jsfunc.
         #
         # Returns full path html file.
         
@@ -740,6 +742,27 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddWordCloudSeries {args} {
+        # Add data serie chart (use only for wordCloud chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions wordcloudseries
+        # or
+        # from doc : https://github.com/ecomfe/echarts-wordcloud
+        #
+        # Returns nothing     
+        incr _indexwordCloudseries
+
+        set options [ticklecharts::wordcloudseries $_indexwordCloudseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -840,6 +863,6 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries
+           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries
 }
 

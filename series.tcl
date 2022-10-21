@@ -1168,7 +1168,6 @@ proc ticklecharts::graphseries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-graph
     #
     # index - index series.
-    # chart - self.
     # value - Options described in proc ticklecharts::graphseries below.
     #
     # return dict graphseries options
@@ -1216,7 +1215,7 @@ proc ticklecharts::graphseries {index value} {
     setdef options -select                  -validvalue {}                 -type dict|null         -default [ticklecharts::select $value]
     setdef options -selectedMode            -validvalue formatSelectedMode -type bool|str|null     -default "False"
     setdef options -categories              -validvalue {}                 -type list.o|null       -default [ticklecharts::categories $value]
-    setdef options -autoCurveness           -validvalue formatSelectedMode -type bool|num|null     -default "nothing"
+    setdef options -autoCurveness           -validvalue {}                 -type bool|num|null     -default "nothing"
     setdef options -data                    -validvalue {}                 -type list.o            -default [ticklecharts::dataGraphItem $value]
     setdef options -links                   -validvalue {}                 -type list.o|null       -default [ticklecharts::linksItem $value -links]
     setdef options -edges                   -validvalue {}                 -type list.o|null       -default [ticklecharts::linksItem $value -edges]
@@ -1243,10 +1242,54 @@ proc ticklecharts::graphseries {index value} {
 
     # not supported yet...
     # setdef options -tooltip                -validvalue {} -type dict|null        -default [ticklecharts::tooltipseries $value]
+
+    if {[dict exists $value -dataGraphItem] && [dict exists $value -data]} {
+        error "'graph' args cannot contain '-data' and '-dataGraphItem'..."
+    } elseif {![dict exists $value -dataGraphItem] && ![dict exists $value -data]} {
+        error "key '-dataGraphItem' or '-data' not present..."
+    }
           
     set value [dict remove $value -circular -force -scaleLimit -itemStyle -lineStyle -label -edgeLabel -labelLayout -emphasis \
-                                  -blur -select -categories -data -links -edges -markPoint -markLine -markArea]
+                                  -blur -select -categories -data -links -edges -markPoint -markLine -markArea -dataGraphItem]
                                 
+    set options [merge $options $value]
+
+    return $options
+
+}
+
+proc ticklecharts::wordcloudseries {index value} {
+    # options : https://github.com/ecomfe/echarts-wordcloud
+    #
+    # index - index series.
+    # value - Options described in proc ticklecharts::wordcloudseries below.
+    #
+    # return dict wordcloudseries options
+
+    setdef options -type              -validvalue {}               -type str            -default "wordCloud"
+    setdef options -shape             -validvalue formatWCshape    -type str            -default "circle"
+    # 'keepAspect' is supported from echarts-wordcloud@2.1.0
+    setdef options -keepAspect        -validvalue {}               -type bool|null      -default "nothing"
+    setdef options -maskImage         -validvalue {}               -type jsfunc|null    -default "nothing"
+    setdef options -left              -validvalue formatLeft       -type num|str|null   -default "center"
+    setdef options -top               -validvalue formatTop        -type num|str|null   -default "center"
+    setdef options -right             -validvalue formatRight      -type num|str|null   -default "null"
+    setdef options -bottom            -validvalue formatBottom     -type num|str|null   -default "null"
+    setdef options -width             -validvalue {}               -type num|str|null   -default "70%"
+    setdef options -height            -validvalue {}               -type num|str|null   -default "80%"
+    setdef options -sizeRange         -validvalue {}               -type list.n         -default [list {12 60}]
+    setdef options -rotationRange     -validvalue {}               -type list.n         -default [list {-90 90}]
+    setdef options -rotationStep      -validvalue {}               -type num            -default 45
+    setdef options -gridSize          -validvalue {}               -type num            -default 8
+    setdef options -drawOutOfBound    -validvalue {}               -type bool           -default "false"
+    setdef options -layoutAnimation   -validvalue {}               -type bool           -default "true"
+    setdef options -textStyle         -validvalue {}               -type dict|null      -default [ticklecharts::textStyle $value -textStyle]
+    setdef options -emphasis          -validvalue {}               -type dict|null      -default [ticklecharts::emphasis $value]
+    setdef options -data              -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
+
+
+    set value [dict remove $value -textStyle -emphasis -dataWCItem]
+
     set options [merge $options $value]
 
     return $options
