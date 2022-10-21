@@ -19,6 +19,9 @@ proc createEdges {count} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -38,7 +41,7 @@ foreach val $datas {
                           -top   [format {%s%%} [expr {($idx / 4) * 25}]] \
                           -width  "25%" \
                           -height "25%" \
-                          -data [lindex $val 1] \
+                          -dataGraphItem [lindex $val 1] \
                           -force {repulsion 60 edgeLength 2} \
                           -edges [lmap v [lindex $val 3] {format {source %s<s!> target %s<s!>} [lindex $v 0] [lindex $v 1]}]
     incr idx

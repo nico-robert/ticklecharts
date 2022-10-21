@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -21,7 +24,7 @@ try {
     $chart SetOptions -title {text "NPM Dependencies"}
 
     $chart AddGraphSeries -layout "none" \
-                          -data [lmap node [dict get $datajson nodes] {
+                          -dataGraphItem [lmap node [dict get $datajson nodes] {
                                 format {x %s y %s id %s name %s symbolSize %s itemStyle {color %s borderColor "nothing"}} \
                                     [dict get $node x] \
                                     [dict get $node y] \

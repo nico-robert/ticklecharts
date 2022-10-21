@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -25,7 +28,7 @@ $chart AddGraphSeries -layout "none" \
                       -label {show "True"} \
                       -edgeSymbol     [list {circle arrow}] \
                       -edgeSymbolSize [list {4 10}] \
-                      -data $data \
+                      -dataGraphItem $data \
                       -links $links \
                       -lineStyle {color "#2f4554"}
 
