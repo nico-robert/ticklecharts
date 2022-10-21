@@ -31,10 +31,67 @@ proc ticklecharts::htmlmap {htmloptions} {
     lappend mapoptions [format {%%jsvar%% %s}      [lrange [dict get $htmloptions -jsvar]  0 end-1]]
 
     set html [ticklecharts::readhtmltemplate]
+
+    # add js script(s) in html template...
+    if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
+        set html [ticklecharts::addJsScript $html [dict get $htmloptions -script]]
+    }
+
     return [string map [join $mapoptions] $html]
 
 }
 
+proc ticklecharts::addJsScript {html value} {
+    # Add js script(s) in html template file...
+    #
+    # Returns html
+
+    set h [split $html "\n"]
+    lassign $value js type
+
+    switch -exact -- $type {
+        jsfunc  {
+            set indent 0
+            switch -exact -- [$js position] {
+                start  {set item "%jschartvar%"}
+                end    {set item "%json%"}
+                header {set item "%jsecharts%" ; set indent 3}
+                null   {set item "%jschartvar%"}
+            }
+            set f [lsearch $h *$item*]
+            if {$f < 0} {
+                error "Impossible to find `$item` string in the html template file..."
+            }
+            set listH [linsert $h [expr {$f + 1}] \
+                      [format [list %-${indent}s %s] "" [join [$js get]]]]
+        }
+        list.d {
+            set listH $h
+            foreach script {*}[lreverse $js] {
+                set indent 0
+                # insert Jsfunc...
+                if {[Type $script] eq "jsfunc"} {
+                    switch -exact -- [$script position] {
+                        start  {set item "%jschartvar%"}
+                        end    {set item "%json%"}
+                        header {set item "%jsecharts%" ; set indent 3}
+                        null   {set item "%jschartvar%"}
+                    }
+                    set f [lsearch $listH *$item*]
+                    if {$f < 0} {
+                        error "Impossible to find `$item` string in the html template file..."
+                    }
+                    set listH [linsert $listH [expr {$f + 1}] \
+                              [format [list %-${indent}s %s] "" [join [$script get]]]]
+                } else {
+                    error "should be a jsfunc class... in list data script."
+                }
+            }
+        }
+    }
+
+    return [join $listH "\n"]
+}
 
 proc ticklecharts::readhtmltemplate {} {
     # Open and read html template
@@ -122,7 +179,7 @@ proc ticklecharts::TclType value {
         return list
     }
 
-    if {[ticklecharts::IsaObject $value] && [$value gettype] eq "jsfunc"} {
+    if {[ticklecharts::IsaObject $value] && [ticklecharts::TypeClass $value] eq "::ticklecharts::jsfunc"} {
         return jsfunc
     }
 
