@@ -153,6 +153,7 @@ oo::define ticklecharts::timeline {
         # -outfile    - full path html (by default in [info script]/render.html)
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
+        # -script     - list data (jsfunc), jsfunc.
         #
         # Returns full path html file.
 
