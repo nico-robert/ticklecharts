@@ -5,15 +5,36 @@ namespace eval ticklecharts {}
 
 oo::class create ticklecharts::jsfunc {
     variable _jsfunc
+    variable _position
 
     constructor {args} {
         # Initializes a new jsfunc Class.
         #
-        # args - javascript function.
+        # args - Options described below.
         #
-        # javascript function
-        #
-        set jsf [string trim [join $args]]
+        # function - pure javascript function, variable...
+        # -start   - To place your script at the beginning of the file. 
+        # -end     - To place your script at the end of the file. 
+        # -header  - To place your script in the file header.
+
+        set _position "null" ;  # default value
+
+        if {[llength $args] == 1} {
+            set jsf [string trim [join $args]]
+
+        } elseif {[llength $args] == 2} {
+
+            set jsf [string trim [lindex $args 0]]
+
+            switch -exact -- [lindex $args 1] {
+                -start  {set _position "start"}
+                -end    {set _position "end"}
+                -header {set _position "header"}
+                default {error "flag should be '-start', '-end' or '-header'..."}
+            }            
+        } else {
+            error "jsfunc args not supported..."
+        }
 
         # delete comma at the end if exists...
         # since I added jsfunc as huddle type 
@@ -34,6 +55,12 @@ oo::define ticklecharts::jsfunc {
     method gettype {} {
         # Returns type
         return "jsfunc"
+    }
+
+    method position {} {
+        # Returns position where the function or script should be 
+        # write in html template file.
+        return $_position
     }
 
 }
