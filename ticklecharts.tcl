@@ -95,6 +95,10 @@
 # 14-10-2022 : v2.4
                # Add `graph` chart.
                # Add `graph` examples.
+# 21-10-2022 : 2.5
+               # Add echarts-wordcloud (https://github.com/ecomfe/echarts-wordcloud).
+               # Add `wordCloud` examples.
+               # Adds the possibility to add one or more js script to the html template file.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -117,7 +121,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.4
+    variable version 2.5
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

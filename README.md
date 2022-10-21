@@ -60,15 +60,16 @@ $chart Render
 ##### :heavy_check_mark: Arguments available :
 | args | Description
 | ------ | ------
-| _-title_ | header title html
+| _-title_ | header title html (default value : `"ticklEcharts !!!"`)
 | _-width_ | size html canvas  (default value : `900px`)
 | _-height_ | size html canvas (default value : `500px`)
-| _-renderer_ | 'canvas' or 'svg' (default value : `canvas`)
+| _-renderer_ | `canvas` or `svg` (default value : `canvas`)
 | _-jschartvar_ | name chart var (default value : `chart_[clock clicks]`) 
 | _-divid_ | name id var (default value : `id_[clock clicks]`) 
-| _-outfile_ | full path html (output by default in `[info script]/render.html`)
-| _-jsecharts_ | full path `echarts.min.js` (by default `cdn` script)
+| _-outfile_ | full path html file (output by default in `[info script]/render.html`)
+| _-jsecharts_ | full path `echarts.min.js` file (by default `cdn` script)
 | _-jsvar_ | name js var (default value : `option`)
+| _-script_ | jsfunc (default value : `"null"`)
 
 ```tcl
 # Demo
@@ -168,7 +169,7 @@ $chart toJSON
 
 Javascript function :
 -------------------------
-Add a `javascript` function to `json` :
+* **Add a javascript function to json** :
 ```tcl
 # Initializes a new jsfunc Class
 ticklecharts::jsfunc new {args}
@@ -214,6 +215,61 @@ $chart Xaxis -axisLabel [list show "True" \
     | `}`           | <0125>   |
     | `[`           | <091>    |
     | `]`           | <093>    |
+*  **Add a js script, variable... in html template file** :
+```tcl
+# Initializes a new jsfunc Class
+ticklecharts::jsfunc new {args} -start? -end? -header?  
+```
+Combined with `Render` method and `-script` flag, you can add a js script (`jsfunc` class) to html template file.  
+For this add :
+- `-start` : To place your script at the beginning of the file. 
+- `-end` : To place your script at the end of the file. 
+- `-header`: To place your script in the file header.
+```tcl
+# Demo
+set js [ticklecharts::jsfunc new {
+                                var maskImage = new Image();
+                                maskImage.src = './logo.png';
+                                } -start
+                            ]
+set header [ticklecharts::jsfunc new {
+                        <script type="text/javascript" src="tcl.js"></script>
+                    } -header
+            ]
+...
+$chart Render -outfile demo.html -title demo -script [list [list $js $header]]
+```
+```js
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script type="text/javascript" src="echarts.min.js"></script>
+    // -header script...
+    <script type="text/javascript" src="tcl.js"></script>
+  </head>
+  <body>
+    <div id="main" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart = echarts.init(document.getElementById('main'), null, {renderer: 'canvas'});
+        // -start script...
+        var maskImage = new Image();
+        maskImage.src = './logo.png';
+        var option = {
+            "backgroundColor": "rgba(0,0,0,0)",
+            "color": [
+            ...
+            ],
+            "maskImage": maskImage,
+            ...
+        }
+    ...
+    </script>
+  </body>
+</html>
+```
+
 Performance :
 -------------------------
 Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).  
@@ -392,6 +448,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] pictorialBar
 - [x] themeRiver
 - [ ] custom
+- [x] wordCloud
 
 #### Gallery :
 ![Photo gallery](images/all.gif)
@@ -492,3 +549,7 @@ Release :
 *  **14-10-2022** : 2.4
     - Add `graph` chart.
     - Add `graph` examples.
+*  **21-10-2022** : 2.5
+    - Add [echarts-wordcloud](https://github.com/ecomfe/echarts-wordcloud).
+    - Add `wordCloud` examples.
+    - Adds the possibility to add one or more js script to the html template file.
