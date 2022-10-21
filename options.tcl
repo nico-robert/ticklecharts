@@ -635,11 +635,15 @@ proc ticklecharts::gaugeItem {value} {
 
 proc ticklecharts::dataGraphItem {value} {
 
-    if {![dict exists $value -data]} {
-        error "key -data not present..."
+    if {[dict exists $value -dataGraphItem]} {
+        set key "-dataGraphItem"
+    }
+    
+    if {[dict exists $value -data]} {
+        set key "-data"
     }
 
-    foreach item [dict get $value -data] {
+    foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
             error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
@@ -668,6 +672,38 @@ proc ticklecharts::dataGraphItem {value} {
         setdef options tooltip          -validvalue {}               -type dict|null       -default "nothing"
 
         set item [dict remove $item label itemStyle lineStyle emphasis blur select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::dataWCItem {value} {
+
+    if {![dict exists $value -dataWCItem]} {
+        error "key -dataWCItem not present..."
+    }
+
+    foreach item [dict get $value -dataWCItem] {
+
+        if {[llength $item] % 2} {
+            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        }
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        setdef options name        -validvalue {}   -type str|null    -default "nothing"
+        setdef options value       -validvalue {}   -type num|null    -default "nothing"
+        setdef options textStyle   -validvalue {}   -type dict|null   -default [ticklecharts::textStyle $item textStyle]
+        setdef options emphasis    -validvalue {}   -type dict|null   -default [ticklecharts::emphasis $item]
+
+        set item [dict remove $item textStyle emphasis]
 
         lappend opts [merge $options $item]
         set options {}
@@ -2672,25 +2708,33 @@ proc ticklecharts::textStyle {value key} {
         set fontWeight "bolder"
     }
 
-    setdef options color                -validvalue formatColor          -type str|null       -default $color
-    setdef options fontStyle            -validvalue formatFontStyle      -type str            -default "normal"
-    setdef options fontWeight           -validvalue formatFontWeight     -type str|num        -default $fontWeight
-    setdef options fontFamily           -validvalue {}                   -type str            -default "sans-serif"
-    setdef options fontSize             -validvalue {}                   -type num            -default $fontSize
-    setdef options lineHeight           -validvalue {}                   -type num|null       -default "nothing"
-    setdef options width                -validvalue {}                   -type num            -default 100
-    setdef options height               -validvalue {}                   -type num            -default 50
-    setdef options textBorderColor      -validvalue {}                   -type str|null       -default "null"
-    setdef options textBorderWidth      -validvalue {}                   -type num            -default 0
-    setdef options textBorderType       -validvalue formatTextBorderType -type str|num|list.n -default "solid"
-    setdef options textBorderDashOffset -validvalue {}                   -type num            -default 0
-    setdef options textShadowColor      -validvalue formatColor          -type str            -default "transparent"
-    setdef options textShadowBlur       -validvalue {}                   -type num            -default 0
-    setdef options textShadowOffsetX    -validvalue {}                   -type num            -default 0
-    setdef options textShadowOffsetY    -validvalue {}                   -type num            -default 0
-    setdef options overflow             -validvalue formatOverflow       -type str|null       -default "null"
-    setdef options ellipsis             -validvalue {}                   -type str            -default "..."
+    setdef options color                -validvalue formatColor          -type str|jsfunc|null -default $color
+    setdef options fontStyle            -validvalue formatFontStyle      -type str             -default "normal"
+    setdef options fontWeight           -validvalue formatFontWeight     -type str|num         -default $fontWeight
+    setdef options fontFamily           -validvalue {}                   -type str             -default "sans-serif"
+    setdef options fontSize             -validvalue {}                   -type num             -default $fontSize
+    setdef options lineHeight           -validvalue {}                   -type num|null        -default "nothing"
+    setdef options width                -validvalue {}                   -type num             -default 100
+    setdef options height               -validvalue {}                   -type num             -default 50
+    setdef options textBorderColor      -validvalue {}                   -type str|null        -default "null"
+    setdef options textBorderWidth      -validvalue {}                   -type num             -default 0
+    setdef options textBorderType       -validvalue formatTextBorderType -type str|num|list.n  -default "solid"
+    setdef options textBorderDashOffset -validvalue {}                   -type num             -default 0
+    setdef options textShadowColor      -validvalue formatColor          -type str             -default "transparent"
+    setdef options textShadowBlur       -validvalue {}                   -type num             -default 0
+    setdef options textShadowOffsetX    -validvalue {}                   -type num             -default 0
+    setdef options textShadowOffsetY    -validvalue {}                   -type num             -default 0
+    setdef options overflow             -validvalue formatOverflow       -type str|null        -default "null"
+    setdef options ellipsis             -validvalue {}                   -type str             -default "..."
     #...
+
+    if {[InfoNameProc 2 "wordcloudseries"]} {
+        setdef options fontSize         -validvalue {}                   -type null            -default "nothing"
+        setdef options lineHeight       -validvalue {}                   -type null            -default "nothing"
+        setdef options width            -validvalue {}                   -type null            -default "nothing"
+        setdef options height           -validvalue {}                   -type null            -default "nothing"
+        setdef options ellipsis         -validvalue {}                   -type null            -default "nothing"
+    }
 
     if {$key eq "subtextStyle"} {
         setdef options align         -validvalue formatTextAlign         -type str|null  -default "nothing"
