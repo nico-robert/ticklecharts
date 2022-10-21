@@ -46,15 +46,16 @@ proc ticklecharts::htmloptions {value} {
     #
     # see file chart.tcl (method render)
 
-    setdef options -title      -validvalue {}             -type str.n     -default "ticklEcharts !!!"
-    setdef options -width      -validvalue {}             -type str.n|num -default "900px"
-    setdef options -height     -validvalue {}             -type str.n|num -default "500px"
-    setdef options -renderer   -validvalue formatRenderer -type str.n     -default "canvas"
-    setdef options -jschartvar -validvalue {}             -type str.n     -default [format "chart_%s" [clock clicks]]
-    setdef options -divid      -validvalue {}             -type str.n     -default [format "id_%s"    [clock clicks]]
-    setdef options -outfile    -validvalue {}             -type str.n     -default [file join [file dirname [info script]] render.html]
-    setdef options -jsecharts  -validvalue {}             -type str.n     -default $::ticklecharts::script
-    setdef options -jsvar      -validvalue {}             -type str.n     -default "option"
+    setdef options -title      -validvalue {}             -type str.n              -default "ticklEcharts !!!"
+    setdef options -width      -validvalue {}             -type str.n|num          -default "900px"
+    setdef options -height     -validvalue {}             -type str.n|num          -default "500px"
+    setdef options -renderer   -validvalue formatRenderer -type str.n              -default "canvas"
+    setdef options -jschartvar -validvalue {}             -type str.n              -default [format "chart_%s" [clock clicks]]
+    setdef options -divid      -validvalue {}             -type str.n              -default [format "id_%s"    [clock clicks]]
+    setdef options -outfile    -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
+    setdef options -jsecharts  -validvalue {}             -type str.n              -default $::ticklecharts::script
+    setdef options -jsvar      -validvalue {}             -type str.n              -default "option"
+    setdef options -script     -validvalue {}             -type list.d|jsfunc|null -default "nothing"
 
     set options [merge $options $value]
     
