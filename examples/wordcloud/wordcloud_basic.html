@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>wordcloud_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script>
+  </head>
+  <body>
+    <div id="id_826182372132740" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_826182372131027 = echarts.init(document.getElementById('id_826182372132740'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [{
+      "type": "wordCloud",
+      "shape": "pentagon",
+      "left": "center",
+      "top": "center",
+      "right": null,
+      "bottom": null,
+      "width": 600,
+      "height": 400,
+      "sizeRange": [
+        12,
+        50
+      ],
+      "rotationRange": [
+        -90,
+        90
+      ],
+      "rotationStep": 45,
+      "gridSize": 2,
+      "drawOutOfBound": true,
+      "layoutAnimation": true,
+      "textStyle": {
+        "color": function () {
+                    return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')';
+                },
+        "fontStyle": "normal",
+        "fontWeight": "bolder",
+        "fontFamily": "sans-serif",
+        "fontSize": 18,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "data": [
+        {
+          "name": "Sam S Club",
+          "value": 10000
+        },
+        {
+          "name": "Macys",
+          "value": 6181
+        },
+        {
+          "name": "Amy Schumer",
+          "value": 4386
+        },
+        {
+          "name": "Jurassic World",
+          "value": 4055
+        },
+        {
+          "name": "Charter Communications",
+          "value": 2467
+        },
+        {
+          "name": "Chick Fil A",
+          "value": 2244
+        },
+        {
+          "name": "Planet Fitness",
+          "value": 1898
+        },
+        {
+          "name": "Pitch Perfect",
+          "value": 1484
+        },
+        {
+          "name": "Express",
+          "value": 1112
+        },
+        {
+          "name": "Home",
+          "value": 965
+        },
+        {
+          "name": "Johnny Depp",
+          "value": 847
+        },
+        {
+          "name": "Lena Dunham",
+          "value": 582
+        },
+        {
+          "name": "Lewis Hamilton",
+          "value": 555
+        },
+        {
+          "name": "KXAN",
+          "value": 550
+        },
+        {
+          "name": "Mary Ellen Mark",
+          "value": 462
+        },
+        {
+          "name": "Farrah Abraham",
+          "value": 366
+        },
+        {
+          "name": "Rita Ora",
+          "value": 360
+        },
+        {
+          "name": "Serena Williams",
+          "value": 282
+        },
+        {
+          "name": "NCAA baseball tournament",
+          "value": 273
+        },
+        {
+          "name": "Point Break",
+          "value": 265
+        }
+      ]
+    }]
+}
+        chart_826182372131027.setOption(option);
+    </script>
+  </body>
+</html>

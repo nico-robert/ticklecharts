@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>bar_wordcloud</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script>
+  </head>
+  <body>
+    <div id="id_997483822764607" class="chart-container" style="width:1900px; height:1000px;"></div>
+    <script>
+        var chart_997483822763159 = echarts.init(document.getElementById('id_997483822764607'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "layout bar + wordCloud...",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "Tcl",
+        "Tk"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "bar",
+      "name": "barseries_1",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "label": {
+        "show": true,
+        "position": "top",
+        "distance": 8,
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "stack": null,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "data": [
+        {
+          "value": 157,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false
+        },
+        {
+          "value": 96,
+          "symbol": "emptyCircle",
+          "symbolSize": 3,
+          "symbolKeepAspect": false,
+          "itemStyle": {
+            "color": "#91cc75",
+            "borderType": "solid",
+            "borderDashOffset": 0,
+            "borderCap": "butt",
+            "borderJoin": "bevel",
+            "borderMiterLimit": 10,
+            "opacity": 1
+          }
+        }
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "xAxisIndex": 0,
+      "yAxisIndex": 0
+    },
+    {
+      "type": "wordCloud",
+      "shape": "pentagon",
+      "keepAspect": true,
+      "left": "5%",
+      "top": "50%",
+      "right": null,
+      "bottom": null,
+      "width": "50%",
+      "height": "50%",
+      "sizeRange": [
+        3,
+        120
+      ],
+      "rotationRange": [
+        -90,
+        90
+      ],
+      "rotationStep": 45,
+      "gridSize": 0,
+      "drawOutOfBound": false,
+      "layoutAnimation": true,
+      "textStyle": {
+        "color": function () {
+                    let colors = ["#3ba272", "#73c0de"];
+                    let num = Math.round(Math.random());
+                    return colors[num];
+                },
+        "fontStyle": "normal",
+        "fontWeight": "bolder",
+        "fontFamily": "sans-serif",
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null
+      },
+      "data": [
+        {
+          "name": "after",
+          "value": 309
+        },
+        {
+          "name": "errorInfo",
+          "value": 537
+        },
+        {
+          "name": "load",
+          "value": 868
+        },
+        {
+          "name": "re_syntax",
+          "value": 113
+        },
+        {
+          "name": "tcl_startOfNextWord",
+          "value": 534
+        },
+        {
+          "name": "append",
+          "value": 472
+        },
+        {
+          "name": "eval",
+          "value": 307
+        },
+        {
+          "name": "lrange",
+          "value": 543
+        },
+        {
+          "name": "read",
+          "value": 831
+        },
+        {
+          "name": "tcl_startOfPreviousWord",
+          "value": 512
+        },
+        {
+          "name": "apply",
+          "value": 208
+        },
+        {
+          "name": "exec",
+          "value": 741
+        },
+        {
+          "name": "lrepeat",
+          "value": 177
+        },
+        {
+          "name": "refchan",
+          "value": 273
+        },
+        {
+          "name": "tcl_traceCompile",
+          "value": 894
+        },
+        {
+          "name": "argc",
+          "value": 831
+        },
+        {
+          "name": "exit",
+          "value": 510
+        },
+        {
+          "name": "lreplace",
+          "value": 834
+        },
+        {
+          "name": "regexp",
+          "value": 816
+        },
+        {
+          "name": "tcl_traceExec",
+          "value": 251
+        },
+        {
+          "name": "argv",
+          "value": 757
+        },
+        {
+          "name": "expr",
+          "value": 131
+        },
+        {
+          "name": "lreverse",
+          "value": 162
+        },
+        {
+          "name": "registry",
+          "value": 343
+        },
+        {
+          "name": "tcl_version",
+          "value": 328
+        },
+        {
+          "name": "argv0",
+          "value": 387
+        },
+        {
+          "name": "fblocked",
+          "value": 910
+        },
+        {
+          "name": "lsearch",
+          "value": 677
+        },
+        {
+          "name": "regsub",
+          "value": 899
+        },
+        {
+          "name": "tcl_wordBreakAfter",
+          "value": 908
+        },
+        {
+          "name": "array",
+          "value": 148
+        },
+        {
+          "name": "fconfigure",
+          "value": 448
+        },
+        {
+          "name": "lset",
+          "value": 93
+        },
+        {
+          "name": "rename",
+          "value": 572
+        },
+        {
+          "name": "tcl_wordBreakBefore",
+          "value": 702
+        },
+        {
+          "name": "auto_execok",
+          "value": 869
+        },
+        {
+          "name": "fcopy",
+          "value": 697
+        },
+        {
+          "name": "lsort",
+          "value": 137
+        },
+        {
+          "name": "return",
+          "value": 520
+        },
+        {
+          "name": "tcl_wordchars",
+          "value": 245
+        },
+        {
+          "name": "auto_import",
+          "value": 849
+        },
+        {
+          "name": "file",
+          "value": 221
+        },
+        {
+          "name": "mathfunc",
+          "value": 372
+        },
+        {
+          "name": "safe",
+          "value": 151
+        },
+        {
+          "name": "tcltest",
+          "value": 780
+        },
+        {
+          "name": "auto_load",
+          "value": 203
+        },
+        {
+          "name": "fileevent",
+          "value": 903
+        },
+        {
+          "name": "mathop",
+          "value": 775
+        },
+        {
+          "name": "scan",
+          "value": 984
+        },
+        {
+          "name": "tell",
+          "value": 409
+        },
+        {
+          "name": "auto_mkindex",
+          "value": 266
+        },
+        {
+          "name": "filename",
+          "value": 257
+        },
+        {
+          "name": "memory",
+          "value": 932
+        },
+        {
+          "name": "seek",
+          "value": 810
+        },
+        {
+          "name": "throw",
+          "value": 820
+        },
+        {
+          "name": "auto_path",
+          "value": 251
+        },
+        {
+          "name": "flush",
+          "value": 987
+        },
+        {
+          "name": "msgcat",
+          "value": 208
+        },
+        {
+          "name": "self",
+          "value": 995
+        },
+        {
+          "name": "time",
+          "value": 801
+        },
+        {
+          "name": "auto_qualify",
+          "value": 331
+        },
+        {
+          "name": "for",
+          "value": 466
+        },
+        {
+          "name": "my",
+          "value": 286
+        },
+        {
+          "name": "set",
+          "value": 161
+        },
+        {
+          "name": "timerate",
+          "value": 624
+        },
+        {
+          "name": "auto_reset",
+          "value": 130
+        },
+        {
+          "name": "foreach",
+          "value": 900
+        },
+        {
+          "name": "namespace",
+          "value": 53
+        },
+        {
+          "name": "socket",
+          "value": 681
+        },
+        {
+          "name": "tm",
+          "value": 700
+        },
+        {
+          "name": "bgerror",
+          "value": 931
+        },
+        {
+          "name": "format",
+          "value": 821
+        },
+        {
+          "name": "next",
+          "value": 752
+        },
+        {
+          "name": "source",
+          "value": 331
+        },
+        {
+          "name": "trace",
+          "value": 328
+        },
+        {
+          "name": "binary",
+          "value": 951
+        },
+        {
+          "name": "gets",
+          "value": 849
+        },
+        {
+          "name": "nextto",
+          "value": 397
+        },
+        {
+          "name": "split",
+          "value": 28
+        },
+        {
+          "name": "transchan",
+          "value": 282
+        },
+        {
+          "name": "break",
+          "value": 936
+        },
+        {
+          "name": "glob",
+          "value": 837
+        },
+        {
+          "name": "oo::class",
+          "value": 657
+        },
+        {
+          "name": "string",
+          "value": 894
+        },
+        {
+          "name": "try",
+          "value": 296
+        },
+        {
+          "name": "catch",
+          "value": 696
+        },
+        {
+          "name": "global",
+          "value": 868
+        },
+        {
+          "name": "oo::copy",
+          "value": 224
+        },
+        {
+          "name": "subst",
+          "value": 658
+        },
+        {
+          "name": "unknown",
+          "value": 517
+        },
+        {
+          "name": "cd",
+          "value": 760
+        },
+        {
+          "name": "history",
+          "value": 71
+        },
+        {
+          "name": "oo::define",
+          "value": 608
+        },
+        {
+          "name": "switch",
+          "value": 857
+        },
+        {
+          "name": "unload",
+          "value": 219
+        },
+        {
+          "name": "chan",
+          "value": 33
+        },
+        {
+          "name": "http",
+          "value": 736
+        },
+        {
+          "name": "oo::objdefine",
+          "value": 838
+        },
+        {
+          "name": "tailcall",
+          "value": 516
+        },
+        {
+          "name": "unset",
+          "value": 383
+        },
+        {
+          "name": "clock",
+          "value": 122
+        },
+        {
+          "name": "if",
+          "value": 320
+        },
+        {
+          "name": "oo::object",
+          "value": 327
+        },
+        {
+          "name": "Tcl",
+          "value": 353
+        },
+        {
+          "name": "update",
+          "value": 90
+        },
+        {
+          "name": "close",
+          "value": 165
+        },
+        {
+          "name": "incr",
+          "value": 566
+        },
+        {
+          "name": "open",
+          "value": 17
+        },
+        {
+          "name": "tcl::prefix",
+          "value": 318
+        },
+        {
+          "name": "uplevel",
+          "value": 286
+        },
+        {
+          "name": "concat",
+          "value": 694
+        },
+        {
+          "name": "info",
+          "value": 837
+        },
+        {
+          "name": "package",
+          "value": 34
+        },
+        {
+          "name": "tcl_endOfWord",
+          "value": 227
+        },
+        {
+          "name": "upvar",
+          "value": 992
+        },
+        {
+          "name": "continue",
+          "value": 234
+        },
+        {
+          "name": "interp",
+          "value": 578
+        },
+        {
+          "name": "parray",
+          "value": 293
+        },
+        {
+          "name": "tcl_findLibrary",
+          "value": 538
+        },
+        {
+          "name": "variable",
+          "value": 384
+        },
+        {
+          "name": "coroutine",
+          "value": 607
+        },
+        {
+          "name": "join",
+          "value": 272
+        },
+        {
+          "name": "pid",
+          "value": 307
+        },
+        {
+          "name": "tcl_interactive",
+          "value": 642
+        },
+        {
+          "name": "vwait",
+          "value": 548
+        },
+        {
+          "name": "dde",
+          "value": 904
+        },
+        {
+          "name": "lappend",
+          "value": 886
+        },
+        {
+          "name": "pkg::create",
+          "value": 884
+        },
+        {
+          "name": "tcl_library",
+          "value": 266
+        },
+        {
+          "name": "while",
+          "value": 263
+        },
+        {
+          "name": "dict",
+          "value": 844
+        },
+        {
+          "name": "lassign",
+          "value": 405
+        },
+        {
+          "name": "pkg_mkIndex",
+          "value": 505
+        },
+        {
+          "name": "tcl_nonwordchars",
+          "value": 612
+        },
+        {
+          "name": "yield",
+          "value": 858
+        },
+        {
+          "name": "encoding",
+          "value": 259
+        },
+        {
+          "name": "lindex",
+          "value": 111
+        },
+        {
+          "name": "platform",
+          "value": 89
+        },
+        {
+          "name": "tcl_patchLevel",
+          "value": 721
+        },
+        {
+          "name": "yieldto",
+          "value": 402
+        },
+        {
+          "name": "env",
+          "value": 290
+        },
+        {
+          "name": "linsert",
+          "value": 572
+        },
+        {
+          "name": "platform::shell",
+          "value": 757
+        },
+        {
+          "name": "tcl_pkgPath",
+          "value": 181
+        },
+        {
+          "name": "zlib",
+          "value": 798
+        },
+        {
+          "name": "eof",
+          "value": 54
+        },
+        {
+          "name": "list",
+          "value": 962
+        },
+        {
+          "name": "proc",
+          "value": 612
+        },
+        {
+          "name": "tcl_platform",
+          "value": 570
+        },
+        {
+          "name": "error",
+          "value": 600
+        },
+        {
+          "name": "llength",
+          "value": 499
+        },
+        {
+          "name": "puts",
+          "value": 760
+        },
+        {
+          "name": "tcl_precision",
+          "value": 310
+        },
+        {
+          "name": "errorCode",
+          "value": 681
+        },
+        {
+          "name": "lmap",
+          "value": 734
+        },
+        {
+          "name": "pwd",
+          "value": 305
+        },
+        {
+          "name": "tcl_rcFileName",
+          "value": 393
+        },
+        {
+          "name": "bell",
+          "value": 862
+        },
+        {
+          "name": "grab",
+          "value": 527
+        },
+        {
+          "name": "scale",
+          "value": 632
+        },
+        {
+          "name": "tk_optionMenu",
+          "value": 930
+        },
+        {
+          "name": "ttk::menubutton",
+          "value": 790
+        },
+        {
+          "name": "bind",
+          "value": 21
+        },
+        {
+          "name": "grid",
+          "value": 878
+        },
+        {
+          "name": "scrollbar",
+          "value": 159
+        },
+        {
+          "name": "tk_patchLevel",
+          "value": 329
+        },
+        {
+          "name": "ttk::notebook",
+          "value": 985
+        },
+        {
+          "name": "bindtags",
+          "value": 820
+        },
+        {
+          "name": "image",
+          "value": 559
+        },
+        {
+          "name": "selection",
+          "value": 645
+        },
+        {
+          "name": "tk_popup",
+          "value": 824
+        },
+        {
+          "name": "ttk::panedwindow",
+          "value": 652
+        },
+        {
+          "name": "bitmap",
+          "value": 504
+        },
+        {
+          "name": "keysyms",
+          "value": 263
+        },
+        {
+          "name": "send",
+          "value": 198
+        },
+        {
+          "name": "tk_setPalette",
+          "value": 443
+        },
+        {
+          "name": "ttk::progressbar",
+          "value": 403
+        },
+        {
+          "name": "busy",
+          "value": 579
+        },
+        {
+          "name": "label",
+          "value": 253
+        },
+        {
+          "name": "spinbox",
+          "value": 879
+        },
+        {
+          "name": "tk_strictMotif",
+          "value": 525
+        },
+        {
+          "name": "ttk::radiobutton",
+          "value": 571
+        },
+        {
+          "name": "button",
+          "value": 270
+        },
+        {
+          "name": "labelframe",
+          "value": 356
+        },
+        {
+          "name": "text",
+          "value": 156
+        },
+        {
+          "name": "tk_textCopy",
+          "value": 386
+        },
+        {
+          "name": "ttk::scale",
+          "value": 581
+        },
+        {
+          "name": "canvas",
+          "value": 400
+        },
+        {
+          "name": "listbox",
+          "value": 661
+        },
+        {
+          "name": "tk",
+          "value": 470
+        },
+        {
+          "name": "tk_textCut",
+          "value": 593
+        },
+        {
+          "name": "ttk::scrollbar",
+          "value": 52
+        },
+        {
+          "name": "checkbutton",
+          "value": 896
+        },
+        {
+          "name": "lower",
+          "value": 760
+        },
+        {
+          "name": "tk::mac",
+          "value": 576
+        },
+        {
+          "name": "tk_textPaste",
+          "value": 344
+        },
+        {
+          "name": "ttk::separator",
+          "value": 912
+        },
+        {
+          "name": "clipboard",
+          "value": 635
+        },
+        {
+          "name": "menu",
+          "value": 37
+        },
+        {
+          "name": "tk_bisque",
+          "value": 465
+        },
+        {
+          "name": "tk_version",
+          "value": 943
+        },
+        {
+          "name": "ttk::sizegrip",
+          "value": 592
+        },
+        {
+          "name": "colors",
+          "value": 253
+        },
+        {
+          "name": "menubutton",
+          "value": 808
+        },
+        {
+          "name": "tk_chooseColor",
+          "value": 484
+        },
+        {
+          "name": "tkerror",
+          "value": 785
+        },
+        {
+          "name": "ttk::spinbox",
+          "value": 299
+        },
+        {
+          "name": "console",
+          "value": 382
+        },
+        {
+          "name": "message",
+          "value": 252
+        },
+        {
+          "name": "tk_chooseDirectory",
+          "value": 638
+        },
+        {
+          "name": "tkwait",
+          "value": 351
+        },
+        {
+          "name": "ttk::style",
+          "value": 322
+        },
+        {
+          "name": "cursors",
+          "value": 903
+        },
+        {
+          "name": "option",
+          "value": 660
+        },
+        {
+          "name": "tk_dialog",
+          "value": 318
+        },
+        {
+          "name": "toplevel",
+          "value": 158
+        },
+        {
+          "name": "ttk::treeview",
+          "value": 51
+        },
+        {
+          "name": "destroy",
+          "value": 256
+        },
+        {
+          "name": "options",
+          "value": 287
+        },
+        {
+          "name": "tk_focusFollowsMouse",
+          "value": 425
+        },
+        {
+          "name": "ttk::button",
+          "value": 54
+        },
+        {
+          "name": "ttk::widget",
+          "value": 138
+        },
+        {
+          "name": "entry",
+          "value": 957
+        },
+        {
+          "name": "pack",
+          "value": 82
+        },
+        {
+          "name": "tk_focusNext",
+          "value": 236
+        },
+        {
+          "name": "ttk::checkbutton",
+          "value": 879
+        },
+        {
+          "name": "ttk_image",
+          "value": 669
+        },
+        {
+          "name": "event",
+          "value": 689
+        },
+        {
+          "name": "panedwindow",
+          "value": 887
+        },
+        {
+          "name": "tk_focusPrev",
+          "value": 929
+        },
+        {
+          "name": "ttk::combobox",
+          "value": 990
+        },
+        {
+          "name": "ttk_vsapi",
+          "value": 984
+        },
+        {
+          "name": "focus",
+          "value": 52
+        },
+        {
+          "name": "photo",
+          "value": 939
+        },
+        {
+          "name": "tk_getOpenFile",
+          "value": 798
+        },
+        {
+          "name": "ttk::entry",
+          "value": 523
+        },
+        {
+          "name": "winfo",
+          "value": 502
+        },
+        {
+          "name": "font",
+          "value": 298
+        },
+        {
+          "name": "place",
+          "value": 963
+        },
+        {
+          "name": "tk_getSaveFile",
+          "value": 247
+        },
+        {
+          "name": "ttk::frame",
+          "value": 361
+        },
+        {
+          "name": "wm",
+          "value": 407
+        },
+        {
+          "name": "fontchooser",
+          "value": 155
+        },
+        {
+          "name": "radiobutton",
+          "value": 716
+        },
+        {
+          "name": "tk_library",
+          "value": 903
+        },
+        {
+          "name": "ttk::intro",
+          "value": 390
+        },
+        {
+          "name": "frame",
+          "value": 837
+        },
+        {
+          "name": "raise",
+          "value": 195
+        },
+        {
+          "name": "tk_menuSetFocus",
+          "value": 780
+        },
+        {
+          "name": "ttk::label",
+          "value": 336
+        },
+        {
+          "name": "geometry",
+          "value": 166
+        },
+        {
+          "name": "safe::loadTk",
+          "value": 295
+        },
+        {
+          "name": "tk_messageBox",
+          "value": 465
+        }
+      ]
+    }
+  ],
+  "grid": [{
+      "bottom": "60%",
+      "left": "5%",
+      "width": "30%"
+    }]
+}
+        chart_997483822763159.setOption(option);
+    </script>
+  </body>
+</html>

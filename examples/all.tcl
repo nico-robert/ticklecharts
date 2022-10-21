@@ -30,6 +30,7 @@ set charts {
     timeline
     gauge
     graph
+    wordcloud
 }
 
 set dir [file dirname [info script]]
