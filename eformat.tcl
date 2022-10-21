@@ -1080,6 +1080,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatWCshape {
+            # possible values...
+            set validvalue {circle cardioid diamond triangle-forward triangle
+                            pentagon triangle-upright star square}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
     }
 
     return
