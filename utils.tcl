@@ -18,6 +18,7 @@ proc ticklecharts::htmlmap {htmloptions} {
     # -title      - title html
     # -jsecharts  - script echarts
     # -jsvar      - name variable js
+    # -script     - code javascript
     #
     # Returns list map html
 
