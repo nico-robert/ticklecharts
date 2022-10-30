@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_278605310244051" class="chart-container" style="width:1200px; height:800px;"></div>
+    <div id="id_1618117431949199" class="chart-container" style="width:1200px; height:800px;"></div>
     <script>
-        var chart_278605310242753 = echarts.init(document.getElementById('id_278605310244051'), null, {renderer: 'canvas'});
+        var chart_1618117431947762 = echarts.init(document.getElementById('id_1618117431949199'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -29,33 +29,6 @@
   "animationEasingUpdate": "cubicInOut",
   "animationThreshold": 2000,
   "progressiveThreshold": 3000,
-  "tooltip": [{
-      "show": true,
-      "trigger": "item",
-      "showContent": true,
-      "alwaysShowContent": false,
-      "triggerOn": "mousemove|click",
-      "transitionDuration": 0.4,
-      "padding": 5,
-      "order": "seriesAsc"
-    }],
-  "toolbox": {
-    "show": true,
-    "orient": "horizontal",
-    "itemSize": 15,
-    "itemGap": 10,
-    "showTitle": true,
-    "feature": {"dataZoom": {
-        "show": true,
-        "filterMode": "filter"
-      }},
-    "z": 2,
-    "left": "center",
-    "top": "auto",
-    "right": "auto",
-    "width": "auto",
-    "height": "auto"
-  },
   "dataset": [{
       "dimensions": [
         "Income",
@@ -10850,6 +10823,33 @@
         ]
       ]
     }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "toolbox": {
+    "show": true,
+    "orient": "horizontal",
+    "itemSize": 15,
+    "itemGap": 10,
+    "showTitle": true,
+    "feature": {"dataZoom": {
+        "show": true,
+        "filterMode": "filter"
+      }},
+    "z": 2,
+    "left": "center",
+    "top": "auto",
+    "right": "auto",
+    "width": "auto",
+    "height": "auto"
+  },
   "xAxis": [
     {
       "show": true,
@@ -11303,7 +11303,7 @@
     }
   ]
 }
-        chart_278605310242753.setOption(option);
+        chart_1618117431947762.setOption(option);
     </script>
   </body>
 </html>

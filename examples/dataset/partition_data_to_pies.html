@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_278604938277502" class="chart-container" style="width:900px; height:900px;"></div>
+    <div id="id_1629077532334868" class="chart-container" style="width:900px; height:900px;"></div>
     <script>
-        var chart_278604938276205 = echarts.init(document.getElementById('id_278604938277502'), null, {renderer: 'canvas'});
+        var chart_1629077532332719 = echarts.init(document.getElementById('id_1629077532334868'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -158,30 +158,30 @@
           2014
         ]
       ]},
-    {"transform": {
-        "type": "filter",
-        "config": {
-          "dimension": "Year",
-          "value": 2011
-        },
-        "print": false
-      }},
-    {"transform": {
-        "type": "filter",
-        "config": {
-          "dimension": "Year",
-          "value": 2012
-        },
-        "print": false
-      }},
-    {"transform": {
-        "type": "filter",
-        "config": {
-          "dimension": "Year",
-          "value": 2013
-        },
-        "print": false
-      }}
+    {"transform": [{
+          "type": "filter",
+          "config": {
+            "dimension": "Year",
+            "value": 2011
+          },
+          "print": false
+        }]},
+    {"transform": [{
+          "type": "filter",
+          "config": {
+            "dimension": "Year",
+            "value": 2012
+          },
+          "print": false
+        }]},
+    {"transform": [{
+          "type": "filter",
+          "config": {
+            "dimension": "Year",
+            "value": 2013
+          },
+          "print": false
+        }]}
   ],
   "series": [
     {
@@ -288,7 +288,7 @@
     }
   ]
 }
-        chart_278604938276205.setOption(option);
+        chart_1629077532332719.setOption(option);
     </script>
   </body>
 </html>

@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_278604907453780" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_1620961610493479" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_278604907452520 = echarts.init(document.getElementById('id_278604907453780'), null, {renderer: 'canvas'});
+        var chart_1620961610491678 = echarts.init(document.getElementById('id_1620961610493479'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -29,6 +29,39 @@
   "animationEasingUpdate": "cubicInOut",
   "animationThreshold": 2000,
   "progressiveThreshold": 3000,
+  "dataset": [{
+      "sourceHeader": true,
+      "source": [
+        [
+          "product",
+          2012,
+          2013,
+          2014,
+          2015
+        ],
+        [
+          "Matcha Latte",
+          41.1,
+          30.4,
+          65.1,
+          53.3
+        ],
+        [
+          "Milk Tea",
+          86.5,
+          92.1,
+          85.7,
+          83.1
+        ],
+        [
+          "Cheese Cocoa",
+          24.1,
+          67.2,
+          79.5,
+          86.4
+        ]
+      ]
+    }],
   "legend": [{
       "type": "plain",
       "show": true,
@@ -67,39 +100,6 @@
       "transitionDuration": 0.4,
       "padding": 5,
       "order": "seriesAsc"
-    }],
-  "dataset": [{
-      "sourceHeader": true,
-      "source": [
-        [
-          "product",
-          2012,
-          2013,
-          2014,
-          2015
-        ],
-        [
-          "Matcha Latte",
-          41.1,
-          30.4,
-          65.1,
-          53.3
-        ],
-        [
-          "Milk Tea",
-          86.5,
-          92.1,
-          85.7,
-          83.1
-        ],
-        [
-          "Cheese Cocoa",
-          24.1,
-          67.2,
-          79.5,
-          86.4
-        ]
-      ]
     }],
   "xAxis": [
     {
@@ -342,7 +342,7 @@
     {"top": "55%"}
   ]
 }
-        chart_278604907452520.setOption(option);
+        chart_1620961610491678.setOption(option);
     </script>
   </body>
 </html>

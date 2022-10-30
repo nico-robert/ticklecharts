@@ -6,9 +6,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_278604872248247" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_1626163275446080" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_278604872246943 = echarts.init(document.getElementById('id_278604872248247'), null, {renderer: 'canvas'});
+        var chart_1626163275439616 = echarts.init(document.getElementById('id_1626163275446080'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -104,14 +104,14 @@
         ]
       ]
     },
-    {"transform": {
-        "type": "sort",
-        "config": {
-          "dimension": "score",
-          "order": "desc"
-        },
-        "print": false
-      }}
+    {"transform": [{
+          "type": "sort",
+          "config": {
+            "dimension": "score",
+            "order": "desc"
+          },
+          "print": false
+        }]}
   ],
   "xAxis": [{
       "show": true,
@@ -212,7 +212,7 @@
       "datasetIndex": 1
     }]
 }
-        chart_278604872246943.setOption(option);
+        chart_1626163275439616.setOption(option);
     </script>
   </body>
 </html>

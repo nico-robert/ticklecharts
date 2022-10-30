@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : destroy layout class (problem source all.tcl...)
+# v3.0 : re-working 'dataset' class should be a list of list...
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -14,7 +15,7 @@ set source {
       }
 
 # dataset class
-set dset [ticklecharts::dataset new -source $source -sourceHeader "true"]
+set dset [ticklecharts::dataset new [list [list -source $source -sourceHeader "true"]]]
 
 # layout
 set layout [ticklecharts::Gridlayout new]

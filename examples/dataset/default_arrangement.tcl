@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : re-working 'dataset' class should be a list of list...
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -13,7 +16,7 @@ set source {
       }
 
 # dataset class
-set dset [ticklecharts::dataset new -dimensions $dimensions -source $source]
+set dset [ticklecharts::dataset new [list [list -dimensions $dimensions -source $source]]]
 
 set chart [ticklecharts::chart new]
 
