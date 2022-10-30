@@ -24,6 +24,7 @@ oo::class create ticklecharts::chart {
     variable _indexgaugeseries        ; # index gauge serie
     variable _indexgraphseries        ; # index graph serie
     variable _indexwordCloudseries    ; # index wordCloud serie
+    variable _indexboxplotseries      ; # index boxplot serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -763,6 +764,27 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddBoxPlotSeries {args} {
+        # Add data serie chart (use only for boxPlot chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions boxPlotseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-boxplot
+        #
+        # Returns nothing     
+        incr _indexboxplotseries
+
+        set options [ticklecharts::boxPlotseries $_indexboxplotseries [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -785,24 +807,17 @@ oo::define ticklecharts::chart {
         set opts {}
 
         if {[dict exists $args -dataset]} {
-            set itemD [dict get $args -dataset]
-            if {![ticklecharts::IsaObject $itemD] && [$itemD gettype] ne "dataset"} {
+            set dst [dict get $args -dataset]
+            if {![ticklecharts::IsaObject $dst] && [$dst gettype] ne "dataset"} {
                 error "key value -dataset should be a 'dataset' Class..."
             }
 
-            lappend opts "@D=dataset" [$itemD get]
-            if {[$itemD transformed] ne "nothing"} {
-                foreach item [$itemD transformed] {
-                    # check if transform values are not null
-                    set itemT [lindex $item 1 0]
-                    if {![ticklecharts::dictIsNotNothing $itemT]} {
-                        lappend opts "@D=dataset" $item
-                    }
-                }
+            foreach itemD [$dst get] {
+                lappend opts "@D=dataset" $itemD
             }
 
             # set dataset chart instance.
-            set _dataset $itemD
+            set _dataset $dst
         }
     
         if {[dict exists $args -title]} {
@@ -863,6 +878,7 @@ oo::define ticklecharts::chart {
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
-           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries
+           AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
+           AddBoxPlotSeries
 }
 

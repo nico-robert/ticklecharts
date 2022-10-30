@@ -777,6 +777,42 @@ proc ticklecharts::RichItem {value} {
 
 }
 
+proc ticklecharts::boxPlotitem {value} {
+
+    foreach item [dict get $value -dataBoxPlotitem] {
+
+        if {[llength $item] % 2} {
+            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        }
+
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        if {[llength {*}[dict get $item value]] != 5} {
+            error "'value' should be a list of 5 elements : \[min,  Q1,  median (or Q2),  Q3,  max\]"
+        }
+
+        setdef options name       -validvalue {}   -type str|null    -default "nothing"
+        setdef options value      -validvalue {}   -type list.n      -default {}
+        setdef options groupId    -validvalue {}   -type str|null    -default "nothing"
+        setdef options itemStyle  -validvalue {}   -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis   -validvalue {}   -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur       -validvalue {}   -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select     -validvalue {}   -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip    -validvalue {}   -type dict|null   -default "nothing"
+
+        set item [dict remove $item select itemStyle emphasis blur tooltip]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
 proc ticklecharts::markAreaItem {value} {
 
     if {![dict exists $value data]} {
@@ -1366,7 +1402,7 @@ proc ticklecharts::setXAxis {chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain XAxis 'data' when a class dataset is present"
+            error "'chart' Class cannot contain Xaxis 'data' when a class dataset is present"
         }
     }
 
@@ -3533,6 +3569,7 @@ proc ticklecharts::encode {chart value} {
     setdef options x          -validvalue {}  -type str|num|list.d|null  -default "nothing"
     setdef options y          -validvalue {}  -type str|num|list.d|null  -default "nothing"
     setdef options itemName   -validvalue {}  -type str|null             -default "nothing"
+    setdef options label      -validvalue {}  -type str|null             -default "nothing"
     setdef options value      -validvalue {}  -type str|null             -default "nothing"
     setdef options radius     -validvalue {}  -type num|null             -default "nothing"
     setdef options angle      -validvalue {}  -type num|null             -default "nothing"
@@ -3577,10 +3614,30 @@ proc ticklecharts::config {value} {
     
     set d [dict get $value config]
 
-    setdef options dimension  -validvalue {}  -type str|null   -default "nothing"
-    setdef options order      -validvalue {}  -type str|null   -default "nothing"
-    setdef options value      -validvalue {}  -type num|null   -default "nothing"
+    setdef options dimension         -validvalue {}  -type str|null        -default "nothing"
+    setdef options order             -validvalue {}  -type str|null        -default "nothing"
+    setdef options groupBy           -validvalue {}  -type str|null        -default "nothing"
+    setdef options value             -validvalue {}  -type num|null        -default "nothing"
+    setdef options gte               -validvalue {}  -type num|null        -default "nothing"
+    setdef options itemNameFormatter -validvalue {}  -type str|jsfunc|null -default "nothing"
     #...
+    
+    if {[dict exists $d resultDimensions]} {
+        foreach item [dict get $d resultDimensions] {
+            if {[llength $item] % 2} {
+                error "item list must have an even number of elements..."
+            }
+            set listobj {}
+            foreach {key info} $item {
+                set val [ticklecharts::MapSpaceString $info]
+                append listobj [format {%s {%s %s} } $key $val [Type $val]]
+            }
+            lappend opts $listobj
+        }
+        setdef options resultDimensions -validvalue {}  -type list.o -default [list {*}$opts]
+    }
+
+    set d [dict remove $d resultDimensions]
 
     set options [merge $options $d]
 
