@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>boxplot_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_1690865202441403" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_1690865202437438 = echarts.init(document.getElementById('id_1690865202441403'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 30,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "splitArea": {
+        "interval": 0,
+        "show": false
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitArea": {
+        "interval": 0,
+        "show": true
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "boxplot",
+      "coordinateSystem": "cartesian2d",
+      "name": "boxplot",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "boxWidth": [
+        7,
+        50
+      ],
+      "data": [
+        [
+          2,
+          5,
+          10,
+          15,
+          30
+        ],
+        [
+          3,
+          5,
+          10,
+          15,
+          20
+        ],
+        [
+          4,
+          5,
+          12,
+          15,
+          20
+        ],
+        [
+          5,
+          8,
+          12,
+          20,
+          23
+        ]
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_1690865202437438.setOption(option);
+    </script>
+  </body>
+</html>

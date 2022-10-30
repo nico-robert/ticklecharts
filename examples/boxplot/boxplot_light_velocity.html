@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>boxplot_light_velocity</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_1689967844766873" class="chart-container" style="width:1500px; height:530px;"></div>
+    <script>
+        var chart_1689967844765109 = echarts.init(document.getElementById('id_1689967844766873'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [
+    {"source": [
+        [
+          850,
+          740,
+          900,
+          1070,
+          930,
+          850,
+          950,
+          980,
+          980,
+          880,
+          1000,
+          980,
+          930,
+          650,
+          760,
+          810,
+          1000,
+          1000,
+          960,
+          960
+        ],
+        [
+          960,
+          940,
+          960,
+          940,
+          880,
+          800,
+          850,
+          880,
+          900,
+          840,
+          830,
+          790,
+          810,
+          880,
+          880,
+          830,
+          800,
+          790,
+          760,
+          800
+        ],
+        [
+          880,
+          880,
+          880,
+          860,
+          720,
+          720,
+          620,
+          860,
+          970,
+          950,
+          880,
+          910,
+          850,
+          870,
+          840,
+          840,
+          850,
+          840,
+          840,
+          840
+        ],
+        [
+          890,
+          810,
+          810,
+          820,
+          800,
+          770,
+          760,
+          740,
+          750,
+          760,
+          910,
+          920,
+          890,
+          860,
+          880,
+          720,
+          840,
+          850,
+          850,
+          780
+        ],
+        [
+          890,
+          840,
+          780,
+          810,
+          760,
+          810,
+          790,
+          810,
+          820,
+          850,
+          870,
+          870,
+          810,
+          740,
+          810,
+          940,
+          950,
+          800,
+          810,
+          870
+        ]
+      ]},
+    {"transform": [{
+          "type": "boxplot",
+          "config": {"itemNameFormatter": "expr {value}"},
+          "print": false
+        }]},
+    {
+      "fromDatasetIndex": 1,
+      "fromTransformResult": 1
+    }
+  ],
+  "title": [{
+      "show": true,
+      "text": "Michelson-Morley Experiment",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "axisPointer": {
+        "type": "shadow",
+        "axis": "auto",
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid": [{
+      "left": "10%",
+      "right": "10%",
+      "bottom": "15%"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 30,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "splitArea": {
+        "interval": 0,
+        "show": false
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "name": "km/s minus 299,000",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitArea": {
+        "interval": 0,
+        "show": true
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "boxplot",
+      "coordinateSystem": "cartesian2d",
+      "name": "boxplot",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "boxWidth": [
+        7,
+        50
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "datasetIndex": 1
+    },
+    {
+      "type": "scatter",
+      "name": "outlier",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": 10,
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "datasetIndex": 2
+    }
+  ],
+  "graphic": {"elements": [{
+        "type": "group",
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "transition": [
+          "x",
+          "y"
+        ],
+        "left": "10%",
+        "top": "90%",
+        "bounding": "all",
+        "z": 0,
+        "zlevel": 0,
+        "silent": false,
+        "invisible": false,
+        "ignore": false,
+        "cursor": "pointer",
+        "draggable": false,
+        "progressive": false,
+        "children": [
+          {
+            "type": "rect",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "middle",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "shape": {
+              "width": 220,
+              "height": 50
+            },
+            "style": {
+              "fill": "#fff",
+              "stroke": "#555",
+              "lineWidth": 1
+            },
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          },
+          {
+            "type": "text",
+            "rotation": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "transition": [
+              "x",
+              "y"
+            ],
+            "left": "center",
+            "top": "middle",
+            "bounding": "all",
+            "z": 100,
+            "zlevel": 0,
+            "silent": false,
+            "invisible": false,
+            "ignore": false,
+            "cursor": "pointer",
+            "draggable": false,
+            "progressive": false,
+            "style": {
+              "text": "upper: Q3 + 1.5 * IQR lower: Q1 - 1.5 * IQR",
+              "overflow": "break",
+              "font": "14px Microsoft YaHei",
+              "width": 130,
+              "fill": "#333"
+            },
+            "focus": "none",
+            "blurScope": "coordinateSystem"
+          }
+        ]
+      }]}
+}
+        chart_1689967844765109.setOption(option);
+    </script>
+  </body>
+</html>

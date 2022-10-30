@@ -31,6 +31,7 @@ set charts {
     gauge
     graph
     wordcloud
+    boxplot
 }
 
 set dir [file dirname [info script]]
