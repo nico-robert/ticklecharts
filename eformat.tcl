@@ -903,7 +903,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatTransform {
             # possible values...
-            set validvalue {filter sort}
+            set validvalue {filter sort ecSimpleTransform:aggregate boxplot}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -1089,6 +1089,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
                         for this key '$key' in $nameproc"
             }
         }
+
+        formatDataBox {
+            foreach val $value {
+                if {[llength $val] != 5} {
+                    error "'val' should be a list of 5 elements : \[min,  Q1,  median (or Q2),  Q3,  max\]"
+                }
+            }
+        }
+
     }
 
     return
