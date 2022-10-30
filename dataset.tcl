@@ -15,7 +15,6 @@ namespace eval ticklecharts {}
 
 oo::class create ticklecharts::dataset {
     variable _dataset
-    variable _transform
     variable _dimension
 
     constructor {args} {
@@ -23,28 +22,35 @@ oo::class create ticklecharts::dataset {
         #
         # args - dataset args.
         #
-        if {![dict exists $args -source]} {
-            error "'-source' shoud be specified... for dataset"
-        }
-
-        set _transform "nothing"
         set _dimension "nothing"
 
-        setdef options -id                   -validvalue {}                 -type str|null          -default "nothing"
-        setdef options -sourceHeader         -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
-        setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [[self] dimensions $args]
-        setdef options -source               -validvalue {}                 -type list.d            -default [dict get $args -source]
-        setdef options -transform            -validvalue {}                 -type dict|null         -default [[self] transform $args]
-        setdef options -fromDatasetIndex     -validvalue {}                 -type num|null          -default "nothing"
-        setdef options -fromDatasetId        -validvalue {}                 -type str|null          -default "nothing"
-        setdef options -fromTransformResult  -validvalue {}                 -type num|null          -default "nothing"
+        if {[llength $args] != 1} {
+            error "args should be a list of 1 element for 'dataset' constructor..."
+        }
 
-        set d       [dict remove $args -source -transform -dimensions]
-        set options [dict remove $options -transform]
+        foreach item {*}$args {
 
-        # set dataset...
-        set _dataset [merge $options $d]
+            if {[llength $item] % 2} {
+                error "item list must have an even number of elements..."
+            }
 
+            setdef options -id                   -validvalue {}                 -type str|null          -default "nothing"
+            setdef options -sourceHeader         -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
+            setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [[self] dimensions $item]
+            setdef options -source               -validvalue {}                 -type list.d|null       -default [[self] source $item]
+            setdef options -transform            -validvalue {}                 -type list.o|null       -default [[self] transform $item]
+            setdef options -fromDatasetIndex     -validvalue {}                 -type num|null          -default "nothing"
+            setdef options -fromDatasetId        -validvalue {}                 -type str|null          -default "nothing"
+            setdef options -fromTransformResult  -validvalue {}                 -type num|null          -default "nothing"
+
+            set item  [dict remove $item -source -transform -dimensions]
+
+            # set dataset...
+            lappend opts [merge $options $item]
+            set options {}
+        }
+
+        set _dataset [list {*}$opts]
     }
 }
 
@@ -59,15 +65,10 @@ oo::define ticklecharts::dataset {
         return "dataset"
     }
 
-    method transformed {} {
-        # Returns data transformed
-        return $_transform
-    }
-
     method dim {} {
         # Returns data dim
         return $_dimension
-    }    
+    }
 
     method dimensions {value} {
         # Set dimension
@@ -110,10 +111,10 @@ oo::define ticklecharts::dataset {
         #
         # value - dict
         #
-        # Returns nothing
+        # Returns list transform value(s)
 
         if {![dict exists $value -transform]} {
-            return {}
+            return "nothing"
         }
 
         foreach item [dict get $value -transform] {
@@ -125,15 +126,27 @@ oo::define ticklecharts::dataset {
             # Remove key(s)
             set item [dict remove $item config]
 
-            lappend opts [list -transform [list [merge $options $item] dict]]
-            
+            lappend opts [merge $options $item]
             set options {}
 
         }
 
-        set _transform $opts
-
-        return {}
+        return [list {*}$opts]
 
     }
+
+    method source {value} {
+        # source dataset
+        #
+        # value - dict
+        #
+        # Returns 'source' data value
+
+        if {![dict exists $value -source]} {
+            return "nothing"
+        }
+
+        return [dict get $value -source]
+    }
+
 }
