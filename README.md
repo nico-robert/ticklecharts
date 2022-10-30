@@ -107,7 +107,8 @@ set data {
         }
 
 # Init dataset class.
-set obj [ticklecharts::dataset new -source $data -sourceHeader "True"]
+# Note : Starting from version '2.6', it is possible to add several 'source' for the same class.
+set obj [ticklecharts::dataset new [list [list -source $data -sourceHeader "True"]]]
 
 # Add 'obj' dataset to chart class. 
 $chart SetOptions -dataset $obj
@@ -435,7 +436,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] tree
 - [ ] treemap
 - [x] sunburst
-- [ ] boxplot
+- [x] boxplot
 - [x] candlestick
 - [x] heatmap
 - [ ] map
@@ -528,7 +529,7 @@ Release :
     - Add `candlestick` examples.
 *  **26-05-2022** : 2.0.1
     - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
-    - ***Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
+    - **Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
 *  **26-06-2022** : 2.1
     - Add `parallel` chart.
     - Add `parallel` examples.
@@ -553,3 +554,8 @@ Release :
     - Add [echarts-wordcloud](https://github.com/ecomfe/echarts-wordcloud).
     - Add `wordCloud` examples.
     - Adds the possibility to add one or more js script to the html template file.
+*  **30-10-2022** : 2.6
+    - Add `boxplot` chart.
+    - Add `boxplot` examples.
+    - **Incompatibility** with previous version for `dataset` class, `dataset` now accepts multiple `source` for the same class.
+    - Update `dataset` examples to reflect this change.

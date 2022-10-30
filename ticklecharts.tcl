@@ -99,6 +99,11 @@
                # Add echarts-wordcloud (https://github.com/ecomfe/echarts-wordcloud).
                # Add `wordCloud` examples.
                # Adds the possibility to add one or more js script to the html template file.
+# 30-10-2022 : v2.6
+               # Add `boxplot` chart.
+               # Add `boxplot` examples.
+               # Incompatibility with previous version for 'dataset' class , dataset now accepts multiple 'source' for the same class.
+               # Update 'dataset' examples to reflect this change.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -121,7 +126,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.5
+    variable version 2.6
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
