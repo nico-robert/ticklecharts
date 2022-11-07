@@ -2,7 +2,7 @@
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
-    namespace export setdef merge Type InfoNameProc EchartsOptsTheme
+    namespace export setdef merge Type vCompare InfoNameProc EchartsOptsTheme
 }
 
 proc ticklecharts::htmlmap {htmloptions} {
@@ -115,18 +115,18 @@ proc ticklecharts::HuddleType {type} {
     # Returns huddle echarts type
 
     switch -exact -- $type {
-        str    {set htype @S}
-        num    {set htype @N}
-        bool   {set htype @B}
-        list.s {set htype @LS}
-        list.n {set htype @LN}
-        list.d {set htype @LD}
-        list.j {set htype @LJ}
-        null   {set htype @NULL}
-        dict   {set htype @L}
-        list.o {set htype @DO}
-        dict.o {set htype @LO}
-        jsfunc {set htype @JS}
+        str     {set htype @S}
+        num     {set htype @N}
+        bool    {set htype @B}
+        list.s  {set htype @LS}
+        list.n  {set htype @LN}
+        list.d  {set htype @LD}
+        list.j  {set htype @LJ}
+        null    {set htype @NULL}
+        dict    {set htype @L}
+        list.o  {set htype @DO}
+        dict.o  {set htype @LO}
+        jsfunc  {set htype @JS}
         default {error "no type for '$type'"}
     }
 
@@ -341,18 +341,19 @@ proc ticklecharts::setdef {d key args} {
     #
     # Returns dictionary
 
-    upvar 1 $d dictionary
+    upvar 1 $d _dict
 
     foreach {k value} $args {
         switch -exact -- $k {
+            "-minversion" {set minversion $value}
             "-validvalue" {set validvalue $value}
             "-type"       {set type       $value}
             "-default"    {set default    $value}
             default       {error "Unknown key '$k' specified"}
-            }
+        }
     }
 
-    dict set dictionary $key [list $default $type $validvalue]
+    dict set _dict $key [list $default $type $validvalue $minversion]
 }
 
 proc ticklecharts::MatchType {mytype type keyt} {
@@ -362,7 +363,7 @@ proc ticklecharts::MatchType {mytype type keyt} {
     # type   - list default type
     # keyt   - upvar key type 
     #
-    # Returns true if mytype is found , false otherwise
+    # Returns true if mytype is found, false otherwise
 
     upvar 1 $keyt typekey
     
@@ -412,7 +413,7 @@ proc ticklecharts::keyCompare {d other} {
         # special case : insert 'dummy' as name of key for theming...
         if {[string match -nocase *item $k] || [string match -nocase *dummy $k]} {continue}
         if {$k ni $keys1} {
-            puts "warning ($infoproc): \"$k\" flag is not in '[join $keys1 ", "]' or not supported..."
+            puts "warning ($infoproc): '$k' flag is not in '[join $keys1 ", "]' or not supported..."
         }
     }
 
@@ -435,7 +436,7 @@ proc ticklecharts::merge {d other} {
     set _dict [dict create]
     
     dict for {key info} $d {
-        lassign $info value type validvalue
+        lassign $info value type validvalue minversion
 
         # force string value for this keys below
         # if value is boolean or double...
@@ -449,17 +450,56 @@ proc ticklecharts::merge {d other} {
             }
         }
 
+        # Several versions for same key...
+        set multiversions 0
+        if {[string match {*:*} $minversion]} {
+            set multiversions 1
+            set lenversion [llength [split $minversion ":"]]
+            set lentype    [llength [split $type ":"]]
+
+            if {$lenversion != $lentype} {
+                error "Each versions must matched with a type of keys..."
+            }
+            set i 0
+            set save_v "0.0.0"
+            foreach v [split $minversion ":"] {
+                if {[vCompare $v $::ticklecharts::echarts_version] <= 0} {
+                    # replaces the type of key according to echarts key version
+                    if {[vCompare $v $save_v] >= 0} {
+                        set version $v
+                        set type [lindex [split $type ":"] $i]
+                    }
+                }
+                set save_v $v
+                incr i
+            }
+
+            set minversion $version
+        }
+
+        set vcompare [vCompare $minversion $::ticklecharts::echarts_version]
+
         if {[dict exists $other $key]} {
+
+            if {$vcompare > 0} {
+                puts "warning (version): '$key' is not supported... in \
+                     '$::ticklecharts::echarts_version' (mininum version = '$minversion')"
+                continue
+            }
         
             set mytype [Type [dict get $other $key]]
             
             # check type in default list
             if {![ticklecharts::MatchType $mytype $type typekey]} {
-                error "bad type 1 for this key '$key'= $mytype should be :$type"
+                if {$multiversions} {
+                    error "bad type(set) for this key '$key'= $mytype should be :$type for $minversion version"
+                } else {
+                    error "bad type(set) for this key '$key'= $mytype should be :$type"
+                }
             }
 
             # REMINDER: use 'dict remove' for this...
-            if {$typekey in [list "dict" "dict.o" "list.o"]} {
+            if {$typekey in {dict dict.o list.o}} {
                 error "dict, dict.o, list.o shouldn't not be present in 'other' dict..."
             }
 
@@ -475,12 +515,18 @@ proc ticklecharts::merge {d other} {
             dict set _dict $key $value $typekey
 
         } else {
+            # Does not take this key, depending on the version used.
+            if {$vcompare > 0} {continue}
         
             set mytype [Type $value]
             
             # check type in default list
             if {![ticklecharts::MatchType $mytype $type typekey]} {
-                error "bad type 2 for this key '$key'= $mytype should be :$type"
+                if {$multiversions} {
+                    error "bad type(default) for this key '$key'= $mytype should be :$type for $minversion version"
+                } else {
+                    error "bad type(default) for this key '$key'= $mytype should be :$type"
+                }
             }
 
             if {$typekey eq "str"} {
@@ -492,6 +538,22 @@ proc ticklecharts::merge {d other} {
     }
     
     return $_dict
+}
+
+proc ticklecharts::vCompare {version1 version2} {
+    # Checking the version used, compared to the minimum version.
+    #
+    # version1 - num version
+    # version2 - num version
+    #
+    # Returns -1 if 'version1' is an earlier version than 'version2',
+    # 0 if they are equal, and 1 if 'version1' is later than 'version2'.
+
+    if {$version1 eq ""} {
+        return 0
+    }
+
+    return [package vcompare $version1 $version2]
 }
 
 proc ticklecharts::MapSpaceString {value} {
