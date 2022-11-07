@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>treemap_basic</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_250450724734456" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_250450724732946 = echarts.init(document.getElementById('id_250450724734456'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "series": [{
+      "type": "treemap",
+      "name": "treeMapseries_1",
+      "zlevel": 0,
+      "z": 2,
+      "left": "center",
+      "top": "middle",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "80%",
+      "height": "80%",
+      "squareRatio": 1.618033988749895,
+      "drillDownIcon": "▶",
+      "roam": true,
+      "nodeClick": "zoomToNode",
+      "zoomToNodeRatio": 0.1024,
+      "colorMappingBy": "index",
+      "visibleMin": 10,
+      "selectedMode": false,
+      "data": [
+        {
+          "value": 10,
+          "name": "nodeA",
+          "colorMappingBy": "index",
+          "visibleMin": 10,
+          "target": "blank",
+          "children": [
+            {
+              "value": 4,
+              "name": "nodeAa",
+              "colorMappingBy": "index",
+              "visibleMin": 10,
+              "target": "blank"
+            },
+            {
+              "value": 6,
+              "name": "nodeAb",
+              "colorMappingBy": "index",
+              "visibleMin": 10,
+              "target": "blank"
+            }
+          ]
+        },
+        {
+          "value": 20,
+          "name": "nodeB",
+          "colorMappingBy": "index",
+          "visibleMin": 10,
+          "target": "blank",
+          "children": [{
+              "value": 20,
+              "name": "nodeBa",
+              "colorMappingBy": "index",
+              "visibleMin": 10,
+              "target": "blank",
+              "children": [{
+                  "value": 20,
+                  "name": "nodeBa1",
+                  "colorMappingBy": "index",
+                  "visibleMin": 10,
+                  "target": "blank"
+                }]
+            }]
+        }
+      ],
+      "silent": false
+    }]
+}
+        chart_250450724732946.setOption(option);
+    </script>
+  </body>
+</html>

@@ -32,6 +32,7 @@ set charts {
     graph
     wordcloud
     boxplot
+    treemap
 }
 
 set dir [file dirname [info script]]
