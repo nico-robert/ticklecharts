@@ -34,14 +34,14 @@ oo::class create ticklecharts::dataset {
                 error "item list must have an even number of elements..."
             }
 
-            setdef options -id                   -validvalue {}                 -type str|null          -default "nothing"
-            setdef options -sourceHeader         -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
-            setdef options -dimensions           -validvalue {}                 -type list.j|null       -default [[self] dimensions $item]
-            setdef options -source               -validvalue {}                 -type list.d|null       -default [[self] source $item]
-            setdef options -transform            -validvalue {}                 -type list.o|null       -default [[self] transform $item]
-            setdef options -fromDatasetIndex     -validvalue {}                 -type num|null          -default "nothing"
-            setdef options -fromDatasetId        -validvalue {}                 -type str|null          -default "nothing"
-            setdef options -fromTransformResult  -validvalue {}                 -type num|null          -default "nothing"
+            setdef options -id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            setdef options -sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
+            setdef options -dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
+            setdef options -source               -minversion 5  -validvalue {}                 -type list.d|null       -default [my source $item]
+            setdef options -transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
+            setdef options -fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
+            setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
 
             set item  [dict remove $item -source -transform -dimensions]
 
@@ -87,9 +87,9 @@ oo::define ticklecharts::dataset {
             if {[ticklecharts::Isdict $dim] && [llength $dim] > 2 && 
                ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
 
-                setdef options name   -validvalue {}            -type str|null  -default "nothing"
-                setdef options value  -validvalue {}            -type num|null  -default "nothing"
-                setdef options type   -validvalue formatDimType -type str|null  -default "nothing"
+                setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
+                setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
+                setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
 
                 lappend d [list [merge $options $dim] dict] ; continue
 
@@ -119,9 +119,9 @@ oo::define ticklecharts::dataset {
 
         foreach item [dict get $value -transform] {
 
-            setdef options type   -validvalue formatTransform -type str       -default "filter"
-            setdef options config -validvalue {}              -type dict|null -default [ticklecharts::config $item]
-            setdef options print  -validvalue {}              -type bool      -default "False"
+            setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
+            setdef options config -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::config $item]
+            setdef options print  -minversion 5  -validvalue {}              -type bool      -default "False"
 
             # Remove key(s)
             set item [dict remove $item config]
