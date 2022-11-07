@@ -25,6 +25,7 @@ oo::class create ticklecharts::chart {
     variable _indexgraphseries        ; # index graph serie
     variable _indexwordCloudseries    ; # index wordCloud serie
     variable _indexboxplotseries      ; # index boxplot serie
+    variable _indextreemapseries      ; # index treemap serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -785,23 +786,45 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddTreeMapSeries {args} {
+        # Add data serie chart (use only for treemap chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions treeMapseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-treemap
+        #
+        # Returns nothing     
+        incr _indextreemapseries
+
+        set options [ticklecharts::treeMapseries $_indextreemapseries $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
         #
         # args - Options described below.
         # 
-        # -dataset       - dataset options   https://echarts.apache.org/en/option.html#dataset
-        # -title         - title options     https://echarts.apache.org/en/option.html#title
-        # -polar         - polar options     https://echarts.apache.org/en/option.html#polar
-        # -legend        - legend options    https://echarts.apache.org/en/option.html#legend
-        # -tooltip       - polar options     https://echarts.apache.org/en/option.html#tooltip
-        # -grid          - grid options      https://echarts.apache.org/en/option.html#grid
-        # -visualMap     - visualMap options https://echarts.apache.org/en/option.html#visualMap
-        # -toolbox       - toolbox options   https://echarts.apache.org/en/option.html#toolbox
-        # -dataZoom      - dataZoom options  https://echarts.apache.org/en/option.html#dataZoom
-        # -parallel      - parallel options  https://echarts.apache.org/en/option.html#parallel
-        # -brush         - brush options     https://echarts.apache.org/en/option.html#brush
+        # -dataset       - dataset options     https://echarts.apache.org/en/option.html#dataset
+        # -title         - title options       https://echarts.apache.org/en/option.html#title
+        # -polar         - polar options       https://echarts.apache.org/en/option.html#polar
+        # -legend        - legend options      https://echarts.apache.org/en/option.html#legend
+        # -tooltip       - polar options       https://echarts.apache.org/en/option.html#tooltip
+        # -grid          - grid options        https://echarts.apache.org/en/option.html#grid
+        # -visualMap     - visualMap options   https://echarts.apache.org/en/option.html#visualMap
+        # -toolbox       - toolbox options     https://echarts.apache.org/en/option.html#toolbox
+        # -dataZoom      - dataZoom options    https://echarts.apache.org/en/option.html#dataZoom
+        # -parallel      - parallel options    https://echarts.apache.org/en/option.html#parallel
+        # -brush         - brush options       https://echarts.apache.org/en/option.html#brush
+        # -axisPointer   - axisPointer options https://echarts.apache.org/en/option.html#axisPointer
         #
         # Returns nothing    
         set opts {}
@@ -861,6 +884,10 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -brush]} {
             lappend opts "@L=brush" [ticklecharts::brush $args]
         }
+    
+        if {[dict exists $args -axisPointer]} {
+            lappend opts "@L=axisPointer" [ticklecharts::axisGlobalPointer $args]
+        }
       
         foreach {key value} $opts {
             set f [ticklecharts::optsToEchartsHuddle $value]
@@ -879,6 +906,6 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries
+           AddBoxPlotSeries AddTreeMapSeries
 }
 
