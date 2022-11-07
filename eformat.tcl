@@ -390,8 +390,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatSelectedMode {
             # possible values...
             if {[Type $value] eq "str"} {
-                lassign [split $::ticklecharts::echarts_version "."] major minor patch
-                if {[format {%s.%s} $major $minor] >= 5.3} {
+                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
                     set validvalue {multiple single series}
                 } else {
                     set validvalue {multiple single}
@@ -451,6 +450,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
         
             if {[InfoNameProc 2 "graphseries"]} {
                 lappend validvalue {calendar none}
+            }
+
+            if {[InfoNameProc 2 "pieseries"]} {
+                lappend validvalue {geo calendar none}
             }
 
             if {$value ni $validvalue} {
@@ -548,7 +551,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                         insideBottom insideTopLeft insideBottomLeft insideTopRight insideBottomRight
                     }
 
-                if {[InfoNameProc 2 "barseries"]} {
+                if {[InfoNameProc 2 "barseries"] && [vCompare $::ticklecharts::echarts_version "5.2.0"] >= 0} {
                     append validvalue " start insideStart middle insideEnd end"
                 }
 
@@ -810,6 +813,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatNodeClick {
             # possible values...
             set validvalue {rootToNode link}
+
+            if {[InfoNameProc 2 "treeMapseries"]} {
+                set validvalue {link zoomToNode}
+            }
+
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -948,7 +956,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
-        formatsymbolRepeat {
+        formatSymbolRepeat {
             # possible values...
             if {[Type $value] eq "str"} {
                 set validvalue {fixed}
@@ -959,6 +967,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatSelectorPos -
         formatsymbolRepeatDirs {
             # possible values...
             set validvalue {start end}
@@ -1095,6 +1104,88 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 if {[llength $val] != 5} {
                     error "'val' should be a list of 5 elements : \[min,  Q1,  median (or Q2),  Q3,  max\]"
                 }
+            }
+        }
+
+        formatColorMapping {
+            # possible values...
+            set validvalue {value index id}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatStackStrategy {
+            # possible values...
+            set validvalue {samesign all positive negative}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatAreaStyleOrigin {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {auto start end}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatBRadius {
+            # possible values...
+            if {[Type $value] eq "list"} {
+                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] < 0} {
+                    set len [llength {*}$value]
+                    if {$len != 2} {
+                        error "length of list should be equal to 2."
+                    }
+                }
+                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
+                    set len [llength {*}$value]
+                    if {![expr {$len == 2 || $len == 4}]} {
+                        error "length of list should be equal to 2 or 4"
+                    }
+                }
+            }
+        }
+
+        formatSEffectOn {
+            # possible values...
+            set validvalue {render emphasis}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatGaugeALrotate {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {radial tangential}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+            if {[Type $value] eq "num"} {
+                if {![expr {$value >= -90 && $value <= 90}]} {
+                    error "'$value' should be between '-90' and '90' \
+                            for this key '$key' in $nameproc"
+                }
+            }
+        }
+
+        formatAPStatus {
+            # possible values...
+            set validvalue {show hide}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
             }
         }
 
