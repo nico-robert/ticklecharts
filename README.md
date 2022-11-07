@@ -125,32 +125,32 @@ Useful methods :
 # get all options for title...
 $chart getoptions -title
 # output :
-id                -validvalue {}                      -type str|null   -default "nothing"
-show              -validvalue {}                      -type bool       -default "True"
-text              -validvalue {}                      -type str|null   -default "nothing"
-link              -validvalue {}                      -type str|null   -default "nothing"
-target            -validvalue formatTarget            -type str        -default "blank"
-textStyle         -validvalue {}                      -type dict|null
-  color                -validvalue formatColor          -type str|null       -default $color
-  fontStyle            -validvalue formatFontStyle      -type str            -default "normal"
-  fontWeight           -validvalue formatFontWeight     -type str|num        -default $fontWeight
-  fontFamily           -validvalue {}                   -type str            -default "sans-serif"
-  fontSize             -validvalue {}                   -type num            -default $fontSize
-  lineHeight           -validvalue {}                   -type num|null       -default "nothing"
-  width                -validvalue {}                   -type num            -default 100
-  height               -validvalue {}                   -type num            -default 50
-  textBorderColor      -validvalue {}                   -type str|null       -default "null"
-  textBorderWidth      -validvalue {}                   -type num            -default 0
-  textBorderType       -validvalue formatTextBorderType -type str|num|list.n -default "solid"
-  textBorderDashOffset -validvalue {}                   -type num            -default 0
-  textShadowColor      -validvalue formatColor          -type str            -default "transparent"
-  textShadowBlur       -validvalue {}                   -type num            -default 0
-  textShadowOffsetX    -validvalue {}                   -type num            -default 0
-  textShadowOffsetY    -validvalue {}                   -type num            -default 0
-  overflow             -validvalue formatOverflow       -type str|null       -default "null"
-  ellipsis             -validvalue {}                   -type str            -default "..."
-subtext           -validvalue {}                      -type str|null   -default "nothing"
-sublink           -validvalue {}                      -type str|null   -default "nothing"
+id                -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
+show              -minversion 5  -validvalue {}                      -type bool       -default "True"
+text              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
+link              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
+target            -minversion 5  -validvalue formatTarget            -type str        -default "blank"
+textStyle         -minversion 5  -validvalue {}                      -type dict|null
+  color                -minversion 5  -validvalue formatColor          -type str|null       -default $color
+  fontStyle            -minversion 5  -validvalue formatFontStyle      -type str            -default "normal"
+  fontWeight           -minversion 5  -validvalue formatFontWeight     -type str|num        -default $fontWeight
+  fontFamily           -minversion 5  -validvalue {}                   -type str            -default "sans-serif"
+  fontSize             -minversion 5  -validvalue {}                   -type num            -default $fontSize
+  lineHeight           -minversion 5  -validvalue {}                   -type num|null       -default "nothing"
+  width                -minversion 5  -validvalue {}                   -type num            -default 100
+  height               -minversion 5  -validvalue {}                   -type num            -default 50
+  textBorderColor      -minversion 5  -validvalue {}                   -type str|null       -default "null"
+  textBorderWidth      -minversion 5  -validvalue {}                   -type num            -default 0
+  textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n -default "solid"
+  textBorderDashOffset -minversion 5  -validvalue {}                   -type num            -default 0
+  textShadowColor      -minversion 5  -validvalue formatColor          -type str            -default "transparent"
+  textShadowBlur       -minversion 5  -validvalue {}                   -type num            -default 0
+  textShadowOffsetX    -minversion 5  -validvalue {}                   -type num            -default 0
+  textShadowOffsetY    -minversion 5  -validvalue {}                   -type num            -default 0
+  overflow             -minversion 5  -validvalue formatOverflow       -type str|null       -default "null"
+  ellipsis             -minversion 5  -validvalue {}                   -type str            -default "..."
+subtext           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
+sublink           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
  ...
  ...
 # following options voluntarily deleted... 
@@ -414,7 +414,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] dataZoom
 - [x] visualMap
 - [x] tooltip
-- [ ] axisPointer
+- [x] axisPointer
 - [x] toolbox
 - [x] brush
 - [ ] geo
@@ -434,7 +434,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] effectScatter
 - [x] radar
 - [x] tree
-- [ ] treemap
+- [x] treemap
 - [x] sunburst
 - [x] boxplot
 - [x] candlestick
@@ -553,9 +553,15 @@ Release :
 *  **21-10-2022** : 2.5
     - Add [echarts-wordcloud](https://github.com/ecomfe/echarts-wordcloud).
     - Add `wordCloud` examples.
-    - Adds the possibility to add one or more js script to the html template file.
+    - Adds the possibility to add one or more js script(s) to the html template file.
 *  **30-10-2022** : 2.6
     - Add `boxplot` chart.
     - Add `boxplot` examples.
     - **Incompatibility** with previous version for `dataset` class, `dataset` now accepts multiple `source` for the same class.
     - Update `dataset` examples to reflect this change.
+*  **07-11-2022** : 2.7
+    - Add `treemap` chart.
+    - Add `treemap` examples.
+    - Add `axisPointer` option
+    - Add `-minversion` flag in args option, to control if the _key_ or _type_ is supported in current version, 
+      output `warning` message if it is not supported.

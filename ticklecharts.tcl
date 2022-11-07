@@ -95,7 +95,7 @@
 # 14-10-2022 : v2.4
                # Add `graph` chart.
                # Add `graph` examples.
-# 21-10-2022 : 2.5
+# 21-10-2022 : v2.5
                # Add echarts-wordcloud (https://github.com/ecomfe/echarts-wordcloud).
                # Add `wordCloud` examples.
                # Adds the possibility to add one or more js script to the html template file.
@@ -104,6 +104,12 @@
                # Add `boxplot` examples.
                # Incompatibility with previous version for 'dataset' class , dataset now accepts multiple 'source' for the same class.
                # Update 'dataset' examples to reflect this change.
+# 07-11-2022 : v2.7
+               # Add `treemap` chart.
+               # Add `treemap` examples.
+               # Add `axisPointer` option
+               # Add `-minversion` flag in args option, to control if the key or type is supported in current version, 
+               # output `warning` message if it is not supported.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -126,7 +132,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.6
+    variable version 2.7
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
@@ -139,6 +145,6 @@ namespace eval ticklecharts {
 
 namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type \
                  ticklecharts::InfoNameProc ticklecharts::formatEcharts \
-                 ticklecharts::EchartsOptsTheme
+                 ticklecharts::EchartsOptsTheme ticklecharts::vCompare
 
 package provide ticklecharts $::ticklecharts::version
