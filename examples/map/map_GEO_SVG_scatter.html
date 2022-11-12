@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>map_GEO_SVG_scatter</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_328097972680144" class="chart-container" style="width:1500px; height:900px;"></div>
+    <script>
+        var mychart = echarts.init(document.getElementById('id_328097972680144'), null, {renderer: 'canvas'});
+ var svg;
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "https://raw.githubusercontent.com/apache/echarts-examples/gh-pages/public/data/asset/geo/Map_of_Iceland.svg", false);
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4) {
+        if (rawFile.status === 200 || rawFile.status == 0) {
+          svg = rawFile.responseText;
+        }
+      }
+    }
+  rawFile.send(null);
+  echarts.registerMap('iceland_svg', { svg: svg });
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "geo": {
+    "show": true,
+    "map": "iceland_svg",
+    "roam": true,
+    "zoom": 1,
+    "selectedMode": false,
+    "zlevel": 0,
+    "z": 2,
+    "left": "auto",
+    "top": "auto",
+    "right": "auto",
+    "bottom": "auto",
+    "silent": false,
+    "tooltip": {
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }
+  },
+  "series": [{
+      "type": "effectScatter",
+      "name": "scatterseries_1",
+      "colorBy": "series",
+      "coordinateSystem": "geo",
+      "geoIndex": 0,
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": function (params) {
+          return (params[2] / 100) * 15 + 5;
+        },
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "itemStyle": {
+        "color": "#b02a02",
+        "borderColor": "rgb(0, 0, 0)",
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      },
+      "data": [
+        [
+          488.2358421078053,
+          459.70913833075736,
+          100
+        ],
+        [
+          770.3415644319939,
+          757.9672194986475,
+          30
+        ],
+        [
+          1180.0329284196291,
+          743.6141808346214,
+          80
+        ],
+        [
+          894.03790632245,
+          1188.1985153835008,
+          61
+        ],
+        [
+          1372.98925630313,
+          477.3839988649537,
+          70
+        ],
+        [
+          1378.62251255796,
+          935.6708486282843,
+          81
+        ]
+      ],
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "effectType": "ripple",
+      "showEffectOn": "render"
+    }]
+}
+ mychart.getZr().on('click', function (params) {
+      var pixelPoint = [params.offsetX, params.offsetY];
+      var dataPoint = mychart.convertFromPixel({ geoIndex: 0 }, pixelPoint);
+      console.log(dataPoint);
+    });
+        mychart.setOption(option);
+    </script>
+  </body>
+</html>

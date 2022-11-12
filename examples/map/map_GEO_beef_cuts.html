@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>map_GEO_beef_cuts</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_328097941334797" class="chart-container" style="width:1500px; height:900px;"></div>
+    <script>
+        var chart_328097941333445 = echarts.init(document.getElementById('id_328097941334797'), null, {renderer: 'canvas'});
+ var svg;
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "https://raw.githubusercontent.com/apache/echarts-examples/gh-pages/public/data/asset/geo/Beef_cuts_France.svg", false);
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4) {
+        if (rawFile.status === 200 || rawFile.status == 0) {
+          svg = rawFile.responseText;
+        }
+      }
+    }
+  rawFile.send(null);
+  echarts.registerMap('Beef_cuts_France', { svg: svg });
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "visualMap": [{
+      "type": "continuous",
+      "min": 5,
+      "max": 100,
+      "calculable": true,
+      "realtime": true,
+      "inverse": false,
+      "precision": 0,
+      "itemWidth": 20,
+      "itemHeight": 140,
+      "align": "auto",
+      "text": [
+        "",
+        "Price"
+      ],
+      "textGap": 10,
+      "show": true,
+      "hoverLink": true,
+      "inRange": {"color": [
+          "#dbac00",
+          "#db6e00",
+          "#cf0000"
+        ]},
+      "zlevel": 0,
+      "z": 4,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "10%",
+      "orient": "horizontal",
+      "padding": 5,
+      "backgroundColor": "rgba(0,0,0,0)",
+      "borderColor": "#ccc",
+      "borderWidth": 0,
+      "handleSize": "120%",
+      "indicatorIcon": "circle",
+      "indicatorSize": "50%"
+    }],
+  "series": [{
+      "type": "map",
+      "name": "French Beef Cuts",
+      "colorBy": "series",
+      "map": "Beef_cuts_France",
+      "roam": true,
+      "zoom": 1,
+      "selectedMode": false,
+      "emphasis": {
+        "scale": true,
+        "focus": "none",
+        "blurScope": "coordinateSystem",
+        "label": {
+          "show": false,
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        }
+      },
+      "zlevel": 0,
+      "z": 2,
+      "mapValueCalculation": "sum",
+      "data": [
+        {
+          "name": "Queue",
+          "value": 15
+        },
+        {
+          "name": "Langue",
+          "value": 35
+        },
+        {
+          "name": "Plat de joue",
+          "value": 15
+        },
+        {
+          "name": "Gros bout de poitrine",
+          "value": 25
+        },
+        {
+          "name": "Jumeau à pot-au-feu",
+          "value": 45
+        },
+        {
+          "name": "Onglet",
+          "value": 85
+        },
+        {
+          "name": "Plat de tranche",
+          "value": 25
+        },
+        {
+          "name": "Araignée",
+          "value": 15
+        },
+        {
+          "name": "Gîte à la noix",
+          "value": 55
+        },
+        {
+          "name": "Bavette d'aloyau",
+          "value": 25
+        },
+        {
+          "name": "Tende de tranche",
+          "value": 65
+        },
+        {
+          "name": "Rond de gîte",
+          "value": 45
+        },
+        {
+          "name": "Bavettede de flanchet",
+          "value": 85
+        },
+        {
+          "name": "Flanchet",
+          "value": 35
+        },
+        {
+          "name": "Hampe",
+          "value": 75
+        },
+        {
+          "name": "Plat de côtes",
+          "value": 65
+        },
+        {
+          "name": "Tendron Milieu de poitrine",
+          "value": 65
+        },
+        {
+          "name": "Macreuse à pot-au-feu",
+          "value": 85
+        },
+        {
+          "name": "Rumsteck",
+          "value": 75
+        },
+        {
+          "name": "Faux-filet",
+          "value": 65
+        },
+        {
+          "name": "Côtes Entrecôtes",
+          "value": 55
+        },
+        {
+          "name": "Basses côtes",
+          "value": 45
+        },
+        {
+          "name": "Collier",
+          "value": 85
+        },
+        {
+          "name": "Jumeau à biftek",
+          "value": 15
+        },
+        {
+          "name": "Paleron",
+          "value": 65
+        },
+        {
+          "name": "Macreuse à bifteck",
+          "value": 45
+        },
+        {
+          "name": "Gîte",
+          "value": 85
+        },
+        {
+          "name": "Aiguillette baronne",
+          "value": 65
+        },
+        {
+          "name": "Filet",
+          "value": 95
+        }
+      ],
+      "silent": false
+    }]
+}
+        chart_328097941333445.setOption(option);
+    </script>
+  </body>
+</html>
