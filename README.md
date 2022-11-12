@@ -417,7 +417,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] axisPointer
 - [x] toolbox
 - [x] brush
-- [ ] geo
+- [x] geo
 - [x] parallel
 - [x] parallelAxis
 - [x] singleAxis
@@ -439,7 +439,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] boxplot
 - [x] candlestick
 - [x] heatmap
-- [ ] map
+- [x] map
 - [x] parallel
 - [ ] lines
 - [x] graph
@@ -563,5 +563,9 @@ Release :
     - Add `treemap` chart.
     - Add `treemap` examples.
     - Add `axisPointer` option
-    - Add `-minversion` flag in args option, to control if the _key_ or _type_ is supported in current version, 
+    - Add `-minversion` flag in args option, to control if the _key_ or _type_ is supported in current `Echarts` version, 
       output `warning` message if it is not supported.
+*  **12-11-2022** : 2.8
+    - Add `map` chart.
+    - Add `map` examples.
+    - Add `geo` option

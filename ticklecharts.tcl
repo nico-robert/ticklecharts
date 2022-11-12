@@ -107,9 +107,13 @@
 # 07-11-2022 : v2.7
                # Add `treemap` chart.
                # Add `treemap` examples.
-               # Add `axisPointer` option
-               # Add `-minversion` flag in args option, to control if the key or type is supported in current version, 
+               # Add `axisPointer` option.
+               # Add `-minversion` flag in args option, to control if the key or type is supported in current `Echarts` version, 
                # output `warning` message if it is not supported.
+# 12-11-2022 : v2.8
+               # Add `map` chart.
+               # Add `map` examples.
+               # Add `geo` option.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -132,7 +136,7 @@ source [file join $dir timeline.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.7
+    variable version 2.8
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"
