@@ -259,6 +259,10 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             list.s {
                 append opts [format " ${htype}=$key {%s}" $value]
             }
+            list.d -
+            list.n {
+                append opts [format " ${htype}=$key {%s}" [list $value]]
+            }
             list.j {
                 set l {}
                 foreach val $value {
@@ -267,7 +271,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 append opts [format " ${htype}=$key {%s}" [list $l]]
             }
             default {
-                append opts [format " ${htype}=$key {%s}" [list $value]]
+                append opts [format " ${htype}=$key %s" $value]
             }
         }
     }
@@ -303,7 +307,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
             }
             list.d -
             list.n {
-                append opts [format " ${htype}=$subkey {{%s}}" $svalue]
+                append opts [format " ${htype}=$subkey {%s}" [list $svalue]]
             }
             list.o {
                 set l {}

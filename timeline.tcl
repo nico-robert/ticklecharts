@@ -55,8 +55,8 @@ oo::define ticklecharts::timeline {
             error "data should be present... for timeline option"
         }
 
-        if {[$chart gettype] ne "chart"} {
-            error "first argument for 'Add' method should be a 'chart' class"
+        if {![expr {[$chart gettype] eq "chart" || [$chart gettype] eq "gridlayout"}]} {
+            error "first argument for 'Add' method should be a 'chart' or 'gridlayout' class."
         }
 
         lappend _data [ticklecharts::timelineItem $args]
