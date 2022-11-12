@@ -862,6 +862,9 @@ proc ticklecharts::RichItem {value} {
         setdef options textShadowOffsetX    -minversion 5  -validvalue {}                   -type num|null            -default "nothing"
         setdef options textShadowOffsetY    -minversion 5  -validvalue {}                   -type num|null            -default "nothing"
 
+        # map spaces key... or others...
+        set key [ticklecharts::MapSpaceString $key]
+
         lappend opts $key [list [merge $options $item] dict]
         set options {}
 
@@ -894,9 +897,75 @@ proc ticklecharts::boxPlotitem {value} {
         setdef options emphasis   -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::emphasis $item]
         setdef options blur       -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::blur $item]
         setdef options select     -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::select $item]
-        setdef options tooltip    -minversion 5  -validvalue {}   -type dict|null   -default "nothing"
+        setdef options tooltip    -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::tooltip $item]
 
         set item [dict remove $item select itemStyle emphasis blur tooltip]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::mapItem {value} {
+
+    foreach item [dict get $value -dataMapItem] {
+
+        if {[llength $item] % 2} {
+            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        }
+        
+        if {![dict exists $item value]} {
+            error "key 'value' must be present in item"
+        }
+
+        setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
+        setdef options value       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
+        setdef options groupId     -minversion 5  -validvalue {}  -type str|null    -default "nothing"
+        setdef options selected    -minversion 5  -validvalue {}  -type bool|null   -default "nothing"
+        setdef options label       -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis    -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options tooltip     -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
+        setdef options select      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+
+        set item [dict remove $item label labelLine itemStyle emphasis tooltip select]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+
+}
+
+proc ticklecharts::regionsItem {value} {
+
+    if {![dict exists $value regions]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value regions] {
+
+        if {[llength $item] % 2} {
+            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        }
+        
+        setdef options name        -minversion 5        -validvalue {}  -type str|null    -default "nothing"
+        setdef options selected    -minversion 5        -validvalue {}  -type bool|null   -default "nothing"
+        setdef options itemStyle   -minversion 5        -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options label       -minversion 5        -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options emphasis    -minversion 5        -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options select      -minversion 5        -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+        setdef options blur        -minversion "5.1.0"  -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options tooltip     -minversion "5.1.0"  -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
+        
+        set item [dict remove $item label blur itemStyle emphasis tooltip select]
 
         lappend opts [merge $options $item]
         set options {}
@@ -1206,7 +1275,7 @@ proc ticklecharts::itemStyle {value} {
     }
 
     if {[InfoNameProc 2 "heatmapseries"]} {
-        setdef options borderRadius     -minversion "5.3.1" -validvalue {}            -type num|list.n|null -default "nothing"
+        setdef options borderRadius     -minversion "5.3.1" -validvalue {}       -type num|list.n|null -default "nothing"
     }
 
     if {[InfoNameProc 2 "candlestickseries"]} {
@@ -1249,7 +1318,7 @@ proc ticklecharts::emphasis {value} {
 
     setdef options disabled  -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
     setdef options scale     -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
-    setdef options focus     -minversion 5             -validvalue formatFocus     -type str|null                -default "none"
+    setdef options focus     -minversion "5.1.0"       -validvalue formatFocus     -type str|null                -default "none"
     setdef options blurScope -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
     setdef options label     -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
     setdef options labelLine -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::labelLine $d]
@@ -2737,8 +2806,7 @@ proc ticklecharts::label {value} {
         setdef options distance     -minversion 5  -validvalue {}              -type num|null        -default 5
         setdef options borderRadius -minversion 5  -validvalue {}              -type num             -default 0
         setdef options offset       -minversion 5  -validvalue {}              -type list.n|null     -default "nothing"
-
-    }    
+    }
 
     # remove key(s) from dict value rich...
     set d [dict remove $d richitem]
@@ -3985,6 +4053,7 @@ proc ticklecharts::timelineOpts {value} {
     setdef options -realtime            -minversion 5  -validvalue {}                      -type bool                 -default "True"
     setdef options -replaceMerge        -minversion 5  -validvalue formatTimelineMerge     -type str|list.s|null      -default "nothing"
     setdef options -controlPosition     -minversion 5  -validvalue formatTimelinePosition  -type str                  -default "left"
+    setdef options -width               -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
     setdef options -zlevel              -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
     setdef options -z                   -minversion 5  -validvalue {}                      -type num                  -default 2
     setdef options -left                -minversion 5  -validvalue formatLeft              -type str|num|null         -default "nothing"
@@ -4609,5 +4678,50 @@ proc ticklecharts::handle {value} {
     set options [merge $options $d]
 
     return $options
+
+}
+
+proc ticklecharts::projection {value} {
+
+    if {![ticklecharts::keyDictExists "projection" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options project    -minversion 5  -validvalue {}  -type jsfunc|null  -default "nothing"
+    setdef options unproject  -minversion 5  -validvalue {}  -type jsfunc|null  -default "nothing"
+    setdef options stream     -minversion 5  -validvalue {}  -type jsfunc|null  -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::nameMap {value} {
+
+    if {![dict exists $value -nameMap]} {
+        return "nothing"
+    }
+
+    foreach {key item} [dict get $value -nameMap] {
+
+        if {$item eq ""} {
+            error "'[lindex [info level 0] 0]' should be a 'key + item'"
+        }
+
+        # map spaces... and others...
+        set key [ticklecharts::MapSpaceString $key]
+
+        # set key in options...
+        setdef options $key -minversion 5 -validvalue {} -type str|num|list.d -default $item
+
+        append opts "[merge $options [list $key $item]] "
+        set options {}
+    }
+
+    return [dict create {*}$opts]
 
 }

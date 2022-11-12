@@ -47,6 +47,11 @@ oo::define ticklecharts::Gridlayout {
         return $_layout
     }
 
+    method options {} {
+        # Gets options object
+        return $_options
+    }
+
     method globalKeyOptions {} {
         # Gets global key options
         return $_keyglob
@@ -186,8 +191,8 @@ oo::define ticklecharts::Gridlayout {
                     }
 
                     # set position in serie instead of grid... 
-                    # For 'funnel', 'sankey', 'treemap' or 'wordCloud' chart
-                    if {[dict get $opts @S=type] in {sankey funnel wordCloud treemap}} {
+                    # For 'funnel', 'sankey', 'treemap', 'map' or 'wordCloud' chart
+                    if {[dict get $opts @S=type] in {sankey funnel wordCloud treemap map}} {
                         set g 1
                         foreach val {top bottom left right width height} {
                             if {[info exists [set val]]} {
@@ -304,6 +309,7 @@ oo::define ticklecharts::Gridlayout {
                     gauge      {error "'Gauge' chart should not be added first..."}
                     wordCloud  {error "'wordCloud' should not be added first..."}
                     treemap    {error "'treemap' should not be added first..."}
+                    map        {error "'map' should not be added first..."}
                 }
             }
         }

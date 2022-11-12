@@ -26,6 +26,7 @@ oo::class create ticklecharts::chart {
     variable _indexwordCloudseries    ; # index wordCloud serie
     variable _indexboxplotseries      ; # index boxplot serie
     variable _indextreemapseries      ; # index treemap serie
+    variable _indexmapseries          ; # index map serie
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -807,6 +808,27 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddMapSeries {args} {
+        # Add data serie chart (use only for map chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions mapseries
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-map
+        #
+        # Returns nothing     
+        incr _indexmapseries
+
+        set options [ticklecharts::mapseries $_indexmapseries [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -825,6 +847,7 @@ oo::define ticklecharts::chart {
         # -parallel      - parallel options    https://echarts.apache.org/en/option.html#parallel
         # -brush         - brush options       https://echarts.apache.org/en/option.html#brush
         # -axisPointer   - axisPointer options https://echarts.apache.org/en/option.html#axisPointer
+        # -geo           - geo options         https://echarts.apache.org/en/option.html#geo
         #
         # Returns nothing    
         set opts {}
@@ -888,6 +911,10 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -axisPointer]} {
             lappend opts "@L=axisPointer" [ticklecharts::axisGlobalPointer $args]
         }
+
+        if {[dict exists $args -geo]} {
+            lappend opts "@L=geo" [ticklecharts::geo $args]
+        }
       
         foreach {key value} $opts {
             set f [ticklecharts::optsToEchartsHuddle $value]
@@ -906,6 +933,6 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries
 }
 

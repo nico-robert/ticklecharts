@@ -33,6 +33,7 @@ proc ticklecharts::barseries {index chart value} {
     setdef options -select                  -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode   -type bool|str|null   -default "nothing"
     setdef options -stack                   -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
+    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy  -type str|null        -default "nothing"
     setdef options -sampling                -minversion 5       -validvalue formatSampling       -type str             -default "max"
     setdef options -cursor                  -minversion 5       -validvalue formatCursor         -type str|null        -default "pointer"
     setdef options -barWidth                -minversion 5       -validvalue {}                   -type str|num|null    -default "nothing"
@@ -64,9 +65,6 @@ proc ticklecharts::barseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                   -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -78,6 +76,7 @@ proc ticklecharts::barseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options  -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
         setdef options  -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
@@ -167,9 +166,6 @@ proc ticklecharts::lineseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                  -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5  -validvalue {} -type str|null  -default "nothing"
-    
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -181,6 +177,7 @@ proc ticklecharts::lineseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class...
         # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
@@ -232,6 +229,7 @@ proc ticklecharts::pieseries {index chart value} {
     setdef options -roseType                -minversion 5       -validvalue formatRoseType     -type bool|str        -default "False"
     setdef options -avoidLabelOverlap       -minversion 5       -validvalue {}                 -type bool            -default "True"
     setdef options -stillShowZeroSum        -minversion 5       -validvalue {}                 -type bool            -default "True"
+    setdef options -percentPrecision        -minversion 5       -validvalue {}                 -type num|null        -default "nothing"
     setdef options -cursor                  -minversion 5       -validvalue formatCursor       -type str|null        -default "pointer"
     setdef options -zlevel                  -minversion 5       -validvalue {}                 -type num             -default 0
     setdef options -z                       -minversion 5       -validvalue {}                 -type num             -default 2
@@ -269,9 +267,6 @@ proc ticklecharts::pieseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null         -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -282,13 +277,14 @@ proc ticklecharts::pieseries {index chart value} {
 
         # set dimensions in dataset class...
         # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null  -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null     -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null     -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
 
     } else {
         # set data options when dataset class doesn't exist...
-        setdef options   -data          -minversion 5        -validvalue {} -type list.o       -default [ticklecharts::PieItem $value]
+        setdef options   -data          -minversion 5   -validvalue {}                 -type list.o       -default [ticklecharts::PieItem $value]
     }
 
     set value [dict remove $value -label \
@@ -363,9 +359,6 @@ proc ticklecharts::funnelseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null  -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -377,6 +370,7 @@ proc ticklecharts::funnelseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null  -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null     -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null     -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
@@ -439,9 +433,6 @@ proc ticklecharts::radarseries {index value} {
     setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                 -type num|jsfunc|null -default "nothing"
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::tooltip $value]
-
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null  -default "nothing"
 
     set value [dict remove $value -label \
                                   -lineStyle \
@@ -524,10 +515,7 @@ proc ticklecharts::scatterseries {index chart value} {
                 setdef options -rippleEffect -minversion 5       -validvalue {}              -type dict|null -default [ticklecharts::rippleEffect $value]
             }
         }
-    }        
-    
-    # not supported yet...
-    # setdef options -dataGroupId            -minversion 5        -validvalue {} -type str|null  -default "nothing"
+    }
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
@@ -540,6 +528,7 @@ proc ticklecharts::scatterseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class...
         # setdef options -dimensions     -minversion 5  -validvalue {} -type list.d|null -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null       -default "nothing"
         setdef options   -datasetId      -minversion 5  -validvalue {}                   -type str|null     -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout   -type str|null     -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                   -type dict|null    -default [ticklecharts::encode $chart $value]
@@ -606,9 +595,6 @@ proc ticklecharts::heatmapseries {index chart value} {
     setdef options -z                    -minversion 5  -validvalue {}                 -type num              -default 2
     setdef options -silent               -minversion 5  -validvalue {}                 -type bool             -default "False"
     setdef options -tooltip              -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::tooltip $value]
-        
-    # not supported yet...
-    # setdef options -dataGroupId        -minversion 5  -validvalue {} -type str|null  -default "nothing"
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
@@ -621,6 +607,7 @@ proc ticklecharts::heatmapseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null  -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null     -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null     -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
@@ -943,9 +930,6 @@ proc ticklecharts::pictorialbarseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                    -type dict|null         -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null  -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -957,6 +941,7 @@ proc ticklecharts::pictorialbarseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -minversion 5  -validvalue {}                 -type list.d|null  -default "nothing"
+        setdef options  -dataGroupId    -minversion 5  -validvalue {}                 -type str|null     -default "nothing"
         setdef options  -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null     -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
 
@@ -1020,9 +1005,6 @@ proc ticklecharts::candlestickseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                    -type dict|null         -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null  -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -1034,6 +1016,7 @@ proc ticklecharts::candlestickseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -minversion 5  -validvalue {} -type list.d|null  -default "nothing"
+        setdef options  -dataGroupId    -minversion 5  -validvalue {} -type str|null     -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::encode $chart $value]
 
     }
@@ -1273,7 +1256,7 @@ proc ticklecharts::wordcloudseries {index value} {
     setdef options -keepAspect        -minversion 5  -validvalue {}               -type bool|null      -default "nothing"
     setdef options -maskImage         -minversion 5  -validvalue {}               -type jsfunc|null    -default "nothing"
     setdef options -left              -minversion 5  -validvalue formatLeft       -type num|str|null   -default "center"
-    setdef options -top               -minversion 5  -validvalue formatTop        -type num|str|null   -default "center"
+    setdef options -top               -minversion 5  -validvalue formatTop        -type num|str|null   -default "middle"
     setdef options -right             -minversion 5  -validvalue formatRight      -type num|str|null   -default "null"
     setdef options -bottom            -minversion 5  -validvalue formatBottom     -type num|str|null   -default "null"
     setdef options -width             -minversion 5  -validvalue {}               -type num|str|null   -default "70%"
@@ -1335,9 +1318,6 @@ proc ticklecharts::boxPlotseries {index chart value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                    -type dict|null         -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -dataGroupId           -minversion 5        -validvalue {} -type str|null  -default "nothing"
-
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
@@ -1349,6 +1329,7 @@ proc ticklecharts::boxPlotseries {index chart value} {
         set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -minversion 5  -validvalue {} -type list.d|null  -default "nothing"
+        setdef options  -dataGroupId    -minversion 5  -validvalue {} -type str|null     -default "nothing"
         setdef options  -datasetId      -minversion 5  -validvalue {} -type str|null     -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -minversion 5  -validvalue {} -type num|null     -default "nothing"
@@ -1435,6 +1416,91 @@ proc ticklecharts::treeMapseries {index value} {
                                   -data -breadcrumb -tooltip \
                                   -labelLine -labelLayout -itemStyle \
                                   -emphasis -blur -select -levels]
+    
+
+    set options [merge $options $value]
+
+    return $options
+ 
+}
+
+proc ticklecharts::mapseries {index chart value} {
+    # options : https://echarts.apache.org/en/option.html#series-map
+    #
+    # index - index series.
+    # chart - self.
+    # value - Options described in proc ticklecharts::mapseries below.
+    #
+    # return dict mapseries options
+
+    setdef options -type                 -minversion 5              -validvalue {}                  -type str                     -default "map"
+    setdef options -id                   -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
+    setdef options -name                 -minversion 5              -validvalue {}                  -type str                     -default "mapseries_${index}"
+    setdef options -colorBy              -minversion "5.2.0"        -validvalue formatColorBy       -type str                     -default "series"
+    setdef options -map                  -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
+    setdef options -roam                 -minversion 5              -validvalue formatRoam          -type str|bool                -default "True"
+    setdef options -projection           -minversion "5.3.0"        -validvalue {}                  -type dict|null               -default [ticklecharts::projection $value]
+    setdef options -center               -minversion "5.0.0:5.3.3"  -validvalue {}                  -type list.n|null:list.d|null -default "nothing"
+    setdef options -aspectScale          -minversion 5              -validvalue {}                  -type num|null                -default "nothing"
+    setdef options -boundingCoords       -minversion 5              -validvalue {}                  -type list.n|null             -default "nothing"
+    setdef options -zoom                 -minversion 5              -validvalue {}                  -type num                     -default 1
+    setdef options -scaleLimit           -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::scaleLimit $value]
+    setdef options -nameMap              -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::nameMap $value]
+    setdef options -nameProperty         -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
+    setdef options -selectedMode         -minversion 5              -validvalue formatSelectedMode  -type bool|str|null           -default "False"
+    setdef options -label                -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::label $value]
+    setdef options -itemStyle            -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis             -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::emphasis $value]
+    setdef options -zlevel               -minversion 5              -validvalue {}                  -type num                     -default 0
+    setdef options -z                    -minversion 5              -validvalue {}                  -type num                     -default 2
+    setdef options -left                 -minversion 5              -validvalue formatLeft          -type num|str|null            -default "nothing"
+    setdef options -top                  -minversion 5              -validvalue formatTop           -type num|str|null            -default "nothing"
+    setdef options -right                -minversion 5              -validvalue formatRight         -type num|str|null            -default "nothing"
+    setdef options -bottom               -minversion 5              -validvalue formatBottom        -type num|str|null            -default "nothing"
+    setdef options -layoutCenter         -minversion 5              -validvalue {}                  -type list.d|null             -default "nothing"
+    setdef options -layoutSize           -minversion 5              -validvalue {}                  -type num|str|null            -default "nothing"
+    setdef options -geoIndex             -minversion 5              -validvalue {}                  -type num|null                -default "nothing"
+    setdef options -mapValueCalculation  -minversion 5              -validvalue formatMVCalculation -type str                     -default "sum"
+    setdef options -showLegendSymbol     -minversion 5              -validvalue {}                  -type bool|null               -default "nothing"
+    setdef options -labelLayout          -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::labelLayout $value]
+    setdef options -labelLine            -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::labelLine $value]
+    setdef options -data                 -minversion 5              -validvalue {}                  -type list.n|null             -default "nothing"
+    setdef options -markPoint            -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::markPoint $value]
+    setdef options -markLine             -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::markLine $value]
+    setdef options -markArea             -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::markArea $value]
+    setdef options -silent               -minversion 5              -validvalue {}                  -type bool                    -default "False"
+    setdef options -universalTransition  -minversion "5.2.0"        -validvalue {}                  -type dict|null               -default [ticklecharts::universalTransition $value]
+    setdef options -tooltip              -minversion 5              -validvalue {}                  -type dict|null               -default [ticklecharts::tooltip $value]
+
+    # check if chart includes a dataset class
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data] || [dict exists $value -dataMapItem]} {
+            error "'chart' Class cannot contain '-data' or '-dataMapItem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class... if need
+        # setdef options -dimensions    -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options  -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
+        setdef options  -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
+        setdef options  -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
+
+    }
+    
+    if {[dict exists $value -dataMapItem]} {
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-dataMapItem'..."
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value]
+    }
+
+    set value [dict remove $value -projection -scaleLimit \
+                                  -nameMap -label -itemStyle -dataMapItem \
+                                  -emphasis -labelLayout -labelLine -tooltip \
+                                  -markPoint -markLine -markArea -universalTransition]
     
 
     set options [merge $options $value]
