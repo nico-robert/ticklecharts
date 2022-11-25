@@ -458,7 +458,7 @@ proc ticklecharts::scatterseries {index chart value} {
     #
     # return dict scatterseries or effectScatterseries options
 
-    setdef options -type                    -minversion 5       -validvalue {}                 -type str               -default "scatter"
+    setdef options -type                    -minversion 5       -validvalue formatTypeScatter  -type str               -default "scatter"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
     setdef options -name                    -minversion 5       -validvalue {}                 -type str               -default "scatterseries_${index}"
     setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy      -type str               -default "series"
@@ -850,7 +850,7 @@ proc ticklecharts::sankeyseries {index value} {
     setdef options -tooltip                 -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
 
     if {![dict exists $value -data] && ![dict exists $value -nodes]} {
-        error "key -data or -nodes not present..."
+        error "key -data or -nodes not present... for [lindex [info level 0] 0]"
     }
 
     set value [dict remove $value -levels \
@@ -1201,7 +1201,7 @@ proc ticklecharts::graphseries {index value} {
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode -type bool|str|null     -default "False"
     setdef options -categories              -minversion 5       -validvalue {}                 -type list.o|null       -default [ticklecharts::categories $value]
     setdef options -autoCurveness           -minversion 5       -validvalue {}                 -type bool|num|null     -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o            -default [ticklecharts::dataGraphItem $value]
+    setdef options -data                    -minversion 5       -validvalue {}                 -type list.d            -default {}
     setdef options -links                   -minversion 5       -validvalue {}                 -type list.o|null       -default [ticklecharts::linksItem $value -links]
     setdef options -edges                   -minversion 5       -validvalue {}                 -type list.o|null       -default [ticklecharts::linksItem $value -edges]
     setdef options -markPoint               -minversion 5       -validvalue {}                 -type dict|null         -default [ticklecharts::markPoint $value]
@@ -1227,14 +1227,19 @@ proc ticklecharts::graphseries {index value} {
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null         -default [ticklecharts::tooltip $value]
 
 
-    if {[dict exists $value -dataGraphItem] && [dict exists $value -data]} {
-        error "'graph' args cannot contain '-data' and '-dataGraphItem'..."
-    } elseif {![dict exists $value -dataGraphItem] && ![dict exists $value -data]} {
-        error "key '-dataGraphItem' or '-data' not present..."
+    if {[dict exists $value -dataGraphItem]} {
+        if {[dict exists $value -data]} {
+            error "'graph' args cannot contain '-data' and '-dataGraphItem'..."
+        }
+        setdef options -data  -minversion 5  -validvalue {}  -type list.o  -default [ticklecharts::dataGraphItem $value]
     }
-          
+
+    if {![dict exists $value -data] && ![dict exists $value -dataGraphItem]} {
+        error "key '-data' or '-dataGraphItem' not present... for [lindex [info level 0] 0]"
+    }
+
     set value [dict remove $value -circular -force -scaleLimit -itemStyle -lineStyle -label -edgeLabel -labelLayout -emphasis \
-                                  -blur -select -categories -data -links -edges -markPoint -markLine -markArea -dataGraphItem]
+                                  -blur -select -categories -links -edges -markPoint -markLine -markArea -dataGraphItem]
                                 
     set options [merge $options $value]
 
