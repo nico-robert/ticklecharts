@@ -114,6 +114,11 @@
                # Add `map` chart.
                # Add `map` examples.
                # Add `geo` option.
+# 26-11-2022 : v2.8.1
+               # Add `calendar` option.
+               # Add `calendar` examples.
+               # For `color` and `backgroundColor` properties adds `eColor` class see 
+               # pie_texture.tcl example(examples/pie/pie_textture.tcl).
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -133,10 +138,11 @@ source [file join $dir options.tcl]
 source [file join $dir theme.tcl]
 source [file join $dir dataset.tcl]
 source [file join $dir timeline.tcl]
+source [file join $dir ecolor.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.8
+    variable version 2.8.1
     variable echarts_version 5.2.2
     variable dir $dir
     variable theme "basic"

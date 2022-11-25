@@ -29,11 +29,11 @@ set chart [ticklecharts::chart new]
 ##### :heavy_check_mark: Arguments available :
 | args | Type | Description
 | ------ | ------ | ------
-| _-backgroundColor_ | string \| jsfunc | canvas color background (hex, rgb, rgba color)
-| _-color_ | list of list | list series chart colors should be a list of list like this : `[list {red blue green}]`
+| _-backgroundColor_ | str \| jsfunc \| e.Color | Canvas color background (hex, rgb, rgba color)
+| _-color_ | list.s \| e.Color | Colors series (default `Echarts Color Theme`)
 | _-animation_ | boolean | chart animation (default `True`)
 | _-others_ | _ | animation sub options (see proc: `ticklecharts::globaloptions` in `global_options.tcl`)
-| _-theme_ | string value | set the default theme for chart instance (default `basic`) possible values: `vintage,westeros,wonderland,dark`
+| _-theme_ | str | set the default theme for chart instance (default `basic`) possible values: `vintage,westeros,wonderland,dark`
 ```tcl
 # Demo
 set chart [ticklecharts::chart new -color [list {red blue green}] -animation "False" -theme "vintage"]
@@ -131,24 +131,24 @@ text              -minversion 5  -validvalue {}                      -type str|n
 link              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
 target            -minversion 5  -validvalue formatTarget            -type str        -default "blank"
 textStyle         -minversion 5  -validvalue {}                      -type dict|null
-  color                -minversion 5  -validvalue formatColor          -type str|null       -default $color
-  fontStyle            -minversion 5  -validvalue formatFontStyle      -type str            -default "normal"
-  fontWeight           -minversion 5  -validvalue formatFontWeight     -type str|num        -default $fontWeight
-  fontFamily           -minversion 5  -validvalue {}                   -type str            -default "sans-serif"
-  fontSize             -minversion 5  -validvalue {}                   -type num            -default $fontSize
-  lineHeight           -minversion 5  -validvalue {}                   -type num|null       -default "nothing"
-  width                -minversion 5  -validvalue {}                   -type num            -default 100
-  height               -minversion 5  -validvalue {}                   -type num            -default 50
-  textBorderColor      -minversion 5  -validvalue {}                   -type str|null       -default "null"
-  textBorderWidth      -minversion 5  -validvalue {}                   -type num            -default 0
-  textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n -default "solid"
-  textBorderDashOffset -minversion 5  -validvalue {}                   -type num            -default 0
-  textShadowColor      -minversion 5  -validvalue formatColor          -type str            -default "transparent"
-  textShadowBlur       -minversion 5  -validvalue {}                   -type num            -default 0
-  textShadowOffsetX    -minversion 5  -validvalue {}                   -type num            -default 0
-  textShadowOffsetY    -minversion 5  -validvalue {}                   -type num            -default 0
-  overflow             -minversion 5  -validvalue formatOverflow       -type str|null       -default "null"
-  ellipsis             -minversion 5  -validvalue {}                   -type str            -default "..."
+  color                -minversion 5  -validvalue formatColor          -type e.Color|str|null -default $color
+  fontStyle            -minversion 5  -validvalue formatFontStyle      -type str              -default "normal"
+  fontWeight           -minversion 5  -validvalue formatFontWeight     -type str|num          -default $fontWeight
+  fontFamily           -minversion 5  -validvalue {}                   -type str              -default "sans-serif"
+  fontSize             -minversion 5  -validvalue {}                   -type num              -default $fontSize
+  lineHeight           -minversion 5  -validvalue {}                   -type num|null         -default "nothing"
+  width                -minversion 5  -validvalue {}                   -type num              -default 100
+  height               -minversion 5  -validvalue {}                   -type num              -default 50
+  textBorderColor      -minversion 5  -validvalue {}                   -type str|null         -default "null"
+  textBorderWidth      -minversion 5  -validvalue {}                   -type num              -default 0
+  textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n   -default "solid"
+  textBorderDashOffset -minversion 5  -validvalue {}                   -type num              -default 0
+  textShadowColor      -minversion 5  -validvalue formatColor          -type str              -default "transparent"
+  textShadowBlur       -minversion 5  -validvalue {}                   -type num              -default 0
+  textShadowOffsetX    -minversion 5  -validvalue {}                   -type num              -default 0
+  textShadowOffsetY    -minversion 5  -validvalue {}                   -type num              -default 0
+  overflow             -minversion 5  -validvalue formatOverflow       -type str|null         -default "null"
+  ellipsis             -minversion 5  -validvalue {}                   -type str              -default "..."
 subtext           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
 sublink           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
  ...
@@ -423,7 +423,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] singleAxis
 - [x] timeline
 - [x] graphic
-- [ ] calendar
+- [x] calendar
 - [x] dataset
 - [ ] aria
 - **Series :**
@@ -569,3 +569,8 @@ Release :
     - Add `map` chart.
     - Add `map` examples.
     - Add `geo` option
+*  **25-11-2022** : 2.8.1
+    - Add `calendar` option.
+    - Add `calendar` examples.
+    - For `color` and `backgroundColor` properties adds `eColor` Class  
+      see [pie_texture.tcl example](examples/pie/pie_texture.tcl) in `../examples/pie` folder.
