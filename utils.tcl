@@ -123,6 +123,7 @@ proc ticklecharts::HuddleType {type} {
         list.d  {set htype @LD}
         list.j  {set htype @LJ}
         null    {set htype @NULL}
+        e.Color -
         dict    {set htype @L}
         list.o  {set htype @DO}
         dict.o  {set htype @LO}
@@ -176,12 +177,18 @@ proc ticklecharts::TclType value {
         return bool
     }
 
-    if {([string first "\{" $value] > -1) && ([string last "\}" $value] > -1) && [llength $value] > 1} {
-        return list
+    if {[llength $value] > 1} {
+        set myList [string trim $value]
+        if {[string index $myList 0] eq "\{" && [string index $myList end] eq "\}"} {
+            return list
+        }
     }
 
-    if {[ticklecharts::IsaObject $value] && [ticklecharts::TypeClass $value] eq "::ticklecharts::jsfunc"} {
-        return jsfunc
+    if {[ticklecharts::IsaObject $value]} {
+        switch -glob -- [ticklecharts::TypeClass $value] {
+            "*::jsfunc" {return jsfunc}
+            "*::eColor" {return e.Color}
+        }
     }
 
     return str
@@ -270,6 +277,9 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 }
                 append opts [format " ${htype}=$key {%s}" [list $l]]
             }
+            e.Color {
+                append opts [format " ${htype}=$key {%s}" [ticklecharts::dictToEchartsHuddle [$value get]]]
+            }
             default {
                 append opts [format " ${htype}=$key %s" $value]
             }
@@ -324,6 +334,9 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                     lappend l [ticklecharts::dictToEchartsHuddle $val]
                 }
                 append opts [format " ${htype}=$subkey {%s}" [list @AO $l]]
+            }
+            e.Color {
+                append opts [format " ${htype}=$subkey {%s}" [ticklecharts::dictToEchartsHuddle [$svalue get]]]
             }
             default {
                 append opts [format " ${htype}=$subkey %s" $svalue]
@@ -677,4 +690,22 @@ proc ticklecharts::listNs {{parentns ::}} {
         lappend result {*}[listNs $ns] $ns
     }
     return $result
+}
+
+proc ticklecharts::isListOfList {value echartsKey} {
+    # Check if 'value' is a list of list...
+    #
+    # value      - list options
+    # echartsKey - key option
+    #
+    # Returns True if value is a list of list, False otherwise.
+
+    set lflag [lsearch $value "*$echartsKey*"]
+    set opts [lrange $value [expr {$lflag + 1}] [expr {$lflag + 1}]]
+
+    if {[string range $opts 0 1] eq "\{\{" && [string range $opts end-1 end] eq "\}\}"} {
+        return 1
+    } 
+
+    return 0
 }
