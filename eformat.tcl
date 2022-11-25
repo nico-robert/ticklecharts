@@ -456,6 +456,18 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 lappend validvalue {geo calendar none}
             }
 
+            if {[InfoNameProc 2 "heatmapseries"]} {
+                lappend validvalue calendar
+            }
+
+            if {[InfoNameProc 2 "graphseries"]} {
+                lappend validvalue calendar
+            }
+
+            if {[InfoNameProc 2 "scatterseries"]} {
+                lappend validvalue calendar
+            }
+
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
@@ -561,6 +573,10 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
                 if {[InfoNameProc 2 "pieseries"]} {
                     set validvalue {outside inside inner center outer}
+                }
+
+                if {[InfoNameProc 3 "calendar"]} {
+                    set validvalue {start end}
                 }
 
                 if {[InfoNameProc 3 "markLine"]} {
@@ -1183,6 +1199,49 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatAPStatus {
             # possible values...
             set validvalue {show hide}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatTypeScatter {
+            # possible values...
+            set validvalue {scatter effectScatter}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatNameMap {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                if {[vCompare $::ticklecharts::echarts_version "5.2.2"] >= 0} {
+                    if {[string toupper $value] ne $value} {
+                        error "Case sensitive is not respected for '$value'"
+                    }
+                }
+                if {[vCompare $::ticklecharts::echarts_version "5.2.2"] < 0} {
+                    if {[string tolower $value] ne $value} {
+                        error "Case sensitive is not respected for '$value'"
+                    }
+                }
+            }
+        }
+
+        formatTypeColor {
+            # possible values...
+            set validvalue {linear radial}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]' \
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatColorRepeat {
+            # possible values...
+            set validvalue {repeat-x repeat-y no-repeat repeat}
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]' \
                         for this key '$key' in $nameproc"
