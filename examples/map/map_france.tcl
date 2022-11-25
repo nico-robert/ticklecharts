@@ -19,6 +19,9 @@ proc dateMapValue {start end} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : destroy all 'gridlayout' for source all.tcl + init set theme to basic
+
 # example from pyecharts-gallery-master... (modify)
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -137,6 +140,7 @@ for {set i $start} {$i < $end} {incr i} {
     
 
     $timeline Add $layout -data [list value "$i"]
+    lappend llayout $layout
 
     incr jj
 }
@@ -149,3 +153,8 @@ $timeline Render -outfile [file join $dirname $fbasename.html] \
               -width 1500px \
               -height 900px \
               -script $header
+
+# destroy for source all.tcl
+lmap ll $llayout {$ll destroy}
+# set basic theme
+set ::ticklecharts::theme "basic"
