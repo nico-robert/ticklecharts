@@ -125,7 +125,7 @@ oo::define ticklecharts::Gridlayout {
         set layoutkeys {
                 series radiusAxis angleAxis xAxis yAxis grid title polar
                 radar legend tooltip visualMap toolbox singleAxis dataZoom dataset
-                parallelAxis parallel brush
+                parallelAxis parallel brush axisPointer geo calendar
             }
 
         foreach {key opts} [$chart options] {
@@ -256,7 +256,7 @@ oo::define ticklecharts::Gridlayout {
             }
             # remove key global options 
             # priority to constructor...
-            lassign [split $key "="] type k
+            lassign [split $key "="] _ k
             if {$k ni $layoutkeys} {continue}
 
             lappend _options $key $opts

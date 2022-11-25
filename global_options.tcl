@@ -9,6 +9,7 @@ proc ticklecharts::globaloptions {value} {
     # value - Options described below.
     #
     # - backgroundColor         - https://echarts.apache.org/en/option.html#backgroundColor
+    # - backgroundColorItem     - https://echarts.apache.org/en/option.html#color
     # - color                   - https://echarts.apache.org/en/option.html#color
     # - animation               - https://echarts.apache.org/en/option.html#animation
     # - animationDuration       - https://echarts.apache.org/en/option.html#animationDuration
@@ -20,19 +21,19 @@ proc ticklecharts::globaloptions {value} {
     #
     # return dict options
 
-    setdef options -backgroundColor         -minversion {}  -validvalue formatColor   -type str|jsfunc|null -default [EchartsOptsTheme backgroundColor]
-    setdef options -color                   -minversion {}  -validvalue formatColor   -type list.s|null     -default [EchartsOptsTheme color]
-    setdef options -animation               -minversion {}  -validvalue {}            -type bool|str|null   -default "True"
-    setdef options -animationDuration       -minversion {}  -validvalue {}            -type num|null        -default 1000
-    setdef options -animationDurationUpdate -minversion {}  -validvalue {}            -type num|null        -default 500
-    setdef options -animationEasing         -minversion {}  -validvalue formatAEasing -type str|null        -default "cubicInOut"
-    setdef options -animationEasingUpdate   -minversion {}  -validvalue formatAEasing -type str|null        -default "cubicInOut"
-    setdef options -animationThreshold      -minversion {}  -validvalue {}            -type num|null        -default 2000
-    setdef options -progressiveThreshold    -minversion {}  -validvalue {}            -type num|null        -default 3000
+    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.Color|null -default [EchartsOptsTheme backgroundColor]
+    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.Color|null     -default [EchartsOptsTheme color]
+    setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null           -default "True"
+    setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                -default 1000
+    setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                -default 500
+    setdef options -animationEasing         -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
+    setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
+    setdef options -animationThreshold      -minversion 5  -validvalue {}            -type num|null                -default 2000
+    setdef options -progressiveThreshold    -minversion 5  -validvalue {}            -type num|null                -default 3000
 
     # remove key(s) '-theme' to avoid warning message when comparing keys...
     if {[dict exists $value -theme]} {set value [dict remove $value -theme]}
-    
+
     set options [merge $options $value]
 
     return $options
@@ -72,35 +73,35 @@ proc ticklecharts::title {value} {
 
     set d [dict get $value -title]
 
-    setdef options id                -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-    setdef options show              -minversion 5  -validvalue {}                      -type bool       -default "True"
-    setdef options text              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-    setdef options link              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-    setdef options target            -minversion 5  -validvalue formatTarget            -type str        -default "blank"
-    setdef options textStyle         -minversion 5  -validvalue {}                      -type dict|null  -default [ticklecharts::textStyle $d textStyle]
-    setdef options subtext           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-    setdef options sublink           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-    setdef options subtarget         -minversion 5  -validvalue formatTarget            -type str        -default "blank"
-    setdef options subtextStyle      -minversion 5  -validvalue {}                      -type dict|null  -default [ticklecharts::textStyle $d subtextStyle]
-    setdef options textAlign         -minversion 5  -validvalue formatTextAlign         -type str|null   -default "null"
-    setdef options textVerticalAlign -minversion 5  -validvalue formatVerticalTextAlign -type str        -default "auto"
-    setdef options triggerEvent      -minversion 5  -validvalue {}                      -type bool|null  -default "nothing"
-    setdef options padding           -minversion 5  -validvalue {}                      -type num|list.n -default 5
-    setdef options itemGap           -minversion 5  -validvalue {}                      -type num        -default 10
-    setdef options zlevel            -minversion 5  -validvalue {}                      -type num|null   -default "nothing"
-    setdef options z                 -minversion 5  -validvalue {}                      -type num        -default 2
-    setdef options left              -minversion 5  -validvalue formatLeft              -type str|num    -default "auto"
-    setdef options top               -minversion 5  -validvalue formatTop               -type str|num    -default "auto"
-    setdef options right             -minversion 5  -validvalue formatRight             -type str|num    -default "auto"
-    setdef options bottom            -minversion 5  -validvalue formatBottom            -type str|num    -default "auto"
-    setdef options backgroundColor   -minversion 5  -validvalue formatColor             -type str        -default "transparent"
-    setdef options borderColor       -minversion 5  -validvalue formatColor             -type str        -default "transparent"
-    setdef options borderWidth       -minversion 5  -validvalue {}                      -type num        -default 1
-    setdef options borderRadius      -minversion 5  -validvalue {}                      -type num|list.n -default 0
-    setdef options shadowBlur        -minversion 5  -validvalue {}                      -type num|null   -default "nothing"
-    setdef options shadowColor       -minversion 5  -validvalue formatColor             -type str|null   -default "nothing"
-    setdef options shadowOffsetX     -minversion 5  -validvalue {}                      -type num|null   -default "nothing"
-    setdef options shadowOffsetY     -minversion 5  -validvalue {}                      -type num|null   -default "nothing"
+    setdef options id                -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+    setdef options show              -minversion 5  -validvalue {}                      -type bool        -default "True"
+    setdef options text              -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+    setdef options link              -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+    setdef options target            -minversion 5  -validvalue formatTarget            -type str         -default "blank"
+    setdef options textStyle         -minversion 5  -validvalue {}                      -type dict|null   -default [ticklecharts::textStyle $d textStyle]
+    setdef options subtext           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+    setdef options sublink           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+    setdef options subtarget         -minversion 5  -validvalue formatTarget            -type str         -default "blank"
+    setdef options subtextStyle      -minversion 5  -validvalue {}                      -type dict|null   -default [ticklecharts::textStyle $d subtextStyle]
+    setdef options textAlign         -minversion 5  -validvalue formatTextAlign         -type str|null    -default "null"
+    setdef options textVerticalAlign -minversion 5  -validvalue formatVerticalTextAlign -type str         -default "auto"
+    setdef options triggerEvent      -minversion 5  -validvalue {}                      -type bool|null   -default "nothing"
+    setdef options padding           -minversion 5  -validvalue {}                      -type num|list.n  -default 5
+    setdef options itemGap           -minversion 5  -validvalue {}                      -type num         -default 10
+    setdef options zlevel            -minversion 5  -validvalue {}                      -type num|null    -default "nothing"
+    setdef options z                 -minversion 5  -validvalue {}                      -type num         -default 2
+    setdef options left              -minversion 5  -validvalue formatLeft              -type str|num     -default "auto"
+    setdef options top               -minversion 5  -validvalue formatTop               -type str|num     -default "auto"
+    setdef options right             -minversion 5  -validvalue formatRight             -type str|num     -default "auto"
+    setdef options bottom            -minversion 5  -validvalue formatBottom            -type str|num     -default "auto"
+    setdef options backgroundColor   -minversion 5  -validvalue formatColor             -type e.Color|str -default "transparent"
+    setdef options borderColor       -minversion 5  -validvalue formatColor             -type str         -default "transparent"
+    setdef options borderWidth       -minversion 5  -validvalue {}                      -type num         -default 1
+    setdef options borderRadius      -minversion 5  -validvalue {}                      -type num|list.n  -default 0
+    setdef options shadowBlur        -minversion 5  -validvalue {}                      -type num|null    -default "nothing"
+    setdef options shadowColor       -minversion 5  -validvalue formatColor             -type str|null    -default "nothing"
+    setdef options shadowOffsetX     -minversion 5  -validvalue {}                      -type num|null    -default "nothing"
+    setdef options shadowOffsetY     -minversion 5  -validvalue {}                      -type num|null    -default "nothing"
     #...
 
     # force string representation for 'text' and 'subtext' keys if exists...
@@ -128,24 +129,24 @@ proc ticklecharts::grid {value} {
 
     set d [dict get $value -grid]
 
-    setdef options id              -minversion 5  -validvalue {}           -type str|null     -default "nothing"
-    setdef options show            -minversion 5  -validvalue {}           -type bool|null    -default "nothing"
-    setdef options zlevel          -minversion 5  -validvalue {}           -type num|null     -default "nothing"
-    setdef options z               -minversion 5  -validvalue {}           -type num|null     -default "nothing"
-    setdef options left            -minversion 5  -validvalue formatLeft   -type str|num|null -default "nothing"
-    setdef options top             -minversion 5  -validvalue formatTop    -type str|num|null -default "nothing"
-    setdef options right           -minversion 5  -validvalue formatRight  -type str|num|null -default "nothing"
-    setdef options bottom          -minversion 5  -validvalue formatBottom -type str|num|null -default "nothing"
-    setdef options width           -minversion 5  -validvalue {}           -type str|num|null -default "nothing"
-    setdef options height          -minversion 5  -validvalue {}           -type str|num|null -default "nothing"
-    setdef options containLabel    -minversion 5  -validvalue {}           -type bool|null    -default "nothing"
-    setdef options backgroundColor -minversion 5  -validvalue formatColor  -type str|null     -default "nothing"
-    setdef options borderColor     -minversion 5  -validvalue formatColor  -type str|null     -default "nothing"
-    setdef options borderWidth     -minversion 5  -validvalue {}           -type num|null     -default "nothing"
-    setdef options shadowBlur      -minversion 5  -validvalue {}           -type num|null     -default "nothing"
-    setdef options shadowColor     -minversion 5  -validvalue formatColor  -type str|null     -default "nothing"
-    setdef options shadowOffsetX   -minversion 5  -validvalue {}           -type num|null     -default "nothing"
-    setdef options shadowOffsetY   -minversion 5  -validvalue {}           -type num|null     -default "nothing"
+    setdef options id              -minversion 5  -validvalue {}           -type str|null         -default "nothing"
+    setdef options show            -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
+    setdef options zlevel          -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options z               -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options left            -minversion 5  -validvalue formatLeft   -type str|num|null     -default "nothing"
+    setdef options top             -minversion 5  -validvalue formatTop    -type str|num|null     -default "nothing"
+    setdef options right           -minversion 5  -validvalue formatRight  -type str|num|null     -default "nothing"
+    setdef options bottom          -minversion 5  -validvalue formatBottom -type str|num|null     -default "nothing"
+    setdef options width           -minversion 5  -validvalue {}           -type str|num|null     -default "nothing"
+    setdef options height          -minversion 5  -validvalue {}           -type str|num|null     -default "nothing"
+    setdef options containLabel    -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
+    setdef options backgroundColor -minversion 5  -validvalue formatColor  -type e.Color|str|null -default "nothing"
+    setdef options borderColor     -minversion 5  -validvalue formatColor  -type str|null         -default "nothing"
+    setdef options borderWidth     -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options shadowBlur      -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options shadowColor     -minversion 5  -validvalue formatColor  -type str|null         -default "nothing"
+    setdef options shadowOffsetX   -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options shadowOffsetY   -minversion 5  -validvalue {}           -type num|null         -default "nothing"
     #...
 
     set options [merge $options $d]
@@ -184,7 +185,7 @@ proc ticklecharts::tooltip {value} {
     setdef options position           -minversion 5       -validvalue formatPosition   -type str|list.d|jsfunc|null -default "nothing"
     setdef options formatter          -minversion 5       -validvalue {}               -type str|jsfunc|null        -default "nothing"
     setdef options valueFormatter     -minversion "5.3.0" -validvalue {}               -type str|jsfunc|null        -default "nothing"
-    setdef options backgroundColor    -minversion 5       -validvalue formatColor      -type str|null               -default "nothing"
+    setdef options backgroundColor    -minversion 5       -validvalue formatColor      -type e.Color|str|null       -default "nothing"
     setdef options borderColor        -minversion 5       -validvalue formatColor      -type str|null               -default "nothing"
     setdef options borderWidth        -minversion 5       -validvalue {}               -type num|null               -default "nothing"
     setdef options padding            -minversion 5       -validvalue {}               -type num|list.n|null        -default 5
@@ -211,54 +212,54 @@ proc ticklecharts::legend {value} {
 
     set d [dict get $value -legend]
 
-    setdef options type                    -minversion 5  -validvalue formatLegendType      -type str             -default "plain"
-    setdef options id                      -minversion 5  -validvalue {}                    -type str|null        -default "nothing"
-    setdef options show                    -minversion 5  -validvalue {}                    -type bool            -default "True"
-    setdef options zlevel                  -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options z                       -minversion 5  -validvalue {}                    -type num             -default 2
-    setdef options left                    -minversion 5  -validvalue formatLeft            -type str|num|null    -default "center"
-    setdef options top                     -minversion 5  -validvalue formatTop             -type str|num|null    -default "auto"
-    setdef options right                   -minversion 5  -validvalue formatRight           -type str|num|null    -default "auto"
-    setdef options bottom                  -minversion 5  -validvalue {}                    -type str|num|null    -default "auto"
-    setdef options width                   -minversion 5  -validvalue {}                    -type str|num|null    -default "auto"
-    setdef options height                  -minversion 5  -validvalue {}                    -type str|num|null    -default "auto"
-    setdef options orient                  -minversion 5  -validvalue formatOrient          -type str             -default "horizontal"
-    setdef options align                   -minversion 5  -validvalue formatAlign           -type str             -default "auto"
-    setdef options padding                 -minversion 5  -validvalue {}                    -type num|list.n      -default 5
-    setdef options itemGap                 -minversion 5  -validvalue {}                    -type num             -default 10
-    setdef options itemWidth               -minversion 5  -validvalue {}                    -type num             -default 25
-    setdef options itemHeight              -minversion 5  -validvalue {}                    -type num             -default 14
-    setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::itemStyle $d]
-    setdef options lineStyle               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::lineStyle $d]
-    setdef options symbolRotate            -minversion 5  -validvalue {}                    -type str|num         -default "inherit"
-    setdef options formatter               -minversion 5  -validvalue {}                    -type str|jsfunc|null -default "nothing"
-    setdef options selectedMode            -minversion 5  -validvalue {}                    -type bool|str        -default "True"
-    setdef options inactiveColor           -minversion 5  -validvalue formatColor           -type str             -default "rgb(204, 204, 204)"
-    setdef options inactiveBorderColor     -minversion 5  -validvalue formatColor           -type str             -default "rgb(204, 204, 204)"
-    setdef options inactiveBorderWidth     -minversion 5  -validvalue formatColor           -type str             -default "auto"
-    setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|null     -default "nothing"
-    setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::textStyle $d textStyle]
-    setdef options icon                    -minversion 5  -validvalue {}                    -type str|null        -default "nothing"
-    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type str|null        -default "transparent"
-    setdef options borderWidth             -minversion 5  -validvalue {}                    -type num             -default 0
-    setdef options borderRadius            -minversion 5  -validvalue {}                    -type num             -default 0
-    setdef options shadowBlur              -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options shadowColor             -minversion 5  -validvalue formatColor           -type str|null        -default "nothing"
-    setdef options shadowOffsetX           -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options shadowOffsetY           -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options scrollDataIndex         -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options pageButtonItemGap       -minversion 5  -validvalue {}                    -type num             -default 5
-    setdef options pageButtonGap           -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options pageButtonPosition      -minversion 5  -validvalue formatPButtonPosition -type str|null        -default "nothing"
-    setdef options pageFormatter           -minversion 5  -validvalue {}                    -type str|jsfunc|null -default "nothing"
-    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::pageIcons $d]
-    setdef options pageIconColor           -minversion 5  -validvalue formatColor           -type str             -default "rgb(47, 69, 84)"
-    setdef options pageIconInactiveColor   -minversion 5  -validvalue formatColor           -type str             -default "rgb(170, 170, 170)"
-    setdef options pageIconSize            -minversion 5  -validvalue {}                    -type num|list.n      -default 15
-    setdef options pageTextStyle           -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::pageTextStyle $d]
-    setdef options animation               -minversion 5  -validvalue {}                    -type bool|null       -default "nothing"
-    setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::pageIcons $d]
+    setdef options type                    -minversion 5  -validvalue formatLegendType      -type str              -default "plain"
+    setdef options id                      -minversion 5  -validvalue {}                    -type str|null         -default "nothing"
+    setdef options show                    -minversion 5  -validvalue {}                    -type bool             -default "True"
+    setdef options zlevel                  -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options z                       -minversion 5  -validvalue {}                    -type num              -default 2
+    setdef options left                    -minversion 5  -validvalue formatLeft            -type str|num|null     -default "center"
+    setdef options top                     -minversion 5  -validvalue formatTop             -type str|num|null     -default "auto"
+    setdef options right                   -minversion 5  -validvalue formatRight           -type str|num|null     -default "auto"
+    setdef options bottom                  -minversion 5  -validvalue {}                    -type str|num|null     -default "auto"
+    setdef options width                   -minversion 5  -validvalue {}                    -type str|num|null     -default "auto"
+    setdef options height                  -minversion 5  -validvalue {}                    -type str|num|null     -default "auto"
+    setdef options orient                  -minversion 5  -validvalue formatOrient          -type str              -default "horizontal"
+    setdef options align                   -minversion 5  -validvalue formatAlign           -type str              -default "auto"
+    setdef options padding                 -minversion 5  -validvalue {}                    -type num|list.n       -default 5
+    setdef options itemGap                 -minversion 5  -validvalue {}                    -type num              -default 10
+    setdef options itemWidth               -minversion 5  -validvalue {}                    -type num              -default 25
+    setdef options itemHeight              -minversion 5  -validvalue {}                    -type num              -default 14
+    setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::itemStyle $d]
+    setdef options lineStyle               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::lineStyle $d]
+    setdef options symbolRotate            -minversion 5  -validvalue {}                    -type str|num          -default "inherit"
+    setdef options formatter               -minversion 5  -validvalue {}                    -type str|jsfunc|null  -default "nothing"
+    setdef options selectedMode            -minversion 5  -validvalue {}                    -type bool|str         -default "True"
+    setdef options inactiveColor           -minversion 5  -validvalue formatColor           -type str              -default "rgb(204, 204, 204)"
+    setdef options inactiveBorderColor     -minversion 5  -validvalue formatColor           -type str              -default "rgb(204, 204, 204)"
+    setdef options inactiveBorderWidth     -minversion 5  -validvalue formatColor           -type str              -default "auto"
+    setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|null      -default "nothing"
+    setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::textStyle $d textStyle]
+    setdef options icon                    -minversion 5  -validvalue {}                    -type str|null         -default "nothing"
+    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.Color|str|null -default "transparent"
+    setdef options borderWidth             -minversion 5  -validvalue {}                    -type num              -default 0
+    setdef options borderRadius            -minversion 5  -validvalue {}                    -type num              -default 0
+    setdef options shadowBlur              -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options shadowColor             -minversion 5  -validvalue formatColor           -type str|null         -default "nothing"
+    setdef options shadowOffsetX           -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options shadowOffsetY           -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options scrollDataIndex         -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options pageButtonItemGap       -minversion 5  -validvalue {}                    -type num              -default 5
+    setdef options pageButtonGap           -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options pageButtonPosition      -minversion 5  -validvalue formatPButtonPosition -type str|null         -default "nothing"
+    setdef options pageFormatter           -minversion 5  -validvalue {}                    -type str|jsfunc|null  -default "nothing"
+    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::pageIcons $d]
+    setdef options pageIconColor           -minversion 5  -validvalue formatColor           -type str              -default "rgb(47, 69, 84)"
+    setdef options pageIconInactiveColor   -minversion 5  -validvalue formatColor           -type str              -default "rgb(170, 170, 170)"
+    setdef options pageIconSize            -minversion 5  -validvalue {}                    -type num|list.n       -default 15
+    setdef options pageTextStyle           -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::pageTextStyle $d]
+    setdef options animation               -minversion 5  -validvalue {}                    -type bool|null        -default "nothing"
+    setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::pageIcons $d]
 
     # not fully supported...
     setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null     -default "nothing"
@@ -314,47 +315,47 @@ proc ticklecharts::visualMap {value} {
 
     switch -exact -- [dict get $d type] {
         continuous {
-            setdef options type            -minversion 5  -validvalue {}                   -type str             -default "continuous"
-            setdef options id              -minversion 5  -validvalue {}                   -type str|null        -default "nothing"
-            setdef options min             -minversion 5  -validvalue {}                   -type num|null        -default "nothing"
-            setdef options max             -minversion 5  -validvalue {}                   -type num|null        -default "nothing"
-            setdef options range           -minversion 5  -validvalue {}                   -type list.n|null     -default "nothing"
-            setdef options calculable      -minversion 5  -validvalue {}                   -type bool|null       -default "False"
-            setdef options realtime        -minversion 5  -validvalue {}                   -type bool|null       -default "True"
-            setdef options inverse         -minversion 5  -validvalue {}                   -type bool|null       -default "False"
-            setdef options precision       -minversion 5  -validvalue {}                   -type num|null        -default 0
-            setdef options itemWidth       -minversion 5  -validvalue {}                   -type num|null        -default 20
-            setdef options itemHeight      -minversion 5  -validvalue {}                   -type num|null        -default 140
-            setdef options align           -minversion 5  -validvalue formatVisualMapAlign -type str|null        -default "auto"
-            setdef options text            -minversion 5  -validvalue {}                   -type list.s|null     -default "nothing"
-            setdef options textGap         -minversion 5  -validvalue {}                   -type num|null        -default 10
-            setdef options show            -minversion 5  -validvalue {}                   -type bool            -default "True"
-            setdef options dimension       -minversion 5  -validvalue {}                   -type num|null        -default "nothing"
-            setdef options seriesIndex     -minversion 5  -validvalue {}                   -type num|list.d|null -default "nothing"
-            setdef options hoverLink       -minversion 5  -validvalue {}                   -type bool            -default "True"
-            setdef options inRange         -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::inRange $d]
-            setdef options outOfRange      -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::outOfRange $d]
-            setdef options controller      -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::controller $d]
-            setdef options zlevel          -minversion 5  -validvalue {}                   -type num             -default 0
-            setdef options z               -minversion 5  -validvalue {}                   -type num             -default 4
-            setdef options left            -minversion 5  -validvalue formatLeft           -type num|str|null    -default "auto"
-            setdef options top             -minversion 5  -validvalue formatTop            -type num|str|null    -default "auto"
-            setdef options right           -minversion 5  -validvalue formatRight          -type num|str|null    -default "auto"
-            setdef options bottom          -minversion 5  -validvalue formatBottom         -type num|str|null    -default "auto"
-            setdef options orient          -minversion 5  -validvalue formatOrient         -type str             -default "vertical"
-            setdef options padding         -minversion 5  -validvalue {}                   -type list.n|num      -default 5
-            setdef options backgroundColor -minversion 5  -validvalue formatColor          -type str             -default "rgba(0,0,0,0)"
-            setdef options borderColor     -minversion 5  -validvalue formatColor          -type str             -default "#ccc"
-            setdef options borderWidth     -minversion 5  -validvalue {}                   -type num             -default 0
-            setdef options color           -minversion 5  -validvalue formatColor          -type list.s|null     -default "nothing"
-            setdef options textStyle       -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::textStyle $d textStyle]
-            setdef options formatter       -minversion 5  -validvalue {}                   -type str|jsfunc|null -default "nothing"
-            setdef options handleIcon      -minversion 5  -validvalue {}                   -type str|null        -default "nothing"
-            setdef options handleSize      -minversion 5  -validvalue {}                   -type str|num|null    -default "120%"
-            setdef options handleStyle     -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::handleStyle $d]
-            setdef options indicatorIcon   -minversion 5  -validvalue {}                   -type str|null        -default "circle"
-            setdef options indicatorSize   -minversion 5  -validvalue {}                   -type str|num|null    -default "50%"
-            setdef options indicatorStyle  -minversion 5  -validvalue {}                   -type dict|null       -default [ticklecharts::indicatorStyle $d]
+            setdef options type            -minversion 5  -validvalue {}                   -type str                 -default "continuous"
+            setdef options id              -minversion 5  -validvalue {}                   -type str|null            -default "nothing"
+            setdef options min             -minversion 5  -validvalue {}                   -type num|null            -default "nothing"
+            setdef options max             -minversion 5  -validvalue {}                   -type num|null            -default "nothing"
+            setdef options range           -minversion 5  -validvalue {}                   -type list.n|null         -default "nothing"
+            setdef options calculable      -minversion 5  -validvalue {}                   -type bool|null           -default "False"
+            setdef options realtime        -minversion 5  -validvalue {}                   -type bool|null           -default "True"
+            setdef options inverse         -minversion 5  -validvalue {}                   -type bool|null           -default "False"
+            setdef options precision       -minversion 5  -validvalue {}                   -type num|null            -default 0
+            setdef options itemWidth       -minversion 5  -validvalue {}                   -type num|null            -default 20
+            setdef options itemHeight      -minversion 5  -validvalue {}                   -type num|null            -default 140
+            setdef options align           -minversion 5  -validvalue formatVisualMapAlign -type str|null            -default "auto"
+            setdef options text            -minversion 5  -validvalue {}                   -type list.s|null         -default "nothing"
+            setdef options textGap         -minversion 5  -validvalue {}                   -type num|null            -default 10
+            setdef options show            -minversion 5  -validvalue {}                   -type bool                -default "True"
+            setdef options dimension       -minversion 5  -validvalue {}                   -type num|null            -default "nothing"
+            setdef options seriesIndex     -minversion 5  -validvalue {}                   -type num|list.d|null     -default "nothing"
+            setdef options hoverLink       -minversion 5  -validvalue {}                   -type bool                -default "True"
+            setdef options inRange         -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::inRange $d]
+            setdef options outOfRange      -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::outOfRange $d]
+            setdef options controller      -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::controller $d]
+            setdef options zlevel          -minversion 5  -validvalue {}                   -type num                 -default 0
+            setdef options z               -minversion 5  -validvalue {}                   -type num                 -default 4
+            setdef options left            -minversion 5  -validvalue formatLeft           -type num|str|null        -default "auto"
+            setdef options top             -minversion 5  -validvalue formatTop            -type num|str|null        -default "auto"
+            setdef options right           -minversion 5  -validvalue formatRight          -type num|str|null        -default "auto"
+            setdef options bottom          -minversion 5  -validvalue formatBottom         -type num|str|null        -default "auto"
+            setdef options orient          -minversion 5  -validvalue formatOrient         -type str                 -default "vertical"
+            setdef options padding         -minversion 5  -validvalue {}                   -type list.n|num          -default 5
+            setdef options backgroundColor -minversion 5  -validvalue formatColor          -type e.Color|str         -default "rgba(0,0,0,0)"
+            setdef options borderColor     -minversion 5  -validvalue formatColor          -type str                 -default "#ccc"
+            setdef options borderWidth     -minversion 5  -validvalue {}                   -type num                 -default 0
+            setdef options color           -minversion 5  -validvalue formatColor          -type e.Color|list.s|null -default "nothing"
+            setdef options textStyle       -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::textStyle $d textStyle]
+            setdef options formatter       -minversion 5  -validvalue {}                   -type str|jsfunc|null     -default "nothing"
+            setdef options handleIcon      -minversion 5  -validvalue {}                   -type str|null            -default "nothing"
+            setdef options handleSize      -minversion 5  -validvalue {}                   -type str|num|null        -default "120%"
+            setdef options handleStyle     -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::handleStyle $d]
+            setdef options indicatorIcon   -minversion 5  -validvalue {}                   -type str|null            -default "circle"
+            setdef options indicatorSize   -minversion 5  -validvalue {}                   -type str|num|null        -default "50%"
+            setdef options indicatorStyle  -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::indicatorStyle $d]
             #...
         }
         piecewise {
@@ -394,10 +395,10 @@ proc ticklecharts::visualMap {value} {
             setdef options right           -minversion 5             -validvalue formatRight          -type num|str|null           -default "auto"
             setdef options bottom          -minversion 5             -validvalue formatBottom         -type num|str|null           -default "auto"
             setdef options padding         -minversion 5             -validvalue {}                   -type list.n|num             -default 5
-            setdef options backgroundColor -minversion 5             -validvalue formatColor          -type str                    -default "rgba(0,0,0,0)"
+            setdef options backgroundColor -minversion 5             -validvalue formatColor          -type e.Color|str            -default "rgba(0,0,0,0)"
             setdef options borderColor     -minversion 5             -validvalue formatColor          -type str                    -default "#ccc"
             setdef options borderWidth     -minversion 5             -validvalue {}                   -type num                    -default 0
-            setdef options color           -minversion 5             -validvalue formatColor          -type list.s|null            -default "nothing"
+            setdef options color           -minversion 5             -validvalue formatColor          -type e.Color|list.s|null    -default "nothing"
             setdef options textStyle       -minversion 5             -validvalue {}                   -type dict|null              -default [ticklecharts::textStyle $d textStyle]
             setdef options formatter       -minversion 5             -validvalue {}                   -type str|jsfunc|null        -default "nothing"
             #...
@@ -506,7 +507,7 @@ proc ticklecharts::dataZoom {value} {
                 setdef options type                   -minversion 5  -validvalue {}               -type str             -default "slider"
                 setdef options id                     -minversion 5  -validvalue {}               -type str|null        -default "nothing"
                 setdef options show                   -minversion 5  -validvalue {}               -type bool            -default "False"
-                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type str             -default [EchartsOptsTheme datazoomBackgroundColor]
+                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.Color|str     -default [EchartsOptsTheme datazoomBackgroundColor]
                 setdef options dataBackground         -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::dataBackground $item]
                 setdef options selectedDataBackground -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::selectedDataBackground $item]
                 setdef options fillerColor            -minversion 5  -validvalue formatColor      -type str|null        -default "nothing"
@@ -726,6 +727,48 @@ proc ticklecharts::geo {value} {
     # remove key(s)
     set d [dict remove $d projection scaleLimit nameMap label itemStyle \
                           emphasis select blur regions tooltip]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::calendar {value} {
+    # options : https://echarts.apache.org/en/option.html#calendar
+    #
+    # value - Options described in proc ticklecharts::calendar below.
+    #
+    # return dict calendar options
+
+    set d [dict get $value -calendar]
+
+    if {[llength $d] % 2} {
+        error "list for '[lindex [info level 0] 0]' must have an even number of elements..."
+    }
+
+    setdef options id                   -minversion 5        -validvalue {}            -type str|null              -default "nothing"
+    setdef options zlevel               -minversion 5        -validvalue {}            -type num                   -default 0
+    setdef options z                    -minversion 5        -validvalue {}            -type num                   -default 2
+    setdef options left                 -minversion 5        -validvalue formatLeft    -type num|str|null          -default "nothing"
+    setdef options top                  -minversion 5        -validvalue formatTop     -type num|str|null          -default "nothing"
+    setdef options right                -minversion 5        -validvalue formatRight   -type num|str|null          -default "nothing"
+    setdef options bottom               -minversion 5        -validvalue formatBottom  -type num|str|null          -default "nothing"
+    setdef options width                -minversion 5        -validvalue {}            -type str|num|null          -default "nothing"
+    setdef options height               -minversion 5        -validvalue {}            -type str|num|null          -default "nothing"
+    setdef options range                -minversion 5        -validvalue {}            -type str|num|list.d|null   -default "auto"
+    setdef options cellSize             -minversion 5        -validvalue {}            -type str|num|list.d|null   -default "nothing"
+    setdef options orient               -minversion 5        -validvalue formatOrient  -type str                   -default "horizontal"
+    setdef options splitLine            -minversion 5        -validvalue {}            -type dict|null             -default [ticklecharts::splitLine $d]
+    setdef options itemStyle            -minversion 5        -validvalue {}            -type dict|null             -default [ticklecharts::itemStyle $d]
+    setdef options dayLabel             -minversion 5        -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "dayLabel"]
+    setdef options monthLabel           -minversion 5        -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "monthLabel"]
+    setdef options yearLabel            -minversion 5        -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "yearLabel"]
+    setdef options silent               -minversion 5        -validvalue {}            -type bool                  -default "False"  
+    #...
+
+    # remove key(s)
+    set d [dict remove $d splitLine itemStyle dayLabel monthLabel yearLabel]
 
     set options [merge $options $d]
 
