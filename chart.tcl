@@ -153,6 +153,10 @@ oo::define ticklecharts::chart {
                 $_echartshchart append $key $opts
             } elseif {[string match {*dataZoom} $key]} {
                 $_echartshchart append $key $opts
+            } elseif {[string match {*calendar} $key]} {
+                $_echartshchart append $key $opts
+            } elseif {[string match {*visualMap} $key]} {
+                $_echartshchart append $key $opts
             } elseif {[string match {*parallelAxis} $key]} {
                 $_echartshchart append $key $opts
             } elseif {[string match {*dataset} $key]} {
@@ -848,6 +852,7 @@ oo::define ticklecharts::chart {
         # -brush         - brush options       https://echarts.apache.org/en/option.html#brush
         # -axisPointer   - axisPointer options https://echarts.apache.org/en/option.html#axisPointer
         # -geo           - geo options         https://echarts.apache.org/en/option.html#geo
+        # -calendar      - calendar options    https://echarts.apache.org/en/option.html#calendar
         #
         # Returns nothing    
         set opts {}
@@ -887,7 +892,16 @@ oo::define ticklecharts::chart {
         }
         
         if {[dict exists $args -visualMap]} {
-            lappend opts "@D=visualMap" [ticklecharts::visualMap $args]
+            # v2.8.1
+            # keep compatibility with previous versions...
+            # 'visualMap' now accepts 'multiple' lists or 'one' like before...
+            set key "-visualMap"
+            if {![ticklecharts::isListOfList $args $key]} {
+                dict set args $key [list [dict get $args $key]]
+            }
+            foreach mapValue [dict get $args $key] {
+                lappend opts "@D=visualMap" [ticklecharts::visualMap [list $key $mapValue]]
+            }
         }
 
         if {[dict exists $args -toolbox]} {
@@ -914,6 +928,16 @@ oo::define ticklecharts::chart {
 
         if {[dict exists $args -geo]} {
             lappend opts "@L=geo" [ticklecharts::geo $args]
+        }
+
+        if {[dict exists $args -calendar]} {
+            set key "-calendar"
+            if {![ticklecharts::isListOfList $args $key]} {
+                dict set args $key [list [dict get $args $key]]
+            }
+            foreach cValue [dict get $args $key] {
+                lappend opts "@D=calendar" [ticklecharts::calendar [list $key $cValue]]
+            }
         }
       
         foreach {key value} $opts {
