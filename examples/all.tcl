@@ -34,6 +34,7 @@ set charts {
     boxplot
     treemap
     map
+    calendar
 }
 
 set dir [file dirname [info script]]
