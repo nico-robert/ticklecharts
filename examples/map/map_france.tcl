@@ -21,6 +21,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : destroy all 'gridlayout' for source all.tcl + init set theme to basic
+# v3.0 : Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
 
 # example from pyecharts-gallery-master... (modify)
 # source all.tcl
