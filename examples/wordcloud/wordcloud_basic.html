@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>wordcloud_basic</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
   </head>
   <body>
-    <div id="id_826182372132740" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_27497828129736" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_826182372131027 = echarts.init(document.getElementById('id_826182372132740'), null, {renderer: 'canvas'});
+        var chart_27497828127897 = echarts.init(document.getElementById('id_27497828129736'), null, {renderer: 'canvas'});
         var option = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
@@ -44,7 +44,7 @@
       "type": "wordCloud",
       "shape": "pentagon",
       "left": "center",
-      "top": "center",
+      "top": "middle",
       "right": null,
       "bottom": null,
       "width": 600,
@@ -72,9 +72,6 @@
         "fontStyle": "normal",
         "fontWeight": "bolder",
         "fontFamily": "sans-serif",
-        "fontSize": 18,
-        "width": 100,
-        "height": 50,
         "textBorderColor": null,
         "textBorderWidth": 0,
         "textBorderType": "solid",
@@ -83,8 +80,7 @@
         "textShadowBlur": 0,
         "textShadowOffsetX": 0,
         "textShadowOffsetY": 0,
-        "overflow": null,
-        "ellipsis": "..."
+        "overflow": null
       },
       "data": [
         {
@@ -170,7 +166,7 @@
       ]
     }]
 }
-        chart_826182372131027.setOption(option);
+        chart_27497828127897.setOption(option);
     </script>
   </body>
 </html>
