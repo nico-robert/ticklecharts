@@ -21,9 +21,11 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : destroy all 'gridlayout' for source all.tcl + init set theme to basic
-# v3.0 : Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
+# v3.0 : Set theme on timeline Class instead layout Class.
+#        Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
 
 # example from pyecharts-gallery-master... (modify)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -33,7 +35,7 @@ set header [ticklecharts::jsfunc new {
                         } -header
             ]
 
-set timeline [ticklecharts::timeline new]
+set timeline [ticklecharts::timeline new -theme dark]
 $timeline SetOptions -axisType "category" -orient "vertical" -autoPlay "True" -playInterval 3000 \
                      -bottom 20 -top 20 -inverse "True" -left null -right 5 -width 60
 
@@ -67,7 +69,7 @@ set jj 0
 
 for {set i $start} {$i < $end} {incr i} {
 
-    set layout [ticklecharts::Gridlayout new -theme dark]
+    set layout [ticklecharts::Gridlayout new]
 
     $layout SetGlobalOptions -tooltip {} \
                              -visualMap [list \
