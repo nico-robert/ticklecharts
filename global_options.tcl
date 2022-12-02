@@ -21,8 +21,8 @@ proc ticklecharts::globaloptions {value} {
     #
     # return dict options
 
-    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.Color|null -default [EchartsOptsTheme backgroundColor]
-    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.Color|null     -default [EchartsOptsTheme color]
+    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.color|null -default [EchartsOptsTheme backgroundColor]
+    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.color|null     -default [EchartsOptsTheme color]
     setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null           -default "True"
     setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                -default 1000
     setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                -default 500
@@ -94,7 +94,7 @@ proc ticklecharts::title {value} {
     setdef options top               -minversion 5  -validvalue formatTop               -type str|num     -default "auto"
     setdef options right             -minversion 5  -validvalue formatRight             -type str|num     -default "auto"
     setdef options bottom            -minversion 5  -validvalue formatBottom            -type str|num     -default "auto"
-    setdef options backgroundColor   -minversion 5  -validvalue formatColor             -type e.Color|str -default "transparent"
+    setdef options backgroundColor   -minversion 5  -validvalue formatColor             -type e.color|str -default "transparent"
     setdef options borderColor       -minversion 5  -validvalue formatColor             -type str         -default "transparent"
     setdef options borderWidth       -minversion 5  -validvalue {}                      -type num         -default 1
     setdef options borderRadius      -minversion 5  -validvalue {}                      -type num|list.n  -default 0
@@ -140,7 +140,7 @@ proc ticklecharts::grid {value} {
     setdef options width           -minversion 5  -validvalue {}           -type str|num|null     -default "nothing"
     setdef options height          -minversion 5  -validvalue {}           -type str|num|null     -default "nothing"
     setdef options containLabel    -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
-    setdef options backgroundColor -minversion 5  -validvalue formatColor  -type e.Color|str|null -default "nothing"
+    setdef options backgroundColor -minversion 5  -validvalue formatColor  -type e.color|str|null -default "nothing"
     setdef options borderColor     -minversion 5  -validvalue formatColor  -type str|null         -default "nothing"
     setdef options borderWidth     -minversion 5  -validvalue {}           -type num|null         -default "nothing"
     setdef options shadowBlur      -minversion 5  -validvalue {}           -type num|null         -default "nothing"
@@ -185,7 +185,7 @@ proc ticklecharts::tooltip {value} {
     setdef options position           -minversion 5       -validvalue formatPosition   -type str|list.d|jsfunc|null -default "nothing"
     setdef options formatter          -minversion 5       -validvalue {}               -type str|jsfunc|null        -default "nothing"
     setdef options valueFormatter     -minversion "5.3.0" -validvalue {}               -type str|jsfunc|null        -default "nothing"
-    setdef options backgroundColor    -minversion 5       -validvalue formatColor      -type e.Color|str|null       -default "nothing"
+    setdef options backgroundColor    -minversion 5       -validvalue formatColor      -type e.color|str|null       -default "nothing"
     setdef options borderColor        -minversion 5       -validvalue formatColor      -type str|null               -default "nothing"
     setdef options borderWidth        -minversion 5       -validvalue {}               -type num|null               -default "nothing"
     setdef options padding            -minversion 5       -validvalue {}               -type num|list.n|null        -default 5
@@ -240,7 +240,7 @@ proc ticklecharts::legend {value} {
     setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|null      -default "nothing"
     setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::textStyle $d textStyle]
     setdef options icon                    -minversion 5  -validvalue {}                    -type str|null         -default "nothing"
-    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.Color|str|null -default "transparent"
+    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.color|str|null -default "transparent"
     setdef options borderWidth             -minversion 5  -validvalue {}                    -type num              -default 0
     setdef options borderRadius            -minversion 5  -validvalue {}                    -type num              -default 0
     setdef options shadowBlur              -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
@@ -344,10 +344,10 @@ proc ticklecharts::visualMap {value} {
             setdef options bottom          -minversion 5  -validvalue formatBottom         -type num|str|null        -default "auto"
             setdef options orient          -minversion 5  -validvalue formatOrient         -type str                 -default "vertical"
             setdef options padding         -minversion 5  -validvalue {}                   -type list.n|num          -default 5
-            setdef options backgroundColor -minversion 5  -validvalue formatColor          -type e.Color|str         -default "rgba(0,0,0,0)"
+            setdef options backgroundColor -minversion 5  -validvalue formatColor          -type e.color|str         -default "rgba(0,0,0,0)"
             setdef options borderColor     -minversion 5  -validvalue formatColor          -type str                 -default "#ccc"
             setdef options borderWidth     -minversion 5  -validvalue {}                   -type num                 -default 0
-            setdef options color           -minversion 5  -validvalue formatColor          -type e.Color|list.s|null -default "nothing"
+            setdef options color           -minversion 5  -validvalue formatColor          -type e.color|list.s|null -default "nothing"
             setdef options textStyle       -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::textStyle $d textStyle]
             setdef options formatter       -minversion 5  -validvalue {}                   -type str|jsfunc|null     -default "nothing"
             setdef options handleIcon      -minversion 5  -validvalue {}                   -type str|null            -default "nothing"
@@ -395,10 +395,10 @@ proc ticklecharts::visualMap {value} {
             setdef options right           -minversion 5             -validvalue formatRight          -type num|str|null           -default "auto"
             setdef options bottom          -minversion 5             -validvalue formatBottom         -type num|str|null           -default "auto"
             setdef options padding         -minversion 5             -validvalue {}                   -type list.n|num             -default 5
-            setdef options backgroundColor -minversion 5             -validvalue formatColor          -type e.Color|str            -default "rgba(0,0,0,0)"
+            setdef options backgroundColor -minversion 5             -validvalue formatColor          -type e.color|str            -default "rgba(0,0,0,0)"
             setdef options borderColor     -minversion 5             -validvalue formatColor          -type str                    -default "#ccc"
             setdef options borderWidth     -minversion 5             -validvalue {}                   -type num                    -default 0
-            setdef options color           -minversion 5             -validvalue formatColor          -type e.Color|list.s|null    -default "nothing"
+            setdef options color           -minversion 5             -validvalue formatColor          -type e.color|list.s|null    -default "nothing"
             setdef options textStyle       -minversion 5             -validvalue {}                   -type dict|null              -default [ticklecharts::textStyle $d textStyle]
             setdef options formatter       -minversion 5             -validvalue {}                   -type str|jsfunc|null        -default "nothing"
             #...
@@ -507,7 +507,7 @@ proc ticklecharts::dataZoom {value} {
                 setdef options type                   -minversion 5  -validvalue {}               -type str             -default "slider"
                 setdef options id                     -minversion 5  -validvalue {}               -type str|null        -default "nothing"
                 setdef options show                   -minversion 5  -validvalue {}               -type bool            -default "False"
-                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.Color|str     -default [EchartsOptsTheme datazoomBackgroundColor]
+                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.color|str     -default [EchartsOptsTheme datazoomBackgroundColor]
                 setdef options dataBackground         -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::dataBackground $item]
                 setdef options selectedDataBackground -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::selectedDataBackground $item]
                 setdef options fillerColor            -minversion 5  -validvalue formatColor      -type str|null        -default "nothing"
@@ -650,10 +650,10 @@ proc ticklecharts::brush {value} {
 
 }
 
-proc ticklecharts::axisGlobalPointer {value} {
+proc ticklecharts::axisPointerGlobal {value} {
     # options : https://echarts.apache.org/en/option.html#axisPointer
     #
-    # value - Options described in proc ticklecharts::axisGlobalPointer below.
+    # value - Options described in proc ticklecharts::axisPointerGlobal below.
     #
     # return dict axisPointer options
 
@@ -769,6 +769,29 @@ proc ticklecharts::calendar {value} {
 
     # remove key(s)
     set d [dict remove $d splitLine itemStyle dayLabel monthLabel yearLabel]
+
+    set options [merge $options $d]
+
+    return $options
+
+}
+
+proc ticklecharts::aria {value} {
+    # options : https://echarts.apache.org/en/option.html#aria
+    #
+    # value - Options described in proc ticklecharts::aria below.
+    #
+    # return dict aria options
+
+    set d [dict get $value -aria]
+
+    setdef options enabled   -minversion 5   -validvalue {}   -type bool       -default "True"
+    setdef options label     -minversion 5   -validvalue {}   -type dict|null  -default [ticklecharts::ariaLabel $d]
+    setdef options decal     -minversion 5   -validvalue {}   -type dict|null  -default [ticklecharts::ariaDecal $d]
+    #...
+
+    # remove key(s)
+    set d [dict remove $d label decal]
 
     set options [merge $options $d]
 
