@@ -22,7 +22,7 @@
 # 28-02-2022 : v1.5
                # Add heatmap chart.
                # Add heatmap examples.
-               # Add 'deleteseries' method to delete serie chart.
+               # Add 'deleteseries' method to delete series chart.
                # Update README to explain `deleteseries` and `getoptions` methods.
 # 06-03-2022 : v1.5.1
                # Add graphic (rect, circle, arc, line, text...)
@@ -72,7 +72,7 @@
 # 26-05-2022 : v2.0.1
                # Replaces some huddle/ehuddle procedures by C functions,
                # with help of critcl package https://andreas-kupries.github.io/critcl/
-               # Critcl package should be available and this commmand 'ticklecharts::eHuddleCritcl' should be set to valide Tcl boolean value.
+               # Critcl package should be available and this command 'ticklecharts::eHuddleCritcl' should be set to valid Tcl boolean value.
                # Note : If a huddle type is added, it will not be supported, additional changes are expected.
                # Incompatibility -render flag renamed to -renderer (flag option to set `canvas` or `svg` renderer).
 # 26-06-2022 : v2.1
@@ -117,8 +117,13 @@
 # 26-11-2022 : v2.8.1
                # Add `calendar` option.
                # Add `calendar` examples.
-               # For `color` and `backgroundColor` properties adds `eColor` class see 
+               # For `color` and `backgroundColor` properties, adds `eColor` class see 
                # pie_texture.tcl example(examples/pie/pie_textture.tcl).
+# 02-12-2022 : v2.8.2
+               # Bump to `v2.1.0` for echarts-wordcloud, update examples to reflect this changes.
+               # Add `aria` option.
+               # Add `aria` examples.
+               # Cosmetic changes.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -142,8 +147,9 @@ source [file join $dir ecolor.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.8.1
-    variable echarts_version 5.2.2
+    variable version 2.8.2
+    variable echarts_version 5.2.2 ; # Echarts version
+    variable wc_version 2.1.0      ; # wordCloud version
     variable dir $dir
     variable theme "basic"
     variable htmlstdout 1

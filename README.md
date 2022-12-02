@@ -29,8 +29,8 @@ set chart [ticklecharts::chart new]
 ##### :heavy_check_mark: Arguments available :
 | args | Type | Description
 | ------ | ------ | ------
-| _-backgroundColor_ | str \| jsfunc \| e.Color | Canvas color background (hex, rgb, rgba color)
-| _-color_ | list.s \| e.Color | Colors series (default `Echarts Color Theme`)
+| _-backgroundColor_ | str \| jsfunc \| e.color | Canvas color background (hex, rgb, rgba color)
+| _-color_ | list.s \| e.color | Colors series (default `Echarts Color Theme`)
 | _-animation_ | boolean | chart animation (default `True`)
 | _-others_ | _ | animation sub options (see proc: `ticklecharts::globaloptions` in `global_options.tcl`)
 | _-theme_ | str | set the default theme for chart instance (default `basic`) possible values: `vintage,westeros,wonderland,dark`
@@ -122,8 +122,12 @@ Useful methods :
 
 1. Get default _options_ according to a `key` (name of procedure) :
 ```tcl
-# get all options for title...
-$chart getoptions -title
+# e.g for series :
+$chart getoptions -series line
+# e.g for axis :
+$chart getoptions -axis X
+# get all options for 'title' :
+$chart getoptions -option title
 # output :
 id                -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
 show              -minversion 5  -validvalue {}                      -type bool       -default "True"
@@ -131,7 +135,7 @@ text              -minversion 5  -validvalue {}                      -type str|n
 link              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
 target            -minversion 5  -validvalue formatTarget            -type str        -default "blank"
 textStyle         -minversion 5  -validvalue {}                      -type dict|null
-  color                -minversion 5  -validvalue formatColor          -type e.Color|str|null -default $color
+  color                -minversion 5  -validvalue formatColor          -type e.color|str|null -default $color
   fontStyle            -minversion 5  -validvalue formatFontStyle      -type str              -default "normal"
   fontWeight           -minversion 5  -validvalue formatFontWeight     -type str|num          -default $fontWeight
   fontFamily           -minversion 5  -validvalue {}                   -type str              -default "sans-serif"
@@ -274,7 +278,7 @@ $chart Render -outfile demo.html -title demo -script [list [list $js $header]]
 Performance :
 -------------------------
 Since version **2**, some _huddle/ehuddle_ procedures can be replaced by functions written in C with help of [critcl](https://andreas-kupries.github.io/critcl/).  
-Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valide `Tcl_boolean` value.  
+Critcl package should be available and this command `ticklecharts::eHuddleCritcl` should be set to valid `Tcl_boolean` value.  
 You may be processing important data and if you want to gain speed, this command can be useful, below how to use it :
 ```tcl
 package require ticklecharts
@@ -425,7 +429,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] graphic
 - [x] calendar
 - [x] dataset
-- [ ] aria
+- [x] aria
 - **Series :**
 - [x] line
 - [x] bar
@@ -481,7 +485,7 @@ Release :
 *  **28-02-2022** : 1.5
     - Add heatmap chart.
     - Add heatmap examples.
-    - Add `deleteseries` method to delete serie chart.
+    - Add `deleteseries` method to delete series chart.
     - Update README to explain `deleteseries` and `getoptions` methods.
 *  **06-03-2022** : 1.5.1
     - Add graphic (rect, circle, arc, line, text...)
@@ -572,5 +576,10 @@ Release :
 *  **25-11-2022** : 2.8.1
     - Add `calendar` option.
     - Add `calendar` examples.
-    - For `color` and `backgroundColor` properties adds `eColor` Class  
-      see [pie_texture.tcl example](examples/pie/pie_texture.tcl) in `../examples/pie` folder.
+    - For `color` and `backgroundColor` properties, adds `eColor` Class  
+      see [pie_texture.tcl example](examples/pie/pie_texture.tcl) in `examples/pie` folder.
+*  **02-12-2022** : 2.8.2
+    - Bump to `v2.1.0` for echarts-wordcloud, update examples to reflect this changes.
+    - Add `aria` option.
+    - Add `aria` examples.
+    - Cosmetic changes.
