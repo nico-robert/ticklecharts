@@ -22,7 +22,7 @@ oo::class create ticklecharts::eColor {
 
 oo::define ticklecharts::eColor {
     method get {} {
-        # Returns js list
+        # Returns color list
         return $_ecolor
     }
     
@@ -33,6 +33,10 @@ oo::define ticklecharts::eColor {
 }
 
 proc ticklecharts::colorItem {value} {
+
+    if {[llength $value] % 2} {
+        error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+    }
 
     setdef options type        -minversion 5  -validvalue formatTypeColor    -type str|null         -default "nothing"
     setdef options x           -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
