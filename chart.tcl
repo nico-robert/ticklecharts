@@ -7,26 +7,26 @@ oo::class create ticklecharts::chart {
     variable _echartshchart           ; # huddle
     variable _options                 ; # list options chart
     variable _dataset                 ; # dataset chart
-    variable _indexlineseries         ; # index line serie
-    variable _indexbarseries          ; # index bar serie
-    variable _indexpieseries          ; # index pie serie
-    variable _indexfunnelseries       ; # index funnel serie
-    variable _indexradarseries        ; # index radar serie
-    variable _indexscatterseries      ; # index scatter serie
-    variable _indexheatmapseries      ; # index heatmap serie
-    variable _indexsunburstseries     ; # index sunburst serie
-    variable _indextreeseries         ; # index tree serie
-    variable _indexthemeriverseries   ; # index themeriver serie
-    variable _indexsankeyseries       ; # index sankey serie
-    variable _indexpictorialbarseries ; # index pictorialbar serie
-    variable _indexcandlestickseries  ; # index candlestick serie
-    variable _indexparallelseries     ; # index parallel serie
-    variable _indexgaugeseries        ; # index gauge serie
-    variable _indexgraphseries        ; # index graph serie
-    variable _indexwordCloudseries    ; # index wordCloud serie
-    variable _indexboxplotseries      ; # index boxplot serie
-    variable _indextreemapseries      ; # index treemap serie
-    variable _indexmapseries          ; # index map serie
+    variable _indexlineseries         ; # index line series
+    variable _indexbarseries          ; # index bar series
+    variable _indexpieseries          ; # index pie series
+    variable _indexfunnelseries       ; # index funnel series
+    variable _indexradarseries        ; # index radar series
+    variable _indexscatterseries      ; # index scatter series
+    variable _indexheatmapseries      ; # index heatmap series
+    variable _indexsunburstseries     ; # index sunburst series
+    variable _indextreeseries         ; # index tree series
+    variable _indexthemeriverseries   ; # index themeriver series
+    variable _indexsankeyseries       ; # index sankey series
+    variable _indexpictorialbarseries ; # index pictorialbar series
+    variable _indexcandlestickseries  ; # index candlestick series
+    variable _indexparallelseries     ; # index parallel series
+    variable _indexgaugeseries        ; # index gauge series
+    variable _indexgraphseries        ; # index graph series
+    variable _indexwordCloudseries    ; # index wordCloud series
+    variable _indexboxplotseries      ; # index boxplot series
+    variable _indextreemapseries      ; # index treemap series
+    variable _indexmapseries          ; # index map series
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -104,9 +104,53 @@ oo::define ticklecharts::chart {
 
     }
 
-    method getoptions {key} {
-        # Returns default and options type according to a key (name of procedure).
-        return [ticklecharts::InfoOptions $key]
+    method getoptions {args} {
+        # args - Options described below.
+        #
+        # -series  - name of series
+        # -option  - name of option
+        # -axis    - name of axis
+        #
+        # Returns default and options type according to a key (name of procedure)
+        # to stdout.
+
+        set methodClass [info class methods ticklecharts::chart]
+
+        foreach {key value} $args {
+            if {$value eq ""} {
+                error "A value should be specified..."
+            }
+            switch -exact -- $key {
+                "-series" {
+                    set methods [lsearch -all -inline -nocase $methodClass *series*]
+                    lappend methods [lsearch -all -inline -nocase $methodClass *graphic*]
+                }
+                "-option" {
+                    set methods {SetOptions}
+                }
+                "-axis" {
+                    set methods [lsearch -all -inline -nocase $methodClass *axis*]
+                    lappend methods [lsearch -all -inline -nocase $methodClass *coordinate*]
+                }
+                default {error "Unknown key '$key' specified"}
+            }
+
+            set info $value
+        }
+
+        foreach method $methods {
+            if {[catch {info class definition ticklecharts::chart $method} infomethod]} {continue}
+            foreach linebody [split $infomethod "\n"] {
+                set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
+                set linebody [string trim $linebody]
+                if {[string match -nocase "*ticklecharts::*$info*" $linebody]} {
+                    if {[regexp {ticklecharts::([A-Za-z]+)\s} $linebody -> match]} {
+                        return [ticklecharts::InfoOptions $match]
+                    }
+                }
+            }
+        }
+
     }
 
     method keys {} {
@@ -223,7 +267,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions setXAxis
+        # gets default option values : [self] getoptions -axis X
         # or
         # from doc : https://echarts.apache.org/en/option.html#xAxis
         #
@@ -248,7 +292,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions setYAxis
+        # gets default option values : [self] getoptions -axis Y
         # or
         # from doc : https://echarts.apache.org/en/option.html#yAxis
         #
@@ -273,7 +317,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetRadiusAxis
+        # gets default option values : [self] getoptions -axis Radius
         # or
         # from doc : https://echarts.apache.org/en/option.html#radiusAxis
         #
@@ -298,7 +342,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetAngleAxis
+        # gets default option values : [self] getoptions -axis Angle
         # or
         # from doc : https://echarts.apache.org/en/option.html#angleAxis
         #
@@ -323,7 +367,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetGraphic
+        # gets default option values : [self] getoptions -serie Graphic
         # or
         # from doc : https://echarts.apache.org/en/option.html#graphic
         #
@@ -343,7 +387,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetRadarCoordinate
+        # gets default option values : [self] getoptions -axis RadarCoordinate
         # or
         # from doc : https://echarts.apache.org/en/option.html#radar
         #
@@ -368,7 +412,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetSingleAxis
+        # gets default option values : [self] getoptions -axis Single
         # or
         # from doc : https://echarts.apache.org/en/option.html#singleAxis
         #
@@ -393,7 +437,7 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions SetParallelAxis
+        # gets default option values : [self] getoptions -axis Parallel
         # or
         # from doc : https://echarts.apache.org/en/option.html#parallelAxis
         #
@@ -415,11 +459,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddBarSeries {args} {
-        # Add data serie chart (use only for bar chart)
+        # Add data series chart (use only for bar chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions barseries
+        # gets default option values : [self] getoptions -series bar
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-bar
         #
@@ -436,11 +480,11 @@ oo::define ticklecharts::chart {
     }
     
     method AddLineSeries {args} {
-        # Add data serie chart (use only for line chart)
+        # Add data series chart (use only for line chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions lineseries
+        # gets default option values : [self] getoptions -series line
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-line
         #
@@ -457,11 +501,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddPieSeries {args} {
-        # Add data serie chart (use only for pie chart)
+        # Add data series chart (use only for pie chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions pieseries
+        # gets default option values : [self] getoptions -series pie
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-pie
         #
@@ -478,11 +522,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddFunnelSeries {args} {
-        # Add data serie chart (use only for funnel chart)
+        # Add data series chart (use only for funnel chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions funnelseries
+        # gets default option values : [self] getoptions -series funnel
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-funnel
         #
@@ -499,11 +543,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddRadarSeries {args} {
-        # Add data serie chart (use only for radar chart)
+        # Add data series chart (use only for radar chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions radarseries
+        # gets default option values : [self] getoptions -series radar
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-radar
         #
@@ -520,11 +564,11 @@ oo::define ticklecharts::chart {
     }
     
     method AddScatterSeries {args} {
-        # Add data serie chart (use only for scatter chart)
+        # Add data series chart (use only for scatter chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions scatterseries
+        # gets default option values : [self] getoptions -series scatter
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-scatter
         #
@@ -541,11 +585,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddHeatmapSeries {args} {
-        # Add data serie chart (use only for heatmap chart)
+        # Add data series chart (use only for heatmap chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions heatmapseries
+        # gets default option values : [self] getoptions -series heatmap
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-heatmap
         #
@@ -562,11 +606,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddSunburstSeries {args} {
-        # Add data serie chart (use only for sunburst chart)
+        # Add data series chart (use only for sunburst chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions sunburstseries
+        # gets default option values : [self] getoptions -series sunburst
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-sunburst
         #
@@ -583,11 +627,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddTreeSeries {args} {
-        # Add data serie chart (use only for tree chart)
+        # Add data series chart (use only for tree chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions treeseries
+        # gets default option values : [self] getoptions -series tree
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-tree
         #
@@ -604,11 +648,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddThemeRiverSeries {args} {
-        # Add data serie chart (use only for ThemeRiver chart)
+        # Add data series chart (use only for ThemeRiver chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions themeriverseries
+        # gets default option values : [self] getoptions -series themeriver
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-themeriver
         #
@@ -625,11 +669,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddSankeySeries {args} {
-        # Add data serie chart (use only for Sankey chart)
+        # Add data series chart (use only for Sankey chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions sankeyseries
+        # gets default option values : [self] getoptions -series sankey
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-sankey
         #
@@ -646,11 +690,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddPictorialBarSeries {args} {
-        # Add data serie chart (use only for pictorialBar chart)
+        # Add data series chart (use only for pictorialBar chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions pictorialbarseries
+        # gets default option values : [self] getoptions -series pictorialBar
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-pictorialBar
         #
@@ -667,11 +711,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddCandlestickSeries {args} {
-        # Add data serie chart (use only for candlestick chart)
+        # Add data series chart (use only for candlestick chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions candlestickseries
+        # gets default option values : [self] getoptions -series candlestick
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-candlesticks
         #
@@ -688,11 +732,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddParallelSeries {args} {
-        # Add data serie chart (use only for parallel chart)
+        # Add data series chart (use only for parallel chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions parallelseries
+        # gets default option values : [self] getoptions -series parallel
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-parallel
         #
@@ -709,11 +753,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddGaugeSeries {args} {
-        # Add data serie chart (use only for gauge chart)
+        # Add data series chart (use only for gauge chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions gaugeseries
+        # gets default option values : [self] getoptions -series gauge
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-gauge
         #
@@ -730,11 +774,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddGraphSeries {args} {
-        # Add data serie chart (use only for graph chart)
+        # Add data series chart (use only for graph chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions graphseries
+        # gets default option values : [self] getoptions -series graph
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-graph
         #
@@ -751,11 +795,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddWordCloudSeries {args} {
-        # Add data serie chart (use only for wordCloud chart)
+        # Add data series chart (use only for wordCloud chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions wordcloudseries
+        # gets default option values : [self] getoptions -series wordcloud
         # or
         # from doc : https://github.com/ecomfe/echarts-wordcloud
         #
@@ -772,11 +816,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddBoxPlotSeries {args} {
-        # Add data serie chart (use only for boxPlot chart)
+        # Add data series chart (use only for boxPlot chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions boxPlotseries
+        # gets default option values : [self] getoptions -series boxPlot
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-boxplot
         #
@@ -793,11 +837,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddTreeMapSeries {args} {
-        # Add data serie chart (use only for treemap chart)
+        # Add data series chart (use only for treemap chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions treeMapseries
+        # gets default option values : [self] getoptions -series treeMap
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-treemap
         #
@@ -814,11 +858,11 @@ oo::define ticklecharts::chart {
     }
 
     method AddMapSeries {args} {
-        # Add data serie chart (use only for map chart)
+        # Add data series chart (use only for map chart)
         #
         # args - Options described below.
         #
-        # gets default option values : [self] getoptions mapseries
+        # gets default option values : [self] getoptions -series map
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-map
         #
@@ -837,6 +881,8 @@ oo::define ticklecharts::chart {
     method SetOptions {args} {
         # Add options chart (available for all charts)
         #
+        # gets default option values e.g : [self] getoptions -option toolbox
+        #
         # args - Options described below.
         # 
         # -dataset       - dataset options     https://echarts.apache.org/en/option.html#dataset
@@ -853,6 +899,7 @@ oo::define ticklecharts::chart {
         # -axisPointer   - axisPointer options https://echarts.apache.org/en/option.html#axisPointer
         # -geo           - geo options         https://echarts.apache.org/en/option.html#geo
         # -calendar      - calendar options    https://echarts.apache.org/en/option.html#calendar
+        # -aria          - aria options        https://echarts.apache.org/en/option.html#aria
         #
         # Returns nothing    
         set opts {}
@@ -923,7 +970,7 @@ oo::define ticklecharts::chart {
         }
     
         if {[dict exists $args -axisPointer]} {
-            lappend opts "@L=axisPointer" [ticklecharts::axisGlobalPointer $args]
+            lappend opts "@L=axisPointer" [ticklecharts::axisPointerGlobal $args]
         }
 
         if {[dict exists $args -geo]} {
@@ -938,6 +985,10 @@ oo::define ticklecharts::chart {
             foreach cValue [dict get $args $key] {
                 lappend opts "@D=calendar" [ticklecharts::calendar [list $key $cValue]]
             }
+        }
+
+        if {[dict exists $args -aria]} {
+            lappend opts "@L=aria" [ticklecharts::aria $args]
         }
       
         foreach {key value} $opts {
