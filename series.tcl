@@ -1255,26 +1255,26 @@ proc ticklecharts::wordcloudseries {index value} {
     #
     # return dict wordcloudseries options
 
-    setdef options -type              -minversion 5  -validvalue {}               -type str            -default "wordCloud"
-    setdef options -shape             -minversion 5  -validvalue formatWCshape    -type str            -default "circle"
-    # 'keepAspect' is supported from echarts-wordcloud@2.1.0
-    setdef options -keepAspect        -minversion 5  -validvalue {}               -type bool|null      -default "nothing"
-    setdef options -maskImage         -minversion 5  -validvalue {}               -type jsfunc|null    -default "nothing"
-    setdef options -left              -minversion 5  -validvalue formatLeft       -type num|str|null   -default "center"
-    setdef options -top               -minversion 5  -validvalue formatTop        -type num|str|null   -default "middle"
-    setdef options -right             -minversion 5  -validvalue formatRight      -type num|str|null   -default "null"
-    setdef options -bottom            -minversion 5  -validvalue formatBottom     -type num|str|null   -default "null"
-    setdef options -width             -minversion 5  -validvalue {}               -type num|str|null   -default "70%"
-    setdef options -height            -minversion 5  -validvalue {}               -type num|str|null   -default "80%"
-    setdef options -sizeRange         -minversion 5  -validvalue {}               -type list.n         -default [list {12 60}]
-    setdef options -rotationRange     -minversion 5  -validvalue {}               -type list.n         -default [list {-90 90}]
-    setdef options -rotationStep      -minversion 5  -validvalue {}               -type num            -default 45
-    setdef options -gridSize          -minversion 5  -validvalue {}               -type num            -default 8
-    setdef options -drawOutOfBound    -minversion 5  -validvalue {}               -type bool           -default "false"
-    setdef options -layoutAnimation   -minversion 5  -validvalue {}               -type bool           -default "true"
-    setdef options -textStyle         -minversion 5  -validvalue {}               -type dict|null      -default [ticklecharts::textStyle $value -textStyle]
-    setdef options -emphasis          -minversion 5  -validvalue {}               -type dict|null      -default [ticklecharts::emphasis $value]
-    setdef options -data              -minversion 5  -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
+    setdef options -type              -minWCversion 2        -validvalue {}               -type str            -default "wordCloud"
+    setdef options -shape             -minWCversion 2        -validvalue formatWCshape    -type str            -default "circle"
+    setdef options -keepAspect        -minWCversion "2.1.0"  -validvalue {}               -type bool|null      -default "nothing"
+    setdef options -maskImage         -minWCversion 2        -validvalue {}               -type jsfunc|null    -default "nothing"
+    setdef options -left              -minWCversion 2        -validvalue formatLeft       -type num|str|null   -default "center"
+    setdef options -top               -minWCversion 2        -validvalue formatTop        -type num|str|null   -default "middle"
+    setdef options -right             -minWCversion 2        -validvalue formatRight      -type num|str|null   -default "null"
+    setdef options -bottom            -minWCversion 2        -validvalue formatBottom     -type num|str|null   -default "null"
+    setdef options -width             -minWCversion 2        -validvalue {}               -type num|str|null   -default "70%"
+    setdef options -height            -minWCversion 2        -validvalue {}               -type num|str|null   -default "80%"
+    setdef options -sizeRange         -minWCversion 2        -validvalue {}               -type list.n         -default [list {12 60}]
+    setdef options -rotationRange     -minWCversion 2        -validvalue {}               -type list.n         -default [list {-90 90}]
+    setdef options -rotationStep      -minWCversion 2        -validvalue {}               -type num            -default 45
+    setdef options -gridSize          -minWCversion 2        -validvalue {}               -type num            -default 8
+    setdef options -drawOutOfBound    -minWCversion "2.1.0"  -validvalue {}               -type bool           -default "False"
+    setdef options -shrinkToFit       -minWCversion "2.1.0"  -validvalue {}               -type bool|null      -default "nothing"
+    setdef options -layoutAnimation   -minWCversion 2        -validvalue {}               -type bool           -default "True"
+    setdef options -textStyle         -minWCversion 2        -validvalue {}               -type dict|null      -default [ticklecharts::textStyle $value -textStyle]
+    setdef options -emphasis          -minWCversion 2        -validvalue {}               -type dict|null      -default [ticklecharts::emphasis $value]
+    setdef options -data              -minWCversion 2        -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
 
 
     set value [dict remove $value -textStyle -emphasis -dataWCItem]
