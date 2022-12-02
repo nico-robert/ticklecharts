@@ -207,7 +207,7 @@ proc ticklecharts::theme {value} {
             dict set ticklecharts::opts_theme timelineLineColor          "#eeeeee"
             dict set ticklecharts::opts_theme timelineLineWidth          1
             dict set ticklecharts::opts_theme timelineItemColor          "#a9334c"
-            dict set ticklecharts::opts_theme timelineItemColorE         "#a9334c"
+            dict set ticklecharts::opts_theme timelineItemColorE         "#dd6b66"
             dict set ticklecharts::opts_theme timelineCheckColor         "#e43c59"
             dict set ticklecharts::opts_theme timelineCheckBorderColor   "#c23531"
             dict set ticklecharts::opts_theme timelineItemBorderWidth    1
