@@ -190,7 +190,7 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # set position in serie instead of grid... 
+                    # set position in series instead of grid... 
                     # For 'funnel', 'sankey', 'treemap', 'map' or 'wordCloud' chart
                     if {[dict get $opts @S=type] in {sankey funnel wordCloud treemap map}} {
                         set g 1
