@@ -74,7 +74,7 @@ proc ticklecharts::colorStops {value} {
 
         setdef options offset  -minversion 5  -validvalue {}           -type num|null         -default "nothing"
         setdef options color   -minversion 5  -validvalue formatColor  -type str|jsfunc|null  -default "nothing"
-
+        #...
 
         lappend opts [merge $options $item]
         set options {}

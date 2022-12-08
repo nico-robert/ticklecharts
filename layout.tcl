@@ -310,6 +310,7 @@ oo::define ticklecharts::Gridlayout {
                     wordCloud  {error "'wordCloud' should not be added first..."}
                     treemap    {error "'treemap' should not be added first..."}
                     map        {error "'map' should not be added first..."}
+                    lines      {error "'lines' should not be added first..."}
                 }
             }
         }
@@ -366,7 +367,7 @@ oo::define ticklecharts::Gridlayout {
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
-        set newhtml    [ticklecharts::htmlmap $opts_html]
+        set newhtml    [ticklecharts::htmlmap $myhuddle $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 

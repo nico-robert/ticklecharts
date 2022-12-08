@@ -162,7 +162,7 @@ oo::define ticklecharts::timeline {
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
-        set newhtml    [ticklecharts::htmlmap $opts_html]
+        set newhtml    [ticklecharts::htmlmap $myhuddle $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 

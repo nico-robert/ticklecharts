@@ -399,7 +399,7 @@ oo::define ticklecharts::ehuddle {
     
     method get {} {
         # Returns the value of huddle instance
-        return {*}$_huddle
+        return $_huddle
     }
 
     method keys {} {
