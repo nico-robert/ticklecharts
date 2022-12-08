@@ -5,9 +5,10 @@ namespace eval ticklecharts {
     namespace export setdef merge Type vCompare InfoNameProc EchartsOptsTheme
 }
 
-proc ticklecharts::htmlmap {htmloptions} {
+proc ticklecharts::htmlmap {h htmloptions} {
     # Html options.
     #
+    # h            - huddle object.
     # htmloptions  - Options described below.
     #
     # -width      - size chart
@@ -32,6 +33,24 @@ proc ticklecharts::htmlmap {htmloptions} {
     lappend mapoptions [format {%%jsvar%% %s}      [lrange [dict get $htmloptions -jsvar]  0 end-1]]
 
     set html [ticklecharts::readhtmltemplate]
+
+    # add gmap script + Google maps API... if 'gmap' option is present
+    if {[lsearch [$h get] *gmap*] > -1} {
+        set frmt {<script type="text/javascript" src="%s"></script>}
+        lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gapiscript] -header]
+        # Add comment in html template file if key API is not present...
+        if {$::ticklecharts::keyGMAPI eq "??"} {
+            lappend gm [ticklecharts::jsfunc new {<!-- please replace {??} with your own API key -->} -header]
+        }
+        # Add echarts-extension-gmap.js
+        lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gmscript] -header]
+        if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
+            set js [lindex [dict get $htmloptions -script] 0]
+            dict set htmloptions -script [format "{{%s}} list.d" [linsert {*}$js end {*}$gm]]
+        } else {
+            dict set htmloptions -script [format "{{%s}} list.d" $gm]
+        }
+    }
 
     # add js script(s) in html template...
     if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
@@ -173,7 +192,8 @@ proc ticklecharts::TclType value {
         return num
     }    
 
-    if {[string is boolean -strict $value]} {
+    if {[string equal -nocase "true" $value] ||
+        [string equal -nocase "false" $value]} {
         return bool
     }
 
@@ -354,18 +374,19 @@ proc ticklecharts::setdef {d key args} {
     # 
     # d    - dict
     # key  - dict key
-    # args - type + default value
+    # args - type, default, version, validvalue
     #
     # Returns dictionary
 
     upvar 1 $d _dict
 
-    # distinguishes between the 2 libraries.
+    # distinguishes between the 3 libraries.
     set versionLib $::ticklecharts::echarts_version ; # for Echarts see ticklecharts.tcl
 
     foreach {k value} $args {
         switch -exact -- $k {
             "-minWCversion" {set minversion $value ; set versionLib $::ticklecharts::wc_version}
+            "-minGMversion" {set minversion $value ; set versionLib $::ticklecharts::gmap_version}
             "-minversion"   {set minversion $value}
             "-validvalue"   {set validvalue $value}
             "-type"         {set type       $value}
@@ -758,4 +779,58 @@ proc ticklecharts::isListOfList {value echartsKey} {
     } 
 
     return 0
+}
+
+proc ticklecharts::traceEchartsVersion {args} {
+    # Changes the script Echarts version variable.
+    #
+    # args   - not used...
+    #
+    # Returns nothing.
+
+    if {[regexp {@([0-9.]+)|@(latest)} $::ticklecharts::script -> match]} {
+        set vMap [list $match $::ticklecharts::echarts_version]
+        set ::ticklecharts::script [string map $vMap $::ticklecharts::script]
+    } else {
+        puts "warning: Num version (@X.X.X) should be present in 'Echarts' path js.\
+              If no pattern matches, the script path is left unchanged."
+    }
+
+    return {}
+}
+
+proc ticklecharts::traceGmapVersion {args} {
+    # Changes the script Gmap version variable.
+    #
+    # args   - not used...
+    #
+    # Returns nothing.
+
+    if {[regexp {@([0-9.]+)|@(latest)} $::ticklecharts::gmscript -> match]} {
+        set vMap [list $match $::ticklecharts::gmap_version]
+        set ::ticklecharts::gmscript [string map $vMap $::ticklecharts::gmscript]
+    } else {
+        puts "warning: Num version (@X.X.X) should be present in 'gmap' path js.\
+              If no pattern matches, the script path is left unchanged."
+    }
+
+    return {}
+}
+
+proc ticklecharts::tracekeyGMAPI {args} {
+    # Changes the API key in Google script js.
+    #
+    # args   - not used...
+    #
+    # Returns nothing.
+
+    if {[regexp {key=([a-zA-Z0-9?_-]+)} $::ticklecharts::gapiscript -> match]} {
+        set vMap [list $match $::ticklecharts::keyGMAPI]
+        set ::ticklecharts::gapiscript [string map $vMap $::ticklecharts::gapiscript]
+    } else {
+        puts "warning: 'key=' should be present in Google script path js.\
+              If no pattern matches, the script path is left unchanged."
+    }
+
+    return {}
 }
