@@ -445,15 +445,18 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] heatmap
 - [x] map
 - [x] parallel
-- [ ] lines
+- [X] lines
 - [x] graph
 - [x] sankey
 - [x] funnel
 - [x] gauge
 - [x] pictorialBar
 - [x] themeRiver
-- [ ] custom
+- [ ] custom (see _note_ below)
 - [x] wordCloud
+
+> **Note** _custom_ series : This series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
+ If you are interested, please report to the github issue tracker.
 
 #### Gallery :
 ![Photo gallery](images/all.gif)
@@ -464,33 +467,33 @@ License :
 
 Release :
 -------------------------
-*  **08-02-2022** : 1.0
+*  **08-Feb-2022** : 1.0
     - Initial release.
-*  **16-02-2022** : 1.1
+*  **16-Feb-2022** : 1.1
     - Add pie chart + visualMap.
     - Add demos line + pie + visualMap.
     - Bug fixes.
     - Add options.
-*  **19-02-2022** : 1.2
+*  **19-Feb-2022** : 1.2
     - Add funnel chart + markArea.
     - Add markArea + funnel examples.
-*  **20-02-2022** : 1.3
+*  **20-Feb-2022** : 1.3
     - Add radar chart.
     - Add radar, pie, layout examples.
-*  **22-02-2022** : 1.4
+*  **22-Feb-2022** : 1.4
     - Add scatter + effectScatter chart.
     - Add scatter examples + line step example.
     - Add `::ticklecharts::htmlstdout` variable to control _stdout_
 	  for render html output.
-*  **28-02-2022** : 1.5
+*  **28-Feb-2022** : 1.5
     - Add heatmap chart.
     - Add heatmap examples.
     - Add `deleteseries` method to delete series chart.
     - Update README to explain `deleteseries` and `getoptions` methods.
-*  **06-03-2022** : 1.5.1
+*  **06-Mar-2022** : 1.5.1
     - Add graphic (rect, circle, arc, line, text...)
     - Add graphic examples.
-*  **20-03-2022** : 1.5.2
+*  **20-Mar-2022** : 1.5.2
     - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
     - Update chart examples to include toolbox utility.
     - Add examples with json data from [github apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `json` packages from Tcllib) + `tls` package.
@@ -498,88 +501,94 @@ Release :
     - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
     - Add `Render` method to keep the same logic of naming methods for ticklecharts,
     the first letter in capital letter... _Note_ : `render` method is still active.
-*  **02-04-2022** : 1.5.3
+*  **02-Apr-2022** : 1.5.3
     - Add `-validvalue` flag to respect the values by default according to the Echarts documentation (especially for string types).
     - Update examples to reflect the changes.
-*  **04-04-2022** : 1.6
+*  **04-Apr-2022** : 1.6
     - Add `sunburst` chart.
     - Add `sunburst` examples + correction `line` chart label position example.
-*  **07-04-2022** : 1.7
+*  **07-Apr-2022** : 1.7
     - Add `tree` chart.
     - Add `tree` examples.
-*  **09-04-2022** : 1.8
+*  **09-Apr-2022** : 1.8
     - Add `themeRiver` chart + `singleAxis` option.
     - Add `themeRiver` examples.
-*  **09-04-2022** : 1.8.1
+*  **09-Apr-2022** : 1.8.1
     - Fix bug on adding multiple axis (xAxis, yAxis...). Not included in version `1.7`
-*  **11-04-2022** : 1.9
+*  **11-Apr-2022** : 1.9
     - Add `sankey` chart.
     - Add `sankey` examples.
-*  **16-04-2022** : 1.9.1
+*  **16-Apr-2022** : 1.9.1
     - Added procedure to check if the options match the default values, output `warning` message if option name doesn't exist or not supported.
     - Update chart examples to avoid warnings messages.
-*  **19-04-2022** : 1.9.2
+*  **19-Apr-2022** : 1.9.2
     - Add `dataZoom` option (For zooming a specific area...)
     - Add or update chart examples to include `dataZoom` option.
     - Fix bug for theming features.
-*  **30-04-2022** : 1.9.3
+*  **30-Apr-2022** : 1.9.3
     - Add `dataset` option.
     - Add chart examples to include `dataset` option.
-*  **04-05-2022** : 1.9.4
+*  **04-May-2022** : 1.9.4
     - Add `pictorialBar` chart.
     - Add `pictorialBar` examples.
-*  **12-05-2022** : 1.9.5
+*  **12-May-2022** : 1.9.5
     - Add `candlestick` chart.
     - Add `candlestick` examples.
-*  **26-05-2022** : 2.0.1
+*  **26-May-2022** : 2.0.1
     - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
     - **Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
-*  **26-06-2022** : 2.1
+*  **26-Jun-2022** : 2.1
     - Add `parallel` chart.
     - Add `parallel` examples.
     - Add `brush` option (To select part of data from a chart to display in detail...)
-*  **27-06-2022** : 2.1.1
+*  **27-Jun-2022** : 2.1.1
     - Add `parallelAxis` as method instead of a option. Update examples to reflect this change.
-*  **02-08-2022** : 2.2
+*  **02-Aug-2022** : 2.2
     - Add `timeline` option (provides switching between charts).
     - Add `timeline` examples.
-*  **20-08-2022** : 2.3
+*  **20-Aug-2022** : 2.3
     - Add `gauge` chart.
     - Add `gauge` examples.
     - Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
     - Cosmetic changes.
     - Add `toJSON` method for `timeline`class.
-*  **05-09-2022** : 2.3.1
+*  **05-Sep-2022** : 2.3.1
     - Code refactoring
-*  **14-10-2022** : 2.4
+*  **14-Oct-2022** : 2.4
     - Add `graph` chart.
     - Add `graph` examples.
-*  **21-10-2022** : 2.5
+*  **21-Oct-2022** : 2.5
     - Add [echarts-wordcloud](https://github.com/ecomfe/echarts-wordcloud).
     - Add `wordCloud` examples.
     - Adds the possibility to add one or more js script(s) to the html template file.
-*  **30-10-2022** : 2.6
+*  **30-Oct-2022** : 2.6
     - Add `boxplot` chart.
     - Add `boxplot` examples.
     - **Incompatibility** with previous version for `dataset` class, `dataset` now accepts multiple `source` for the same class.
     - Update `dataset` examples to reflect this change.
-*  **07-11-2022** : 2.7
+*  **07-Nov-2022** : 2.7
     - Add `treemap` chart.
     - Add `treemap` examples.
     - Add `axisPointer` option
     - Add `-minversion` flag in args option, to control if the _key_ or _type_ is supported in current `Echarts` version, 
       output `warning` message if it is not supported.
-*  **12-11-2022** : 2.8
+*  **12-Nov-2022** : 2.8
     - Add `map` chart.
     - Add `map` examples.
     - Add `geo` option
-*  **25-11-2022** : 2.8.1
+*  **25-Nov-2022** : 2.8.1
     - Add `calendar` option.
     - Add `calendar` examples.
     - For `color` and `backgroundColor` properties, adds `eColor` Class  
       see [pie_texture.tcl example](examples/pie/pie_texture.tcl) in `examples/pie` folder.
-*  **02-12-2022** : 2.8.2
+*  **02-Dec-2022** : 2.8.2
     - Bump to `v2.1.0` for echarts-wordcloud, update examples to reflect this changes.
     - Add `aria` option.
-    - Add `aria` examples.
+    - Add `aria` example.
+    - Cosmetic changes.
+*  **08-Dec-2022** : 2.9
+    - Add `gmap` [extension](https://github.com/plainheart/echarts-extension-gmap). (_Note_: A Google Key API is required)
+    - Add `gmap` examples.
+    - Add `lines` chart.
+    - Add `lines` examples.
     - Cosmetic changes.
