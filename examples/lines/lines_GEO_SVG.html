@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>lines_GEO_SVG</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_264239860184181" class="chart-container" style="width:1500px; height:900px;"></div>
+    <script>
+        var chart_264239860182309 = echarts.init(document.getElementById('id_264239860184181'), null, {renderer: 'canvas'});
+ var svg;
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "https://raw.githubusercontent.com/apache/echarts-examples/gh-pages/public/data/asset/geo/MacOdrum-LV5-floorplan-web.svg", false);
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4) {
+        if (rawFile.status === 200 || rawFile.status == 0) {
+          svg = rawFile.responseText;
+        }
+      }
+    }
+  rawFile.send(null);
+  echarts.registerMap('MacOdrum-LV5-floorplan-web', { svg: svg });
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "Visit Route",
+      "target": "blank",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": 10,
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "geo": {
+    "show": true,
+    "map": "MacOdrum-LV5-floorplan-web",
+    "roam": true,
+    "zoom": 1,
+    "selectedMode": false,
+    "emphasis": {
+      "scale": true,
+      "focus": "none",
+      "blurScope": "coordinateSystem",
+      "label": {
+        "show": false,
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "itemStyle": {
+        "color": null,
+        "borderColor": "rgb(0, 0, 0)",
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "opacity": 1
+      }
+    },
+    "zlevel": 0,
+    "z": 2,
+    "left": "auto",
+    "top": "auto",
+    "right": "auto",
+    "bottom": "auto",
+    "silent": false
+  },
+  "series": [{
+      "type": "lines",
+      "name": "Route",
+      "colorBy": "series",
+      "coordinateSystem": "geo",
+      "geoIndex": 0,
+      "polyline": true,
+      "effect": {
+        "show": true,
+        "period": 8,
+        "constantSpeed": 80,
+        "symbol": "path://M35.5 40.5c0-22.16 17.84-40 40-40s40 17.84 40 40c0 1.6939-.1042 3.3626-.3067 5H35.8067c-.2025-1.6374-.3067-3.3061-.3067-5zm90.9621-2.6663c-.62-1.4856-.9621-3.1182-.9621-4.8337 0-6.925 5.575-12.5 12.5-12.5s12.5 5.575 12.5 12.5a12.685 12.685 0 0 1-.1529 1.9691l.9537.5506-15.6454 27.0986-.1554-.0897V65.5h-28.7285c-7.318 9.1548-18.587 15-31.2715 15s-23.9535-5.8452-31.2715-15H15.5v-2.8059l-.0937.0437-8.8727-19.0274C2.912 41.5258.5 37.5549.5 33c0-6.925 5.575-12.5 12.5-12.5S25.5 26.075 25.5 33c0 .9035-.0949 1.784-.2753 2.6321L29.8262 45.5h92.2098z",
+        "symbolSize": [
+          20,
+          12
+        ],
+        "color": "#a10000",
+        "trailLength": 0,
+        "loop": true
+      },
+      "large": true,
+      "largeThreshold": 2000,
+      "symbol": "emptyCircle",
+      "symbolSize": 3,
+      "lineStyle": {
+        "color": "#c46e54",
+        "width": 5,
+        "type": "dotted",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 1
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "none",
+        "blurScope": "coordinateSystem",
+        "label": {
+          "show": false,
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        }
+      },
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "data": [{"coords": [
+            [
+              110.6189462165178,
+              456.64349563895087
+            ],
+            [
+              124.10988522879458,
+              450.8570048730469
+            ],
+            [
+              123.9272226116071,
+              389.9520693708147
+            ],
+            [
+              61.58708083147317,
+              386.87942320312504
+            ],
+            [
+              61.58708083147317,
+              72.8954315876116
+            ],
+            [
+              258.29514854771196,
+              72.8954315876116
+            ],
+            [
+              260.75457021484374,
+              336.8559607533482
+            ],
+            [
+              280.5277985253906,
+              410.2406672084263
+            ],
+            [
+              275.948185765904,
+              528.0254369698661
+            ],
+            [
+              111.06907909458701,
+              552.795792593471
+            ],
+            [
+              118.87138231445309,
+              701.365737015904
+            ],
+            [
+              221.36468155133926,
+              758.7870354617745
+            ],
+            [
+              307.86195445452006,
+              742.164737297712
+            ],
+            [
+              366.8489324762834,
+              560.9895157073103
+            ],
+            [
+              492.8750778390066,
+              560.9895157073103
+            ],
+            [
+              492.8750778390066,
+              827.9639780566406
+            ],
+            [
+              294.9255269587053,
+              827.9639780566406
+            ],
+            [
+              282.79803391043527,
+              868.2476088113839
+            ]
+          ]}]
+    }]
+}
+        chart_264239860182309.setOption(option);
+    </script>
+  </body>
+</html>

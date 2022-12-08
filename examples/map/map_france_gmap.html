@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>map_france_gmap</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-extension-gmap@1.5.0/dist/echarts-extension-gmap.min.js"></script>
+    <!-- please replace {??} with your own API key -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=??"></script>
+  </head>
+  <body>
+    <div id="id_37937531409601" class="chart-container" style="width:1500px; height:900px;"></div>
+    <script>
+        var chart_37937531407744 = echarts.init(document.getElementById('id_37937531409601'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "gmap": {
+    "center": [
+      2.00,
+      46.00
+    ],
+    "zoom": 6.5,
+    "roam": true,
+    "renderOnMoving": true,
+    "echartsLayerZIndex": 2000,
+    "disableDefaultUI": true,
+    "mapTypeId": "roadmap",
+    "styles": [
+      {
+        "elementType": "geometry",
+        "stylers": [{"color": "#004981"}]
+      },
+      {
+        "elementType": "labels",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "elementType": "labels.icon",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "elementType": "labels.text.fill",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [{"visibility": "off"}]
+      },
+      {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [{"color": "#044161"}]
+      },
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+          {"visibility": "on"},
+          {"color": "#24b0e2"}
+        ]
+      }
+    ]
+  },
+  "series": [
+    {
+      "type": "effectScatter",
+      "name": "City",
+      "colorBy": "series",
+      "coordinateSystem": "gmap",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": 15,
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "itemStyle": {
+        "color": "#f4e925",
+        "borderColor": "rgb(0, 0, 0)",
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "borderMiterLimit": 10,
+        "shadowBlur": 10,
+        "shadowColor": "#333",
+        "opacity": 1
+      },
+      "data": [
+        {
+          "name": "Bayonne",
+          "value": [
+            -1.4724319938245576,
+            43.49308776293058
+          ]
+        },
+        {
+          "name": "Paris",
+          "value": [
+            2.34960965438873,
+            48.860204769341884
+          ]
+        },
+        {
+          "name": "Marseille",
+          "value": [
+            5.372546427576347,
+            43.29511510366016
+          ]
+        }
+      ],
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "effectType": "ripple",
+      "showEffectOn": "render"
+    },
+    {
+      "type": "pie",
+      "name": "pie",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "coordinateSystem": "gmap",
+      "selectedOffset": 30,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": true,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "center": [
+        -6.43676598655016,
+        46.12723458558478
+      ],
+      "radius": 90,
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "data": [
+        {
+          "name": "Bayonne",
+          "value": 300,
+          "selected": false
+        },
+        {
+          "name": "Paris",
+          "value": 735,
+          "selected": false
+        },
+        {
+          "name": "Marseille",
+          "value": 580,
+          "selected": false
+        }
+      ]
+    },
+    {
+      "type": "lines",
+      "name": "Arrow",
+      "colorBy": "series",
+      "coordinateSystem": "gmap",
+      "polyline": false,
+      "effect": {
+        "show": true,
+        "period": 4,
+        "symbol": "arrow",
+        "symbolSize": 10,
+        "color": "red",
+        "trailLength": 0.5,
+        "loop": true
+      },
+      "large": false,
+      "largeThreshold": 2000,
+      "symbol": [
+        "none",
+        "arrow"
+      ],
+      "symbolSize": 12,
+      "lineStyle": {
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "curveness": 0.2,
+        "opacity": 1
+      },
+      "progressive": 400,
+      "progressiveThreshold": 3000,
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "data": [
+        {"coords": [
+            [
+              -1.4724319938245576,
+              43.49308776293058
+            ],
+            [
+              2.34960965438873,
+              48.860204769341884
+            ]
+          ]},
+        {"coords": [
+            [
+              2.34960965438873,
+              48.860204769341884
+            ],
+            [
+              5.372546427576347,
+              43.29511510366016
+            ]
+          ]},
+        {"coords": [
+            [
+              5.372546427576347,
+              43.29511510366016
+            ],
+            [
+              -1.4724319938245576,
+              43.49308776293058
+            ]
+          ]}
+      ]
+    }
+  ]
+}
+        chart_37937531407744.setOption(option);
+    </script>
+  </body>
+</html>

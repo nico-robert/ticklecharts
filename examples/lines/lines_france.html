@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>lines_france</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://echarts-maps.github.io/echarts-countries-js/echarts-countries-js/France.js"></script>
+  </head>
+  <body>
+    <div id="id_21470068808648" class="chart-container" style="width:1500px; height:900px;"></div>
+    <script>
+        var chart_21470068806243 = echarts.init(document.getElementById('id_21470068808648'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "geo": {
+    "show": true,
+    "map": "法国",
+    "roam": true,
+    "zoom": 1,
+    "selectedMode": false,
+    "itemStyle": {
+      "color": "#323c48",
+      "borderColor": "#111",
+      "borderType": "solid",
+      "borderDashOffset": 0,
+      "borderCap": "butt",
+      "borderJoin": "bevel",
+      "borderMiterLimit": 10,
+      "opacity": 1
+    },
+    "zlevel": 0,
+    "z": 2,
+    "left": "auto",
+    "top": "auto",
+    "right": "auto",
+    "bottom": "auto",
+    "silent": false
+  },
+  "series": [{
+      "type": "lines",
+      "name": "Arrow",
+      "colorBy": "series",
+      "coordinateSystem": "geo",
+      "polyline": false,
+      "effect": {
+        "show": true,
+        "period": 4,
+        "symbol": "arrow",
+        "symbolSize": 6,
+        "color": "red",
+        "trailLength": 0.5,
+        "loop": true
+      },
+      "large": false,
+      "largeThreshold": 2000,
+      "symbol": [
+        "none",
+        "arrow"
+      ],
+      "symbolSize": 12,
+      "lineStyle": {
+        "width": 1,
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "miterLimit": 10,
+        "shadowBlur": 0,
+        "shadowColor": null,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "curveness": 0.2,
+        "opacity": 1
+      },
+      "progressive": 400,
+      "progressiveThreshold": 3000,
+      "clip": true,
+      "zlevel": 3,
+      "z": 2,
+      "silent": false,
+      "data": [
+        {"coords": [
+            [
+              -1.4724319938245576,
+              43.49308776293058
+            ],
+            [
+              2.34960965438873,
+              48.860204769341884
+            ]
+          ]},
+        {"coords": [
+            [
+              2.34960965438873,
+              48.860204769341884
+            ],
+            [
+              5.372546427576347,
+              43.29511510366016
+            ]
+          ]},
+        {"coords": [
+            [
+              5.372546427576347,
+              43.29511510366016
+            ],
+            [
+              -1.4724319938245576,
+              43.49308776293058
+            ]
+          ]}
+      ]
+    }]
+}
+        chart_21470068806243.setOption(option);
+    </script>
+  </body>
+</html>
