@@ -252,6 +252,9 @@ eval [string map [list \
                     exit(EXIT_FAILURE);
                 }
 
+                // if count == 0 Segmentation fault... for Tcl_GetString()
+                if (count == 0) {return 0;}
+
                 const char* h = Tcl_GetString(elements[0]);
                 result = strcmp(h, "HUDDLE");
 
@@ -544,7 +547,7 @@ eval [string map [list \
             }
             /*
             *----------------------------------------------------------------------
-            * huddleJsonDumpC --
+            * huddleArgToNodeC --
             *----------------------------------------------------------------------
             */
             Tcl_Obj* huddleArgToNodeC (Tcl_Interp* interp, Tcl_Obj* srcObj) {
