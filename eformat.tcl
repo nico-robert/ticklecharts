@@ -449,15 +449,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         
             if {[InfoNameProc 2 "graphseries"]} {
-                lappend validvalue {calendar none}
+                append validvalue " calendar none"
             }
 
             if {[InfoNameProc 2 "pieseries"]} {
-                lappend validvalue {geo calendar none}
+                append validvalue " calendar none gmap"
             }
 
             if {[InfoNameProc 2 "heatmapseries"]} {
-                lappend validvalue calendar
+                append validvalue " calendar gmap"
             }
 
             if {[InfoNameProc 2 "graphseries"]} {
@@ -465,7 +465,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
 
             if {[InfoNameProc 2 "scatterseries"]} {
-                lappend validvalue calendar
+                append validvalue " calendar gmap"
+            }
+
+            if {[InfoNameProc 2 "linesseries"]} {
+                lappend validvalue gmap
             }
 
             if {$value ni $validvalue} {
@@ -1248,6 +1252,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatRangeTrailLength - 
         formatRangeSymbolSize {
             # possible values...
             if {![expr {$value >= 0 && $value <= 1}]} {
@@ -1261,6 +1266,17 @@ proc ticklecharts::formatEcharts {formattype value key} {
             if {![expr {$value >= -3.141592 && $value <= 3.141592}]} {
                 error "'$value' should be between '-Pi()' and 'Pi()'\
                         for this key '$key' in $nameproc"
+            }
+        }
+
+        formatMapTypeID {
+            # possible values...
+            if {[Type $value] eq "str"} {
+                set validvalue {roadmap satellite hybrid terrain}
+                if {$value ni $validvalue} {
+                    error "'$value' should be '[join $validvalue "' or '"]'\
+                            for this key '$key' in $nameproc"
+                }
             }
         }
 
