@@ -27,6 +27,7 @@ oo::class create ticklecharts::chart {
     variable _indexboxplotseries      ; # index boxplot series
     variable _indextreemapseries      ; # index treemap series
     variable _indexmapseries          ; # index map series
+    variable _indexlinesseries        ; # index lines series
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -238,7 +239,7 @@ oo::define ticklecharts::chart {
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
-        set newhtml    [ticklecharts::htmlmap $opts_html]
+        set newhtml    [ticklecharts::htmlmap $myhuddle $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
@@ -877,6 +878,27 @@ oo::define ticklecharts::chart {
         return {}
 
     }
+
+    method AddLinesSeries {args} {
+        # Add data series chart (use only for lines chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getoptions -series lines
+        # or
+        # from doc : https://echarts.apache.org/en/option.html#series-lines
+        #
+        # Returns nothing     
+        incr _indexlinesseries
+
+        set options [ticklecharts::linesseries $_indexlinesseries [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+
+    }
     
     method SetOptions {args} {
         # Add options chart (available for all charts)
@@ -900,6 +922,7 @@ oo::define ticklecharts::chart {
         # -geo           - geo options         https://echarts.apache.org/en/option.html#geo
         # -calendar      - calendar options    https://echarts.apache.org/en/option.html#calendar
         # -aria          - aria options        https://echarts.apache.org/en/option.html#aria
+        # -gmap          - gmap options        https://github.com/plainheart/echarts-extension-gmap
         #
         # Returns nothing    
         set opts {}
@@ -990,6 +1013,10 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -aria]} {
             lappend opts "@L=aria" [ticklecharts::aria $args]
         }
+
+        if {[dict exists $args -gmap]} {
+            lappend opts "@L=gmap" [ticklecharts::gmap $args]
+        }
       
         foreach {key value} $opts {
             set f [ticklecharts::optsToEchartsHuddle $value]
@@ -1008,6 +1035,6 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries AddMapSeries
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries
 }
 
