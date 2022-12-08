@@ -109,7 +109,7 @@ proc ticklecharts::lineseries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::lineseries below.
     #
-    # return dict barseries options
+    # return dict lineseries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str             -default "line"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null        -default "nothing"
@@ -521,25 +521,37 @@ proc ticklecharts::scatterseries {index chart value} {
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
-        if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain '-data' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value -dataScatterItem]} {
+            error "'chart' Class cannot contain '-data' or '-dataScatterItem' when a class dataset is present"
         }
 
         set options [dict remove $options -data]
         # set dimensions in dataset class...
         # setdef options -dimensions     -minversion 5  -validvalue {} -type list.d|null -default "nothing"
-        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null       -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                   -type str|null     -default "nothing"
         setdef options   -datasetId      -minversion 5  -validvalue {}                   -type str|null     -default "nothing"
         setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout   -type str|null     -default "nothing"
         setdef options   -encode         -minversion 5  -validvalue {}                   -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                   -type num|null     -default "nothing"
 
     }
+
+    if {[dict exists $value -dataScatterItem]} {
+        if {[dict exists $value -data]} {
+            error "'chart' args cannot contain '-data' and '-dataScatterItem'..."
+        }
+        if {![dict exists $value -type]} {
+            dict set value -type "scatter"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::scatterItem $value [dict get $value -type]]
+    }
     
-    set lflag {-label -labelLine -lineStyle
-               -markPoint -markLine -universalTransition \
-               -labelLayout -itemStyle -markArea 
-               -emphasis -blur -select -tooltip -rippleEffect -encode}
+    set lflag {
+               -label -labelLine -lineStyle
+               -markPoint -markLine -universalTransition
+               -labelLayout -itemStyle -markArea -dataScatterItem
+               -emphasis -blur -select -tooltip -rippleEffect -encode
+    }
     
     # does not remove '-labelLayout' for js function.
     if {[dict exists $value -labelLayout] && [Type [dict get $value -labelLayout]] eq "jsfunc"} {
@@ -1512,4 +1524,88 @@ proc ticklecharts::mapseries {index chart value} {
 
     return $options
  
+}
+
+proc ticklecharts::linesseries {index chart value} {
+    # options : https://echarts.apache.org/en/option.html#series-lines
+    #
+    # index - index series.
+    # chart - self.
+    # value - Options described in proc ticklecharts::linesseries below.
+    #
+    # return dict linesseries options
+
+    setdef options -type                    -minversion 5       -validvalue {}                  -type str             -default "lines"
+    setdef options -id                      -minversion 5       -validvalue {}                  -type str|null        -default "nothing"
+    setdef options -name                    -minversion 5       -validvalue {}                  -type str             -default "linesseries_${index}"
+    setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy       -type str             -default "series"
+    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS          -type str             -default "geo"
+    setdef options -xAxisIndex              -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -yAxisIndex              -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -geoIndex                -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -polyline                -minversion 5       -validvalue {}                  -type bool            -default "False"
+    setdef options -effect                  -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::effect $value]
+    setdef options -large                   -minversion 5       -validvalue {}                  -type bool            -default "True"
+    setdef options -largeThreshold          -minversion 5       -validvalue {}                  -type num             -default 2000
+    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str|list.d|null -default [EchartsOptsTheme symbol]
+    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num|list.n      -default [EchartsOptsTheme symbolSize]
+    setdef options -lineStyle               -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::lineStyle $value]
+    setdef options -label                   -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::label $value]
+    setdef options -labelLayout             -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::labelLayout $value]
+    setdef options -emphasis                -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::blur $value]
+    setdef options -select                  -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::select $value]
+    setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode  -type bool|str|null   -default "nothing"
+    setdef options -progressive             -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -progressiveThreshold    -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -markPoint               -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::markPoint $value]
+    setdef options -markLine                -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::markLine $value]
+    setdef options -markArea                -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::markArea $value]
+    setdef options -clip                    -minversion 5       -validvalue {}                  -type bool            -default "True"
+    setdef options -zlevel                  -minversion 5       -validvalue {}                  -type num             -default 0
+    setdef options -z                       -minversion 5       -validvalue {}                  -type num             -default 2
+    setdef options -silent                  -minversion 5       -validvalue {}                  -type bool            -default "False"
+    setdef options -animation               -minversion 5       -validvalue {}                  -type bool|null       -default "nothing"
+    setdef options -animationThreshold      -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
+    setdef options -animationDuration       -minversion 5       -validvalue {}                  -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasing         -minversion 5       -validvalue formatAEasing       -type str|null        -default "nothing"
+    setdef options -animationDelay          -minversion 5       -validvalue {}                  -type num|jsfunc|null -default "nothing"
+    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                  -type num|jsfunc|null -default "nothing"
+    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing       -type str|null        -default "nothing"
+    setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                  -type num|jsfunc|null -default "nothing"
+    setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                  -type dict|null       -default [ticklecharts::universalTransition $value]
+
+    # check if chart includes a dataset class
+    set dataset [$chart dataset]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -dataLinesItem]} {
+            error "'chart' Class cannot contain '-dataLinesItem' when a class dataset is present"
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
+        setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
+        setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
+
+    } else {
+        if {![dict exists $value -dataLinesItem]} {
+            error "'chart' args should contain -dataLinesItem'..."
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LinesItem $value]
+    }
+    
+    set value [dict remove $value -label -effect \
+                                  -lineStyle \
+                                  -markPoint -markLine -markArea \
+                                  -labelLayout -universalTransition \
+                                  -emphasis -blur -select -encode -dataLinesItem]
+                                
+    set options [merge $options $value]
+
+    return $options
+
 }
