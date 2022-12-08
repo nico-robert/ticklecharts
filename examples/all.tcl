@@ -35,6 +35,7 @@ set charts {
     treemap
     map
     calendar
+    lines
 }
 
 set dir [file dirname [info script]]
