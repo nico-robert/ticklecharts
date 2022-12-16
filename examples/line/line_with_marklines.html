@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_with_marklines</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_287437938637859" class="chart-container" style="width:1200px; height:900px;"></div>
+    <script>
+        var chart_287437938635817 = echarts.init(document.getElementById('id_287437938637859'), null, {renderer: 'canvas'});
+        var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": false,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "grid": [{
+      "left": 60,
+      "top": 30,
+      "right": 60,
+      "bottom": 40
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitArea": {
+        "interval": 0,
+        "show": true
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "max": 2,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [{
+      "type": "line",
+      "name": "line",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "emptyCircle",
+      "symbolSize": 6,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": "auto",
+      "legendHoverLink": true,
+      "stack": "all",
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "smooth": false,
+      "data": [
+        0.3,
+        1.4,
+        1.2,
+        1,
+        0.6
+      ],
+      "markLine": {
+        "silent": false,
+        "precision": 2,
+        "label": {
+          "show": true,
+          "distance": [
+            20,
+            8
+          ],
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "fontFamily": "sans-serif",
+          "fontSize": 12,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "..."
+        },
+        "data": [
+          {
+            "name": "start",
+            "yAxis": 1.8,
+            "label": {
+              "show": true,
+              "position": "start",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: start",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "start",
+                "rotate": 0,
+                "formatter": "start",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: start",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "middle",
+            "yAxis": 1.8,
+            "label": {
+              "show": true,
+              "position": "middle",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          {
+            "name": "end",
+            "yAxis": 1.8,
+            "label": {
+              "show": true,
+              "position": "end",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: end",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "end",
+                "rotate": 0,
+                "formatter": "end",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: end",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideStart",
+            "yAxis": 1.6,
+            "label": {
+              "show": true,
+              "position": "insideStart",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideStart",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideStart",
+                "rotate": 0,
+                "formatter": "insideStart",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideStart",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideStartTop",
+            "yAxis": 1.6,
+            "label": {
+              "show": true,
+              "position": "insideStartTop",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideStartTop",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideStartTop",
+                "rotate": 0,
+                "formatter": "insideStartTop",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideStartTop",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideStartBottom",
+            "yAxis": 1.6,
+            "label": {
+              "show": true,
+              "position": "insideStartBottom",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideStartBottom",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideStartBottom",
+                "rotate": 0,
+                "formatter": "insideStartBottom",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideStartBottom",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideMiddle",
+            "yAxis": 1.4,
+            "label": {
+              "show": true,
+              "position": "insideMiddle",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideMiddle",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideMiddle",
+                "rotate": 0,
+                "formatter": "insideMiddle / middle",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideMiddle",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideMiddleTop",
+            "yAxis": 1.4,
+            "label": {
+              "show": true,
+              "position": "insideMiddleTop",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideMiddleTop",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideMiddleTop",
+                "rotate": 0,
+                "formatter": "insideMiddleTop",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideMiddleTop",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideMiddleBottom",
+            "yAxis": 1.4,
+            "label": {
+              "show": true,
+              "position": "insideMiddleBottom",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideMiddleBottom",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideMiddleBottom",
+                "rotate": 0,
+                "formatter": "insideMiddleBottom",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideMiddleBottom",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideEnd",
+            "yAxis": 1.2,
+            "label": {
+              "show": true,
+              "position": "insideEnd",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideEnd",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideEnd",
+                "rotate": 0,
+                "formatter": "insideEnd",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideEnd",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideEndTop",
+            "yAxis": 1.2,
+            "label": {
+              "show": true,
+              "position": "insideEndTop",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideEndTop",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideEndTop",
+                "rotate": 0,
+                "formatter": "insideEndTop",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideEndTop",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ],
+          {
+            "name": "insideEndBottom",
+            "yAxis": 1.2,
+            "label": {
+              "show": true,
+              "position": "insideEndBottom",
+              "rotate": 0,
+              "formatter": "{b}",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "fontFamily": "sans-serif",
+              "fontSize": 12,
+              "lineHeight": 12,
+              "borderWidth": 0,
+              "borderType": "solid",
+              "borderDashOffset": 0,
+              "borderRadius": 2,
+              "shadowColor": "transparent",
+              "shadowBlur": 0,
+              "shadowOffsetX": 0,
+              "shadowOffsetY": 0,
+              "textBorderColor": null,
+              "textBorderWidth": 0,
+              "textBorderType": "solid",
+              "textBorderDashOffset": 0,
+              "textShadowColor": "transparent",
+              "textShadowBlur": 0,
+              "textShadowOffsetX": 0,
+              "textShadowOffsetY": 0,
+              "overflow": "truncate",
+              "ellipsis": "..."
+            }
+          },
+          [
+            {
+              "name": "start: insideEndBottom",
+              "coord": [
+                0,
+                0.3
+              ],
+              "label": {
+                "show": true,
+                "position": "insideEndBottom",
+                "rotate": 0,
+                "formatter": "insideEndBottom",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+                "fontFamily": "sans-serif",
+                "fontSize": 12,
+                "lineHeight": 12,
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderRadius": 2,
+                "shadowColor": "transparent",
+                "shadowBlur": 0,
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 0,
+                "textBorderColor": null,
+                "textBorderWidth": 0,
+                "textBorderType": "solid",
+                "textBorderDashOffset": 0,
+                "textShadowColor": "transparent",
+                "textShadowBlur": 0,
+                "textShadowOffsetX": 0,
+                "textShadowOffsetY": 0,
+                "overflow": "truncate",
+                "ellipsis": "..."
+              }
+            },
+            {
+              "name": "end: insideEndBottom",
+              "coord": [
+                3,
+                1
+              ]
+            }
+          ]
+        ]
+      },
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }]
+}
+        chart_287437938635817.setOption(option);
+    </script>
+  </body>
+</html>
