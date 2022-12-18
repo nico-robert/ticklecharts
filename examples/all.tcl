@@ -9,6 +9,9 @@ package require ticklecharts
 # Replaces some huddle/ehuddle procedures by C procedures...
 # ticklecharts::eHuddleCritcl 1
 
+# set minimum properties (not compatible with '::ticklecharts::theme' variable)
+# set ::ticklecharts::minProperties 1
+
 set charts {
     bar
     line
