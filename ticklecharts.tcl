@@ -129,6 +129,11 @@
                # Add `lines` chart.
                # Add `lines` examples.
                # Cosmetic changes.
+# 18-Dec-2022 : v2.9.1
+               # The result of the ticklecharts::InfoOptions command on the stdout is deleted, in favor of a result of a command.
+               # New global variable `::ticklecharts::minProperties` see Global variables(#Globalvariables) section for detail.
+               # `-class` and `-style` are added in `Render` method to control the class name and style respectively (_Note_ : `template.html` file is modified).
+               # Cosmetic changes.
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -152,21 +157,22 @@ source [file join $dir ecolor.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.9
+    variable version 2.9.1
     variable echarts_version 5.2.2 ; # Echarts version
     variable wc_version 2.1.0      ; # wordCloud version
     variable gmap_version 1.5.0    ; # gmap version
-    variable keyGMAPI "??"         ; # Please replace 'keyGMAPI' with your own API key.
+    variable keyGMAPI "??"         ; # Please replace '??' with your own API key.
     variable dir $dir
     variable theme "basic"
-    variable htmlstdout 1
+    variable htmlstdout    "True"
+    variable minProperties "False"
     variable opts_theme {}
     variable htmltemplate [file join $dir html template.html]
     variable script     "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
     variable gmscript   "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
     variable gapiscript "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
     
-    # When version change add trace command.
+    # When version is modified add trace command.
     trace add variable echarts_version write ticklecharts::traceEchartsVersion
     trace add variable gmap_version    write ticklecharts::traceGmapVersion
     trace add variable keyGMAPI        write ticklecharts::tracekeyGMAPI

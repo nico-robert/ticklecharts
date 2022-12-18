@@ -70,6 +70,8 @@ $chart Render
 | _-jsecharts_ | full path `echarts.min.js` file (by default `cdn` script)
 | _-jsvar_ | name js var (default value : `option`)
 | _-script_ | jsfunc (default value : `"null"`)
+| _-class_ | Class container (default value : `"chart-container"`)
+| _-style_ | Css style (default value : `width:'-width'; height:'-height';`)
 
 ```tcl
 # Demo
@@ -295,6 +297,35 @@ source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200
 #    critcl   |    3514165 microseconds per iteration (≃7x faster)
 ```
 `Note` : _No advantage to use this command with small data..._
+
+Global variables :
+-------------------------
+```tcl
+package require ticklecharts
+
+# Set theme... with variable
+# Or with class : ticklecharts::(Gridlayout|chart|timeline) new -theme "vintage"
+set ::ticklecharts::theme "vintage" ; # default "basic" 
+
+# Minimum properties...
+# Only write values that are defined in the *.tcl file. (Benefit : performance + minifying your HTML files)
+# Be careful, properties in the *.tcl file must be implicitly marked.
+# Note : 'theme' other than 'basic' is not supported (yet) when 'minProperties' variable is set to 'True'.
+set ::ticklecharts::minProperties "True" ; # default "False"
+
+# Output 'render.html' full path to stdout. 
+set ::ticklecharts::htmlstdout "False" ; # default "True"
+
+# Google API Key 
+# Note : To use the Google map API 'gmap' a valid key is required.
+set ::ticklecharts::keyGMAPI "??" ; # Please replace '??' with your own API key.
+
+# Set versions for js script.
+# Note : Num version (@X.X.X) should be present in js path .If no pattern matches, the script path is left unchanged.
+set ::ticklecharts::echarts_version "X.X.X" ; # Echarts version
+set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
+```
+`Note` : _All the above variables can be modified in the `ticklecharts.tcl` file_.
 
 Examples :
 -------------------------
@@ -591,4 +622,9 @@ Release :
     - Add `gmap` examples.
     - Add `lines` chart.
     - Add `lines` examples.
+    - Cosmetic changes.
+*  **18-Dec-2022** : 2.9.1
+    - The result of the [ticklecharts::InfoOptions] command on the `stdout` is deleted, in favor of a result of a command.
+    - New global variable `::ticklecharts::minProperties` see [Global variables](#Globalvariables) section for detail.
+    - `-class` and `-style` are added in `Render` method to control the class name and style respectively (_Note_ : `template.html` file is modified).
     - Cosmetic changes.
