@@ -56,7 +56,6 @@ proc ticklecharts::colorItem {value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 
@@ -82,5 +81,4 @@ proc ticklecharts::colorStops {value} {
     }
 
     return [list {*}$opts]
-
 }

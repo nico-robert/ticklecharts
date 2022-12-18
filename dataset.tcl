@@ -43,7 +43,7 @@ oo::class create ticklecharts::dataset {
             setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
             setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
 
-            set item  [dict remove $item -source -transform -dimensions]
+            set item  [dict remove $item -transform -dimensions]
 
             # set dataset...
             lappend opts [merge $options $item]

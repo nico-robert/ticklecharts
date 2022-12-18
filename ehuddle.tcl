@@ -66,20 +66,10 @@ oo::define ticklecharts::ehuddle {
                 "@NULL" {set value [huddle null]}
                 "@LS"   {set value [huddle list {*}[join $data]]}
                 "@LN"   {
-                            set listv {}
-                            if {[llength {*}$data] == 1} {
-                                foreach val [lindex {*}$data 0] {
-                                    lappend listv [huddle number $val]
-                                }
-                            } else {
-                                foreach val {*}$data {
-                                    lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
-                                }
-                            }
+                            set listv [ticklecharts::ehuddleListNum $data]
                             set value [huddle list {*}$listv]
                         }
                 "@LD"   {
-                            set listv {}
                             if {[llength {*}$data] == 1} {
                                 set listv [ticklecharts::ehuddleListInsert $data]
                             } else {
@@ -87,7 +77,6 @@ oo::define ticklecharts::ehuddle {
                             }
                             set value [huddle list {*}$listv]
                         }
-
                 "@LJ" {
                     set subH {}
                     foreach var {*}$data {
@@ -104,7 +93,6 @@ oo::define ticklecharts::ehuddle {
 
                     }
                 "@JS" {set value [huddle jsfunc [$data get]]}
-
                 default {error "(1) Unknown type '$type' specified for '$keyvalue'"}
             }
 
@@ -139,20 +127,10 @@ oo::define ticklecharts::ehuddle {
                     "@NULL" {set value [huddle null]}
                     "@LS"   {set value [huddle list {*}[join $info]]}
                     "@LN"   {
-                                set listv {}
-                                if {[llength {*}$info] == 1} {
-                                    foreach val [lindex {*}$info 0] {
-                                        lappend listv [huddle number $val]
-                                    }
-                                } else {
-                                    foreach val {*}$info {
-                                        lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
-                                    }
-                                }
+                                set listv [ticklecharts::ehuddleListNum $info]
                                 set value [huddle list {*}$listv]
                             }
                     "@LD"   {
-                                set listv {}
                                 if {[llength {*}$info] == 1} {
                                     set listv [ticklecharts::ehuddleListInsert $info]
                                 } else {
@@ -192,7 +170,6 @@ oo::define ticklecharts::ehuddle {
                         }
                     }
                     "@JS" {set value [huddle jsfunc [$info get]]}
-
                     default {error "(2) Unknown type '$type' specified for '$subkeyvalue'"}
                 }
 
@@ -228,11 +205,11 @@ oo::define ticklecharts::ehuddle {
                                                     set dlist {}
                                                     foreach vald $vk {
                                                         set llist {}
-                                                        foreach {subkeyvald subvald} $vald {       
-                                                            set subdata {}
+                                                        foreach {subkeyvald subvald} $vald {
+                                                            set _subdata {}
                                                             lassign [split $subkeyvald "="] subtype subkeyvalue1
                                                             switch -exact -- $subtype {
-                                                                "@L"    {lappend subdata $subkeyvalue1 [huddle create {*}[my set $subkeyvald $subvald]]}
+                                                                "@L"    {lappend _subdata $subkeyvalue1 [huddle create {*}[my set $subkeyvald $subvald]]}
                                                                 "@B"    -
                                                                 "@S"    - 
                                                                 "@N"    - 
@@ -240,12 +217,12 @@ oo::define ticklecharts::ehuddle {
                                                                 "@JS"   -
                                                                 "@LS"   - 
                                                                 "@LD"   - 
-                                                                "@LN"  {lappend subdata {*}[my set $subkeyvald $subvald]}
+                                                                "@LN"  {lappend _subdata {*}[my set $subkeyvald $subvald]}
                                                                 default {error "(7) Unknown type '$subtype' specified for '$subkeyvalue1'"}
                                                             }
 
-                                                            if {$subdata ne ""} {
-                                                                append llist "$subdata "
+                                                            if {$_subdata ne ""} {
+                                                                append llist "$_subdata "
                                                             }
                                                         }
                                                         lappend dlist [huddle create {*}$llist]
@@ -268,14 +245,11 @@ oo::define ticklecharts::ehuddle {
                         }
                     "@AO"  -
                     "@LO"  {
-                        set subdata {}
+                        set subdata     {}
                         set subdatalist {}
-
                         foreach value $info {
-
                             foreach {k val} $value {
                                 lassign [split $k "="] subtype subkeyvalue1
-
                                 switch -exact -- $subtype {
                                     "@L"    {lappend subdata $subkeyvalue1 [huddle create {*}[my set $k $val]]}
                                     "@DO"   {lappend subdata {*}[my set $k $value]}
@@ -302,7 +276,6 @@ oo::define ticklecharts::ehuddle {
                             lappend lhuddle $subkeyvalue [huddle list {*}$subdatalist]
                         }
                     }
-
                     default {error "(3) Unknown type '$type' specified for '$subkey'"}
                 }
             }
@@ -449,6 +422,25 @@ proc ticklecharts::ehuddle_num val {
     #
     # Returns format hudlle num
     return [format "HUDDLE {num %s}" $val]
+}
+
+proc ticklecharts::ehuddleListNum data {
+    # Map tcl list to huddle format list number
+    #
+    # Returns huddle list
+    set listv {}
+
+    if {[llength {*}$data] == 1} {
+        foreach val [lindex {*}$data 0] {
+            lappend listv [huddle number $val]
+        }
+    } else {
+        foreach val {*}$data {
+            lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
+        }
+    }
+
+    return $listv
 }
 
 proc ticklecharts::ehuddleListMap data {

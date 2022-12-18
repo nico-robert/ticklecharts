@@ -89,7 +89,8 @@ proc ticklecharts::barseries {index chart value} {
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::BarItem $value]
     }
-    
+
+    # remove key(s)...
     set value [dict remove $value -label -endLabel -universalTransition \
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine \
@@ -99,7 +100,6 @@ proc ticklecharts::barseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::lineseries {index chart value} {
@@ -190,7 +190,8 @@ proc ticklecharts::lineseries {index chart value} {
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LineItem $value]
     }
-    
+
+    # remove key(s)...
     set value [dict remove $value -label -endLabel \
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine -markArea \
@@ -200,7 +201,6 @@ proc ticklecharts::lineseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::pieseries {index chart value} {
@@ -287,6 +287,7 @@ proc ticklecharts::pieseries {index chart value} {
         setdef options   -data          -minversion 5   -validvalue {}                 -type list.o       -default [ticklecharts::PieItem $value]
     }
 
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -markPoint \
@@ -300,7 +301,6 @@ proc ticklecharts::pieseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::funnelseries {index chart value} {
@@ -377,6 +377,7 @@ proc ticklecharts::funnelseries {index chart value} {
 
     }
 
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -datafunnelitem \
@@ -389,7 +390,6 @@ proc ticklecharts::funnelseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::radarseries {index value} {
@@ -434,6 +434,7 @@ proc ticklecharts::radarseries {index value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::tooltip $value]
 
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -lineStyle \
                                   -dataradaritem \
@@ -444,7 +445,6 @@ proc ticklecharts::radarseries {index value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::scatterseries {index chart value} {
@@ -564,7 +564,6 @@ proc ticklecharts::scatterseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::heatmapseries {index chart value} {
@@ -626,6 +625,7 @@ proc ticklecharts::heatmapseries {index chart value} {
 
     }
     
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -labelLayout -itemStyle -markLine -markPoint -markArea \
@@ -634,7 +634,6 @@ proc ticklecharts::heatmapseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::sunburstseries {index value} {
@@ -679,6 +678,7 @@ proc ticklecharts::sunburstseries {index value} {
         error "key -data not present... for [lindex [info level 0] 0]"
     }
 
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -data \
                                   -levels \
@@ -690,7 +690,6 @@ proc ticklecharts::sunburstseries {index value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::treeseries {index value} {
@@ -748,6 +747,7 @@ proc ticklecharts::treeseries {index value} {
         error "key -data not present... for [lindex [info level 0] 0]"
     }
 
+    # remove key(s)...
     set value [dict remove $value -label \
                                   -data \
                                   -lineStyle \
@@ -758,7 +758,6 @@ proc ticklecharts::treeseries {index value} {
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::themeriverseries {index value} {
@@ -796,11 +795,8 @@ proc ticklecharts::themeriverseries {index value} {
     setdef options -data                    -minversion 5       -validvalue {}                  -type list.d            -default [ticklecharts::themeriverItem $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
 
-    # not supported yet...
-    # setdef options -tooltip               -minversion 5        -validvalue {} -type dict|null  -default [ticklecharts::tooltipseries $value]
-
+    # remove key(s)...
     set value [dict remove $value -label \
-                                  -data \
                                   -labelLine \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select]
@@ -809,7 +805,6 @@ proc ticklecharts::themeriverseries {index value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::sankeyseries {index value} {
@@ -820,51 +815,53 @@ proc ticklecharts::sankeyseries {index value} {
     #
     # return dict sankeyseries options
 
-    setdef options -type                    -minversion 5  -validvalue {}                  -type str               -default "sankey"
-    setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
-    setdef options -name                    -minversion 5  -validvalue {}                  -type str               -default "sankeyseries_${index}"
-    setdef options -zlevel                  -minversion 5  -validvalue {}                  -type num               -default 0
-    setdef options -z                       -minversion 5  -validvalue {}                  -type num               -default 2
-    setdef options -left                    -minversion 5  -validvalue formatLeft          -type num|str           -default "5%"
-    setdef options -top                     -minversion 5  -validvalue formatTop           -type num|str           -default "5%"
-    setdef options -right                   -minversion 5  -validvalue formatRight         -type num|str           -default "20%"
-    setdef options -bottom                  -minversion 5  -validvalue formatBottom        -type num|str           -default "5%"
-    setdef options -width                   -minversion 5  -validvalue {}                  -type num|str           -default "auto"
-    setdef options -height                  -minversion 5  -validvalue {}                  -type num|str           -default "auto"
-    setdef options -nodeWidth               -minversion 5  -validvalue {}                  -type num               -default 20
-    setdef options -nodeGap                 -minversion 5  -validvalue {}                  -type num               -default 8
-    setdef options -nodeAlign               -minversion 5  -validvalue formatNodeAlign     -type str               -default "justify"
-    setdef options -layoutIterations        -minversion 5  -validvalue {}                  -type num               -default 32
-    setdef options -orient                  -minversion 5  -validvalue formatOrient        -type str               -default "horizontal"
-    setdef options -draggable               -minversion 5  -validvalue {}                  -type bool              -default "True"
-    setdef options -levels                  -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsSankeyItem $value]
-    setdef options -label                   -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
-    setdef options -labelLayout             -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
-    setdef options -lineStyle               -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::lineStyle $value]
-    setdef options -itemStyle               -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
-    setdef options -emphasis                -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
-    setdef options -blur                    -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
-    setdef options -select                  -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
-    setdef options -selectedMode            -minversion 5  -validvalue formatSelectedMode  -type bool|str|null     -default "nothing"
-    setdef options -data                    -minversion 5  -validvalue {}                  -type list.o            -default [ticklecharts::sankeyItem $value -data]
-    setdef options -nodes                   -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::sankeyItem $value -nodes]
-    setdef options -links                   -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -links]
-    setdef options -edges                   -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -edges]
-    setdef options -silent                  -minversion 5  -validvalue {}                  -type bool              -default "False"
-    setdef options -animation               -minversion 5  -validvalue {}                  -type bool|null         -default "nothing"
-    setdef options -animationThreshold      -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -animationDuration       -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -animationEasing         -minversion 5  -validvalue formatAEasing       -type str|null          -default "nothing"
-    setdef options -animationDelay          -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -animationDurationUpdate -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing       -type str|null          -default "nothing"
-    setdef options -animationDelayUpdate    -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -tooltip                 -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
+    setdef options -type                    -minversion 5        -validvalue {}                  -type str               -default "sankey"
+    setdef options -id                      -minversion 5        -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -name                    -minversion 5        -validvalue {}                  -type str               -default "sankeyseries_${index}"
+    setdef options -zlevel                  -minversion 5        -validvalue {}                  -type num               -default 0
+    setdef options -z                       -minversion 5        -validvalue {}                  -type num               -default 2
+    setdef options -left                    -minversion 5        -validvalue formatLeft          -type num|str           -default "5%"
+    setdef options -top                     -minversion 5        -validvalue formatTop           -type num|str           -default "5%"
+    setdef options -right                   -minversion 5        -validvalue formatRight         -type num|str           -default "20%"
+    setdef options -bottom                  -minversion 5        -validvalue formatBottom        -type num|str           -default "5%"
+    setdef options -width                   -minversion 5        -validvalue {}                  -type num|str           -default "auto"
+    setdef options -height                  -minversion 5        -validvalue {}                  -type num|str           -default "auto"
+    setdef options -nodeWidth               -minversion 5        -validvalue {}                  -type num               -default 20
+    setdef options -nodeGap                 -minversion 5        -validvalue {}                  -type num               -default 8
+    setdef options -nodeAlign               -minversion 5        -validvalue formatNodeAlign     -type str               -default "justify"
+    setdef options -layoutIterations        -minversion 5        -validvalue {}                  -type num               -default 32
+    setdef options -orient                  -minversion 5        -validvalue formatOrient        -type str               -default "horizontal"
+    setdef options -draggable               -minversion 5        -validvalue {}                  -type bool              -default "True"
+    setdef options -edgeLabel               -minversion "5.4.1"  -validvalue {}                  -type dict|null         -default [ticklecharts::edgeLabel $value]
+    setdef options -levels                  -minversion 5        -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsSankeyItem $value]
+    setdef options -label                   -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
+    setdef options -labelLayout             -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
+    setdef options -lineStyle               -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::lineStyle $value]
+    setdef options -itemStyle               -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -minversion 5        -validvalue formatSelectedMode  -type bool|str|null     -default "nothing"
+    setdef options -data                    -minversion 5        -validvalue {}                  -type list.o            -default [ticklecharts::sankeyItem $value -data]
+    setdef options -nodes                   -minversion 5        -validvalue {}                  -type list.o|null       -default [ticklecharts::sankeyItem $value -nodes]
+    setdef options -links                   -minversion 5        -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -links]
+    setdef options -edges                   -minversion 5        -validvalue {}                  -type list.o|null       -default [ticklecharts::linksItem $value -edges]
+    setdef options -silent                  -minversion 5        -validvalue {}                  -type bool              -default "False"
+    setdef options -animation               -minversion 5        -validvalue {}                  -type bool|null         -default "nothing"
+    setdef options -animationThreshold      -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -animationDuration       -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -minversion 5        -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelay          -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationDurationUpdate -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -minversion 5        -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelayUpdate    -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -tooltip                 -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
 
     if {![dict exists $value -data] && ![dict exists $value -nodes]} {
         error "key -data or -nodes not present... for [lindex [info level 0] 0]"
     }
 
+    # remove key(s)...
     set value [dict remove $value -levels \
                                   -label \
                                   -lineStyle \
@@ -875,7 +872,6 @@ proc ticklecharts::sankeyseries {index value} {
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::pictorialbarseries {index chart value} {
@@ -958,7 +954,8 @@ proc ticklecharts::pictorialbarseries {index chart value} {
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
 
     }
-          
+
+    # remove key(s)... 
     set value [dict remove $value -label \
                                   -labelLine -lineStyle \
                                   -markPoint -markLine -markArea \
@@ -968,7 +965,6 @@ proc ticklecharts::pictorialbarseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::candlestickseries {index chart value} {
@@ -1040,7 +1036,8 @@ proc ticklecharts::candlestickseries {index chart value} {
         }
         # setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value]
     }
-          
+
+    # remove key(s)...
     set value [dict remove $value -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle -universalTransition \
                                   -emphasis -blur -select -tooltip -encode]
@@ -1048,7 +1045,6 @@ proc ticklecharts::candlestickseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::parallelseries {index value} {
@@ -1094,12 +1090,12 @@ proc ticklecharts::parallelseries {index value} {
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::ParallelItem $value]
     }
 
+    # remove key(s)...
     set value [dict remove $value -lineStyle -emphasis]
     
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::gaugeseries {index value} {
@@ -1157,6 +1153,7 @@ proc ticklecharts::gaugeseries {index value} {
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value]
     }
 
+    # remove key(s)...
     set value [dict remove $value -axisLine -progress -splitLine -axisTick \
                                   -axisLabel -pointer -anchor -itemStyle \
                                   -emphasis -title -detail -markPoint -markLine -markArea]
@@ -1164,7 +1161,6 @@ proc ticklecharts::gaugeseries {index value} {
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::graphseries {index value} {
@@ -1250,13 +1246,13 @@ proc ticklecharts::graphseries {index value} {
         error "key '-data' or '-dataGraphItem' not present... for [lindex [info level 0] 0]"
     }
 
+    # remove key(s)...
     set value [dict remove $value -circular -force -scaleLimit -itemStyle -lineStyle -label -edgeLabel -labelLayout -emphasis \
                                   -blur -select -categories -links -edges -markPoint -markLine -markArea -dataGraphItem]
                                 
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::wordcloudseries {index value} {
@@ -1288,13 +1284,12 @@ proc ticklecharts::wordcloudseries {index value} {
     setdef options -emphasis          -minWCversion 2        -validvalue {}               -type dict|null      -default [ticklecharts::emphasis $value]
     setdef options -data              -minWCversion 2        -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
 
-
+    # remove key(s)...
     set value [dict remove $value -textStyle -emphasis -dataWCItem]
 
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::boxPlotseries {index chart value} {
@@ -1359,7 +1354,8 @@ proc ticklecharts::boxPlotseries {index chart value} {
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value]
     }
-          
+
+    # remove key(s)...
     set value [dict remove $value -markPoint -markLine -markArea \
                                   -itemStyle -dataBoxPlotitem \
                                   -emphasis -blur -select -tooltip -encode]
@@ -1367,7 +1363,6 @@ proc ticklecharts::boxPlotseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }
 
 proc ticklecharts::treeMapseries {index value} {
@@ -1429,6 +1424,7 @@ proc ticklecharts::treeMapseries {index value} {
         error "key -data not present... for [lindex [info level 0] 0]"
     }
 
+    # remove key(s)...
     set value [dict remove $value -label -upperLabel \
                                   -data -breadcrumb -tooltip \
                                   -labelLine -labelLayout -itemStyle \
@@ -1438,7 +1434,6 @@ proc ticklecharts::treeMapseries {index value} {
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::mapseries {index chart value} {
@@ -1514,6 +1509,7 @@ proc ticklecharts::mapseries {index chart value} {
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value]
     }
 
+    # remove key(s)...
     set value [dict remove $value -projection -scaleLimit \
                                   -nameMap -label -itemStyle -dataMapItem \
                                   -emphasis -labelLayout -labelLine -tooltip \
@@ -1523,7 +1519,6 @@ proc ticklecharts::mapseries {index chart value} {
     set options [merge $options $value]
 
     return $options
- 
 }
 
 proc ticklecharts::linesseries {index chart value} {
@@ -1597,7 +1592,8 @@ proc ticklecharts::linesseries {index chart value} {
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LinesItem $value]
     }
-    
+
+    # remove key(s)...
     set value [dict remove $value -label -effect \
                                   -lineStyle \
                                   -markPoint -markLine -markArea \
@@ -1607,5 +1603,4 @@ proc ticklecharts::linesseries {index chart value} {
     set options [merge $options $value]
 
     return $options
-
 }

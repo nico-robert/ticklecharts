@@ -585,8 +585,8 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
                 if {[InfoNameProc 3 "markLine"]} {
                     set validvalue {
-                            start middle end insideStartTop insideStartBottom insideMiddleTop insideMiddleBottom
-                            insideEndTop insideEndBottom
+                            start middle end insideStart insideStartTop insideStartBottom insideMiddle insideMiddleTop insideMiddleBottom
+                            insideEnd insideEndTop insideEndBottom
                         }
                 }
 
@@ -1279,9 +1279,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 }
             }
         }
-
     }
 
-    return
-
+    return {}
 }
