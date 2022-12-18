@@ -102,7 +102,6 @@ oo::define ticklecharts::chart {
             }
         }
         return [expr {([llength $ktype] > 1) ? 1 : 0}]
-
     }
 
     method getoptions {args} {
@@ -151,7 +150,6 @@ oo::define ticklecharts::chart {
                 }
             }
         }
-
     }
 
     method keys {} {
@@ -231,6 +229,8 @@ oo::define ticklecharts::chart {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         # -script     - list data (jsfunc), jsfunc.
+        # -class      - container.
+        # -style      - css style.
         #
         # Returns full path html file.
         
@@ -252,7 +252,6 @@ oo::define ticklecharts::chart {
         }
 
         return $outputfile
-
     }
 
     method toJSON {} {
@@ -285,7 +284,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=xAxis [list {*}$f]
 
         return {}
-
     }
 
     method Yaxis {args} {
@@ -309,8 +307,7 @@ oo::define ticklecharts::chart {
         
         lappend _options @D=yAxis [list {*}$f]
 
-        return {}
-        
+        return {}        
     }
     
     method RadiusAxis {args} {
@@ -335,7 +332,6 @@ oo::define ticklecharts::chart {
         lappend _options @L=radiusAxis [list {*}$f]
 
         return {}
-
     }
     
     method AngleAxis {args} {
@@ -360,7 +356,6 @@ oo::define ticklecharts::chart {
         lappend _options @L=angleAxis [list {*}$f]
 
         return {}
-
     }
 
     method AddGraphic {args} {
@@ -380,7 +375,6 @@ oo::define ticklecharts::chart {
         lappend _options @L=graphic [list {*}$f]
 
         return {}
-
     }
 
     method RadarCoordinate {args} {
@@ -405,7 +399,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=radar [list {*}$f]
 
         return {}
-
     }
 
     method SingleAxis {args} {
@@ -430,7 +423,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=singleAxis [list {*}$f]
 
         return {}
-
     }
 
     method ParallelAxis {args} {
@@ -456,7 +448,6 @@ oo::define ticklecharts::chart {
         }
 
         return {}
-
     }
 
     method AddBarSeries {args} {
@@ -477,7 +468,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
     
     method AddLineSeries {args} {
@@ -498,7 +488,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddPieSeries {args} {
@@ -519,7 +508,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddFunnelSeries {args} {
@@ -540,7 +528,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddRadarSeries {args} {
@@ -561,7 +548,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
     
     method AddScatterSeries {args} {
@@ -582,7 +568,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddHeatmapSeries {args} {
@@ -603,7 +588,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddSunburstSeries {args} {
@@ -624,7 +608,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddTreeSeries {args} {
@@ -645,7 +628,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddThemeRiverSeries {args} {
@@ -666,7 +648,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddSankeySeries {args} {
@@ -687,7 +668,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddPictorialBarSeries {args} {
@@ -708,7 +688,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddCandlestickSeries {args} {
@@ -729,7 +708,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddParallelSeries {args} {
@@ -750,7 +728,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddGaugeSeries {args} {
@@ -771,7 +748,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddGraphSeries {args} {
@@ -792,7 +768,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddWordCloudSeries {args} {
@@ -813,7 +788,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddBoxPlotSeries {args} {
@@ -834,7 +808,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddTreeMapSeries {args} {
@@ -855,7 +828,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddMapSeries {args} {
@@ -876,7 +848,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
 
     method AddLinesSeries {args} {
@@ -897,7 +868,6 @@ oo::define ticklecharts::chart {
         lappend _options @D=series [list {*}$f]
 
         return {}
-
     }
     
     method SetOptions {args} {

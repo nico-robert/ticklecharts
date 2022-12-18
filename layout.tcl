@@ -36,7 +36,6 @@ oo::class create ticklecharts::Gridlayout {
         set _indexchart -1
 
         lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
-
     }
 }
 
@@ -137,7 +136,7 @@ oo::define ticklecharts::Gridlayout {
                         set data_name {}
                         foreach series_opts [lsearch -all [$chart options] *=series] {
                             set myserie [lindex [$chart options] [expr {$series_opts + 1}]]
-                            
+
                             # if item data...
                             if {[dict exists $myserie @DO=data @AO]} {
                                 foreach data_item [dict get $myserie @DO=data @AO] {
@@ -157,20 +156,27 @@ oo::define ticklecharts::Gridlayout {
                         # add data name in legend...
                         dict set opts @LS=data [list $data_name]
                     }
-
                 }
                 *series  {
-                    # force index axis chart... if exists...
-                    set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
-                    if {[dict exists $opts $xindex] && [dict get $opts $xindex] eq "nothing"} {
-                        dict set opts @N=xAxisIndex $_indexchart
+                    # force index axis chart if exists or not...
+                    if {[dict get $opts @S=type] in {bar line scatter effectScatter heatmap pictorialBar candlestick graph boxplot lines}} {
+
+                        set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
+                        set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
+
+                        if {[dict exists $opts $xindex]} {
+                            if {[dict get $opts $xindex] eq "nothing"} {dict set opts @N=xAxisIndex $_indexchart} 
+                        } else {
+                            dict set opts @N=xAxisIndex $_indexchart
+                        }
+
+                        if {[dict exists $opts $yindex]} {
+                            if {[dict get $opts $yindex] eq "nothing"} {dict set opts @N=yAxisIndex $_indexchart}
+                        } else {
+                            dict set opts @N=yAxisIndex $_indexchart
+                        }
                     }
 
-                    set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
-                    if {[dict exists $opts $yindex] && [dict get $opts $yindex] eq "nothing"} {
-                        dict set opts @N=yAxisIndex $_indexchart
-                    }
-                    
                     set stack [lsearch -inline [dict keys $opts] *stack]
                     if {[dict exists $opts $stack] && [dict get $opts $stack] ne "null"} {
                         set value [dict get $opts $stack]
@@ -178,15 +184,13 @@ oo::define ticklecharts::Gridlayout {
                     }
 
                     # replace 'center' flag if exists by the one in args if exists...
-                    set coordinatecenter [lsearch -inline [dict keys $opts] *center]
-                    if {[dict exists $opts $coordinatecenter]} {
+                    if {[dict get $opts @S=type] in {pie sunburst gauge}} {
                         if {[info exists center]} {
                             set mytype [Type $center]
                             if {$mytype ne "list"} {
                                 error "'center' flag must be a list"
                             }
                             dict set opts @LD=center [list $center]
-
                         }
                     }
 
@@ -207,7 +211,6 @@ oo::define ticklecharts::Gridlayout {
                             }
                         }
                     }
-                
                 }
                 *radar -
                 *polar {
@@ -218,17 +221,14 @@ oo::define ticklecharts::Gridlayout {
                             error "'center' flag must be a list"
                         }
                         dict set opts @LD=center [list $center]
-
                     }
-
                 }
                 *visualMap {
                     dict set opts @N=seriesIndex $_indexchart
                 }
                 *xAxis -
                 *yAxis  {
-                    set gridindex [lsearch -inline [dict keys $opts] *gridIndex]
-                    dict set opts $gridindex $_indexchart
+                    dict set opts @N=gridIndex $_indexchart
                 }
                 *singleAxis -
                 *grid  {
@@ -329,7 +329,7 @@ oo::define ticklecharts::Gridlayout {
         foreach {key opts} $_options {
             lassign [split $key "="] type value
 
-            if {$type eq "@D" || $type eq "@L"} {
+            if {($type eq "@D" || $type eq "@L") && $opts ne ""} {
                 $_layout append $key $opts
             } else {
                 $_layout set $key $opts
@@ -337,11 +337,10 @@ oo::define ticklecharts::Gridlayout {
         }
         
         if {[$_layout llengthkeys "tooltip"] > 1} {
-            error "several 'tooltip' not supported..."
+            error "Several 'tooltip' not supported..."
         }
 
         return {}
-
     }
     
     method render {args} {
@@ -359,6 +358,8 @@ oo::define ticklecharts::Gridlayout {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         # -script     - list data (jsfunc), jsfunc.
+        # -class      - container.
+        # -style      - css style.
         #
         # Returns full path html file.
 
@@ -380,7 +381,6 @@ oo::define ticklecharts::Gridlayout {
         }
 
         return $outputfile
-
     }
 
     method toJSON {} {
@@ -418,8 +418,7 @@ oo::define ticklecharts::Gridlayout {
         # destroy...
         $c destroy
 
-        return {}
-        
+        return {}        
     }
 
     # To keep the same logic of naming methods for ticklecharts 

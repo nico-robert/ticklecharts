@@ -128,7 +128,6 @@ oo::define ticklecharts::timeline {
         }
 
         return {}
-
     }
 
     method toJSON {} {
@@ -154,6 +153,8 @@ oo::define ticklecharts::timeline {
         # -jsecharts  - full path echarts.min.js (by default cdn script)
         # -jsvar      - name js var
         # -script     - list data (jsfunc), jsfunc.
+        # -class      - container.
+        # -style      - css style.
         #
         # Returns full path html file.
 
