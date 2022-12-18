@@ -11,31 +11,27 @@ proc ticklecharts::htmlmap {h htmloptions} {
     # h            - huddle object.
     # htmloptions  - Options described below.
     #
-    # -width      - size chart
-    # -height     - size chart
-    # -renderer   - 'canvas' or 'svg'
-    # -jschartvar - name js variable chart
-    # -divid      - name id div html
-    # -title      - title html
-    # -jsecharts  - script echarts
-    # -jsvar      - name variable js
-    # -script     - code javascript
-    #
     # Returns list map html
 
-    lappend mapoptions [format {%%width%% %s}      [lrange [dict get $htmloptions -width]  0 end-1]]
-    lappend mapoptions [format {%%height%% %s}     [lrange [dict get $htmloptions -height] 0 end-1]]
+    lappend mapoptions [format {%%width%% %s}      [set width [lrange [dict get $htmloptions -width]  0 end-1]]]
+    lappend mapoptions [format {%%height%% %s}     [set height [lrange [dict get $htmloptions -height] 0 end-1]]]
     lappend mapoptions [format {%%renderer%% %s}   [lrange [dict get $htmloptions -renderer] 0 end-1]]
     lappend mapoptions [format {%%jsecharts%% %s}  [lrange [dict get $htmloptions -jsecharts]  0 end-1]]
     lappend mapoptions [format {%%jschartvar%% %s} [lrange [dict get $htmloptions -jschartvar]  0 end-1]]
     lappend mapoptions [format {%%divid%% %s}      [lrange [dict get $htmloptions -divid]  0 end-1]]
     lappend mapoptions [format {%%title%% %s}      [lrange [dict get $htmloptions -title]  0 end-1]]
     lappend mapoptions [format {%%jsvar%% %s}      [lrange [dict get $htmloptions -jsvar]  0 end-1]]
+    lappend mapoptions [format {%%class%% %s}      [lrange [dict get $htmloptions -class]  0 end-1]]
 
-    set html [ticklecharts::readhtmltemplate]
+    # add style in html template...
+    if {[lindex [dict get $htmloptions -style] 0] eq "nothing"} {
+        lappend mapoptions [format {%%style%% {width:%s; height:%s;}} $width $height]
+    } else {
+        lappend mapoptions [format {%%style%% %s} [lrange [dict get $htmloptions -style] 0 end-1]]
+    }
 
     # add gmap script + Google maps API... if 'gmap' option is present
-    if {[lsearch [$h get] *gmap*] > -1} {
+    if {[lsearch [$h get] {*gmap \{*}] > -1} {
         set frmt {<script type="text/javascript" src="%s"></script>}
         lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gapiscript] -header]
         # Add comment in html template file if key API is not present...
@@ -46,11 +42,13 @@ proc ticklecharts::htmlmap {h htmloptions} {
         lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gmscript] -header]
         if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
             set js [lindex [dict get $htmloptions -script] 0]
-            dict set htmloptions -script [format "{{%s}} list.d" [linsert {*}$js end {*}$gm]]
+            dict set htmloptions -script [format {{{%s}} list.d} [linsert {*}$js end {*}$gm]]
         } else {
             dict set htmloptions -script [format "{{%s}} list.d" $gm]
         }
     }
+
+    set html [ticklecharts::readhtmltemplate]
 
     # add js script(s) in html template...
     if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
@@ -58,7 +56,6 @@ proc ticklecharts::htmlmap {h htmloptions} {
     }
 
     return [string map [join $mapoptions] $html]
-
 }
 
 proc ticklecharts::addJsScript {html value} {
@@ -570,6 +567,18 @@ proc ticklecharts::merge {d other} {
                     error "bad type(default) for this key '$key'= $mytype should be :$type"
                 }
             }
+            # Minimum properties...
+            # Only write values that are defined in the *.tcl file.
+            # Be careful, properties in the *.tcl file must be implicitly marked.
+            if {$::ticklecharts::minProperties} {
+                if {$::ticklecharts::theme ne "basic"} {
+                    error "'theme' other than 'basic' is not supported yet\
+                            when 'minProperties' variable is set to 'true'"
+                }
+                if {$key ni {-type -name} && $typekey ni {dict list.o list.j}} {
+                    continue
+                }
+            }
 
             if {$typekey eq "str"} {
                 set value [ticklecharts::MapSpaceString $value]
@@ -632,6 +641,7 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
     set listmap {"setdef" "" "options" ""}
     set buffer "" ; set info 0
     set ifnP "" ; set copyifnP ""
+    set dataInfo {}
 
     foreach val $body {
         # find command in body...
@@ -651,7 +661,7 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
         if {[info complete $buffer] && $buffer ne ""} {
             # omit if 'setdef' is not present
             if {[lsearch $buffer *setdef*] > -1} {
-                puts [format "%${indent}s \}" ""]
+                lappend dataInfo [format "%${indent}s \}" ""]
             }
             set buffer "" ; set info 0
             set ifnP ""   ; set copyifnP ""
@@ -662,30 +672,32 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
                 set str [string range $val 0 [expr {[string first "-default" $val] - 1}]]
 
                 if {$ifnP ne ""} {
-                    if {$ifnP ne $copyifnP} {puts [format "%${indent}s %s \{" "" $ifnP]}
+                    if {$ifnP ne $copyifnP} {lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]}
                     set newIndent [expr {$indent - 4}]
-                    puts [format "%${newIndent}s %s" "" [string trim [string map $listmap $str]]]
+                    lappend dataInfo [format "%${newIndent}s %s" "" [string trim [string map $listmap $str]]]
                 } else {
-                    puts [format "%${indent}s %s" "" [string trim [string map $listmap $str]]]
+                    lappend dataInfo [format "%${indent}s %s" "" [string trim [string map $listmap $str]]]
                 }
 
-                # bug infinite loop? Add test to get if $match is not equal to current $key (name proc)
+                # bug 'infinite loop?'. Add test to get if $match is not equal to current $key (name proc)
                 if {[regexp {ticklecharts::([A-Za-z]+)\s} $val -> match] && $match ne $key} {
-                    ticklecharts::InfoOptions $match [expr {$indent - 2}]
+                    lappend dataInfo [ticklecharts::InfoOptions $match [expr {$indent - 2}]]
                 }
             } else {
                 if {$ifnP ne ""} {
-                    if {$ifnP ne $copyifnP} {puts [format "%${indent}s %s \{" "" $ifnP]}
+                    if {$ifnP ne $copyifnP} {lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]}
                     set newIndent [expr {$indent - 4}]
-                    puts [format "%${newIndent}s %s" "" [string trim [string map $listmap $val]]]
+                    lappend dataInfo [format "%${newIndent}s %s" "" [string trim [string map $listmap $val]]]
                 } else {
-                    puts [format "%${indent}s %s" "" [string trim [string map $listmap $val]]]
+                    lappend dataInfo [format "%${indent}s %s" "" [string trim [string map $listmap $val]]]
                 }
             }
 
             set copyifnP $ifnP
         }
     }
+
+    return [join $dataInfo "\n"]
 }
 
 proc ticklecharts::InfoNameProc {level name} {
