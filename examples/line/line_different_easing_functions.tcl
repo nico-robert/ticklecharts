@@ -237,7 +237,7 @@ proc parseFloat {string} {
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
-set ::ticklecharts::minProperties 1
+set minP $::ticklecharts::minProperties ; set ::ticklecharts::minProperties 1
 
 set N_POINT 30
 set len       [llength [info procs line_*]]
@@ -299,3 +299,6 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width "1525px" \
                -height "1013px"
+
+# init properties...
+set ::ticklecharts::minProperties $minP
