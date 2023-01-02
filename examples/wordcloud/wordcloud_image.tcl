@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : bump to 'v2.1.0' echarts-wordcloud
+# v3.0 : Delete 'echarts-wordcloud.js' with jsfunc. It is inserted automatically when writing the html file.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -17,11 +18,6 @@ set js [ticklecharts::jsfunc new {
                     ].join(',') + ')';
                 }
           }]
-
-set header [ticklecharts::jsfunc new {
-                        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
-                    } -header
-            ]
 
 set maskImage [ticklecharts::jsfunc new {maskImage}]
 
@@ -437,5 +433,5 @@ set dirname [file dirname [info script]]
 
 $chart render -outfile [file join $dirname $fbasename.html] \
               -title $fbasename \
-              -script [list [list $header $var]] \
+              -script $var \
               -jschartvar $jschartvar

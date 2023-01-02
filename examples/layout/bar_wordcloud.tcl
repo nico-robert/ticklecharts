@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : bump to 'v2.1.0' echarts-wordcloud
+# v3.0 : Delete 'echarts-wordcloud.js' with jsfunc. It is inserted automatically when writing the html file.
 
 proc fakerRandomValue {{min 10} {max 1000}} {
 
@@ -96,11 +97,6 @@ $bar AddBarSeries -databaritem [list \
 # Add wordCloud serie
 set wc [ticklecharts::chart new]
 
-# Add js script
-set header [ticklecharts::jsfunc new {
-                        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
-                    } -header
-            ]
 # callback color wordCloud
 set js [ticklecharts::jsfunc new {
                 function () {
@@ -131,5 +127,4 @@ set dirname [file dirname [info script]]
 $layout render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1900px \
-               -height 1000px \
-               -script $header
+               -height 1000px
