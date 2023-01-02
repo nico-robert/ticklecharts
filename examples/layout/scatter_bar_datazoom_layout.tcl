@@ -4,6 +4,9 @@ proc dataRand {max} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : init data1 (problem source all.tcl)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -11,6 +14,8 @@ set js [ticklecharts::jsfunc new {function (val) {
                                     return val[2] * 40;
                                     },
                                 }]
+
+set data1 {}
 
 for {set i 0} {$i < 500} {incr i} {
     lappend data1 [list [dataRand 15] [dataRand 10] [dataRand 1]]
