@@ -19,7 +19,7 @@ proc ticklecharts::globalOptions {value} {
     # - animationEasingUpdate   - https://echarts.apache.org/en/option.html#animationEasingUpdate
     # - animationThreshold      - https://echarts.apache.org/en/option.html#animationThreshold
     # - progressiveThreshold    - https://echarts.apache.org/en/option.html#progressiveThreshold
-    # - hoverLayerThreshold      - https://echarts.apache.org/en/option.html#hoverLayerThreshold
+    # - hoverLayerThreshold     - https://echarts.apache.org/en/option.html#hoverLayerThreshold
     # - useUTC                  - https://echarts.apache.org/en/option.html#useUTC
     # - blendMode               - https://echarts.apache.org/en/option.html#blendMode
     #
