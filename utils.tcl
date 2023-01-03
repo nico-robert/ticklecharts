@@ -1,17 +1,20 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
-    namespace export setdef merge Type vCompare InfoNameProc EchartsOptsTheme
+    namespace export setdef merge
 }
 
-proc ticklecharts::htmlmap {h htmloptions} {
+proc ticklecharts::htmlMap {h htmloptions} {
     # Html options.
     #
     # h            - huddle object.
     # htmloptions  - Options described below.
     #
     # Returns list map html
+    variable gapiscript ; variable keyGMAPI
+    variable wcscript
+    variable gmscript
 
     lappend mapoptions [format {%%width%% %s}      [set width [lrange [dict get $htmloptions -width]  0 end-1]]]
     lappend mapoptions [format {%%height%% %s}     [set height [lrange [dict get $htmloptions -height] 0 end-1]]]
@@ -23,32 +26,41 @@ proc ticklecharts::htmlmap {h htmloptions} {
     lappend mapoptions [format {%%jsvar%% %s}      [lrange [dict get $htmloptions -jsvar]  0 end-1]]
     lappend mapoptions [format {%%class%% %s}      [lrange [dict get $htmloptions -class]  0 end-1]]
 
-    # add style in html template...
+    # Add style in html template...
     if {[lindex [dict get $htmloptions -style] 0] eq "nothing"} {
         lappend mapoptions [format {%%style%% {width:%s; height:%s;}} $width $height]
     } else {
         lappend mapoptions [format {%%style%% %s} [lrange [dict get $htmloptions -style] 0 end-1]]
     }
 
-    # add gmap script + Google maps API... if 'gmap' option is present
+    set frmt {<script type="text/javascript" src="%s"></script>} ; # base format...
+    set jsScript {}
+    # Add gmap script + Google maps API... if 'gmap' option is present
     if {[lsearch [$h get] {*gmap \{*}] > -1} {
-        set frmt {<script type="text/javascript" src="%s"></script>}
-        lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gapiscript] -header]
+        lappend jsScript [jsfunc new [format $frmt $gapiscript] -header]
         # Add comment in html template file if key API is not present...
-        if {$::ticklecharts::keyGMAPI eq "??"} {
-            lappend gm [ticklecharts::jsfunc new {<!-- please replace {??} with your own API key -->} -header]
+        if {$keyGMAPI eq "??"} {
+            lappend jsScript [jsfunc new {<!-- please replace '??' with your own API key -->} -header]
         }
         # Add echarts-extension-gmap.js
-        lappend gm [ticklecharts::jsfunc new [format $frmt $::ticklecharts::gmscript] -header]
+        lappend jsScript [jsfunc new [format $frmt $gmscript] -header]
+    }
+
+    # Add 'wordcloud' script if 'wordcloud' type is present
+    if {[lsearch [$h get] {*type {s wordCloud}*}] > -1} {
+        lappend jsScript [jsfunc new [format $frmt $wcscript] -header]
+    }
+
+    if {[llength $jsScript]} {
         if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
             set js [lindex [dict get $htmloptions -script] 0]
-            dict set htmloptions -script [format {{{%s}} list.d} [linsert {*}$js end {*}$gm]]
+            dict set htmloptions -script [format {{{%s}} list.d} [linsert {*}$js end {*}$jsScript]]
         } else {
-            dict set htmloptions -script [format "{{%s}} list.d" $gm]
+            dict set htmloptions -script [format "{{%s}} list.d" $jsScript]
         }
     }
 
-    set html [ticklecharts::readhtmltemplate]
+    set html [ticklecharts::readHTMLTemplate]
 
     # add js script(s) in html template...
     if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
@@ -87,7 +99,7 @@ proc ticklecharts::addJsScript {html value} {
             foreach script {*}[lreverse $js] {
                 set indent 0
                 # insert Jsfunc...
-                if {[Type $script] eq "jsfunc"} {
+                if {[ticklecharts::typeOf $script] eq "jsfunc"} {
                     switch -exact -- [$script position] {
                         start  {set item "%jschartvar%"}
                         end    {set item "%json%"}
@@ -110,20 +122,20 @@ proc ticklecharts::addJsScript {html value} {
     return [join $listH "\n"]
 }
 
-proc ticklecharts::readhtmltemplate {} {
+proc ticklecharts::readHTMLTemplate {} {
     # Open and read html template.
     #
     # Returns html file list
+    variable htmltemplate
 
-    set fp [open $::ticklecharts::htmltemplate r]
+    set fp [open $htmltemplate r]
     set html [read $fp]
     close $fp
     
     return $html
 }
 
-
-proc ticklecharts::HuddleType {type} {
+proc ticklecharts::ehuddleType {type} {
     # Transform dict type to huddle echarts type.
     #
     # type  - dict options type.
@@ -150,7 +162,7 @@ proc ticklecharts::HuddleType {type} {
     return $htype
 }
 
-proc ticklecharts::TypeClass {obj} {
+proc ticklecharts::typeOfClass {obj} {
     # Name of class.
     #
     # obj  - Instance.
@@ -160,7 +172,7 @@ proc ticklecharts::TypeClass {obj} {
     return [info object class $obj]
 }
 
-proc ticklecharts::IsaObject {obj} {
+proc ticklecharts::isAObject {obj} {
     # Check if variable 'obj' is an object.
     #
     # obj  - Instance.
@@ -170,7 +182,7 @@ proc ticklecharts::IsaObject {obj} {
     return [info object isa object $obj]
 }
 
-proc ticklecharts::TclType value {
+proc ticklecharts::tclType value {
     # Guess the type of the value (2nd time...)
     # 
     # value - string (everything is string !!!)
@@ -201,8 +213,8 @@ proc ticklecharts::TclType value {
         }
     }
 
-    if {[ticklecharts::IsaObject $value]} {
-        switch -glob -- [ticklecharts::TypeClass $value] {
+    if {[ticklecharts::isAObject $value]} {
+        switch -glob -- [ticklecharts::typeOfClass $value] {
             "*::jsfunc" {return jsfunc}
             "*::eColor" {return e.color}
         }
@@ -211,26 +223,25 @@ proc ticklecharts::TclType value {
     return str
 }
 
-proc ticklecharts::IsList value {
+proc ticklecharts::isList value {
     # Guess if value is a list (again and again !!)
     # 
     # value - string (everything is string !!!)
     #
     # Returns type of value
     
-    if {![catch {llength {*}$value}] && [llength {*}$value] > 1} {
+    if {![catch {llength {*}$value} len] && $len > 1} {
         return list
     } else {
-        return [ticklecharts::TclType $value]
+        return [ticklecharts::tclType $value]
     }
 
 }
 
-proc ticklecharts::Type value {
-    # Guess the type of the value (1st time if ticklecharts::TclType is string)
+proc ticklecharts::typeOf value {
+    # Guess the type of the value (1st time if ticklecharts::tclType is string)
     # from https://rosettacode.org/wiki/JSON#Tcl
     # not the best way !!
-    # Controls only 2 types dict or list
     # 
     # value - string (everything is string !!!)
     #
@@ -244,10 +255,10 @@ proc ticklecharts::Type value {
             return dict
         }
         list {
-            return [ticklecharts::IsList $value]
+            return [ticklecharts::isList $value]
         }
         default {
-            return [ticklecharts::TclType $value]
+            return [ticklecharts::tclType $value]
         }
     }
 }
@@ -266,7 +277,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
         lassign $info value type
         
         set key   [string map {- ""} $key]
-        set htype [ticklecharts::HuddleType $type]
+        set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
             dict -
@@ -320,7 +331,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
     dict for {subkey subinfo} $options {
         lassign $subinfo svalue type
         
-        set htype [ticklecharts::HuddleType $type]
+        set htype [ticklecharts::ehuddleType $type]
        
         switch -exact -- $type {
             dict {
@@ -374,16 +385,17 @@ proc ticklecharts::setdef {d key args} {
     # args - type, default, version, validvalue
     #
     # Returns dictionary
+    variable echarts_version ; variable wc_version ; variable gmap_version
 
     upvar 1 $d _dict
 
     # distinguishes between the 3 libraries.
-    set versionLib $::ticklecharts::echarts_version ; # for Echarts see ticklecharts.tcl
+    set versionLib $echarts_version ; # for Echarts see ticklecharts.tcl
 
     foreach {k value} $args {
         switch -exact -- $k {
-            "-minWCversion" {set minversion $value ; set versionLib $::ticklecharts::wc_version}
-            "-minGMversion" {set minversion $value ; set versionLib $::ticklecharts::gmap_version}
+            "-minWCversion" {set minversion $value ; set versionLib $wc_version}
+            "-minGMversion" {set minversion $value ; set versionLib $gmap_version}
             "-minversion"   {set minversion $value}
             "-validvalue"   {set validvalue $value}
             "-type"         {set type       $value}
@@ -395,7 +407,7 @@ proc ticklecharts::setdef {d key args} {
     dict set _dict $key [list $default $type $validvalue $minversion $versionLib]
 }
 
-proc ticklecharts::MatchType {mytype type keyt} {
+proc ticklecharts::matchTypeOf {mytype type keyt} {
     # Guess type, follow optional list.
     # 
     # mytype - type
@@ -425,7 +437,7 @@ proc ticklecharts::keyCompare {d other} {
     #
     # Returns nothing
 
-    if {![ticklecharts::Isdict $other] || $other eq ""} {
+    if {![ticklecharts::isdict $other] || $other eq ""} {
         return {}
     }
 
@@ -463,13 +475,15 @@ proc ticklecharts::merge {d other} {
     # Merge 2 dictionaries and control the type of value.
     # An error exception is raised if type of value doesn't match.
     #
-    # d      - dict (default option)
+    # d      - dict (default option(s))
     # other  - list values
     #
     # Returns a new dictionary
 
     # Compare keys... output warning message if key name doesn't exist 
     # in key default option...
+    variable minProperties ; variable theme
+
     ticklecharts::keyCompare $d $other
 
     set _dict [dict create]
@@ -483,7 +497,7 @@ proc ticklecharts::merge {d other} {
             if {[dict exists $other $key]} {
                 set namevalue [dict get $other $key]
                 # Force string representation.
-                if {[Type $namevalue] ne "str"} {
+                if {[ticklecharts::typeOf $namevalue] ne "str"} {
                     dict set other $key [string cat $namevalue "<s!>"]
                 }
             }
@@ -502,9 +516,9 @@ proc ticklecharts::merge {d other} {
             set i 0
             set save_v "0.0.0"
             foreach v [split $minversion ":"] {
-                if {[vCompare $v $versionLib] <= 0} {
+                if {[ticklecharts::vCompare $v $versionLib] <= 0} {
                     # replaces the type of key according to echarts key version
-                    if {[vCompare $v $save_v] >= 0} {
+                    if {[ticklecharts::vCompare $v $save_v] >= 0} {
                         set version $v
                         set type [lindex [split $type ":"] $i]
                     }
@@ -516,7 +530,7 @@ proc ticklecharts::merge {d other} {
             set minversion $version
         }
 
-        set vcompare [vCompare $minversion $versionLib]
+        set vcompare [ticklecharts::vCompare $minversion $versionLib]
 
         if {[dict exists $other $key]} {
 
@@ -526,10 +540,10 @@ proc ticklecharts::merge {d other} {
                 continue
             }
         
-            set mytype [Type [dict get $other $key]]
+            set mytype [ticklecharts::typeOf [dict get $other $key]]
             
             # check type in default list
-            if {![ticklecharts::MatchType $mytype $type typekey]} {
+            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 if {$multiversions} {
                     error "bad type(set) for this key '$key'= $mytype should be :$type for $minversion version"
                 } else {
@@ -545,22 +559,19 @@ proc ticklecharts::merge {d other} {
             set value [dict get $other $key]
 
             # Verification of certain values (especially for string types)
-            formatEcharts $validvalue $value $key
+            ticklecharts::formatEcharts $validvalue $value $key
 
             if {$typekey eq "str"} {
-                set value [ticklecharts::MapSpaceString $value]
+                set value [ticklecharts::mapSpaceString $value]
             }
-
-            dict set _dict $key $value $typekey
-
         } else {
             # Does not take this key, depending on the version used.
             if {$vcompare > 0} {continue}
         
-            set mytype [Type $value]
+            set mytype [ticklecharts::typeOf $value]
             
             # check type in default list
-            if {![ticklecharts::MatchType $mytype $type typekey]} {
+            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 if {$multiversions} {
                     error "bad type(default) for this key '$key'= $mytype should be :$type for $minversion version"
                 } else {
@@ -570,8 +581,8 @@ proc ticklecharts::merge {d other} {
             # Minimum properties...
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
-            if {$::ticklecharts::minProperties} {
-                if {$::ticklecharts::theme ne "basic"} {
+            if {$minProperties} {
+                if {$theme ne "basic"} {
                     error "'theme' other than 'basic' is not supported yet\
                             when 'minProperties' variable is set to 'true'"
                 }
@@ -581,11 +592,11 @@ proc ticklecharts::merge {d other} {
             }
 
             if {$typekey eq "str"} {
-                set value [ticklecharts::MapSpaceString $value]
+                set value [ticklecharts::mapSpaceString $value]
             }
-                    
-            dict set _dict $key $value $typekey
         }
+
+        dict set _dict $key $value $typekey
     }
     
     return $_dict
@@ -607,7 +618,7 @@ proc ticklecharts::vCompare {version1 version2} {
     return [package vcompare $version1 $version2]
 }
 
-proc ticklecharts::MapSpaceString {value} {
+proc ticklecharts::mapSpaceString {value} {
     # Replace 'spaces' by symbol '<@!>' if present.
     # Replace '#'      by symbol '<#?>' if present.
     # Use for string type values.
@@ -618,7 +629,7 @@ proc ticklecharts::MapSpaceString {value} {
     return [string map {" " <@!> # <#?>} $value]
 }
 
-proc ticklecharts::Isdict {value} {
+proc ticklecharts::isdict {value} {
     # Check if the value is a dictionary.
     #
     # value - dict
@@ -628,7 +639,7 @@ proc ticklecharts::Isdict {value} {
 }
 
 
-proc ticklecharts::InfoOptions {key {indent 0}} {
+proc ticklecharts::infoOptions {key {indent 0}} {
     # Gets default options according to key procedure.
     #
     # key    - dict
@@ -645,10 +656,10 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
 
     foreach val $body {
         # find command in body...
-        if {[string match {*InfoNameProc*} $val]} {
+        if {[string match {*infoNameProc*} $val]} {
             set info 1 ; set cmd {}
             set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
-            foreach index [lsearch -all $map "*InfoNameProc*"] {
+            foreach index [lsearch -all $map "*infoNameProc*"] {
                 lappend cmd [lindex $map [expr {$index  + 2}]]
             }
             set ifnP "**[join $cmd " || "]**"
@@ -681,7 +692,7 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
 
                 # bug 'infinite loop?'. Add test to get if $match is not equal to current $key (name proc)
                 if {[regexp {ticklecharts::([A-Za-z]+)\s} $val -> match] && $match ne $key} {
-                    lappend dataInfo [ticklecharts::InfoOptions $match [expr {$indent - 2}]]
+                    lappend dataInfo [ticklecharts::infoOptions $match [expr {$indent - 2}]]
                 }
             } else {
                 if {$ifnP ne ""} {
@@ -700,7 +711,7 @@ proc ticklecharts::InfoOptions {key {indent 0}} {
     return [join $dataInfo "\n"]
 }
 
-proc ticklecharts::InfoNameProc {level name} {
+proc ticklecharts::infoNameProc {level name} {
     # Gets name of proc follow level.
     #
     # level  - level number or list level numbers
@@ -718,14 +729,15 @@ proc ticklecharts::InfoNameProc {level name} {
     return $lnum
 }
 
-proc ticklecharts::EchartsOptsTheme {name} {
+proc ticklecharts::echartsOptsTheme {name} {
     # Gets default theme value
     #
     # name   - name theme option
     #
     # Returns value.
+    variable opts_theme
 
-    return [dict get $::ticklecharts::opts_theme $name]
+    return [dict get $opts_theme $name]
 }
 
 proc ticklecharts::dictIsNotNothing {d} {
@@ -768,6 +780,7 @@ proc ticklecharts::listNs {{parentns ::}} {
     # From https://wiki.tcl-lang.org/page/namespace
     #
     # Returns list of all namespaces.
+
     set result {}
     foreach ns [namespace children $parentns] {
         lappend result {*}[listNs $ns] $ns
@@ -799,10 +812,11 @@ proc ticklecharts::traceEchartsVersion {args} {
     # args   - not used...
     #
     # Returns nothing.
+    variable escript ; variable echarts_version
 
-    if {[regexp {@([0-9.]+)|@(latest)} $::ticklecharts::script -> match]} {
-        set vMap [list $match $::ticklecharts::echarts_version]
-        set ::ticklecharts::script [string map $vMap $::ticklecharts::script]
+    if {[regexp {@([0-9.]+)|@(latest)} $escript -> match]} {
+        set vMap [list $match $echarts_version]
+        set escript [string map $vMap $escript]
     } else {
         puts "warning: Num version (@X.X.X) should be present in 'Echarts' path js.\
               If no pattern matches, the script path is left unchanged."
@@ -817,12 +831,32 @@ proc ticklecharts::traceGmapVersion {args} {
     # args   - not used...
     #
     # Returns nothing.
+    variable gmscript ; variable gmap_version
 
-    if {[regexp {@([0-9.]+)|@(latest)} $::ticklecharts::gmscript -> match]} {
-        set vMap [list $match $::ticklecharts::gmap_version]
-        set ::ticklecharts::gmscript [string map $vMap $::ticklecharts::gmscript]
+    if {[regexp {@([0-9.]+)|@(latest)} $gmscript -> match]} {
+        set vMap [list $match $gmap_version]
+        set gmscript [string map $vMap $gmscript]
     } else {
         puts "warning: Num version (@X.X.X) should be present in 'gmap' path js.\
+              If no pattern matches, the script path is left unchanged."
+    }
+
+    return {}
+}
+
+proc ticklecharts::traceWCVersion {args} {
+    # Changes the script echarts-wordcloud version variable.
+    #
+    # args   - not used...
+    #
+    # Returns nothing.
+    variable wcscript ; variable wc_version
+
+    if {[regexp {@([0-9.]+)} $wcscript -> match]} {
+        set WCMap [list $match $wc_version]
+        set wcscript [string map $WCMap $wcscript]
+    } else {
+        puts "warning: Num version (@X.X.X) should be present in 'wordcloud' path js.\
               If no pattern matches, the script path is left unchanged."
     }
 
@@ -835,14 +869,29 @@ proc ticklecharts::tracekeyGMAPI {args} {
     # args   - not used...
     #
     # Returns nothing.
+    variable gapiscript ; variable keyGMAPI
 
-    if {[regexp {key=([a-zA-Z0-9?_-]+)} $::ticklecharts::gapiscript -> match]} {
-        set vMap [list $match $::ticklecharts::keyGMAPI]
-        set ::ticklecharts::gapiscript [string map $vMap $::ticklecharts::gapiscript]
+    if {[regexp {key=([a-zA-Z0-9?_-]+)} $gapiscript -> match]} {
+        set vMap [list $match $keyGMAPI]
+        set gapiscript [string map $vMap $gapiscript]
     } else {
         puts "warning: 'key=' should be present in Google script path js.\
               If no pattern matches, the script path is left unchanged."
     }
 
     return {}
+}
+
+proc ticklecharts::setThemeOptions {opts {parent ""}} {
+
+    foreach {key data} $opts {
+        lassign [split $key "="] type _
+
+        if {$type eq "@D"} {
+            setThemeOptions $data "$parent $key"
+            continue
+        }
+
+        puts "$parent: $key > $data"
+    }
 }
