@@ -899,7 +899,7 @@ oo::define ticklecharts::chart {
 
         if {[dict exists $args -dataset]} {
             set dts [dict get $args -dataset]
-            if {![ticklecharts::isAObject $dts] && [$dts gettype] ne "dataset"} {
+            if {![ticklecharts::isAObject $dts] || [$dts gettype] ne "dataset"} {
                 error "key value -dataset should be a 'dataset' Class..."
             }
 
