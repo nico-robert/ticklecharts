@@ -32,7 +32,7 @@ set chart [ticklecharts::chart new]
 | _-backgroundColor_ | str \| jsfunc \| e.color | Canvas color background (hex, rgb, rgba color)
 | _-color_ | list.s \| e.color | Colors series (default `Echarts Color Theme`)
 | _-animation_ | boolean | chart animation (default `True`)
-| _-others_ | _ | animation sub options (see proc: `ticklecharts::globaloptions` in `global_options.tcl`)
+| _-others_ | _ | animation sub options (see proc: `ticklecharts::globalOptions` in `global_options.tcl`)
 | _-theme_ | str | set the default theme for chart instance (default `basic`) possible values: `vintage,westeros,wonderland,dark`
 ```tcl
 # Demo
@@ -90,7 +90,7 @@ $chart Xaxis
 ```
 `-datalineitem` (for _lineseries_) flag :
 ```tcl
-# Additional options on the graph... see ticklecharts::LineItem in options.tcl
+# Additional options on the graph... see ticklecharts::lineItem in options.tcl
 $chart AddLineSeries -datalineitem {
                                 {name "Mon" value 150}
                                 {name "Tue" value 230}
@@ -329,7 +329,7 @@ set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
 
 Examples :
 -------------------------
-See **[examples](/examples)** for all demos (from [apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
+See **[examples](/examples)** for all demos (from [Apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
 
 ```tcl
 # line + bar on same canvas...
@@ -624,7 +624,13 @@ Release :
     - Add `lines` examples.
     - Cosmetic changes.
 *  **18-Dec-2022** : 2.9.1
-    - The result of the [ticklecharts::InfoOptions] command on the `stdout` is deleted, in favor of a result of a command.
+    - The result of the `ticklecharts::infoOptions` _command_ on the `stdout` is deleted, in favor of a result of a _command_.
     - New global variable `::ticklecharts::minProperties` see [Global variables](#Globalvariables) section for detail.
     - `-class` and `-style` are added in `Render` method to control the class name and style respectively (_Note_ : `template.html` file is modified).
     - Cosmetic changes.
+*  **03-Jan-2023** : 2.9.2
+    - Code refactoring.
+    - Update LICENSE year.
+    - `echarts-wordcloud.js` is inserted automatically when writing the html file. Update `wordcloud` examples to reflect this changes.
+    - Cosmetic changes.
+    - Add global options (useUTC, hoverLayerThreshold...)

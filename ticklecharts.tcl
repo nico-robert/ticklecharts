@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 # ticklEcharts - Tcl wrapper for Apache ECharts. (https://echarts.apache.org/en/index.html)
 
@@ -130,10 +130,16 @@
                # Add `lines` examples.
                # Cosmetic changes.
 # 18-Dec-2022 : v2.9.1
-               # The result of the ticklecharts::InfoOptions command on the stdout is deleted, in favor of a result of a command.
+               # The result of the ticklecharts::infoOptions command on the stdout is deleted, in favor of a result of a command.
                # New global variable `::ticklecharts::minProperties` see Global variables(#Globalvariables) section for detail.
                # `-class` and `-style` are added in `Render` method to control the class name and style respectively (_Note_ : `template.html` file is modified).
                # Cosmetic changes.
+# 03-Jan-2023 : v2.9.2
+               # Code refactoring
+               # Update LICENSE year.
+               # 'echarts-wordcloud.js' is inserted automatically when writing the html file. Update `wordcloud` examples to reflect this changes.
+               # Cosmetic changes.
+               # Add global options (useUTC, hoverLayerThreshold...) 
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -150,6 +156,7 @@ source [file join $dir layout.tcl]
 source [file join $dir global_options.tcl]
 source [file join $dir series.tcl]
 source [file join $dir options.tcl]
+source [file join $dir axis.tcl]
 source [file join $dir theme.tcl]
 source [file join $dir dataset.tcl]
 source [file join $dir timeline.tcl]
@@ -157,30 +164,30 @@ source [file join $dir ecolor.tcl]
 
 namespace eval ticklecharts {
 
-    variable version 2.9.1
+    variable version         2.9.2
     variable echarts_version 5.2.2 ; # Echarts version
-    variable wc_version 2.1.0      ; # wordCloud version
-    variable gmap_version 1.5.0    ; # gmap version
-    variable keyGMAPI "??"         ; # Please replace '??' with your own API key.
-    variable dir $dir
-    variable theme "basic"
-    variable htmlstdout    "True"
-    variable minProperties "False"
-    variable opts_theme {}
-    variable htmltemplate [file join $dir html template.html]
-    variable script     "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
-    variable gmscript   "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
-    variable gapiscript "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
+    variable wc_version      2.1.0 ; # wordCloud version
+    variable gmap_version    1.5.0 ; # gmap version
+    variable keyGMAPI       "??"   ; # Please replace '??' with your own API key.
+    variable edir           $dir
+    variable theme          "basic"
+    variable htmlstdout     "True"
+    variable minProperties  "False"
+    variable opts_theme     {}
+    variable htmltemplate   [file join $dir html template.html]
+    variable escript        "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
+    variable wcscript       "https://cdn.jsdelivr.net/npm/echarts-wordcloud@${wc_version}/dist/echarts-wordcloud.min.js"
+    variable gmscript       "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
+    variable gapiscript     "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
     
     # When version is modified add trace command.
     trace add variable echarts_version write ticklecharts::traceEchartsVersion
     trace add variable gmap_version    write ticklecharts::traceGmapVersion
+    trace add variable wc_version      write ticklecharts::traceWCVersion
     trace add variable keyGMAPI        write ticklecharts::tracekeyGMAPI
 
 }
 
-namespace import ticklecharts::setdef ticklecharts::merge ticklecharts::Type \
-                 ticklecharts::InfoNameProc ticklecharts::formatEcharts \
-                 ticklecharts::EchartsOptsTheme ticklecharts::vCompare
+namespace import ticklecharts::setdef ticklecharts::merge
 
 package provide ticklecharts $::ticklecharts::version
