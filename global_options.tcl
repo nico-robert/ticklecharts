@@ -1,9 +1,9 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::globaloptions {value} {
+proc ticklecharts::globalOptions {value} {
     # Global options chart
     #
     # value - Options described below.
@@ -14,22 +14,30 @@ proc ticklecharts::globaloptions {value} {
     # - animation               - https://echarts.apache.org/en/option.html#animation
     # - animationDuration       - https://echarts.apache.org/en/option.html#animationDuration
     # - animationDurationUpdate - https://echarts.apache.org/en/option.html#animationDurationUpdate
+    # - animationDelayUpdate    - https://echarts.apache.org/en/option.html#animationDelayUpdate
     # - animationEasing         - https://echarts.apache.org/en/option.html#animationEasing
     # - animationEasingUpdate   - https://echarts.apache.org/en/option.html#animationEasingUpdate
     # - animationThreshold      - https://echarts.apache.org/en/option.html#animationThreshold
     # - progressiveThreshold    - https://echarts.apache.org/en/option.html#progressiveThreshold
+    # - hoverLayerThreshold      - https://echarts.apache.org/en/option.html#hoverLayerThreshold
+    # - useUTC                  - https://echarts.apache.org/en/option.html#useUTC
+    # - blendMode               - https://echarts.apache.org/en/option.html#blendMode
     #
     # return dict options
 
-    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.color|null -default [EchartsOptsTheme backgroundColor]
-    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.color|null     -default [EchartsOptsTheme color]
+    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
+    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.color|null     -default [echartsOptsTheme color]
     setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null           -default "True"
     setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                -default 1000
     setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                -default 500
+    setdef options -animationDelayUpdate    -minversion 5  -validvalue {}            -type jsfunc|null             -default "nothing"
     setdef options -animationEasing         -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
     setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
     setdef options -animationThreshold      -minversion 5  -validvalue {}            -type num|null                -default 2000
     setdef options -progressiveThreshold    -minversion 5  -validvalue {}            -type num|null                -default 3000
+    setdef options -hoverLayerThreshold     -minversion 5  -validvalue {}            -type num|null                -default "nothing"
+    setdef options -useUTC                  -minversion 5  -validvalue {}            -type bool|null               -default "nothing"
+    setdef options -blendMode               -minversion 5  -validvalue formatBlendM  -type str|null                -default "nothing"
 
     # remove key(s) '-theme' to avoid warning message when comparing keys...
     if {[dict exists $value -theme]} {set value [dict remove $value -theme]}
@@ -39,7 +47,7 @@ proc ticklecharts::globaloptions {value} {
     return $options
 }
 
-proc ticklecharts::htmloptions {value} { 
+proc ticklecharts::htmlOptions {value} { 
     # Global options chart
     #
     # value - Options described below.
@@ -47,7 +55,9 @@ proc ticklecharts::htmloptions {value} {
     # see chart.tcl, timeline.tcl and layout.tcl files (method render)
 
     # required values... set minProperties to false.
-    set minP $::ticklecharts::minProperties ; set ::ticklecharts::minProperties 0
+    variable minProperties ; variable escript
+
+    set minP $minProperties ; set minProperties 0
 
     setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
     setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
@@ -56,7 +66,7 @@ proc ticklecharts::htmloptions {value} {
     setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" [clock clicks]]
     setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    [clock clicks]]
     setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
-    setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $::ticklecharts::script
+    setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
     setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default "option"
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
     setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
@@ -64,7 +74,7 @@ proc ticklecharts::htmloptions {value} {
 
     set options [merge $options $value]
 
-    set ::ticklecharts::minProperties $minP
+    set minProperties $minP
     
     return $options
 }
@@ -268,7 +278,7 @@ proc ticklecharts::legend {value} {
     #...
 
     if {[dict exists $d dataLegendItem]} {
-        setdef options data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LegendItem $d]
+        setdef options data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::legendItem $d]
     }
 
     # remove key(s)...
@@ -505,7 +515,7 @@ proc ticklecharts::dataZoom {value} {
                 setdef options type                   -minversion 5  -validvalue {}               -type str             -default "slider"
                 setdef options id                     -minversion 5  -validvalue {}               -type str|null        -default "nothing"
                 setdef options show                   -minversion 5  -validvalue {}               -type bool            -default "False"
-                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.color|str     -default [EchartsOptsTheme datazoomBackgroundColor]
+                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.color|str     -default [echartsOptsTheme datazoomBackgroundColor]
                 setdef options dataBackground         -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::dataBackground $item]
                 setdef options selectedDataBackground -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::selectedDataBackground $item]
                 setdef options fillerColor            -minversion 5  -validvalue formatColor      -type str|null        -default "nothing"
@@ -566,7 +576,7 @@ proc ticklecharts::dataZoom {value} {
 
         # remove key(s)...
         set item [dict remove $item dataBackground selectedDataBackground \
-                            moveHandleStyle textStyle brushStyle emphasis]
+                                    moveHandleStyle textStyle brushStyle emphasis]
 
         lappend opts [merge $options $item]
         set options {}

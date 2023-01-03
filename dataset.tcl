@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -84,7 +84,7 @@ oo::define ticklecharts::dataset {
         set d {}
 
         foreach dim [dict get $value -dimensions] {
-            if {[ticklecharts::Isdict $dim] && [llength $dim] > 2 && 
+            if {[ticklecharts::isdict $dim] && [llength $dim] > 2 && 
                ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
 
                 setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
@@ -94,7 +94,7 @@ oo::define ticklecharts::dataset {
                 lappend d [list [merge $options $dim] dict] ; continue
 
             }
-            lappend vald [ticklecharts::MapSpaceString $dim]
+            lappend vald [ticklecharts::mapSpaceString $dim]
         }
 
         if {[llength $d] == 0} {

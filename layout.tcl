@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -29,7 +29,7 @@ oo::class create ticklecharts::Gridlayout {
         # theme options
         set opts_theme [ticklecharts::theme $args]
         # global options : animation, chart color...
-        set opts_global [ticklecharts::globaloptions $args]
+        set opts_global [ticklecharts::globalOptions $args]
         set _options    {}
         set _keyglob    {}
         set _dataset    {}
@@ -180,13 +180,13 @@ oo::define ticklecharts::Gridlayout {
                     set stack [lsearch -inline [dict keys $opts] *stack]
                     if {[dict exists $opts $stack] && [dict get $opts $stack] ne "null"} {
                         set value [dict get $opts $stack]
-                        dict set opts $stack [ticklecharts::MapSpaceString "$value $_indexchart"]
+                        dict set opts $stack [ticklecharts::mapSpaceString "$value $_indexchart"]
                     }
 
                     # replace 'center' flag if exists by the one in args if exists...
                     if {[dict get $opts @S=type] in {pie sunburst gauge}} {
                         if {[info exists center]} {
-                            set mytype [Type $center]
+                            set mytype [ticklecharts::typeOf $center]
                             if {$mytype ne "list"} {
                                 error "'center' flag must be a list"
                             }
@@ -201,7 +201,7 @@ oo::define ticklecharts::Gridlayout {
                         foreach val {top bottom left right width height} {
                             if {[info exists [set val]]} {
                                 set myvalue [expr $[set val]]
-                                set mytype [Type $myvalue]
+                                set mytype [ticklecharts::typeOf $myvalue]
 
                                 switch -- $mytype {
                                     "str" {dict set opts @S=$val $myvalue}
@@ -216,7 +216,7 @@ oo::define ticklecharts::Gridlayout {
                 *polar {
                     set coordinatecenter [lsearch -inline [dict keys $opts] *center]
                     if {[info exists center]} {
-                        set mytype [Type $center]
+                        set mytype [ticklecharts::typeOf $center]
                         if {$mytype ne "list"} {
                             error "'center' flag must be a list"
                         }
@@ -236,7 +236,7 @@ oo::define ticklecharts::Gridlayout {
                     foreach val {top bottom left right width height} {
                         if {[info exists [set val]]} {
                             set myvalue [expr $[set val]]
-                            set mytype [Type $myvalue]
+                            set mytype [ticklecharts::typeOf $myvalue]
 
                             switch -- $mytype {
                                 "str" {dict set opts @S=$val $myvalue}
@@ -269,7 +269,7 @@ oo::define ticklecharts::Gridlayout {
             foreach val {top bottom left right width height} {
                 if {[info exists [set val]]} {
                     set myvalue [expr $[set val]]
-                    set mytype [Type $myvalue]
+                    set mytype [ticklecharts::typeOf $myvalue]
 
                     switch -- $mytype {
                         "str" {lappend f @S=$val $myvalue}
@@ -363,12 +363,12 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns full path html file.
 
-        set opts_html [ticklecharts::htmloptions $args]
+        set opts_html [ticklecharts::htmlOptions $args]
         my layoutToHuddle ; # transform to huddle
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
-        set newhtml    [ticklecharts::htmlmap $myhuddle $opts_html]
+        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
@@ -440,7 +440,7 @@ proc ticklecharts::gridlayoutHasDataSetObj {dts} {
     upvar 1 $dts dataset
 
     foreach obj [concat [ticklecharts::listNs] "::"] {
-        if {[ticklecharts::IsaObject $obj]} {
+        if {[ticklecharts::isAObject $obj]} {
             if {[info object class $obj] eq "::ticklecharts::Gridlayout"} {
                 if {[$obj dataset] ne ""} {
                     set dataset [$obj dataset]

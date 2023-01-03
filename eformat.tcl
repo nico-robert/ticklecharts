@@ -1,9 +1,7 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
-namespace eval ticklecharts {
-    namespace export formatEcharts
-}
+namespace eval ticklecharts {}
 
 proc ticklecharts::formatEcharts {formattype value key} {
     # Verification of certain values (especially for string types) 
@@ -14,6 +12,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     # key        - key flag.
     #
     # Returns nothing.
+    variable echarts_version
 
     if {$formattype eq ""} {return}
     if {$value eq "nothing" || $value eq "null"} {return}
@@ -166,11 +165,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         }
 
         formatColor {
-            set type [Type $value]
+            set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
                 foreach val {*}$value {
-                    formatEcharts formatColor $val $key
+                    ticklecharts::formatEcharts formatColor $val $key
                 }
             }
             if {$type eq "str"} {
@@ -222,7 +221,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatLineStyleType -
         formatTextBorderType {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {inherit solid dashed dotted}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -277,7 +276,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatConfine {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {inside top left right bottom}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -389,8 +388,8 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatSelectedMode {
             # possible values...
-            if {[Type $value] eq "str"} {
-                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
+                if {[ticklecharts::vCompare $echarts_version "5.3.0"] >= 0} {
                     set validvalue {multiple single series}
                 } else {
                     set validvalue {multiple single}
@@ -404,11 +403,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         }
 
         formatItemSymbol {
-            set type [Type $value]
+            set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
                 foreach val {*}$value {
-                    formatEcharts formatItemSymbol $val $key
+                    ticklecharts::formatEcharts formatItemSymbol $val $key
                 }
             }
             # possible values...
@@ -440,35 +439,35 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {cartesian2d polar geo}
 
-            if {[InfoNameProc 2 "themeriverseries"]} {
+            if {[infoNameProc 2 "themeRiverSeries"]} {
                 set validvalue {single}
             }
 
-            if {[InfoNameProc 2 "parallelseries"]} {
+            if {[infoNameProc 2 "parallelSeries"]} {
                 set validvalue {parallel}
             }
         
-            if {[InfoNameProc 2 "graphseries"]} {
+            if {[infoNameProc 2 "graphSeries"]} {
                 append validvalue " calendar none"
             }
 
-            if {[InfoNameProc 2 "pieseries"]} {
+            if {[infoNameProc 2 "pieSeries"]} {
                 append validvalue " calendar none gmap"
             }
 
-            if {[InfoNameProc 2 "heatmapseries"]} {
+            if {[infoNameProc 2 "heatmapSeries"]} {
                 append validvalue " calendar gmap"
             }
 
-            if {[InfoNameProc 2 "graphseries"]} {
+            if {[infoNameProc 2 "graphSeries"]} {
                 lappend validvalue calendar
             }
 
-            if {[InfoNameProc 2 "scatterseries"]} {
+            if {[infoNameProc 2 "scatterSeries"]} {
                 append validvalue " calendar gmap"
             }
 
-            if {[InfoNameProc 2 "linesseries"]} {
+            if {[infoNameProc 2 "linesSeries"]} {
                 lappend validvalue gmap
             }
 
@@ -541,7 +540,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatSort {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {descending ascending none desc asc}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -561,29 +560,29 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatPosition {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {
                         top left right bottom inside insideLeft insideRight insideTop
                         insideBottom insideTopLeft insideBottomLeft insideTopRight insideBottomRight
                     }
 
-                if {[InfoNameProc 2 "barseries"] && [vCompare $::ticklecharts::echarts_version "5.2.0"] >= 0} {
+                if {[infoNameProc 2 "barSeries"] && [ticklecharts::vCompare $echarts_version "5.2.0"] >= 0} {
                     append validvalue " start insideStart middle insideEnd end"
                 }
 
-                if {[InfoNameProc 2 "sunburstseries"]} {
+                if {[infoNameProc 2 "sunburstSeries"]} {
                     append validvalue " outside"
                 }
 
-                if {[InfoNameProc 2 "pieseries"]} {
+                if {[infoNameProc 2 "pieSeries"]} {
                     set validvalue {outside inside inner center outer}
                 }
 
-                if {[InfoNameProc 3 "calendar"]} {
+                if {[infoNameProc 3 "calendar"]} {
                     set validvalue {start end}
                 }
 
-                if {[InfoNameProc 3 "markLine"]} {
+                if {[infoNameProc 3 "markLine"]} {
                     set validvalue {
                             start middle end insideStart insideStartTop insideStartBottom insideMiddle insideMiddleTop insideMiddleBottom
                             insideEnd insideEndTop insideEndBottom
@@ -671,7 +670,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatShowAllSymbol {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {auto}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -705,8 +704,12 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {none self series ancestor descendant adjacency}
 
-            if {[InfoNameProc 2 "sankeyseries"]} {
-                append validvalue " adjacency"
+            if {[infoNameProc 2 "treeSeries"]} {
+                if {[ticklecharts::vCompare $echarts_version "5.3.3"] >= 0} {
+                    set validvalue {none ancestor descendant relative}
+                } else {
+                    set validvalue {none ancestor descendant}
+                }
             }
             if {$value ni $validvalue} {
                 error "'$value' should be '[join $validvalue "' or '"]'\
@@ -716,7 +719,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatShapeSmooth {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {spline}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -736,7 +739,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatInterval {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {auto}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -756,7 +759,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatRoseType {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {radius area}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -767,7 +770,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatStep {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {start middle end}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -834,7 +837,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {rootToNode link}
 
-            if {[InfoNameProc 2 "treeMapseries"]} {
+            if {[infoNameProc 2 "treemapSeries"]} {
                 set validvalue {link zoomToNode}
             }
 
@@ -846,13 +849,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatRotate {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {radial tangential}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
                             for this key '$key' in $nameproc"
                 }
-            } elseif {[Type $value] eq "num"} {
+            } elseif {[ticklecharts::typeOf $value] eq "num"} {
                 if {![expr {$value >= -90 && $value <= 90}]} {
                     error "'$value' should be between '-90' and '90'\
                             for this key '$key' in $nameproc"
@@ -864,7 +867,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {orthogonal radial}
 
-            if {[InfoNameProc 2 "graphseries"]} {
+            if {[infoNameProc 2 "graphSeries"]} {
                 set validvalue {none circular force}
             }
 
@@ -892,7 +895,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatRoam {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {scale move}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -920,7 +923,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatZoomMW {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {shift ctrl alt}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -958,7 +961,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatSourceHeader {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {undefined auto}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -978,7 +981,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatSymbolRepeat {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {fixed}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -999,7 +1002,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatBrushIndex -
         formatToolBox {
-            set type [Type $value]
+            set type [ticklecharts::typeOf $value]
             set validvalue {rect polygon keep clear}
 
             if {$type eq "list"} {
@@ -1014,7 +1017,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatBrushLink {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {all none}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -1069,11 +1072,11 @@ proc ticklecharts::formatEcharts {formattype value key} {
         }
 
         formatTimelineMerge {
-            set type [Type $value]
+            set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
                 foreach val {*}$value {
-                    formatEcharts formatTimelineMerge $val $key
+                    ticklecharts::formatEcharts formatTimelineMerge $val $key
                 }
             }
             if {$type eq "str"} {
@@ -1147,7 +1150,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatAreaStyleOrigin {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {auto start end}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -1158,14 +1161,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatBRadius {
             # possible values...
-            if {[Type $value] eq "list"} {
-                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] < 0} {
+            if {[ticklecharts::typeOf $value] eq "list"} {
+                if {[ticklecharts::vCompare $echarts_version "5.3.0"] < 0} {
                     set len [llength {*}$value]
                     if {$len != 2} {
                         error "length of list should be equal to 2."
                     }
                 }
-                if {[vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
+                if {[ticklecharts::vCompare $echarts_version "5.3.0"] >= 0} {
                     set len [llength {*}$value]
                     if {![expr {$len == 2 || $len == 4}]} {
                         error "length of list should be equal to 2 or 4"
@@ -1185,14 +1188,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatGaugeALrotate {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {radial tangential}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
                             for this key '$key' in $nameproc"
                 }
             }
-            if {[Type $value] eq "num"} {
+            if {[ticklecharts::typeOf $value] eq "num"} {
                 if {![expr {$value >= -90 && $value <= 90}]} {
                     error "'$value' should be between '-90' and '90'\
                             for this key '$key' in $nameproc"
@@ -1220,13 +1223,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatNameMap {
             # possible values...
-            if {[Type $value] eq "str"} {
-                if {[vCompare $::ticklecharts::echarts_version "5.2.2"] >= 0} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
+                if {[ticklecharts::vCompare $echarts_version "5.2.2"] >= 0} {
                     if {[string toupper $value] ne $value} {
                         error "Case sensitive is not respected for '$value'"
                     }
                 }
-                if {[vCompare $::ticklecharts::echarts_version "5.2.2"] < 0} {
+                if {[ticklecharts::vCompare $echarts_version "5.2.2"] < 0} {
                     if {[string tolower $value] ne $value} {
                         error "Case sensitive is not respected for '$value'"
                     }
@@ -1271,7 +1274,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatMapTypeID {
             # possible values...
-            if {[Type $value] eq "str"} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {roadmap satellite hybrid terrain}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[join $validvalue "' or '"]'\
@@ -1279,6 +1282,17 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 }
             }
         }
+
+        formatBlendM {
+            # possible values...
+            set validvalue {source-over lighter}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+
     }
 
     return {}

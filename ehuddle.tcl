@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -52,7 +52,7 @@ oo::define ticklecharts::ehuddle {
         set lhuddle {}
         lassign $args key data
 
-        if {![ticklecharts::Isdict $data]} {
+        if {![ticklecharts::isdict $data]} {
 
             lassign [split $key "="] type keyvalue
 
@@ -98,7 +98,7 @@ oo::define ticklecharts::ehuddle {
 
             lassign [info level 0] obj
 
-            if {[ticklecharts::IsaObject $obj]} {
+            if {[ticklecharts::isAObject $obj]} {
                 lappend _huddle [huddle create $keyvalue $value]
                 return {}
             } else {
@@ -112,7 +112,7 @@ oo::define ticklecharts::ehuddle {
         dict for {subkey info} $mydict {
             # Guess if info is a dictionary
             #
-            if {![ticklecharts::Isdict $info]} {
+            if {![ticklecharts::isdict $info]} {
 
                 lassign [split $subkey "="] type subkeyvalue
                 set lko 0
@@ -298,7 +298,7 @@ oo::define ticklecharts::ehuddle {
             default {error "(4) Unknown type '$type' specified for '$key'"}
         }
 
-        if {[ticklecharts::IsaObject $obj]} {
+        if {[ticklecharts::isAObject $obj]} {
             # append to global huddle.
             lappend _huddle $h
         }
@@ -320,7 +320,7 @@ oo::define ticklecharts::ehuddle {
         #
         # append huddle to global '_huddle'. 
     
-        set newhuddle [ticklecharts::ehuddle new]
+        set _h [ticklecharts::ehuddle new]
         lassign [split $key "="] type valkey
 
         # special case for timeline class
@@ -331,36 +331,36 @@ oo::define ticklecharts::ehuddle {
         foreach {k val} $value {
             if {$timeline} {
                 if {[string match {*@D=*} $k] && ($k in $listk)} {
-                    $newhuddle append $k $val
+                    $_h append $k $val
                 } else {
-                    $newhuddle set $k $val 
+                    $_h set $k $val 
                 }
                 lappend listk $k
             } else {
-                $newhuddle set $k $val
+                $_h set $k $val
             }
         }
-        
+
         if {$valkey in [my keys]} {
             set h [my extract]
             set index [huddle llength [huddle get $h $valkey]]
-            huddle set h $valkey $index [$newhuddle extract]
+            huddle set h $valkey $index [$_h extract]
         } else {
             [self] set $key {}
             set h [my extract]
 
             if {$type eq "@L"} {
-                huddle set h $valkey [$newhuddle extract]
+                huddle set h $valkey [$_h extract]
             } else {
-                huddle set h $valkey 0 [$newhuddle extract]
+                huddle set h $valkey 0 [$_h extract]
             }
         }
         
         # destroy...
-        $newhuddle destroy
-        
-        # add huddle list
-        lappend _huddle $h
+        $_h destroy
+
+        # set new huddle list
+        set _huddle [list $h]
 
         return {}
     }
@@ -486,8 +486,10 @@ proc ticklecharts::eHuddleCritcl {bool} {
     # bool - true or false 
     #
     # Returns Nothing
+    variable edir
+
     if {$bool} {
-        if {![catch {uplevel 1 [list source [file join $::ticklecharts::dir ehuddlecrit.tcl]]} infocrit]} {
+        if {![catch {uplevel 1 [list source [file join $edir ehuddlecrit.tcl]]} infocrit]} {
             # Replace 'if {[isHuddle $key]} {...}' by 'if {[huddle::isHuddle $key]} {...}'
             # Problem if full namespace is not included... 
             proc ::huddle::types::dict::create {args} {

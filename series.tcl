@@ -1,16 +1,16 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::barseries {index chart value} {
+proc ticklecharts::barSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-bar
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::barseries below.
+    # value - Options described in proc ticklecharts::barSeries below.
     #
-    # return dict barseries options
+    # return dict barSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                   -type str             -default "bar"
     setdef options -id                      -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
@@ -87,7 +87,7 @@ proc ticklecharts::barseries {index chart value} {
         if {[dict exists $value -data]} {
             error "'chart' args cannot contain '-data' and '-databaritem'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::BarItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::barItem $value]
     }
 
     # remove key(s)...
@@ -102,14 +102,14 @@ proc ticklecharts::barseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::lineseries {index chart value} {
+proc ticklecharts::lineSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-line
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::lineseries below.
+    # value - Options described in proc ticklecharts::lineSeries below.
     #
-    # return dict lineseries options
+    # return dict lineSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str             -default "line"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null        -default "nothing"
@@ -119,8 +119,8 @@ proc ticklecharts::lineseries {index chart value} {
     setdef options -xAxisIndex              -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
     setdef options -yAxisIndex              -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
     setdef options -polarIndex              -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
-    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str|jsfunc|null -default [EchartsOptsTheme symbol]
-    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num|list.n      -default [EchartsOptsTheme symbolSize]
+    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str|jsfunc|null -default [echartsOptsTheme symbol]
+    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num|list.n      -default [echartsOptsTheme symbolSize]
     setdef options -symbolRotate            -minversion 5       -validvalue {}                  -type num|null        -default "nothing"
     setdef options -symbolKeepAspect        -minversion 5       -validvalue {}                  -type bool            -default "True"
     setdef options -symbolOffset            -minversion 5       -validvalue {}                  -type list.d|null     -default "nothing"
@@ -145,7 +145,7 @@ proc ticklecharts::lineseries {index chart value} {
     setdef options -blur                    -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::blur $value]
     setdef options -select                  -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode  -type bool|str|null   -default "nothing"
-    setdef options -smooth                  -minversion 5       -validvalue {}                  -type bool|num        -default [EchartsOptsTheme lineSmooth]
+    setdef options -smooth                  -minversion 5       -validvalue {}                  -type bool|num        -default [echartsOptsTheme lineSmooth]
     setdef options -smoothMonotone          -minversion 5       -validvalue formatSMonotone     -type str|null        -default "nothing"
     setdef options -sampling                -minversion 5       -validvalue formatSampling      -type str|null        -default "nothing"
     setdef options -data                    -minversion 5       -validvalue {}                  -type list.d          -default {}
@@ -188,7 +188,7 @@ proc ticklecharts::lineseries {index chart value} {
         if {[dict exists $value -data]} {
             error "'chart' args cannot contain '-data' and '-datalineitem'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LineItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lineItem $value]
     }
 
     # remove key(s)...
@@ -203,14 +203,14 @@ proc ticklecharts::lineseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::pieseries {index chart value} {
+proc ticklecharts::pieSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-pie
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::pieseries below.
+    # value - Options described in proc ticklecharts::pieSeries below.
     #
-    # return dict pieseries options
+    # return dict pieSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "pie"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -284,7 +284,7 @@ proc ticklecharts::pieseries {index chart value} {
 
     } else {
         # set data options when dataset class doesn't exist...
-        setdef options   -data          -minversion 5   -validvalue {}                 -type list.o       -default [ticklecharts::PieItem $value]
+        setdef options   -data          -minversion 5   -validvalue {}                 -type list.o       -default [ticklecharts::pieItem $value]
     }
 
     # remove key(s)...
@@ -303,14 +303,14 @@ proc ticklecharts::pieseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::funnelseries {index chart value} {
+proc ticklecharts::funnelSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-funnel
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::funnelseries below.
+    # value - Options described in proc ticklecharts::funnelSeries below.
     #
-    # return dict funnelseries options
+    # return dict funnelSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "funnel"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -341,7 +341,7 @@ proc ticklecharts::funnelseries {index chart value} {
     setdef options -bottom                  -minversion 5       -validvalue formatBottom       -type num|str         -default 0
     setdef options -width                   -minversion 5       -validvalue {}                 -type num|str         -default "auto"
     setdef options -height                  -minversion 5       -validvalue {}                 -type num|str         -default "auto"
-    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::FunnelItem $value]
+    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::funnelItem $value]
     setdef options -markPoint               -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markPoint $value]
     setdef options -markLine                -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markLine $value]
     setdef options -markArea                -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markArea $value]
@@ -392,13 +392,13 @@ proc ticklecharts::funnelseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::radarseries {index value} {
+proc ticklecharts::radarSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-radar
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::radarseries below.
+    # value - Options described in proc ticklecharts::radarSeries below.
     #
-    # return dict radarseries options
+    # return dict radarSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "radar"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -419,7 +419,7 @@ proc ticklecharts::radarseries {index value} {
     setdef options -blur                    -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::blur $value]
     setdef options -select                  -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode -type bool|str|null   -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::RadarItem $value]
+    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::radarItem $value]
     setdef options -zlevel                  -minversion 5       -validvalue {}                 -type num             -default 0
     setdef options -z                       -minversion 5       -validvalue {}                 -type num             -default 2
     setdef options -silent                  -minversion 5       -validvalue {}                 -type bool            -default "False"
@@ -447,16 +447,16 @@ proc ticklecharts::radarseries {index value} {
     return $options
 }
 
-proc ticklecharts::scatterseries {index chart value} {
+proc ticklecharts::scatterSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-scatter
     # or
     # options : https://echarts.apache.org/en/option.html#series-effectScatter
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::scatterseries below.
+    # value - Options described in proc ticklecharts::scatterSeries below.
     #
-    # return dict scatterseries or effectScatterseries options
+    # return dict scatterSeries or effectScatterSeries options
 
     setdef options -type                    -minversion 5       -validvalue formatTypeScatter  -type str               -default "scatter"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -554,7 +554,7 @@ proc ticklecharts::scatterseries {index chart value} {
     }
     
     # does not remove '-labelLayout' for js function.
-    if {[dict exists $value -labelLayout] && [Type [dict get $value -labelLayout]] eq "jsfunc"} {
+    if {[dict exists $value -labelLayout] && [ticklecharts::typeOf [dict get $value -labelLayout]] eq "jsfunc"} {
         set lflag [lsearch -inline -all -not -exact $lflag "-labelLayout"]
         set value [dict remove $value {*}$lflag]
     } else {
@@ -566,14 +566,14 @@ proc ticklecharts::scatterseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::heatmapseries {index chart value} {
+proc ticklecharts::heatmapSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-heatmap
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::heatmapseries below.
+    # value - Options described in proc ticklecharts::heatmapSeries below.
     #
-    # return dict heatmapseries options
+    # return dict heatmapSeries options
 
     setdef options -type                 -minversion 5  -validvalue {}                 -type str              -default "heatmap"
     setdef options -id                   -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
@@ -636,13 +636,13 @@ proc ticklecharts::heatmapseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::sunburstseries {index value} {
+proc ticklecharts::sunburstSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-sunburst
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::sunburstseries below.
+    # value - Options described in proc ticklecharts::sunburstSeries below.
     #
-    # return dict sunburstseries options
+    # return dict sunburstSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                 -type str             -default "sunburst"
     setdef options -id                      -minversion 5  -validvalue {}                 -type str|null        -default "nothing"
@@ -692,13 +692,13 @@ proc ticklecharts::sunburstseries {index value} {
     return $options
 }
 
-proc ticklecharts::treeseries {index value} {
+proc ticklecharts::treeSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-tree
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::treeseries below.
+    # value - Options described in proc ticklecharts::treeSeries below.
     #
-    # return dict treeseries options
+    # return dict treeSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str               -default "tree"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
@@ -713,8 +713,8 @@ proc ticklecharts::treeseries {index value} {
     setdef options -height                  -minversion 5  -validvalue {}                  -type num|str           -default "auto"
     setdef options -layout                  -minversion 5  -validvalue formatLayout        -type str               -default "orthogonal"
     setdef options -orient                  -minversion 5  -validvalue formatTreeOrient    -type str               -default "LR"
-    setdef options -symbol                  -minversion 5  -validvalue formatItemSymbol    -type str|jsfunc|null   -default [EchartsOptsTheme symbol]
-    setdef options -symbolSize              -minversion 5  -validvalue {}                  -type num|list.n|jsfunc -default [EchartsOptsTheme symbolSize]
+    setdef options -symbol                  -minversion 5  -validvalue formatItemSymbol    -type str|jsfunc|null   -default [echartsOptsTheme symbol]
+    setdef options -symbolSize              -minversion 5  -validvalue {}                  -type num|list.n|jsfunc -default [echartsOptsTheme symbolSize]
     setdef options -symbolRotate            -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
     setdef options -symbolKeepAspect        -minversion 5  -validvalue {}                  -type bool              -default "True"
     setdef options -symbolOffset            -minversion 5  -validvalue {}                  -type list.d|null       -default "nothing"
@@ -760,17 +760,17 @@ proc ticklecharts::treeseries {index value} {
     return $options
 }
 
-proc ticklecharts::themeriverseries {index value} {
+proc ticklecharts::themeRiverSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-themeRiver
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::themeriverseries below.
+    # value - Options described in proc ticklecharts::themeRiverSeries below.
     #
-    # return dict themeriverseries options
+    # return dict themeRiverSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "themeRiver"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
-    setdef options -name                    -minversion 5       -validvalue {}                  -type str               -default "themeriverseries_${index}"
+    setdef options -name                    -minversion 5       -validvalue {}                  -type str               -default "themeRiverseries_${index}"
     setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy       -type str               -default "data"
     setdef options -zlevel                  -minversion 5       -validvalue {}                  -type num               -default 0
     setdef options -z                       -minversion 5       -validvalue {}                  -type num               -default 2
@@ -807,13 +807,13 @@ proc ticklecharts::themeriverseries {index value} {
     return $options
 }
 
-proc ticklecharts::sankeyseries {index value} {
+proc ticklecharts::sankeySeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-sankey
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::sankeyseries below.
+    # value - Options described in proc ticklecharts::sankeySeries below.
     #
-    # return dict sankeyseries options
+    # return dict sankeySeries options
 
     setdef options -type                    -minversion 5        -validvalue {}                  -type str               -default "sankey"
     setdef options -id                      -minversion 5        -validvalue {}                  -type str|null          -default "nothing"
@@ -874,18 +874,18 @@ proc ticklecharts::sankeyseries {index value} {
     return $options
 }
 
-proc ticklecharts::pictorialbarseries {index chart value} {
+proc ticklecharts::pictorialBarSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-pictorialBar
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::pictorialbarseries below.
+    # value - Options described in proc ticklecharts::pictorialBarSeries below.
     #
-    # return dict pictorialbarseries options
+    # return dict pictorialBarSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "pictorialBar"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
-    setdef options -name                    -minversion 5       -validvalue {}                    -type str               -default "pictorialbarseries_${index}"
+    setdef options -name                    -minversion 5       -validvalue {}                    -type str               -default "pictorialBarseries_${index}"
     setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy         -type str               -default "series"
     setdef options -legendHoverLink         -minversion 5       -validvalue {}                    -type bool              -default "True"
     setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS            -type str               -default "cartesian2d"
@@ -967,14 +967,14 @@ proc ticklecharts::pictorialbarseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::candlestickseries {index chart value} {
+proc ticklecharts::candlestickSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-candlesticks
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::candlestickseries below.
+    # value - Options described in proc ticklecharts::candlestickSeries below.
     #
-    # return dict candlestickseries options
+    # return dict candlestickSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "candlestick"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1047,13 +1047,13 @@ proc ticklecharts::candlestickseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::parallelseries {index value} {
+proc ticklecharts::parallelSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-parallel
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::parallelseries below.
+    # value - Options described in proc ticklecharts::parallelSeries below.
     #
-    # return dict parallelseries options
+    # return dict parallelSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "parallel"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1087,7 +1087,7 @@ proc ticklecharts::parallelseries {index value} {
         if {[dict exists $value -data]} {
             error "'chart' args cannot contain '-data' and '-dataParallelItem'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::ParallelItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::parallelItem $value]
     }
 
     # remove key(s)...
@@ -1098,13 +1098,13 @@ proc ticklecharts::parallelseries {index value} {
     return $options
 }
 
-proc ticklecharts::gaugeseries {index value} {
+proc ticklecharts::gaugeSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-gauge
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::gaugeseries below.
+    # value - Options described in proc ticklecharts::gaugeSeries below.
     #
-    # return dict gaugeseries options
+    # return dict gaugeSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "gauge"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1163,13 +1163,13 @@ proc ticklecharts::gaugeseries {index value} {
     return $options
 }
 
-proc ticklecharts::graphseries {index value} {
+proc ticklecharts::graphSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-graph
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::graphseries below.
+    # value - Options described in proc ticklecharts::graphSeries below.
     #
-    # return dict graphseries options
+    # return dict graphSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str               -default "graph"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -1255,13 +1255,13 @@ proc ticklecharts::graphseries {index value} {
     return $options
 }
 
-proc ticklecharts::wordcloudseries {index value} {
+proc ticklecharts::wordcloudSeries {index value} {
     # options : https://github.com/ecomfe/echarts-wordcloud
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::wordcloudseries below.
+    # value - Options described in proc ticklecharts::wordcloudSeries below.
     #
-    # return dict wordcloudseries options
+    # return dict wordcloudSeries options
 
     setdef options -type              -minWCversion 2        -validvalue {}               -type str            -default "wordCloud"
     setdef options -shape             -minWCversion 2        -validvalue formatWCshape    -type str            -default "circle"
@@ -1292,21 +1292,21 @@ proc ticklecharts::wordcloudseries {index value} {
     return $options
 }
 
-proc ticklecharts::boxPlotseries {index chart value} {
+proc ticklecharts::boxplotSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-boxplot
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::boxPlotseries below.
+    # value - Options described in proc ticklecharts::boxplotSeries below.
     #
-    # return dict boxPlotseries options
+    # return dict boxplotSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "boxplot"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
     setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS            -type str               -default "cartesian2d"
     setdef options -xAxisIndex              -minversion 5       -validvalue {}                    -type num|null          -default "nothing"
     setdef options -yAxisIndex              -minversion 5       -validvalue {}                    -type num|null          -default "nothing"
-    setdef options -name                    -minversion 5       -validvalue {}                    -type str               -default "boxPlotseries_${index}"
+    setdef options -name                    -minversion 5       -validvalue {}                    -type str               -default "boxplotseries_${index}"
     setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy         -type str               -default "series"
     setdef options -legendHoverLink         -minversion 5       -validvalue {}                    -type bool              -default "True"
     setdef options -hoverAnimation          -minversion 5       -validvalue {}                    -type bool|null         -default "nothing"
@@ -1365,17 +1365,17 @@ proc ticklecharts::boxPlotseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::treeMapseries {index value} {
+proc ticklecharts::treemapSeries {index value} {
     # options : https://echarts.apache.org/en/option.html#series-treemap
     #
     # index - index series.
-    # value - Options described in proc ticklecharts::treeMapseries below.
+    # value - Options described in proc ticklecharts::treemapSeries below.
     #
-    # return dict treeMapseries options
+    # return dict treemapSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str               -default "treemap"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
-    setdef options -name                    -minversion 5  -validvalue {}                  -type str               -default "treeMapseries_${index}"
+    setdef options -name                    -minversion 5  -validvalue {}                  -type str               -default "treemapseries_${index}"
     setdef options -zlevel                  -minversion 5  -validvalue {}                  -type num               -default 0
     setdef options -z                       -minversion 5  -validvalue {}                  -type num               -default 2
     setdef options -left                    -minversion 5  -validvalue formatLeft          -type num|str           -default "center"
@@ -1409,7 +1409,7 @@ proc ticklecharts::treeMapseries {index value} {
     setdef options -labelLine               -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::labelLine $value]
     setdef options -labelLayout             -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
     setdef options -levels                  -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsTreeMapItem $value]
-    setdef options -data                    -minversion 5  -validvalue {}                  -type list.o            -default [ticklecharts::treeMapItem $value]
+    setdef options -data                    -minversion 5  -validvalue {}                  -type list.o            -default [ticklecharts::treemapItem $value]
     setdef options -silent                  -minversion 5  -validvalue {}                  -type bool              -default "False"
     setdef options -animationDuration       -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
     setdef options -animationEasing         -minversion 5  -validvalue formatAEasing       -type str|null          -default "nothing"
@@ -1436,14 +1436,14 @@ proc ticklecharts::treeMapseries {index value} {
     return $options
 }
 
-proc ticklecharts::mapseries {index chart value} {
+proc ticklecharts::mapSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-map
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::mapseries below.
+    # value - Options described in proc ticklecharts::mapSeries below.
     #
-    # return dict mapseries options
+    # return dict mapSeries options
 
     setdef options -type                 -minversion 5              -validvalue {}                  -type str                     -default "map"
     setdef options -id                   -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
@@ -1521,14 +1521,14 @@ proc ticklecharts::mapseries {index chart value} {
     return $options
 }
 
-proc ticklecharts::linesseries {index chart value} {
+proc ticklecharts::linesSeries {index chart value} {
     # options : https://echarts.apache.org/en/option.html#series-lines
     #
     # index - index series.
     # chart - self.
-    # value - Options described in proc ticklecharts::linesseries below.
+    # value - Options described in proc ticklecharts::linesSeries below.
     #
-    # return dict linesseries options
+    # return dict linesSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str             -default "lines"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null        -default "nothing"
@@ -1542,8 +1542,8 @@ proc ticklecharts::linesseries {index chart value} {
     setdef options -effect                  -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::effect $value]
     setdef options -large                   -minversion 5       -validvalue {}                  -type bool            -default "True"
     setdef options -largeThreshold          -minversion 5       -validvalue {}                  -type num             -default 2000
-    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str|list.d|null -default [EchartsOptsTheme symbol]
-    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num|list.n      -default [EchartsOptsTheme symbolSize]
+    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str|list.d|null -default [echartsOptsTheme symbol]
+    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num|list.n      -default [echartsOptsTheme symbolSize]
     setdef options -lineStyle               -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::lineStyle $value]
     setdef options -label                   -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::label $value]
     setdef options -labelLayout             -minversion 5       -validvalue {}                  -type dict|null       -default [ticklecharts::labelLayout $value]
@@ -1590,7 +1590,7 @@ proc ticklecharts::linesseries {index chart value} {
         if {![dict exists $value -dataLinesItem]} {
             error "'chart' args should contain -dataLinesItem'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::LinesItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::linesItem $value]
     }
 
     # remove key(s)...

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -81,7 +81,7 @@ oo::define ticklecharts::timeline {
         lappend timeline_opts $key [linsert $dataopts end {*}[format "-data {{%s} list.o}" $_data]]
 
         # get keys from global options & remove...
-        set optsglob [ticklecharts::globaloptions {}]
+        set optsglob [ticklecharts::globalOptions {}]
         set keysoptsglob [dict keys [ticklecharts::optsToEchartsHuddle $optsglob]]
 
         # add keys from 'SetOptions' ticklecharts::chart  method
@@ -158,12 +158,12 @@ oo::define ticklecharts::timeline {
         #
         # Returns full path html file.
 
-        set opts_html [ticklecharts::htmloptions $args]
+        set opts_html [ticklecharts::htmlOptions $args]
         my timelineToHuddle ; # transform to huddle
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
-        set newhtml    [ticklecharts::htmlmap $myhuddle $opts_html]
+        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
         set outputfile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
@@ -187,4 +187,70 @@ oo::define ticklecharts::timeline {
 
 }
 
+proc ticklecharts::timelineOpts {value} {
+    # timeline options
+    #
+    # Returns dict options
+    variable theme
 
+    if {$theme ne "basic"} {
+        if {![dict exists $value -checkpointStyle]} {
+            dict set value -checkpointStyle [dict create dummy null]
+        }
+        if {![dict exists $value -controlStyle]} {
+            dict set value -controlStyle [dict create dummy null]
+        }
+        if {![dict exists $value -label]} {
+            dict set value -label [dict create dummy null]
+        }
+        if {![dict exists $value -itemStyle]} {
+            dict set value -itemStyle [dict create dummy null]
+        }
+    }
+
+    setdef options -show                -minversion 5  -validvalue {}                      -type bool                 -default "True"
+    setdef options -type                -minversion 5  -validvalue formatTimelineType      -type str                  -default "slider"
+    setdef options -axisType            -minversion 5  -validvalue formatTimelineAxisType  -type str                  -default "time"
+    setdef options -currentIndex        -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -autoPlay            -minversion 5  -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -rewind              -minversion 5  -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -loop                -minversion 5  -validvalue {}                      -type bool                 -default "True"
+    setdef options -playInterval        -minversion 5  -validvalue {}                      -type num                  -default 1000
+    setdef options -realtime            -minversion 5  -validvalue {}                      -type bool                 -default "True"
+    setdef options -replaceMerge        -minversion 5  -validvalue formatTimelineMerge     -type str|list.s|null      -default "nothing"
+    setdef options -controlPosition     -minversion 5  -validvalue formatTimelinePosition  -type str                  -default "left"
+    setdef options -width               -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -zlevel              -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -z                   -minversion 5  -validvalue {}                      -type num                  -default 2
+    setdef options -left                -minversion 5  -validvalue formatLeft              -type str|num|null         -default "nothing"
+    setdef options -top                 -minversion 5  -validvalue formatTop               -type str|num|null         -default "nothing"
+    setdef options -right               -minversion 5  -validvalue formatRight             -type str|num|null         -default "nothing"
+    setdef options -bottom              -minversion 5  -validvalue formatBottom            -type str|num|null         -default "nothing"
+    setdef options -padding             -minversion 5  -validvalue {}                      -type num|list.n           -default 5
+    setdef options -orient              -minversion 5  -validvalue formatOrient            -type str                  -default "horizontal"
+    setdef options -inverse             -minversion 5  -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -itemSymbol          -minversion 5  -validvalue formatItemSymbol        -type str|null             -default "emptyCircle"
+    setdef options -symbolSize          -minversion 5  -validvalue {}                      -type num|list.n           -default 10
+    setdef options -symbolRotate        -minversion 5  -validvalue {}                      -type num|null             -default "nothing"
+    setdef options -symbolKeepAspect    -minversion 5  -validvalue {}                      -type bool|null            -default "nothing"
+    setdef options -symbolOffset        -minversion 5  -validvalue {}                      -type list.n|null          -default "nothing"
+    setdef options -lineStyle           -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::lineStyle $value]
+    setdef options -label               -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::label $value]
+    setdef options -itemStyle           -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::itemStyle $value]
+    setdef options -checkpointStyle     -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::checkPointStyle $value]
+    setdef options -controlStyle        -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::controlStyle $value]
+    setdef options -progress            -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::progress $value]
+    setdef options -emphasis            -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::emphasis $value]
+    #...
+    
+    # remove key(s)...
+    if {[llength $value]} {
+        set value [dict remove $value -lineStyle -label -itemStyle \
+                                      -checkpointStyle -controlStyle \
+                                      -progress -emphasis]
+    }
+
+    set options [merge $options $value]
+
+    return $options
+}

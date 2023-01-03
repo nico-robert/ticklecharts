@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Nicolas ROBERT.
+# Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -10,11 +10,12 @@ proc ticklecharts::theme {value} {
     # value - dict
     #
     # set global theme ticklecharts
+    variable theme
 
     if {[dict exists $value -theme]} {
         set t [dict get $value -theme]
     } else {
-        set t $::ticklecharts::theme
+        set t $theme
     }
     
     set ticklecharts::opts_theme [dict create]
