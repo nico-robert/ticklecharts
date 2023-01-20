@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : re-working 'dataset' class should be a list of list...
+# v3.0 : Fixes bug (or not !) with echarts version 5.4.1... when borderColor is set with itemStyle
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -74,14 +75,13 @@ proc generateOHLC {count} {
     }
 
     return $data
-    
 }
 
 set upColor "#ec0000"
 set upBorderColor "#8A0000"
 set downColor "#00da3c"
 set downBorderColor "#008F28"
-set dataCount 20000
+set dataCount 2000
 
 set source [generateOHLC $dataCount]
 set dset [ticklecharts::dataset new [list [list -source $source]]]
@@ -92,7 +92,7 @@ $layout SetGlobalOptions -title [list text "Data Amount : [commify $dataCount]"]
                          -tooltip  {trigger "axis" axisPointer {type "line"}} \
                          -toolbox {feature {dataZoom {yAxisIndex "False"}}} \
                          -dataset $dset \
-                         -visualMap {type "piecewise" show "false" seriesIndex 1 dimension 6 pieces {{value 1 color "#ec0000"} {value -1 color "#00da3c"}}} \
+                         -visualMap {type "piecewise" show "False" seriesIndex 1 dimension 6 pieces {{value 1 color "#ec0000"} {value -1 color "#00da3c"}}} \
                          -dataZoom [list [list type "inside" xAxisIndex [list {0 1}] start 10 end 100] [list type "slider" show "True" xAxisIndex [list {0 1}] bottom 10 start 10 end 100]]
 
 set candlestick [ticklecharts::chart new]
@@ -118,10 +118,18 @@ $bar Yaxis -scale "True" -gridIndex 1 -splitNumber 2 \
            -axisLabel {show "False"} -axisLine {show "False"} \
            -axisTick {show "False"} -splitLine {show "False"}
 
-$bar AddBarSeries -name "Volume" -xAxisIndex 1 -yAxisIndex 1 -itemStyle {color "#7fbe9e"} -large "True" \
+if {[ticklecharts::vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
+    set itemS {color "#7fbe9e" borderColor null}
+} else {
+    set itemS {color "#7fbe9e"}
+}
+
+$bar AddBarSeries -name "Volume" \
+                  -xAxisIndex 1 \
+                  -yAxisIndex 1 \
+                  -itemStyle $itemS \
+                  -large "True" \
                   -encode {x 0 y 5}
-
-
 
 $layout Add $candlestick -left "10%" -right "10%" -bottom 200
 $layout Add $bar         -left "10%" -right "10%" -height 80 -bottom 80
