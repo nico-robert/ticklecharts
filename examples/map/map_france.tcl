@@ -24,6 +24,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Set theme on timeline Class instead layout Class.
 #        Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
 # v4.0 : add try command
+# v5.0 : Rename '-datapieitem' by '-dataPieItem'
 
 # example from pyecharts-gallery-master... (modify)
 
@@ -125,7 +126,7 @@ try {
         set pie [ticklecharts::chart new]
 
         $pie AddPieSeries -radius "17%" \
-                    -datapieitem $dataItem
+                          -dataPieItem $dataItem
 
 
         set line [ticklecharts::chart new]

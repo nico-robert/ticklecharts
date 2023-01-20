@@ -1,7 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
-# 16-02-2022 : basic pieces
-# 19-02-2022 : with markarea
+# v1.0 : Initial example
+# v1.0 : Adds pieces.
+# v2.0 : Adds markarea.
+# v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -52,4 +54,4 @@ $chart AddLineSeries -smooth "True" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

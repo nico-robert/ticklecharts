@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+# v3.0 : Since v3.0.1 '-dataZoom' can be written like this -dataZoom {key "value"} instead of -dataZoom {{key "value"}} (for one list)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -25,7 +26,7 @@ try {
                       -legend [list data [list [dict get $datajson counties]] selectedMode "single" right 100] \
                       -grid {left 0 bottom 0 containLabel "True" top 80} \
                       -toolbox {feature {dataZoom {}}} \
-                      -dataZoom {{type "inside"}}
+                      -dataZoom {type "inside"}
 
     $chart Xaxis -type "value"
     $chart Yaxis -type "value" -scale "True"

@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -13,7 +17,7 @@ $pie SetOptions -tooltip [list trigger "item" formatter $tooltipjs]
 
 $pie AddPieSeries -name "Access From" -selectedMode "single" -radius [list {0 30%}] \
                   -label {position "inner" fontSize 14} -labelLine {show false} \
-                  -datapieitem {
+                  -dataPieItem {
                                 {value 1548 name "Search Engine"}
                                 {value 775 name "Direct"}
                                 {value 679 name "Marketing" selected "True"}
@@ -30,7 +34,7 @@ $pie AddPieSeries -name "Access From" -selectedMode "single" -radius [list {45% 
                                    per [list color "#fff" backgroundColor "#4C5058" padding [list {3 4}] borderRadius 4] \
                                ]
                   ] \
-                  -datapieitem {
+                  -dataPieItem {
                                 {value 1048 name "Baidu"}
                                 {value 335 name "Direct"}
                                 {value 310 name "Email"}
@@ -44,4 +48,4 @@ $pie AddPieSeries -name "Access From" -selectedMode "single" -radius [list {45% 
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
-$pie render -outfile [file join $dirname $fbasename.html] -title $fbasename -width "1586px" -height "766px"
+$pie Render -outfile [file join $dirname $fbasename.html] -title $fbasename -width "1586px" -height "766px"

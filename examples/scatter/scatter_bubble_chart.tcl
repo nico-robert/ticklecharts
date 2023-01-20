@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : delete 'show' key it's not a key option... in emphasis flag
 #        + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 
 set data {
   {
@@ -74,9 +75,10 @@ set jsitem1 [ticklecharts::jsfunc new {new echarts.graphic.RadialGradient(0.4, 0
                                             ])
                                         }]
 
-set chart [ticklecharts::chart new -backgroundColor $jsbackcolor]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {text "Life Expectancy and GDP by Country" left "5%" top "3%"} \
+$chart SetOptions -backgroundColor $jsbackcolor \
+                  -title {text "Life Expectancy and GDP by Country" left "5%" top "3%"} \
                   -legend {right "10%" top "3%"} \
                   -grid {left "8%" top "10%"}
 

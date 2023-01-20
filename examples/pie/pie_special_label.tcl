@@ -1,7 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
-# 16-02-2022 : Initial release
-# 22-02-2022 : image path correction
+# v1.0 : Initial example
+# v2.0 : image path correction
+# v3.0 : Rename '-datapieitem' by '-dataPieItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # image dir
 set imagedir ../../images
@@ -54,9 +56,9 @@ $pie SetOptions -title  {text "Weather Statistics" subtext "Fake Data" left "cen
 
 $pie AddPieSeries -radius "65%" -center [list {50% 50%}] -selectedMode "single" \
                   -emphasis  {itemStyle {shadowBlur 10 shadowOffsetX 0 shadowColor "rgba(0, 0, 0, 0.5)"}} \
-                  -datapieitem $data
+                  -dataPieItem $data
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
-$pie render -outfile [file join $dirname $fbasename.html] -title $fbasename -width "1586px" -height "766px"
+$pie Render -outfile [file join $dirname $fbasename.html] -title $fbasename -width "1586px" -height "766px"

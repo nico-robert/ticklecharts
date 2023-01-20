@@ -2,6 +2,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Typo 'aera' should be 'area'...
+# v3.0 : Rename '-datapieitem' by '-dataPieItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -20,7 +22,7 @@ $pie AddPieSeries -name "Radius Mode" -radius [list {20 140}] -center [list {25%
                   -itemStyle {borderRadius 5} \
                   -label     {show "False"} \
                   -emphasis  {label {show "True"}} \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 40 name "rose 1"}
                       {value 33 name "rose 2"}
                       {value 28 name "rose 3"}
@@ -34,7 +36,7 @@ $pie AddPieSeries -name "Radius Mode" -radius [list {20 140}] -center [list {25%
 $pie AddPieSeries -name "Area Mode" -radius [list {20 140}] -center [list {75% 50%}] \
                   -roseType "area" \
                   -itemStyle {borderRadius 5} \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 30 name "rose 1"}
                       {value 28 name "rose 2"}
                       {value 26 name "rose 3"}
@@ -48,4 +50,4 @@ $pie AddPieSeries -name "Area Mode" -radius [list {20 140}] -center [list {75% 5
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$pie render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$pie Render -outfile [file join $dirname $fbasename.html] -title $fbasename

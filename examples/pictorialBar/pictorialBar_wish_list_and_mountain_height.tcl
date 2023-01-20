@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Move '-backgroundColor', '-animationEasing' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -35,9 +38,12 @@ try {
                     }
                 }]
 
-    set picBar [ticklecharts::chart new -backgroundColor "#0f375f" -animationEasing "elasticOut"]
+    set picBar [ticklecharts::chart new]
 
-    $picBar SetOptions -tooltip {} -legend {textStyle {color "#ddd"}}
+    $picBar SetOptions -backgroundColor "#0f375f" \
+                       -animationEasing "elasticOut" \
+                       -tooltip {} \
+                       -legend {textStyle {color "#ddd"}}
 
     $picBar Xaxis -data [list {"Christmas Wish List" "" "Qomolangma" "Kilimanjaro"}] \
                   -axisTick {show "False"} \

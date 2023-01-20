@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'center' by 'middle' for visualMap top flag
+# v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -40,7 +41,7 @@ try {
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]
 
-    $chart render -outfile [file join $dirname $fbasename.html] -title $fbasename -width 1200px -height 800px
+    $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename -width 1200px -height 800px
 } on error {result options} {
     puts stderr "[info script] : $result"
 }

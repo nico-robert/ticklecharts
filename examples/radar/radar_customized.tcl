@@ -3,6 +3,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : delete 'show' key it's not a key option... in areaStyle flag
 #        + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Rename '-dataradaritem' by '-dataRadarItem'
+#        Move '-color' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,9 +26,10 @@ set js_RadialGradient [ticklecharts::jsfunc new {new echarts.graphic.RadialGradi
                                 ])
                                 }]
 
-set chart [ticklecharts::chart new -color [list {#67F9D8 #FFE434 #56A3F1 #FF917C}]]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {text "Customized Radar Chart"} \
+$chart SetOptions -color [list {#67F9D8 #FFE434 #56A3F1 #FF917C}] \
+                  -title {text "Customized Radar Chart"} \
                   -legend {}
 
 $chart RadarCoordinate -indicatoritem {
@@ -61,7 +64,7 @@ $chart RadarCoordinate -indicatoritem {
                         -axisName [list color "#fff" backgroundColor "#666" borderRadius 3 padding [list {3 5}]]
 
 $chart AddRadarSeries -emphasis {lineStyle {width 4}} \
-                      -dataradaritem [list \
+                      -dataRadarItem [list \
                                             [list name "Data A" \
                                                   value [list {100 8 0.4 -80 2000}] \
                                             ] \
@@ -73,7 +76,7 @@ $chart AddRadarSeries -emphasis {lineStyle {width 4}} \
 
 # delete 'show "true"' in AddRadarSeries(areaStyle) method
 $chart AddRadarSeries -radarIndex 1 \
-                      -dataradaritem [list \
+                      -dataRadarItem [list \
                                             [list name "Data C" \
                                                   value [list {120 118 130 100 99 70}] \
                                                   symbol rect \

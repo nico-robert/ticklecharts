@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -39,7 +43,7 @@ $pie SetOptions -legend {top "6%" left "65%"}
 
 $pie AddPieSeries -name "Access From" -radius [list {"50%" "70%"}] \
                   -labelLine {show "True"} \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}
@@ -56,7 +60,7 @@ $layout Add $pie  -center [list {75% 50%}]
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] \
+$layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1700px \
                -height 1000px

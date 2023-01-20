@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+# v3.0 : Move '-animationDuration', '-animationEasingUpdate' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -29,9 +30,11 @@ try {
         lappend datanodes $val
     }
 
-    set chart [ticklecharts::chart new -animationDuration 1500 -animationEasingUpdate "quinticInOut"]
+    set chart [ticklecharts::chart new]
 
-    $chart SetOptions -title {text "Les Miserables" subtext "Default layout" top "bottom" left "right"} \
+    $chart SetOptions -animationDuration 1500 \
+                      -animationEasingUpdate "quinticInOut" \
+                      -title {text "Les Miserables" subtext "Default layout" top "bottom" left "right"} \
                       -tooltip {} \
                       -legend [list dataLegendItem [dict get $datajson categories]]
 

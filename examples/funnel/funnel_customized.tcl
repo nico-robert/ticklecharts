@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datafunnelitem' by '-dataFunnelItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -18,7 +22,7 @@ $chart AddFunnelSeries -name "Expected" \
                        -labelLine {show false} \
                        -itemStyle {opacity 0.7} \
                        -emphasis  {label {position "inside" formatter "<0123>b<0125>Expected: <0123>c<0125>%"}} \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 60 name Visit}
                                             {value 40 name Inquiry}
                                             {value 20 name Order}
@@ -34,7 +38,7 @@ $chart AddFunnelSeries -name "Actual" \
                        -label {show True position "inside" formatter "<0123>c<0125>%" color "#fff"} \
                        -itemStyle {opacity 0.5 borderColor "#fff" borderWidth 2} \
                        -emphasis  {label {position "inside" formatter "<0123>b<0125>Actual: <0123>c<0125>%"}} \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 30 name Visit}
                                             {value 10 name Inquiry}
                                             {value 5 name Order}
@@ -47,4 +51,4 @@ $chart AddFunnelSeries -name "Actual" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

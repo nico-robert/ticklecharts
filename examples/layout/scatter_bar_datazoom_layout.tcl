@@ -6,6 +6,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : init data1 (problem source all.tcl)
+# v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+#        Delete bar formatter for '-axisLabel'
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -22,9 +25,10 @@ for {set i 0} {$i < 500} {incr i} {
 }
 
 # scatter
-set scatter [ticklecharts::chart new -animation false]
+set scatter [ticklecharts::chart new]
 
-$scatter SetOptions -legend [list data [list {scatter scatter2 scatter3}]] \
+$scatter SetOptions -animation false \
+                    -legend [list data [list {scatter scatter2 scatter3}]] \
                     -tooltip {show "True"} \
                     -dataZoom [list \
                             [list type "slider" show "True" xAxisIndex [list {0 0}] start 1 end 35 bottom "53%" left "2%" right "2%"] \
@@ -47,7 +51,7 @@ $bar SetOptions -dataZoom [list \
                             ]
 
 $bar Xaxis -type "category" -data [list {A B C D E}] \
-           -axisLabel [dict create show "True" formatter $js]
+           -axisLabel {show "True"}
 $bar Yaxis -type "value"
 $bar AddBarSeries -data [list {50 6 80 120 30}]
 
@@ -60,5 +64,5 @@ $layout Add $bar     -top    "60%" -width "100%" -left "5%"
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] -title $fbasename -height 1000px -width 1000px
+$layout Render -outfile [file join $dirname $fbasename.html] -title $fbasename -height 1000px -width 1000px
           

@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-dataradaritem' by '-dataRadarItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -27,7 +31,7 @@ $radar RadarCoordinate -radius 190 \
                                     } 
 
 $radar AddRadarSeries -name "Budget vs spending" \
-                      -dataradaritem [list \
+                      -dataRadarItem [list \
                                             [list name "Allocated Budget" value [list {4200 3000 20000 35000 50000 18000}]] \
                                             [list name "Actual Spending" value [list {5000 14000 28000 26000 42000 21000}]] \
                                      ]
@@ -39,7 +43,7 @@ $layout Add $radar -center [list {55% 25%}]
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] \
+$layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1900px \
                -height 1000px

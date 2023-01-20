@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -23,9 +26,9 @@ $chart AddGaugeSeries -startAngle 180 -endAngle 0 -min 0 -max 240 -splitNumber 1
                       -axisTick      {splitNumber 2 lineStyle {width 2 color #999}} \
                       -splitLine     {length 12 lineStyle {width 3 color "#999"}} \
                       -axisLabel     {distance 30 color "#999" fontSize 20} \
-                      -title         {show "false"} \
+                      -title         {show "False"} \
                       -detail        [list backgroundColor "#fff" borderColor #999 borderWidth 2  width "60%" \
-                                           lineHeight 40 height 40 borderRadius 8 valueAnimation "true" \
+                                           lineHeight 40 height 40 borderRadius 8 valueAnimation "True" \
                                            formatter $js offsetCenter [list {0 "35%"}] \
                                            richitem [list \
                                                             value {fontSize 50 fontWeight "bolder" color "#777"} \
@@ -36,4 +39,4 @@ $chart AddGaugeSeries -startAngle 180 -endAngle 0 -min 0 -max 240 -splitNumber 1
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename -width 1200px -height 900px
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename -width 1200px -height 900px

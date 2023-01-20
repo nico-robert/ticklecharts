@@ -1,5 +1,10 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-dataradaritem' by '-dataRadarItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+
 proc setdata {list} {
 
     foreach val $list {
@@ -115,9 +120,10 @@ set dataSH {
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
-set chart [ticklecharts::chart new -backgroundColor "#161627"]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {text "AQI - Radar" left "center" textStyle {color "#eee"}} \
+$chart SetOptions -backgroundColor "#161627" \
+                  -title {text "AQI - Radar" left "center" textStyle {color "#eee"}} \
                   -legend [list bottom 5 itemGap 20 \
                                 selectedMode "single" \
                                 textStyle {color "#fff" fontSize 14} \
@@ -148,21 +154,21 @@ $chart RadarCoordinate -indicatoritem {
 
 $chart AddRadarSeries -name "Beijing" \
                       -lineStyle {width 1 opacity 0.5} \
-                      -dataradaritem [setdata $dataBJ] \
+                      -dataRadarItem [setdata $dataBJ] \
                       -symbol "none" \
                       -itemStyle {color "#F9713C"} \
                       -areaStyle {opacity 0.1}
 
 $chart AddRadarSeries -name "Shanghai" \
                       -lineStyle {width 1 opacity 0.5} \
-                      -dataradaritem [setdata $dataSH] \
+                      -dataRadarItem [setdata $dataSH] \
                       -symbol "none" \
                       -itemStyle {color "#B3E4A1"} \
                       -areaStyle {opacity 0.05}
 
 $chart AddRadarSeries -name "Guangzhou" \
                       -lineStyle {width 1 opacity 0.5} \
-                      -dataradaritem [setdata $dataGZ] \
+                      -dataRadarItem [setdata $dataGZ] \
                       -symbol "none" \
                       -itemStyle {color "rgb(238, 197, 102)"} \
                       -areaStyle {opacity 0.05}
@@ -170,6 +176,6 @@ $chart AddRadarSeries -name "Guangzhou" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 
 

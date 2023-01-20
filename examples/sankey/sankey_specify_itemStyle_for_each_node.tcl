@@ -1,11 +1,15 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
-set chart [ticklecharts::chart new -backgroundColor "#FFFFFF"]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {subtext "Data From lisachristina1234 on GitHub" left "center"} \
+$chart SetOptions -backgroundColor "#FFFFFF" \
+                  -title {subtext "Data From lisachristina1234 on GitHub" left "center"} \
                   -tooltip {trigger "item"}
                
 $chart AddSankeySeries -bottom 25 -left 50 -top 20 -right 150 \

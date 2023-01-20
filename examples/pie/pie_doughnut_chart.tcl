@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -10,11 +14,11 @@ $pie SetOptions -tooltip {show "True" trigger "item"} \
 
 
 $pie AddPieSeries -name "Access From" -radius [list {"40%" "70%"}] \
-                  -avoidLabelOverlap "false" \
+                  -avoidLabelOverlap "False" \
                   -label     {show "False" position "center"} \
                   -emphasis  {label {show "True" fontSize 25 fontWeight "bold"}} \
                   -labelLine {show "False"} \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 1048 name "Search Engine"}
                       {value 735 name "Direct"}
                       {value 580 name "Email"}
@@ -25,4 +29,4 @@ $pie AddPieSeries -name "Access From" -radius [list {"40%" "70%"}] \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$pie render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$pie Render -outfile [file join $dirname $fbasename.html] -title $fbasename

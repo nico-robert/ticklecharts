@@ -1,5 +1,6 @@
 # v1.0 : Initial example
-# v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v2.0 : Add toolbox utility.
+# v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
@@ -14,7 +15,7 @@ $chart SetOptions -title   {text "Temperature Change"} \
                  -tooltip {show True trigger "axis"} \
                  -toolbox [list feature [list \
                                         dataZoom {yAxisIndex "none"} \
-                                        dataView {readOnly "false"} \
+                                        dataView {readOnly "False"} \
                                         magicType [list type [list {line bar}]] \
                                         restore {} \
                                         saveAsImage {} \
@@ -47,4 +48,4 @@ $chart AddLineSeries -name "Lowest" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

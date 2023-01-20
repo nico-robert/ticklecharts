@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem'
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -52,7 +55,7 @@ $chart AddPieSeries -name "pie" \
                     -selectedOffset 30 \
                     -center [list {-6.43676598655016 46.12723458558478}] \
                     -radius 90 \
-                    -datapieitem {
+                    -dataPieItem {
                       {value 300 name "Bayonne"}
                       {value 735 name "Paris"}
                       {value 580 name "Marseille"}

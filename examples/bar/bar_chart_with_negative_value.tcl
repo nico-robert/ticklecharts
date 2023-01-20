@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-databaritem' by '-dataBarItem' + 
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,7 +27,7 @@ $chart Yaxis -axisLine    {show "False"} \
 
 $chart AddBarSeries -name "Cost" -label [list show "True" formatter "<0123>b<0125>"] \
                             -stack "Total" \
-                            -databaritem {
+                            -dataBarItem {
                                             {value -0.07 label {position "right"}}
                                             {value -0.09 label {position "right"}}
                                             {value 0.20}
@@ -41,4 +44,4 @@ $chart AddBarSeries -name "Cost" -label [list show "True" formatter "<0123>b<012
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

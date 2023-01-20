@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-animationEasing', '-animationDelayUpdate' from constructor to 'SetOptions' method with v3.0.1
+
 for {set i 0} {$i < 100} {incr i} {
     lappend xAxisData [string cat "A" $i]
     lappend data1     [expr {(sin($i / 5.) * ($i / 5 - 10) + $i / 6.) * 5}]
@@ -13,9 +17,11 @@ set aDUpdate [ticklecharts::jsfunc new {function (idx) {
                                 return idx * 5;
                             }}]
 
-set chart [ticklecharts::chart new -animationEasing "elasticOut" -animationDelayUpdate $aDUpdate]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {text "Bar Animation Delay"} \
+$chart SetOptions -animationEasing "elasticOut" \
+                  -animationDelayUpdate $aDUpdate \
+                  -title {text "Bar Animation Delay"} \
                   -legend [list data [list {"bar" "bar2"}]] \
                   -toolbox [list feature [list magicType [list type [list {"stack" "_"}]] dataView {} saveAsImage {pixelRatio 2}]] \
                   -tooltip {}
@@ -40,4 +46,4 @@ $chart AddBarSeries -name "bar2" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

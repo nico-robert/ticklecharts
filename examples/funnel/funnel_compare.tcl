@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datafunnelitem' by '-dataFunnelItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -16,7 +20,7 @@ $chart AddFunnelSeries -name "ExpectFunneled" \
                        -width "40%" \
                        -height "45%" \
                        -funnelAlign "right" \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 60 name "Prod C"}
                                             {value 30 name "Prod D"}
                                             {value 10 name "Prod E"}
@@ -31,7 +35,7 @@ $chart AddFunnelSeries -name "Pyramid" \
                        -height "45%" \
                        -funnelAlign "right" \
                        -sort "ascending" \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 60 name "Prod C"}
                                             {value 30 name "Prod D"}
                                             {value 10 name "Prod E"}
@@ -45,7 +49,7 @@ $chart AddFunnelSeries -name "Funnel" \
                        -width "40%" \
                        -height "45%" \
                        -funnelAlign "left" \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 60 name "Prod C"}
                                             {value 30 name "Prod D"}
                                             {value 10 name "Prod E"}
@@ -60,7 +64,7 @@ $chart AddFunnelSeries -name "Pyramid" \
                        -height "45%" \
                        -funnelAlign "left" \
                        -sort "ascending" \
-                       -datafunnelitem {
+                       -dataFunnelItem {
                                             {value 60 name "Prod C"}
                                             {value 30 name "Prod D"}
                                             {value 10 name "Prod E"}
@@ -71,4 +75,4 @@ $chart AddFunnelSeries -name "Pyramid" \
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

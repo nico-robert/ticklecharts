@@ -3,6 +3,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : bump to 'v2.1.0' echarts-wordcloud
 # v3.0 : Delete 'echarts-wordcloud.js' with jsfunc. It is inserted automatically when writing the html file.
+# v4.0 : Rename '-databaritem' by '-dataBarItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 proc fakerRandomValue {{min 10} {max 1000}} {
 
@@ -88,7 +90,7 @@ $bar SetOptions -title   {text "layout bar + wordCloud..."} \
     
 $bar Xaxis -data [list {"Tcl" "Tk"}]
 $bar Yaxis
-$bar AddBarSeries -databaritem [list \
+$bar AddBarSeries -dataBarItem [list \
                                     [list value [llength $tcl_commands]] \
                                     [list value [llength $tk_commands] itemStyle {color "#91cc75" borderColor "nothing"}] \
                                 ] \
@@ -124,7 +126,7 @@ $layout Add $wc   -top "50%" -left "5%"
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] \
+$layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1900px \
                -height 1000px

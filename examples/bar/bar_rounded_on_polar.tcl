@@ -1,5 +1,7 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -10,7 +12,7 @@ $chart SetOptions -polar {} \
                   -legend {}
 
 $chart RadiusAxis -data [list {v w x y z}] -type "category" -z 10
-$chart AngleAxis  -max 2 -startAngle 30 -splitLine {show "false"}
+$chart AngleAxis  -max 2 -startAngle 30 -splitLine {show "False"}
 
 $chart AddBarSeries -data [list {4 3 2 1 0}] \
                     -coordinateSystem "polar" \
@@ -20,7 +22,7 @@ $chart AddBarSeries -data [list {4 3 2 1 0}] \
 $chart AddBarSeries -data [list {4 3 2 1 0}] \
                     -coordinateSystem "polar" \
                     -name "With Round Cap" \
-                    -roundCap "true" \
+                    -roundCap "True" \
                     -itemStyle {borderColor "green" opacity 0.8 borderWidth 1}
                     
                     
@@ -28,4 +30,4 @@ $chart AddBarSeries -data [list {4 3 2 1 0}] \
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename

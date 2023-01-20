@@ -2,13 +2,17 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+# v3.0 : Move '-animationDurationUpdate', '-animationEasingUpdate' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
-set chart [ticklecharts::chart new -animationDurationUpdate 1500 -animationEasingUpdate "quinticInOut"]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -title {text "Basic Graph"} -tooltip {}
+$chart SetOptions -animationDurationUpdate 1500 \
+                  -animationEasingUpdate "quinticInOut" \
+                  -title {text "Basic Graph"} \
+                  -tooltip {}
 
 $chart AddGraphSeries -layout "none" \
                       -symbolSize 50 \

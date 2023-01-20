@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Add ParallelAxis as method instead of a option.
+# v3.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -119,9 +120,10 @@ set dataBJ {
     { name "等级" index 7 text "等级" }
   }
 
-set chart [ticklecharts::chart new -backgroundColor "#333"]
+set chart [ticklecharts::chart new]
                
-$chart SetOptions -legend [list bottom 30 data [list [list Beijing Shanghai Guangzhou]] itemGap 20 textStyle {color #fff fontSize 14}] \
+$chart SetOptions -backgroundColor "#333" \
+                  -legend [list bottom 30 data [list [list Beijing Shanghai Guangzhou]] itemGap 20 textStyle {color #fff fontSize 14}] \
                   -tooltip {padding 10 backgroundColor #222 borderColor #777 borderWidth 1} \
                   -visualMap [list type "continuous" show "True" min 0 max 150 dimension 2 inRange [list color [list [lreverse {"#d94e5d" "#eac736" "#50a3ba"}]]]] \
                   -parallel {left 5% right 18% bottom 100 parallelAxisDefault {

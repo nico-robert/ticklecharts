@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -35,9 +38,10 @@ foreach pos $positions {
     incr i
 }
 
-set chart [ticklecharts::chart new -animation "False"]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -grid {top 30 left 60 right 60 bottom 40}
+$chart SetOptions -animation "False" \
+                  -grid {top 30 left 60 right 60 bottom 40}
                
 $chart Xaxis -data [list {A B C D E}] -boundaryGap "True" -splitArea {show "True"}
 $chart Yaxis -max 2

@@ -6,6 +6,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : init data1, data2, data3 (problem source all.tcl)
+# v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-animation' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -23,9 +25,10 @@ for {set i 0} {$i < 500} {incr i} {
     lappend data3 [list [dataRand 15] [dataRand 10] [dataRand 1]]
 }
 
-set chart [ticklecharts::chart new -animation false]
+set chart [ticklecharts::chart new]
 
-$chart SetOptions -legend [list data [list {scatter scatter2 scatter3}]] \
+$chart SetOptions -animation false \
+                  -legend [list data [list {scatter scatter2 scatter3}]] \
                   -tooltip {show "True"} \
                   -dataZoom {
                             {type "slider" show "True" xAxisIndex 0 start 1 end 35}
@@ -44,5 +47,5 @@ $chart AddScatterSeries -name "scatter3" -itemStyle {opacity 0.8 borderColor not
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$chart render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
           

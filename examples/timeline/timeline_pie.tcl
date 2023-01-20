@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem'
+
 proc fakerRandomValue {min max} {
 
     set range [expr {$max - $min}]
@@ -26,7 +29,7 @@ for {set i 2019} {$i < 2023} {incr i} {
     $pie SetOptions -title [list text "Data $i"]
 
     $pie AddPieSeries -radius [list {"30%" "55%"}] -roseType "radius" \
-                      -datapieitem [dataPie]
+                      -dataPieItem [dataPie]
 
     $timeline Add $pie -data [list value "Data $i"]
 

@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Add ParallelAxis as method instead of a option.
+# v3.0 : Move '-animation' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -176,9 +177,10 @@ set GRID_HEIGHT [expr {(100 - $BASE_TOP - $GAP) / double($CATEGORY_DIM_COUNT) - 
 set CATEGORY_DIM 7
 set SYMBOL_SIZE 4
 
-set layout [ticklecharts::Gridlayout new -animation "False"]
+set layout [ticklecharts::Gridlayout new]
 
-$layout SetGlobalOptions -visualMap [list type "piecewise" show "True" categories [list {"北京" "上海" "广州"}] \
+$layout SetGlobalOptions -animation "False" \
+                         -visualMap [list type "piecewise" show "True" categories [list {"北京" "上海" "广州"}] \
                                      dimension $CATEGORY_DIM \
                                      orient "horizontal" \
                                      inRange [list color [list {"#51689b" "#ce5c5c" "#fbc357"}]] \

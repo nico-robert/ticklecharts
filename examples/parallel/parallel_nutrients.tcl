@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Add ParallelAxis as method instead of a option.
+# v3.0 : Move '-backgroundColor', '-animation' from constructor to 'SetOptions' method with v3.0.1
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -147,9 +148,11 @@ try {
     }
 
 
-    set chart [ticklecharts::chart new -backgroundColor "#333" -animation false]
+    set chart [ticklecharts::chart new]
                 
-    $chart SetOptions -title {text "Groups" top 0 left 0 textStyle {color #fff}} \
+    $chart SetOptions -backgroundColor "#333" \
+                      -animation "False" \
+                      -title {text "Groups" top 0 left 0 textStyle {color #fff}} \
                       -tooltip {padding 10 backgroundColor #222 borderColor #777 borderWidth 1} \
                       -visualMap [list type "piecewise" show "True" categories [list $groupCategories] \
                                      dimension [dict get $indices group] \

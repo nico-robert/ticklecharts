@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-color' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -14,9 +18,10 @@ set jsformat [ticklecharts::jsfunc new {function (params) {
                   }
                 }]
 
-set line1 [ticklecharts::chart new -color $colors]
+set line1 [ticklecharts::chart new]
 
-$line1 SetOptions -tooltip {trigger "none" axisPointer {type "cross"}} \
+$line1 SetOptions -color $colors \
+                  -tooltip {trigger "none" axisPointer {type "cross"}} \
                   -legend {}
                                 
 $line1 Xaxis -axisTick {show True alignWithLabel "True"} -position top \
@@ -46,4 +51,4 @@ $line1 AddLineSeries -data [list {3.9 5.9 11.1 18.7 48.3 69.2 231.6 46.6 55.4 18
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$line1 render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$line1 Render -outfile [file join $dirname $fbasename.html] -title $fbasename

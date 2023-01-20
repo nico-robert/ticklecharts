@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-databaritem' by '-dataBarItem' & `-datalineitem' by '-dataLineItem'
+#        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -25,10 +29,11 @@ set jscolor2 [ticklecharts::jsfunc new {new echarts.graphic.LinearGradient(0, 0,
                 {offset: 1,color: "rgba(20,200,212,0)"}]),
                 }]
 
-set picBar [ticklecharts::chart new -backgroundColor "#0f375f"]
+set picBar [ticklecharts::chart new]
 
 
-$picBar SetOptions -tooltip {trigger "axis" axisPointer {type "shadow"}} \
+$picBar SetOptions -backgroundColor "#0f375f" \
+                   -tooltip {trigger "axis" axisPointer {type "shadow"}} \
                    -legend [list data [list {"line" "bar"}] textStyle {fontSize 12 fontWeight "normal" color "#ccc"}]
 
 
@@ -37,7 +42,7 @@ $picBar Yaxis -splitLine {show "False"} -axisLine {lineStyle {color "#ccc"}}
 
 
 $picBar AddLineSeries -name "line" -smooth "True" \
-                      -datalineitem $lineData \
+                      -dataLineItem $lineData \
                       -showAllSymbol "True" \
                       -symbol "emptyCircle" \
                       -symbolSize 15
@@ -48,7 +53,7 @@ $picBar AddBarSeries -name "bar" -barWidth 10 \
 
 $picBar AddBarSeries -name "line" -barWidth 10 -barGap "-100%" \
                      -itemStyle [list color $jscolor2 borderColor "nothing"] \
-                     -databaritem $lineData -z "-12"
+                     -dataBarItem $lineData -z "-12"
 
 $picBar AddPictorialBarSeries -name "dotted" -symbol "rect" -itemStyle {borderColor "nothing" color "#0f375f"} \
                               -symbolRepeat "True" \

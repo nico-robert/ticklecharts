@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -24,7 +27,7 @@ $polar SetOptions -polar {radius "50%"} \
                   -legend {}
 
 $polar RadiusAxis -data [list {v w x y z}] -type "category" -z 10
-$polar AngleAxis  -max 2 -startAngle 30 -splitLine {show "false"}
+$polar AngleAxis  -max 2 -startAngle 30 -splitLine {show "False"}
 
 $polar AddBarSeries -data [list {4 3 2 1 0}] \
                     -coordinateSystem "polar" \
@@ -39,7 +42,7 @@ $layout Add $polar -center [list {"50%" "30%"}]
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
-$layout render -outfile [file join $dirname $fbasename.html] \
+$layout Render -outfile [file join $dirname $fbasename.html] \
                -title $fbasename \
                -width 1900px \
                -height 1000px

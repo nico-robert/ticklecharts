@@ -1,5 +1,10 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Rename '-datapieitem' by '-dataPieItem' +
+#        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+#        Move '-color' from constructor to 'SetOptions' method with v3.0.1
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -25,9 +30,10 @@ set ec1 [ticklecharts::eColor new [list \
         ] \
 ]
 
-set pie [ticklecharts::chart new -backgroundColor $ec]
+set pie [ticklecharts::chart new]
 
-$pie SetOptions -tooltip {} \
+$pie SetOptions -backgroundColor $ec \
+                -tooltip {} \
                 -title {text "饼图纹理" textStyle {color "#235894"}}
 
 
@@ -38,7 +44,7 @@ $pie AddPieSeries -name "pie" \
                   -label     {fontSize 18 color "#235894"} \
                   -labelLine {lineStyle {color "#235894"}} \
                   -itemStyle [list opacity 0.7 color $ec1 borderWidth 3 borderColor "#235894"] \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 1048 name "Search Engine"}
                       {value 735 name "Direct"}
                       {value 580 name "Email"}
