@@ -39,6 +39,8 @@ set charts {
     map
     calendar
     lines
+    line3D
+    bar3D
 }
 
 set dir [file dirname [info script]]
