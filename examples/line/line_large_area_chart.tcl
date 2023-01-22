@@ -1,8 +1,12 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Init 'data' variable
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
+set data {}
 set base [clock scan {03/09/1968} -format {%d/%m/%Y}]
 lappend data [expr {rand() * 300}]
 
