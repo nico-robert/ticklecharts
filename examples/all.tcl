@@ -41,6 +41,7 @@ set charts {
     lines
     line3D
     bar3D
+    surface
 }
 
 set dir [file dirname [info script]]
