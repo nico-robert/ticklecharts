@@ -25,6 +25,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
 # v4.0 : add try command
 # v5.0 : Rename '-datapieitem' by '-dataPieItem'
+# v6.0 : Rename 'basic' theme to 'custom'
 
 # example from pyecharts-gallery-master... (modify)
 
@@ -167,6 +168,6 @@ try {
 } on error {result options} {
     puts stderr "[info script] : $result"
 } finally {
-    # set basic theme
-    set ::ticklecharts::theme "basic"
+    # set theme
+    set ::ticklecharts::theme "custom"
 }
