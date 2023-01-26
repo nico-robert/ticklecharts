@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : bump to 'v2.1.0' echarts-wordcloud
 # v3.0 : Delete 'echarts-wordcloud.js' with jsfunc. It is inserted automatically when writing the html file.
 # v4.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v5.0 : set jsvar in 'Render' method + fix bug in javascript function ($jschartvar variable was not initialized) 
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -23,6 +24,7 @@ set js [ticklecharts::jsfunc new {
 set maskImage [ticklecharts::jsfunc new {maskImage}]
 
 set jschartvar chart_wordCloud
+set jsvar option
 
 set var [ticklecharts::jsfunc new [subst -nocommands {
                     var maskImage = new Image();
@@ -74,8 +76,8 @@ set var [ticklecharts::jsfunc new [subst -nocommands {
                                      gCFGGK0ESADj5Mp3cC1Zhp+9KzspbV7WSQ7rkAZUCBehRBmkLVGtPmqsxlVJpLE0EI0PEE6jTCVKBuHpjLCExVJgKUD4F6FIGafrql9LZLfhmBeSkwEaCsG6h79wL1oBr2Qv\
                                      6LCMurCMulbwEClKaDdRWmq5+rvy5hkipVlO/uBmX6aewSAUou4boXr6P4x6t/VkXYtjE0cHHnr6/iVUXXu4qK0n3ltO6/AgwAJM21HORE7w8AAAAASUVORK5CYII=";
                     maskImage.onload = function () {
-                            option.series[0].maskImage
-                            $jschartvar.setOption(option);
+                            $jschartvar.series[0].maskImage;
+                            $jschartvar.setOption($jsvar);
                     }
                 }] -start
         ]
@@ -435,4 +437,5 @@ set dirname [file dirname [info script]]
 $chart Render -outfile [file join $dirname $fbasename.html] \
               -title $fbasename \
               -script $var \
-              -jschartvar $jschartvar
+              -jschartvar $jschartvar \
+              -jsvar $jsvar
