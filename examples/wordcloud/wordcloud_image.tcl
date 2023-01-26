@@ -76,7 +76,7 @@ set var [ticklecharts::jsfunc new [subst -nocommands {
                                      gCFGGK0ESADj5Mp3cC1Zhp+9KzspbV7WSQ7rkAZUCBehRBmkLVGtPmqsxlVJpLE0EI0PEE6jTCVKBuHpjLCExVJgKUD4F6FIGafrql9LZLfhmBeSkwEaCsG6h79wL1oBr2Qv\
                                      6LCMurCMulbwEClKaDdRWmq5+rvy5hkipVlO/uBmX6aewSAUou4boXr6P4x6t/VkXYtjE0cHHnr6/iVUXXu4qK0n3ltO6/AgwAJM21HORE7w8AAAAASUVORK5CYII=";
                     maskImage.onload = function () {
-                            $jschartvar.series[0].maskImage;
+                            $jsvar.series[0].maskImage;
                             $jschartvar.setOption($jsvar);
                     }
                 }] -start
