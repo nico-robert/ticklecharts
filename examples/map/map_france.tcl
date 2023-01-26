@@ -26,11 +26,14 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v4.0 : add try command
 # v5.0 : Rename '-datapieitem' by '-dataPieItem'
 # v6.0 : Rename 'basic' theme to 'custom'
+# v7.0 : add myTheme variable
 
 # example from pyecharts-gallery-master... (modify)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
+
+set myTheme $::ticklecharts::theme
 
 try {
 
@@ -169,5 +172,5 @@ try {
     puts stderr "[info script] : $result"
 } finally {
     # set theme
-    set ::ticklecharts::theme "custom"
+    set ::ticklecharts::theme $myTheme
 }
