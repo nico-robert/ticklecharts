@@ -4,12 +4,12 @@ lappend auto_path [file dirname [file dirname [file dirname [file normalize [inf
 package require ticklecharts
 
 # set theme if you want...
-# set ::ticklecharts::theme "basic"
+# set ::ticklecharts::theme "dark" ; # (default = custom)
 
 # Replaces some huddle/ehuddle procedures by C procedures...
 # ticklecharts::eHuddleCritcl 1
 
-# set minimum properties (not compatible with '::ticklecharts::theme' variable)
+# set minimum properties
 # set ::ticklecharts::minProperties 1
 
 set charts {
