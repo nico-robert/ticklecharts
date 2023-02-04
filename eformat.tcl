@@ -17,7 +17,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     if {$formattype eq ""} {return}
     if {$value eq "nothing" || $value eq "null"} {return}
 
-    lassign [info level 2] nameproc
+    set nameproc [ticklecharts::getStackFormatProc [expr {[info level] - 1}]]
 
     switch -exact -- $formattype {
 
@@ -61,7 +61,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatLeft {
             # possible values...
-            lappend validvalue {auto|left|center|right}
+            lappend validvalue {^auto$|^left$|^center$|^right$}
             lappend validvalue {^[0-9.]+%$}
             lappend validvalue {^[0-9.]+$}
 
@@ -82,7 +82,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatERight -
         formatELeft {
             # possible values...
-            lappend validvalue {left|center|right}
+            lappend validvalue {^left$|^center$|^right$}
             lappend validvalue {^[0-9.]+%$}
             lappend validvalue {^[0-9.]+$}
 
@@ -105,7 +105,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
         formatETop -
         formatEBottom {
             # possible values...
-            lappend validvalue {top|middle|bottom}
+            lappend validvalue {^top$|^middle$|^bottom$}
             lappend validvalue {^[0-9.]+%$}
             lappend validvalue {^[0-9.]+$}
 
@@ -127,7 +127,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatTop {
             # possible values...
-            lappend validvalue {auto|top|middle|bottom}
+            lappend validvalue {^auto$|^top$|^middle$|^bottom$}
             lappend validvalue {^[0-9.]+%$}
             lappend validvalue {^[0-9.]+$}
 
@@ -174,7 +174,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
             if {$type eq "str"} {
                 # possible values...
-                lappend validvalue {white|black|red|blue|green|transparent|inherit|source|gradient}
+                lappend validvalue {^whit$e|^black$|^red$|^blue$|^green$|^transparent$|^inherit$|^source$|^gradient$}
                 lappend validvalue {^#[a-zA-Z0-9]{3,6}$}
                 lappend validvalue {^rgb\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+)\)$}
                 lappend validvalue {^rgba\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+),\s*(?:1|0?\.[0-9]+)\)$}
@@ -469,6 +469,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
             if {[infoNameProc 2 "linesSeries"]} {
                 lappend validvalue gmap
+            }
+
+            if {[infoNameProc 2 "line3DSeries"]} {
+                set validvalue cartesian3D
+            }
+
+            if {[infoNameProc 2 "bar3DSeries"]} {
+                set validvalue {cartesian3D geo3D globe}
             }
 
             if {$value ni $validvalue} {
@@ -1255,6 +1263,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatBevelSize -
         formatRangeTrailLength - 
         formatRangeSymbolSize {
             # possible values...
@@ -1292,7 +1301,51 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatSSAOQuality -
+        formatShadowQuality {
+            # possible values...
+            set validvalue {low medium high ultra}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
 
+        formatProjection3D {
+            # possible values...
+            set validvalue {perspective orthogonal orthographic}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatDirection3D {
+            # possible values...
+            set validvalue {cw ccw}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatMouseButton {
+            # possible values...
+            set validvalue {left middle right}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
+
+        formatShading3D {
+            # possible values...
+            set validvalue {color lambert realistic}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[join $validvalue "' or '"]'\
+                        for this key '$key' in $nameproc"
+            }
+        }
     }
 
     return {}
