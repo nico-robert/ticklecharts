@@ -8,34 +8,30 @@ namespace eval ticklecharts {}
 # The first chart needs to be a graph with an x/y axis.
 
 oo::class create ticklecharts::Gridlayout {
-    variable _layout     ; # huddle
-    variable _indexchart ; # grid index chart
-    variable _options    ; # list options chart
-    variable _keyglob    ; # global key options
-    variable _dataset    ; 
+    variable _layout       ; # huddle
+    variable _indexchart2D ; # grid index chart2D
+    variable _indexchart3D ; # grid index chart3D
+    variable _options      ; # list options chart
+    variable _charts2D     ; # list charts 2D
+    variable _charts3D     ; # list charts 3D
+    variable _keyglob      ; # global key options
+    variable _dataset
 
     constructor {args} {
         # Initializes a new layout Class.
         #
         # args - Options described below.
         #
-        # -backgroundColor - chart color background
-        # -color           - list chart color must be a list of list like this 
-        #                    [list {red blue green}]
-        # -animation       - chart animation (default True)
-        # -others          - animation sub options see : global_options.tcl
-        # -theme           - name theme see : theme.tcl
+        # -theme  - name theme see : theme.tcl
         #
-        # theme options
-        set opts_theme [ticklecharts::theme $args]
-        # global options : animation, chart color...
-        set opts_global [ticklecharts::globalOptions $args]
-        set _options    {}
-        set _keyglob    {}
-        set _dataset    {}
-        set _indexchart -1
-
-        lappend _options {*}[ticklecharts::optsToEchartsHuddle $opts_global]
+        ticklecharts::setTheme $args ; # theme options
+        set _options   {}
+        set _keyglob   {}
+        set _dataset   {}
+        set _charts2D  {}
+        set _charts3D  {}
+        set _indexchart2D -1
+        set _indexchart3D -1
     }
 }
 
@@ -61,7 +57,7 @@ oo::define ticklecharts::Gridlayout {
         return $_dataset
     }
 
-    method gettype {} {
+    method getType {} {
         # Returns type of class
         return "gridlayout"
     }
@@ -83,15 +79,15 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns nothing
         foreach {key value} $args {
-        
+
             if {$value eq ""} {
                 error "No value specified for key '$key'"
             }
-            
+
             if {[llength $value] != [llength $chart]} {
                 error "llength charts must be equal with values of $key"
             }
-            
+
             switch -exact -- $key {
                 "-top"    {set top $value}
                 "-bottom" {set bottom $value}
@@ -103,8 +99,9 @@ oo::define ticklecharts::Gridlayout {
                 default {error "Unknown key '$key' specified"}
             }
         }
-        
-        set keys [$chart keys]
+
+        set keys      [$chart keys]
+        set chartType [$chart getType]
 
         if {"series" ni $keys} {
             error "charts must have a key 'series'"
@@ -114,18 +111,20 @@ oo::define ticklecharts::Gridlayout {
         if {"graphic" in $keys} {
             error "graphic not supported..."
         }
-        
-        if {("grid" ni $keys) && ($args eq "")} {
+
+        if {([lsearch $keys grid*] == -1) && ($args eq "")} {
             error "charts must have a grid key if no options..."
         }
 
-        incr _indexchart
-        set g 0
-        set layoutkeys {
-                series radiusAxis angleAxis xAxis yAxis grid title polar
-                radar legend tooltip visualMap toolbox singleAxis dataZoom dataset
-                parallelAxis parallel brush axisPointer geo calendar
-            }
+        switch -exact -- $chartType {
+            "chart"   {incr _indexchart2D ; lappend _charts2D $chart}
+            "chart3D" {incr _indexchart3D ; lappend _charts3D $chart}
+            default {error "class chart not supported..."}
+        }
+
+        set g 0 ; # variable for grid*
+        # Gets global options...
+        set gopts [string map {- ""} [dict keys [ticklecharts::globalOptions {}]]]
 
         foreach {key opts} [$chart options] {
 
@@ -159,28 +158,45 @@ oo::define ticklecharts::Gridlayout {
                 }
                 *series  {
                     # force index axis chart if exists or not...
+                    # 2D
                     if {[dict get $opts @S=type] in {bar line scatter effectScatter heatmap pictorialBar candlestick graph boxplot lines}} {
 
                         set xindex [lsearch -inline [dict keys $opts] *xAxisIndex]
                         set yindex [lsearch -inline [dict keys $opts] *yAxisIndex]
 
                         if {[dict exists $opts $xindex]} {
-                            if {[dict get $opts $xindex] eq "nothing"} {dict set opts @N=xAxisIndex $_indexchart} 
+                            if {[dict get $opts $xindex] eq "nothing"} {dict set opts @N=xAxisIndex $_indexchart2D} 
                         } else {
-                            dict set opts @N=xAxisIndex $_indexchart
+                            dict set opts @N=xAxisIndex $_indexchart2D
                         }
 
                         if {[dict exists $opts $yindex]} {
-                            if {[dict get $opts $yindex] eq "nothing"} {dict set opts @N=yAxisIndex $_indexchart}
+                            if {[dict get $opts $yindex] eq "nothing"} {dict set opts @N=yAxisIndex $_indexchart2D}
                         } else {
-                            dict set opts @N=yAxisIndex $_indexchart
+                            dict set opts @N=yAxisIndex $_indexchart2D
+                        }
+                    }
+
+                    # 3D
+                    if {[dict get $opts @S=type] in {bar3D line3D surface}} {
+
+                        set gridindex [lsearch -inline [dict keys $opts] *grid3DIndex]
+
+                        if {[dict exists $opts $gridindex]} {
+                            if {[dict get $opts $gridindex] eq "nothing"} {dict set opts @N=grid3DIndex $_indexchart3D} 
+                        } else {
+                            dict set opts @N=grid3DIndex $_indexchart3D
                         }
                     }
 
                     set stack [lsearch -inline [dict keys $opts] *stack]
                     if {[dict exists $opts $stack] && [dict get $opts $stack] ne "null"} {
                         set value [dict get $opts $stack]
-                        dict set opts $stack [ticklecharts::mapSpaceString "$value $_indexchart"]
+                        if {[$chart getType] eq "chart3D"} {
+                            dict set opts $stack [ticklecharts::mapSpaceString "$value $_indexchart3D"]
+                        } else {
+                            dict set opts $stack [ticklecharts::mapSpaceString "$value $_indexchart2D"]
+                        }
                     }
 
                     # replace 'center' flag if exists by the one in args if exists...
@@ -224,13 +240,19 @@ oo::define ticklecharts::Gridlayout {
                     }
                 }
                 *visualMap {
-                    dict set opts @N=seriesIndex $_indexchart
+                    dict set opts @N=seriesIndex $_indexchart2D
+                }
+                *xAxis3D -
+                *yAxis3D -
+                *zAxis3D {
+                    dict set opts @N=grid3DIndex $_indexchart3D
                 }
                 *xAxis -
                 *yAxis  {
-                    dict set opts @N=gridIndex $_indexchart
+                    dict set opts @N=gridIndex $_indexchart2D
                 }
                 *singleAxis -
+                *grid3D -
                 *grid  {
                     set g 1
                     foreach val {top bottom left right width height} {
@@ -248,16 +270,16 @@ oo::define ticklecharts::Gridlayout {
                 }
             }
 
+            # remove key global options 
+            lassign [split $key "="] _ k
+            if {$k in $gopts} {continue}
+
             if {$key in [my globalKeyOptions]} {
                 puts "warning(ticklecharts::Gridlayout): '$key' in chart class is already\
                      activated with 'SetGlobalOptions' method\
                      it is not taken into account..."
                 continue
             }
-            # remove key global options 
-            # priority to constructor...
-            lassign [split $key "="] _ k
-            if {$k ni $layoutkeys} {continue}
 
             lappend _options $key $opts
         }
@@ -279,28 +301,31 @@ oo::define ticklecharts::Gridlayout {
                 }
             }
             if {[llength $f]} {
-                lappend _options @D=grid [list {*}$f]
+                switch -exact -- $chartType {
+                    "chart"   {lappend _options @D=grid [list {*}$f]}
+                    "chart3D" {lappend _options @D=grid3D [list {*}$f]}
+                }
             }
         }
 
         # Check if polar key exists in first place
         # Error if yes , not possible.
         set keypolar [lsearch [dict keys $_options] *polar]
-        if {!$_indexchart && $keypolar > -1} {
+        if {!$_indexchart2D && $keypolar > -1} {
             error "'Polar' mode should not be added first..."
         }
 
         # Check if radar key exists in first place
         # Error if yes , not possible.
         set keyradar [lsearch [dict keys $_options] *radar]
-        if {!$_indexchart && $keyradar > -1} {
+        if {!$_indexchart2D && $keyradar > -1} {
             error "'Radar' mode should not be added first..."
         }
 
         # Check if pie, sunburst, themeriver, sankey... chart type exists in first place
         # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
-            if {!$_indexchart} {
+            if {!$_indexchart2D} {
                 switch -exact -- [dict get $_options @D=series @S=type]  {
                     pie        {error "'Pie' chart should not be added first..."}
                     sunburst   {error "'Sunburst' chart should not be added first..."}
@@ -323,27 +348,55 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns nothing
 
+        # Bug when several 'tooltip' < 5.3.0
+        if {([ticklecharts::vCompare $::ticklecharts::echarts_version "5.3.0"] == -1) && 
+            ([llength [lsearch -all -exact $_options @D=tooltip]] > 1)} {
+            error "Several 'tooltip' not supported..."
+        }
+
+        # Insert or not global options in the top of list.
+        set match2D 0 ; set match3D 0
+        if {![llength [my globalKeyOptions]]} {
+            # pririority chart 2D for global options
+            foreach chart $_charts2D {
+                if {[$chart globalOptions] ne ""} {
+                    set _options [linsert $_options 0 {*}[$chart globalOptions]]
+                    set match2D 1 ; break
+                }
+            }
+            if {!$match2D} {
+                foreach chart $_charts3D {
+                    if {[$chart globalOptions] ne ""} {
+                        set _options [linsert $_options 0 {*}[$chart globalOptions]]
+                        set match3D 1 ; break
+                    }
+                }
+            }
+        }
+
+        # no global options adds if need.
+        if {![llength [my globalKeyOptions]] && !$match2D && !$match3D} {
+            set optsg    [ticklecharts::globalOptions {}]
+            set optsEH   [ticklecharts::optsToEchartsHuddle $optsg]
+            set _options [linsert $_options 0 {*}$optsEH]
+        }
+
         # init ehuddle.
         set _layout [ticklecharts::ehuddle new]
 
         foreach {key opts} $_options {
-            lassign [split $key "="] type value
-
+            lassign [split $key "="] type _
             if {($type eq "@D" || $type eq "@L") && $opts ne ""} {
                 $_layout append $key $opts
             } else {
                 $_layout set $key $opts
             }
         }
-        
-        if {[$_layout llengthkeys "tooltip"] > 1} {
-            error "Several 'tooltip' not supported..."
-        }
 
         return {}
     }
     
-    method render {args} {
+    method Render {args} {
         # Export chart to html.
         #
         # args - Options described below.
@@ -363,24 +416,24 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns full path html file.
 
-        set opts_html [ticklecharts::htmlOptions $args]
         my layoutToHuddle ; # transform to huddle
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
+        set opts_html  [ticklecharts::htmlOptions $args]
         set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputfile [lindex [dict get $opts_html -outfile] 0]
+        set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
-        set fp [open $outputfile w+]
+        set fp [open $outputFile w+]
         puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
         close $fp
 
         if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} $outputfile]
+            puts [format {html:%s} [file nativename $outputFile]]
         }
 
-        return $outputfile
+        return $outputFile
     }
 
     method toJSON {} {
@@ -392,22 +445,14 @@ oo::define ticklecharts::Gridlayout {
     }
 
     method SetGlobalOptions {args} {
-        # Set global options for all charts class
+        # Set global options for all charts (2D + 3D) class
         #
         # Returns nothing
         set c [ticklecharts::chart new]
-        set c_opts [$c keys]
         $c SetOptions {*}$args
 
-        foreach {key info} [$c options] {
-            # remove key global options 
-            # priority to layout class...
-            lassign [split $key "="] type k
-            if {$k in $c_opts} {continue}
-
-            lappend _options $key $info
-            lappend _keyglob $key
-        }
+        lappend _options {*}[$c options]
+        lappend _keyglob {*}[dict keys [$c options]]
 
         # check if chart has dataset.
         # save is yes...
@@ -418,12 +463,17 @@ oo::define ticklecharts::Gridlayout {
         # destroy...
         $c destroy
 
-        return {}        
-    }
+        # doesn't support 3D options
+        set keys [dict keys $args]
+        foreach opts3D {-grid3D -globe -geo3D -mapbox3D} {
+            if {$opts3D in $keys} {
+                error "$opts3D (options 3D) not supported...\
+                with 'SetGlobalOptions' method"
+            }
+        }
 
-    # To keep the same logic of naming methods for ticklecharts 
-    # the first letter in capital letter...
-    forward Render my render
+        return {}
+    }
 
     # export method
     export Add Render SetGlobalOptions
