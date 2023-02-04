@@ -2,6 +2,8 @@ ticklEcharts - chart library
 ==========================
 Tcl wrapper for [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript Visualization library).
 
+![Photo gallery](images/all.png)
+
 Dependencies :
 -------------------------
 
@@ -26,18 +28,10 @@ $chart Render
 # Initializes a new 2D Chart Class
 set chart [ticklecharts::chart new]
 ```
-##### :heavy_check_mark: Arguments available :
+##### :heavy_check_mark: Argument available :
 | args | Type | Description
 | ------ | ------ | ------
-| _-backgroundColor_ | str \| jsfunc \| e.color | Canvas color background (hex, rgb, rgba color)
-| _-color_ | list.s \| e.color | Colors series (default `Echarts Color Theme`)
-| _-animation_ | boolean | chart animation (default `True`)
-| _-others_ | _ | animation sub options (see proc: `ticklecharts::globalOptions` in `global_options.tcl`)
-| _-theme_ | str | set the default theme for chart instance (default `basic`) possible values: `vintage,westeros,wonderland,dark`
-```tcl
-# Demo
-set chart [ticklecharts::chart new -color [list {red blue green}] -animation "False" -theme "vintage"]
-```
+| _-theme_ | str | set the default theme for chart instance (default `custom`) possible values: `vintage,westeros,wonderland,dark`
 ```tcl
 # Initializes X axis with values
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
@@ -61,37 +55,44 @@ $chart Render
 | args | Description
 | ------ | ------
 | _-title_ | header title html (default value : `"ticklEcharts !!!"`)
-| _-width_ | size html canvas  (default value : `900px`)
-| _-height_ | size html canvas (default value : `500px`)
+| _-width_ | width of the chart  (default value : `900px`)
+| _-height_ | height of the chart (default value : `500px`)
 | _-renderer_ | `canvas` or `svg` (default value : `canvas`)
-| _-jschartvar_ | name chart var (default value : `chart_[clock clicks]`) 
-| _-divid_ | name id var (default value : `id_[clock clicks]`) 
+| _-jschartvar_ | variable name chart (default value : `chart_[ticklecharts::uuid]`) 
+| _-divid_ | name container's ID (default value : `id_[ticklecharts::uuid]`) 
 | _-outfile_ | full path html file (output by default in `[info script]/render.html`)
 | _-jsecharts_ | full path `echarts.min.js` file (by default `cdn` script)
-| _-jsvar_ | name js var (default value : `option`)
+| _-jsvar_ | variable name js (default value : `option_[ticklecharts::uuid]`)
 | _-script_ | jsfunc (default value : `"null"`)
-| _-class_ | Class container (default value : `"chart-container"`)
-| _-style_ | Css style (default value : `width:'-width'; height:'-height';`)
+| _-class_ | specify container's CSS class (default value : `"chart-container"`)
+| _-style_ | add inline style (default value : `width:'-width'; height:'-height';`)
 
 ```tcl
 # Demo
 $chart Render -width "1200px" -height "800px" -renderer "svg"
 ```
-Data :
+Data series :
 -------------------------
-`-data` in _series_, can be written like this : 
+`-data` (x values) : 
 ```tcl
-# Demo
+# Example for lineseries
+$chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
+$chart Yaxis
+```
+`-data` (x, y values) : 
+```tcl
+# Example for lineseries
 $chart AddLineSeries -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # Mon = X value
 # 150 = Y value
 # And now -data in Xaxis method can be deleted and written like this :
 $chart Xaxis
 ```
-`-datalineitem` (for _lineseries_) flag :
+`-dataXXXItem` :
 ```tcl
+# Example for lineseries
 # Additional options on the graph... see ticklecharts::lineItem in options.tcl
-$chart AddLineSeries -datalineitem {
+$chart AddLineSeries -dataLineItem {
                                 {name "Mon" value 150}
                                 {name "Tue" value 230}
                                 {name "Wed" value 224}
@@ -101,7 +102,7 @@ $chart AddLineSeries -datalineitem {
                                 {name "Sun" value 260}
                                 }
 ```
-With `dataset` class :
+`dataset` (class) :
 ```tcl
 set data {
         {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
@@ -125,38 +126,41 @@ Useful methods :
 1. Get default _options_ according to a `key` (name of procedure) :
 ```tcl
 # e.g for series :
-$chart getoptions -series line
+$chart getOptions -series line
 # e.g for axis :
-$chart getoptions -axis X
+$chart getOptions -axis X
+# e.g for global options :
+$chart getOptions -globalOptions ; # no value required
 # get all options for 'title' :
-$chart getoptions -option title
+$chart getOptions -option title
 # output :
-id                -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-show              -minversion 5  -validvalue {}                      -type bool       -default "True"
-text              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-link              -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-target            -minversion 5  -validvalue formatTarget            -type str        -default "blank"
-textStyle         -minversion 5  -validvalue {}                      -type dict|null
-  color                -minversion 5  -validvalue formatColor          -type e.color|str|null -default $color
-  fontStyle            -minversion 5  -validvalue formatFontStyle      -type str              -default "normal"
-  fontWeight           -minversion 5  -validvalue formatFontWeight     -type str|num          -default $fontWeight
-  fontFamily           -minversion 5  -validvalue {}                   -type str              -default "sans-serif"
-  fontSize             -minversion 5  -validvalue {}                   -type num              -default $fontSize
-  lineHeight           -minversion 5  -validvalue {}                   -type num|null         -default "nothing"
-  width                -minversion 5  -validvalue {}                   -type num              -default 100
-  height               -minversion 5  -validvalue {}                   -type num              -default 50
-  textBorderColor      -minversion 5  -validvalue {}                   -type str|null         -default "null"
-  textBorderWidth      -minversion 5  -validvalue {}                   -type num              -default 0
-  textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n   -default "solid"
-  textBorderDashOffset -minversion 5  -validvalue {}                   -type num              -default 0
-  textShadowColor      -minversion 5  -validvalue formatColor          -type str              -default "transparent"
-  textShadowBlur       -minversion 5  -validvalue {}                   -type num              -default 0
-  textShadowOffsetX    -minversion 5  -validvalue {}                   -type num              -default 0
-  textShadowOffsetY    -minversion 5  -validvalue {}                   -type num              -default 0
-  overflow             -minversion 5  -validvalue formatOverflow       -type str|null         -default "null"
-  ellipsis             -minversion 5  -validvalue {}                   -type str              -default "..."
-subtext           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
-sublink           -minversion 5  -validvalue {}                      -type str|null   -default "nothing"
+ id                -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+ show              -minversion 5  -validvalue {}                      -type bool        -default "True"
+ text              -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+ link              -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+ target            -minversion 5  -validvalue formatTarget            -type str         -default "blank"
+ textStyle         -minversion 5  -validvalue {}                      -type dict|null
+   color                -minversion 5  -validvalue formatColor          -type str.t|jsfunc|null -default $color
+   fontStyle            -minversion 5  -validvalue formatFontStyle      -type str               -default "normal"
+   fontWeight           -minversion 5  -validvalue formatFontWeight     -type str.t|num.t|null  -default $fontWeight
+   fontFamily           -minversion 5  -validvalue {}                   -type str               -default "sans-serif"
+   fontSize             -minversion 5  -validvalue {}                   -type num.t|null        -default $fontSize
+   lineHeight           -minversion 5  -validvalue {}                   -type num|null          -default "nothing"
+   width                -minversion 5  -validvalue {}                   -type num               -default 100
+   height               -minversion 5  -validvalue {}                   -type num               -default 50
+   textBorderColor      -minversion 5  -validvalue {}                   -type str|null          -default "null"
+   textBorderWidth      -minversion 5  -validvalue {}                   -type num               -default 0
+   textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n    -default "solid"
+   textBorderDashOffset -minversion 5  -validvalue {}                   -type num               -default 0
+   textShadowColor      -minversion 5  -validvalue formatColor          -type str               -default "transparent"
+   textShadowBlur       -minversion 5  -validvalue {}                   -type num               -default 0
+   textShadowOffsetX    -minversion 5  -validvalue {}                   -type num               -default 0
+   textShadowOffsetY    -minversion 5  -validvalue {}                   -type num               -default 0
+   overflow             -minversion 5  -validvalue formatOverflow       -type str|null          -default "null"
+   ellipsis             -minversion 5  -validvalue {}                   -type str               -default "..."
+   # ...
+ subtext           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
+ sublink           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
  ...
  ...
 # following options voluntarily deleted... 
@@ -167,7 +171,7 @@ $chart AddLineSeries -data [list {1 2 3 4}]
 $chart AddBarSeries  -data [list {4 5 6 7}]
 
 # Delete bar series :
-$chart deleteseries 1
+$chart deleteSeries 1
 ```
 3. Gets _json_ data :
 ```tcl
@@ -195,7 +199,7 @@ $chart Xaxis -axisLabel [list show "True" \
                               showMinLabel "null" \
                               ... ]
 
-# Echarts 'json' result :
+# 'json' result :
 "axisLabel": {
   "show": true,
   "margin": 8,
@@ -206,8 +210,8 @@ $chart Xaxis -axisLabel [list show "True" \
   ...
 }
 ```
-*  **formatter** :
-    - Accepts a _javascript_ function_ most times. For basic _format_, `formatter` supports string template like this :
+*  **formatter** (Accepts a _javascript function_ most times):
+    - For basic _format_, `formatter` supports string template like this :
     > formatter `'{b0}: {c0}<br />{b1}: {c1}'`
     
     - In Tcl you can use _substitution_ e.g.:
@@ -294,7 +298,7 @@ ticklecharts::eHuddleCritcl True
 source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200,000
 #             | This run (Mac Os Core i7)
 #    pure Tcl |   25354915 microseconds per iteration 
-#    critcl   |    3514165 microseconds per iteration (≃7x faster)
+#    critcl   |    6338728 microseconds per iteration (≃5x faster)
 ```
 `Note` : _No advantage to use this command with small data..._
 
@@ -305,12 +309,11 @@ package require ticklecharts
 
 # Set theme... with variable
 # Or with class : ticklecharts::(Gridlayout|chart|timeline) new -theme "vintage"
-set ::ticklecharts::theme "vintage" ; # default "basic" 
+set ::ticklecharts::theme "vintage" ; # default "custom" 
 
 # Minimum properties...
 # Only write values that are defined in the *.tcl file. (Benefit : performance + minifying your HTML files)
 # Be careful, properties in the *.tcl file must be implicitly marked.
-# Note : 'theme' other than 'basic' is not supported (yet) when 'minProperties' variable is set to 'True'.
 set ::ticklecharts::minProperties "True" ; # default "False"
 
 # Output 'render.html' full path to stdout. 
@@ -323,7 +326,9 @@ set ::ticklecharts::keyGMAPI "??" ; # Please replace '??' with your own API key.
 # Set versions for js script.
 # Note : Num version (@X.X.X) should be present in js path .If no pattern matches, the script path is left unchanged.
 set ::ticklecharts::echarts_version "X.X.X" ; # Echarts version
+set ::ticklecharts::gl_version      "X.X.X" ; # Echarts GL version
 set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
+set ::ticklecharts::wc_version      "X.X.X" ; # wordcloud version
 ```
 `Note` : _All the above variables can be modified in the `ticklecharts.tcl` file_.
 
@@ -331,6 +336,7 @@ Examples :
 -------------------------
 See **[examples](/examples)** for all demos (from [Apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
 
+![line and bar mixed](images/line_and_bar_mixed.png)
 ```tcl
 # line + bar on same canvas...
 package require ticklecharts
@@ -371,8 +377,7 @@ set dirname   [file dirname [info script]]
 # Save to html...
 $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ```
-![line and bar mixed](images/line_and_bar_mixed.png)
-
+![line, bar and pie layout](images/line_bar_pie_layout.png)
 ```tcl
 # demo layout line + bar + pie...
 set data0 {1 2 3 4 5}
@@ -411,7 +416,7 @@ $pie SetOptions -legend {top "6%" left "65%"}
 
 $pie AddPieSeries -name "Access From" -radius [list {"50%" "70%"}] \
                   -labelLine {show "True"} \
-                  -datapieitem {
+                  -dataPieItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}
@@ -433,15 +438,17 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
                -width 1700px \
                -height 1000px
 ```
-![line, bar and pie layout](images/line_bar_pie_layout.png)
-
 #### Currently chart and options supported are :
 - **Global options :**
 - [x] title
 - [x] legend
 - [x] grid
+- [x] grid3D
 - [x] xaxis
+- [x] xaxis3D
 - [x] yaxis
+- [x] yaxis3D
+- [x] zaxis3D
 - [x] polar
 - [x] radiusAxis
 - [x] angleAxis
@@ -463,7 +470,9 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [x] aria
 - **Series :**
 - [x] line
+- [x] line3D
 - [x] bar
+- [x] bar3D
 - [x] pie
 - [x] scatter
 - [x] effectScatter
@@ -479,6 +488,7 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 - [X] lines
 - [x] graph
 - [x] sankey
+- [x] surface (3D)
 - [x] funnel
 - [x] gauge
 - [x] pictorialBar
@@ -489,9 +499,6 @@ $layout Render -outfile [file join $dirname $fbasename.html] \
 > **Note** _custom_ series : This series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
  If you are interested, please report to the github issue tracker.
 
-#### Gallery :
-![Photo gallery](images/all.gif)
-
 License :
 -------------------------
 **ticklEcharts** is covered under the terms of the [MIT](LICENSE) license.
@@ -500,137 +507,36 @@ Release :
 -------------------------
 *  **08-Feb-2022** : 1.0
     - Initial release.
-*  **16-Feb-2022** : 1.1
-    - Add pie chart + visualMap.
-    - Add demos line + pie + visualMap.
-    - Bug fixes.
-    - Add options.
-*  **19-Feb-2022** : 1.2
-    - Add funnel chart + markArea.
-    - Add markArea + funnel examples.
-*  **20-Feb-2022** : 1.3
-    - Add radar chart.
-    - Add radar, pie, layout examples.
-*  **22-Feb-2022** : 1.4
-    - Add scatter + effectScatter chart.
-    - Add scatter examples + line step example.
-    - Add `::ticklecharts::htmlstdout` variable to control _stdout_
-	  for render html output.
-*  **28-Feb-2022** : 1.5
-    - Add heatmap chart.
-    - Add heatmap examples.
-    - Add `deleteseries` method to delete series chart.
-    - Update README to explain `deleteseries` and `getoptions` methods.
-*  **06-Mar-2022** : 1.5.1
-    - Add graphic (rect, circle, arc, line, text...)
-    - Add graphic examples.
-*  **20-Mar-2022** : 1.5.2
-    - Add `toolbox`option (A group of utility tools... Save as image, Zoom, Data view...)
-    - Update chart examples to include toolbox utility.
-    - Add examples with json data from [github apache echarts-examples](https://github.com/apache/echarts-examples) (require `http`, `json` packages from Tcllib) + `tls` package.
-    - Add `jsfunc` as huddle `type`, instead of using a `string map` and `dictionary` combination.
-    - Patch for huddle.tcl (v0.3) `proc ::huddle::jsondump`.
-    - Add `Render` method to keep the same logic of naming methods for ticklecharts,
-    the first letter in capital letter... _Note_ : `render` method is still active.
-*  **02-Apr-2022** : 1.5.3
-    - Add `-validvalue` flag to respect the values by default according to the Echarts documentation (especially for string types).
-    - Update examples to reflect the changes.
-*  **04-Apr-2022** : 1.6
-    - Add `sunburst` chart.
-    - Add `sunburst` examples + correction `line` chart label position example.
-*  **07-Apr-2022** : 1.7
-    - Add `tree` chart.
-    - Add `tree` examples.
-*  **09-Apr-2022** : 1.8
-    - Add `themeRiver` chart + `singleAxis` option.
-    - Add `themeRiver` examples.
-*  **09-Apr-2022** : 1.8.1
-    - Fix bug on adding multiple axis (xAxis, yAxis...). Not included in version `1.7`
-*  **11-Apr-2022** : 1.9
-    - Add `sankey` chart.
-    - Add `sankey` examples.
-*  **16-Apr-2022** : 1.9.1
-    - Added procedure to check if the options match the default values, output `warning` message if option name doesn't exist or not supported.
-    - Update chart examples to avoid warnings messages.
-*  **19-Apr-2022** : 1.9.2
-    - Add `dataZoom` option (For zooming a specific area...)
-    - Add or update chart examples to include `dataZoom` option.
-    - Fix bug for theming features.
-*  **30-Apr-2022** : 1.9.3
-    - Add `dataset` option.
-    - Add chart examples to include `dataset` option.
-*  **04-May-2022** : 1.9.4
-    - Add `pictorialBar` chart.
-    - Add `pictorialBar` examples.
 *  **12-May-2022** : 1.9.5
     - Add `candlestick` chart.
     - Add `candlestick` examples.
 *  **26-May-2022** : 2.0.1
     - Replaces some _huddle/ehuddle_ procedures by _C_ functions, with help of [critcl](https://andreas-kupries.github.io/critcl/) package.
     - **Incompatibility** : `-render` flag renamed to `-renderer` (flag option to set `canvas` or `svg` renderer).
-*  **26-Jun-2022** : 2.1
-    - Add `parallel` chart.
-    - Add `parallel` examples.
-    - Add `brush` option (To select part of data from a chart to display in detail...)
-*  **27-Jun-2022** : 2.1.1
-    - Add `parallelAxis` as method instead of a option. Update examples to reflect this change.
-*  **02-Aug-2022** : 2.2
-    - Add `timeline` option (provides switching between charts).
-    - Add `timeline` examples.
-*  **20-Aug-2022** : 2.3
-    - Add `gauge` chart.
-    - Add `gauge` examples.
-    - Move huddle patch (0.3) proc from ehuddle.tcl to a new separate file (huddle_patch.tcl).
-    - Cosmetic changes.
-    - Add `toJSON` method for `timeline`class.
-*  **05-Sep-2022** : 2.3.1
-    - Code refactoring
-*  **14-Oct-2022** : 2.4
-    - Add `graph` chart.
-    - Add `graph` examples.
-*  **21-Oct-2022** : 2.5
-    - Add [echarts-wordcloud](https://github.com/ecomfe/echarts-wordcloud).
-    - Add `wordCloud` examples.
-    - Adds the possibility to add one or more js script(s) to the html template file.
-*  **30-Oct-2022** : 2.6
-    - Add `boxplot` chart.
-    - Add `boxplot` examples.
-    - **Incompatibility** with previous version for `dataset` class, `dataset` now accepts multiple `source` for the same class.
-    - Update `dataset` examples to reflect this change.
-*  **07-Nov-2022** : 2.7
-    - Add `treemap` chart.
-    - Add `treemap` examples.
-    - Add `axisPointer` option
-    - Add `-minversion` flag in args option, to control if the _key_ or _type_ is supported in current `Echarts` version, 
-      output `warning` message if it is not supported.
-*  **12-Nov-2022** : 2.8
-    - Add `map` chart.
-    - Add `map` examples.
-    - Add `geo` option
-*  **25-Nov-2022** : 2.8.1
-    - Add `calendar` option.
-    - Add `calendar` examples.
-    - For `color` and `backgroundColor` properties, adds `eColor` Class  
-      see [pie_texture.tcl example](examples/pie/pie_texture.tcl) in `examples/pie` folder.
-*  **02-Dec-2022** : 2.8.2
-    - Bump to `v2.1.0` for echarts-wordcloud, update examples to reflect this changes.
-    - Add `aria` option.
-    - Add `aria` example.
-    - Cosmetic changes.
-*  **08-Dec-2022** : 2.9
-    - Add `gmap` [extension](https://github.com/plainheart/echarts-extension-gmap). (_Note_: A Google Key API is required)
-    - Add `gmap` examples.
-    - Add `lines` chart.
-    - Add `lines` examples.
-    - Cosmetic changes.
-*  **18-Dec-2022** : 2.9.1
-    - The result of the `ticklecharts::infoOptions` _command_ on the `stdout` is deleted, in favor of a result of a _command_.
-    - New global variable `::ticklecharts::minProperties` see [Global variables](#Globalvariables) section for detail.
-    - `-class` and `-style` are added in `Render` method to control the class name and style respectively (_Note_ : `template.html` file is modified).
-    - Cosmetic changes.
 *  **03-Jan-2023** : 2.9.2
     - Code refactoring.
     - Update LICENSE year.
     - `echarts-wordcloud.js` is inserted automatically when writing the html file. Update `wordcloud` examples to reflect this changes.
     - Cosmetic changes.
     - Add global options (useUTC, hoverLayerThreshold...)
+*  **04-Feb-2023** : 3.0.1
+    - Bump to `v5.4.1` for Echarts.
+    - Add Echarts GL (3D)
+    - Add `bar3D`, `line3D` and `surface` series.
+    - Add `bar3D`, `line3D` and `surface` examples.
+    - `::ticklecharts::theme` variable is supported with `::ticklecharts::minProperties` variable.
+    - **Incompatibility** :
+        - `render` method is no longer supported, it is replaced by `Render` method (Note the first letter in capital letter...).
+        - `getoptions` method is renamed `getOptions`.
+        - `deleteseries` method is renamed `deleteSeries`.
+        - `gettype` method is renamed `getType` (internal method).
+        -  Rename `basic` theme to `custom` theme.
+        - `theme.tcl` file has been completely reworked.
+        - Several options are no longer supported when initializing the `ticklecharts::chart` class, all of these options are initialized in `Setoptions` method now.
+        - To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :
+                - `-databaritem` is renamed `-dataBarItem`
+                - `-datalineitem` is renamed `-dataLineItem`
+                - `-datapieitem` is renamed `-dataPieItem`
+                - `-datafunnelitem` is renamed `-dataFunnelItem`
+                - `-dataradaritem` is renamed `-dataRadarItem`
+                - `-datacandlestickitem` is renamed `-dataCandlestickItem`

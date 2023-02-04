@@ -140,6 +140,27 @@
                # 'echarts-wordcloud.js' is inserted automatically when writing the html file. Update `wordcloud` examples to reflect this changes.
                # Cosmetic changes.
                # Add global options (useUTC, hoverLayerThreshold...) 
+# 04-Feb-2023 : v3.0.1
+               # Bump to `v5.4.1` for Echarts.
+               # Add Echarts GL (3D)
+               # Add `bar3D`, `line3D` and `surface` series.
+               # Add `bar3D`, `line3D` and `surface` examples.
+               # `::ticklecharts::theme` variable is supported with `::ticklecharts::minProperties` variable.
+               # **Incompatibility** :
+                    #  `render` method is no longer supported, it is replaced by `Render` method (Note the first letter in capital letter...).
+                    #  `getoptions` method is renamed `getOptions`.
+                    #  `gettype` method is renamed `getType` (internal method).
+                    #  Rename `basic` theme to `custom` theme.
+                    #  `theme.tcl` file has been completely reworked.
+                    # Several options are no longer supported when initializing the `ticklecharts::chart` class, 
+                    # all of these options are initialized in `Setoptions` method now.
+                  # To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :
+                    # `-databaritem` is renamed `-dataBarItem`
+                    # `-datalineitem` is renamed `-dataLineItem`
+                    # `-datapieitem` is renamed `-dataPieItem`
+                    # `-datafunnelitem` is renamed `-dataFunnelItem`
+                    # `-dataradaritem` is renamed `-dataRadarItem`
+                    # `-datacandlestickitem` is renamed `-dataCandlestickItem`
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -148,15 +169,20 @@ set dir [file dirname [file normalize [info script]]]
 
 source [file join $dir utils.tcl]
 source [file join $dir chart.tcl]
+source [file join $dir chart3D.tcl]
 source [file join $dir ehuddle.tcl]
 source [file join $dir huddle_patch.tcl]
 source [file join $dir eformat.tcl]
 source [file join $dir jsfunc.tcl]
 source [file join $dir layout.tcl]
 source [file join $dir global_options.tcl]
+source [file join $dir global_options3D.tcl]
 source [file join $dir series.tcl]
+source [file join $dir series3D.tcl]
 source [file join $dir options.tcl]
+source [file join $dir options3D.tcl]
 source [file join $dir axis.tcl]
+source [file join $dir axis3D.tcl]
 source [file join $dir theme.tcl]
 source [file join $dir dataset.tcl]
 source [file join $dir timeline.tcl]
@@ -164,27 +190,29 @@ source [file join $dir ecolor.tcl]
 
 namespace eval ticklecharts {
 
-    variable version         2.9.2
-    variable echarts_version 5.2.2 ; # Echarts version
+    variable version         3.0.1 ; # ticklEcharts version
+    variable echarts_version 5.4.1 ; # Echarts version
+    variable gl_version      2.0.9 ; # Echarts GL version
     variable wc_version      2.1.0 ; # wordCloud version
     variable gmap_version    1.5.0 ; # gmap version
-    variable keyGMAPI       "??"   ; # Please replace '??' with your own API key.
-    variable edir           $dir
-    variable theme          "basic"
-    variable htmlstdout     "True"
-    variable minProperties  "False"
-    variable opts_theme     {}
-    variable htmltemplate   [file join $dir html template.html]
-    variable escript        "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
-    variable wcscript       "https://cdn.jsdelivr.net/npm/echarts-wordcloud@${wc_version}/dist/echarts-wordcloud.min.js"
-    variable gmscript       "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
-    variable gapiscript     "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
+    variable keyGMAPI        "??"  ; # Please replace '??' with your own API key.
+    variable edir            $dir
+    variable theme           "custom"
+    variable htmlstdout      "True"
+    variable minProperties   "False"
+    variable htmltemplate    [file join $dir html template.html]
+    variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
+    variable eGLscript       "https://cdn.jsdelivr.net/npm/echarts-gl@${gl_version}/dist/echarts-gl.min.js"
+    variable wcscript        "https://cdn.jsdelivr.net/npm/echarts-wordcloud@${wc_version}/dist/echarts-wordcloud.min.js"
+    variable gmscript        "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
+    variable gapiscript      "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
     
     # When version is modified add trace command.
     trace add variable echarts_version write ticklecharts::traceEchartsVersion
+    trace add variable gl_version      write ticklecharts::traceEchartsGLVersion
     trace add variable gmap_version    write ticklecharts::traceGmapVersion
     trace add variable wc_version      write ticklecharts::traceWCVersion
-    trace add variable keyGMAPI        write ticklecharts::tracekeyGMAPI
+    trace add variable keyGMAPI        write ticklecharts::traceKeyGMAPI
 
 }
 
