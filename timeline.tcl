@@ -14,7 +14,12 @@ oo::class create ticklecharts::timeline {
 
     constructor {args} {
         # Initializes a new timeline Class.
-        set opts_theme [ticklecharts::theme $args]
+        #
+        # args - Options described below.
+        #
+        # -theme  - name theme see : theme.tcl
+        #
+        ticklecharts::setTheme $args ; # theme options
         set _data    {}
         set _charts  {}
         set _opts    {}
@@ -23,7 +28,7 @@ oo::class create ticklecharts::timeline {
 
 oo::define ticklecharts::timeline {
     
-    method gettype {} {
+    method getType {} {
         # Returns type
         return "timeline"
     }
@@ -55,8 +60,9 @@ oo::define ticklecharts::timeline {
             error "data should be present... for timeline option"
         }
 
-        if {![expr {[$chart gettype] eq "chart" || [$chart gettype] eq "gridlayout"}]} {
-            error "first argument for 'Add' method should be a 'chart' or 'gridlayout' class."
+        if {![expr {[$chart getType] eq "chart" || [$chart getType] eq "chart3D" ||
+                    [$chart getType] eq "gridlayout"}]} {
+            error "first argument for 'Add' method should be a 'chart', 'chart3D' or 'gridlayout' class."
         }
 
         lappend _data [ticklecharts::timelineItem $args]
@@ -84,8 +90,9 @@ oo::define ticklecharts::timeline {
         set optsglob [ticklecharts::globalOptions {}]
         set keysoptsglob [dict keys [ticklecharts::optsToEchartsHuddle $optsglob]]
 
-        # add keys from 'SetOptions' ticklecharts::chart  method
-        set infomethod [lindex [info class definition ticklecharts::chart "SetOptions"] 1]
+        # add keys from 'SetOptions' ticklecharts::chart*  method
+        lappend infomethod [lindex [info class definition ticklecharts::chart   "SetOptions"] 1]
+        lappend infomethod [lindex [info class definition ticklecharts::chart3D "SetOptions"] 1]
         foreach linebody [split $infomethod "\n"] {
             if {[string match {*@*} $linebody]} {
                 set keyopts [lindex $linebody 2]
@@ -117,7 +124,6 @@ oo::define ticklecharts::timeline {
         # add all charts to 'option' key
         foreach chart $_charts {
             set optschart [$chart options]
-
             set option {}
 
             foreach {key value} $optschart {
@@ -138,7 +144,7 @@ oo::define ticklecharts::timeline {
         return [[my get] toJSON]
     }
 
-    method render {args} {
+    method Render {args} {
         # Export chart to html.
         #
         # args - Options described below.
@@ -158,29 +164,25 @@ oo::define ticklecharts::timeline {
         #
         # Returns full path html file.
 
-        set opts_html [ticklecharts::htmlOptions $args]
         my timelineToHuddle ; # transform to huddle
         set myhuddle [my get]
         set json     [$myhuddle toJSON] ; # jsondump
 
+        set opts_html  [ticklecharts::htmlOptions $args]
         set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputfile [lindex [dict get $opts_html -outfile] 0]
+        set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
-        set fp [open $outputfile w+]
+        set fp [open $outputFile w+]
         puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
         close $fp
         
         if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} $outputfile]
+            puts [format {html:%s} [file nativename $outputFile]]
         }
 
-        return $outputfile
+        return $outputFile
     }
-
-    # To keep the same logic of naming methods for ticklecharts 
-    # the first letter in capital letter...
-    forward Render my render
 
     # export method
     export Add SetOptions Render
@@ -191,22 +193,6 @@ proc ticklecharts::timelineOpts {value} {
     # timeline options
     #
     # Returns dict options
-    variable theme
-
-    if {$theme ne "basic"} {
-        if {![dict exists $value -checkpointStyle]} {
-            dict set value -checkpointStyle [dict create dummy null]
-        }
-        if {![dict exists $value -controlStyle]} {
-            dict set value -controlStyle [dict create dummy null]
-        }
-        if {![dict exists $value -label]} {
-            dict set value -label [dict create dummy null]
-        }
-        if {![dict exists $value -itemStyle]} {
-            dict set value -itemStyle [dict create dummy null]
-        }
-    }
 
     setdef options -show                -minversion 5  -validvalue {}                      -type bool                 -default "True"
     setdef options -type                -minversion 5  -validvalue formatTimelineType      -type str                  -default "slider"
