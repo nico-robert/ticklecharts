@@ -8,39 +8,22 @@ proc ticklecharts::globalOptions {value} {
     #
     # value - Options described below.
     #
-    # - backgroundColor         - https://echarts.apache.org/en/option.html#backgroundColor
-    # - backgroundColorItem     - https://echarts.apache.org/en/option.html#color
-    # - color                   - https://echarts.apache.org/en/option.html#color
-    # - animation               - https://echarts.apache.org/en/option.html#animation
-    # - animationDuration       - https://echarts.apache.org/en/option.html#animationDuration
-    # - animationDurationUpdate - https://echarts.apache.org/en/option.html#animationDurationUpdate
-    # - animationDelayUpdate    - https://echarts.apache.org/en/option.html#animationDelayUpdate
-    # - animationEasing         - https://echarts.apache.org/en/option.html#animationEasing
-    # - animationEasingUpdate   - https://echarts.apache.org/en/option.html#animationEasingUpdate
-    # - animationThreshold      - https://echarts.apache.org/en/option.html#animationThreshold
-    # - progressiveThreshold    - https://echarts.apache.org/en/option.html#progressiveThreshold
-    # - hoverLayerThreshold     - https://echarts.apache.org/en/option.html#hoverLayerThreshold
-    # - useUTC                  - https://echarts.apache.org/en/option.html#useUTC
-    # - blendMode               - https://echarts.apache.org/en/option.html#blendMode
-    #
     # return dict options
 
-    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
-    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.s|e.color|null     -default [echartsOptsTheme color]
-    setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null           -default "True"
-    setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                -default 1000
-    setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                -default 500
-    setdef options -animationDelayUpdate    -minversion 5  -validvalue {}            -type jsfunc|null             -default "nothing"
-    setdef options -animationEasing         -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
-    setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null                -default "cubicInOut"
-    setdef options -animationThreshold      -minversion 5  -validvalue {}            -type num|null                -default 2000
-    setdef options -progressiveThreshold    -minversion 5  -validvalue {}            -type num|null                -default 3000
-    setdef options -hoverLayerThreshold     -minversion 5  -validvalue {}            -type num|null                -default "nothing"
-    setdef options -useUTC                  -minversion 5  -validvalue {}            -type bool|null               -default "nothing"
-    setdef options -blendMode               -minversion 5  -validvalue formatBlendM  -type str|null                -default "nothing"
-
-    # remove key(s) '-theme' to avoid warning message when comparing keys...
-    if {[dict exists $value -theme]} {set value [dict remove $value -theme]}
+    setdef options -darkMode                -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
+    setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
+    setdef options -color                   -minversion 5  -validvalue formatColor   -type list.st|e.color|null      -default [echartsOptsTheme color]
+    setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null             -default "True"
+    setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                  -default 1000
+    setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                  -default 500
+    setdef options -animationDelayUpdate    -minversion 5  -validvalue {}            -type jsfunc|null               -default "nothing"
+    setdef options -animationEasing         -minversion 5  -validvalue formatAEasing -type str|null                  -default "cubicInOut"
+    setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null                  -default "cubicInOut"
+    setdef options -animationThreshold      -minversion 5  -validvalue {}            -type num|null                  -default 2000
+    setdef options -progressiveThreshold    -minversion 5  -validvalue {}            -type num|null                  -default 3000
+    setdef options -hoverLayerThreshold     -minversion 5  -validvalue {}            -type num|null                  -default "nothing"
+    setdef options -useUTC                  -minversion 5  -validvalue {}            -type bool|null                 -default "nothing"
+    setdef options -blendMode               -minversion 5  -validvalue formatBlendM  -type str|null                  -default "nothing"
 
     set options [merge $options $value]
 
@@ -55,19 +38,23 @@ proc ticklecharts::htmlOptions {value} {
     # see chart.tcl, timeline.tcl and layout.tcl files (method render)
 
     # required values... set minProperties to false.
-    variable minProperties ; variable escript
+    variable minProperties
+    variable escript
 
     set minP $minProperties ; set minProperties 0
+
+    # Add '[ticklecharts::uuid]' command to generate random number generator.
+    set uuid [ticklecharts::uuid]
 
     setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
     setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
     setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
     setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
-    setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" [clock clicks]]
-    setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    [clock clicks]]
+    setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
+    setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    $uuid]
     setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
     setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
-    setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default "option"
+    setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
     setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
     setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
@@ -473,117 +460,110 @@ proc ticklecharts::dataZoom {value} {
     #
     # return dict dataZoom options
 
-    foreach item [dict get $value -dataZoom] {
+    set d [dict get $value -dataZoom]
 
-        if {[llength $item] % 2} {
-            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
-        }
-
-        if {![dict exists $item type]} {
-            error "dataZoom 'type' should be specified... 'inside' or 'slider'"
-        }
-
-        switch -exact -- [dict get $item type] {
-            inside {
-                setdef options type                    -minversion 5  -validvalue {}               -type str             -default "inside"
-                setdef options id                      -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-                setdef options disabled                -minversion 5  -validvalue {}               -type bool            -default "False"
-                setdef options xAxisIndex              -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options yAxisIndex              -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options radiusAxisIndex         -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options angleAxisIndex          -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options filterMode              -minversion 5  -validvalue formatFilterMode -type str             -default "filter"
-                setdef options start                   -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options end                     -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options startValue              -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options endValue                -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options minSpan                 -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options maxSpan                 -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options minValueSpan            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options maxValueSpan            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options orient                  -minversion 5  -validvalue formatOrient     -type str             -default "horizontal"
-                setdef options zoomLock                -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
-                setdef options throttle                -minversion 5  -validvalue {}               -type num             -default 100
-                setdef options rangeMode               -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
-                setdef options zoomOnMouseWheel        -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "True"
-                setdef options moveOnMouseMove         -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "True"
-                setdef options moveOnMouseWheel        -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "False"
-                setdef options preventDefaultMouseMove -minversion 5  -validvalue {}               -type bool            -default "True"
-                #...
-            }
-            slider {
-                setdef options type                   -minversion 5  -validvalue {}               -type str             -default "slider"
-                setdef options id                     -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-                setdef options show                   -minversion 5  -validvalue {}               -type bool            -default "False"
-                setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.color|str     -default [echartsOptsTheme datazoomBackgroundColor]
-                setdef options dataBackground         -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::dataBackground $item]
-                setdef options selectedDataBackground -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::selectedDataBackground $item]
-                setdef options fillerColor            -minversion 5  -validvalue formatColor      -type str|null        -default "nothing"
-                setdef options borderColor            -minversion 5  -validvalue formatColor      -type str             -default "#ddd"
-                setdef options handleIcon             -minversion 5  -validvalue {}               -type str             -default "M8.2,13.6V3.9H6.3v9.7H3.1v14.9h3.3v9.7h1.8v-9.7h3.3V13.6H8.2z\
-                                                                                                                                  M9.7,24.4H4.8v-1.4h4.9V24.4z M9.7,19.1H4.8v-1.4h4.9V19.1z"
-                setdef options handleSize             -minversion 5  -validvalue {}               -type str|num         -default "100%"
-                setdef options handleStyle            -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::handleStyle $item]
-                setdef options moveHandleIcon         -minversion 5  -validvalue {}               -type str             -default "M-320.9-50L-320.9-50c18.1,0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,\
-                                                                                                                                  0c-18.1,0-27.1-9-27.1-27.1V-22.9C-348-41-339-50-320.9-50z M-212.3-50L-212.3-50c18.1,\
-                                                                                                                                  0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,0c-18.1,\
-                                                                                                                                  0-27.1-9-27.1-27.1V-22.9C-239.4-41-230.4-50-212.3-50z M-103.7-50L-103.7-50c18.1,\
-                                                                                                                                  0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,\
-                                                                                                                                  0c-18.1,0-27.1-9-27.1-27.1V-22.9C-130.9-41-121.8-50-103.7-50z"
-                setdef options moveHandleSize         -minversion 5  -validvalue {}               -type num             -default 3
-                setdef options moveHandleStyle        -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::moveHandleStyle $item]
-                setdef options labelPrecision         -minversion 5  -validvalue {}               -type str|num         -default "auto"
-                setdef options labelFormatter         -minversion 5  -validvalue {}               -type str|jsfunc|null -default "nothing"
-                setdef options showDetail             -minversion 5  -validvalue {}               -type bool            -default "True"
-                setdef options showDataShadow         -minversion 5  -validvalue {}               -type str             -default "auto"
-                setdef options realtime               -minversion 5  -validvalue {}               -type bool            -default "True"
-                setdef options textStyle              -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::textStyle $item "textStyle"]
-                setdef options xAxisIndex             -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options yAxisIndex             -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options radiusAxisIndex        -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options angleAxisIndex         -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
-                setdef options filterMode             -minversion 5  -validvalue formatFilterMode -type str             -default "filter"
-                setdef options start                  -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options end                    -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options startValue             -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options endValue               -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options minSpan                -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options maxSpan                -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
-                setdef options minValueSpan           -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options maxValueSpan           -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options orient                 -minversion 5  -validvalue formatOrient     -type str|null        -default "nothing"
-                setdef options zoomLock               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
-                setdef options throttle               -minversion 5  -validvalue {}               -type num             -default 100
-                setdef options rangeMode              -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
-                setdef options zlevel                 -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-                setdef options z                      -minversion 5  -validvalue {}               -type num             -default 2
-                setdef options left                   -minversion 5  -validvalue formatLeft       -type str|num|null    -default "nothing"
-                setdef options top                    -minversion 5  -validvalue formatTop        -type str|num|null    -default "nothing"
-                setdef options right                  -minversion 5  -validvalue formatRight      -type str|num|null    -default "nothing"
-                setdef options bottom                 -minversion 5  -validvalue formatBottom     -type str|num|null    -default "nothing"
-                setdef options width                  -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options height                 -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
-                setdef options brushSelect            -minversion 5  -validvalue {}               -type bool            -default "True"
-                setdef options brushStyle             -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::brushStyle $item]
-                # not supported yet...
-                # setdef options emphasis             -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $item]
-                #...
-            }
-            default {
-                error "Type name should be 'inside' or 'slider'"
-            }
-        }
-
-        # remove key(s)...
-        set item [dict remove $item dataBackground selectedDataBackground \
-                                    moveHandleStyle textStyle brushStyle emphasis]
-
-        lappend opts [merge $options $item]
-        set options {}
-
+    if {![dict exists $d type]} {
+        error "dataZoom 'type' should be specified... 'inside' or 'slider'"
     }
-    
-    return $opts
+
+    switch -exact -- [dict get $d type] {
+        inside {
+            setdef options type                    -minversion 5  -validvalue {}               -type str             -default "inside"
+            setdef options id                      -minversion 5  -validvalue {}               -type str|null        -default "nothing"
+            setdef options disabled                -minversion 5  -validvalue {}               -type bool            -default "False"
+            setdef options xAxisIndex              -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options yAxisIndex              -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options radiusAxisIndex         -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options angleAxisIndex          -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options filterMode              -minversion 5  -validvalue formatFilterMode -type str             -default "filter"
+            setdef options start                   -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options end                     -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options startValue              -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options endValue                -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options minSpan                 -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options maxSpan                 -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options minValueSpan            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options maxValueSpan            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options orient                  -minversion 5  -validvalue formatOrient     -type str             -default "horizontal"
+            setdef options zoomLock                -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
+            setdef options throttle                -minversion 5  -validvalue {}               -type num             -default 100
+            setdef options rangeMode               -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
+            setdef options zoomOnMouseWheel        -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "True"
+            setdef options moveOnMouseMove         -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "True"
+            setdef options moveOnMouseWheel        -minversion 5  -validvalue formatZoomMW     -type bool|str        -default "False"
+            setdef options preventDefaultMouseMove -minversion 5  -validvalue {}               -type bool            -default "True"
+            #...
+        }
+        slider {
+            setdef options type                   -minversion 5  -validvalue {}               -type str             -default "slider"
+            setdef options id                     -minversion 5  -validvalue {}               -type str|null        -default "nothing"
+            setdef options show                   -minversion 5  -validvalue {}               -type bool            -default "False"
+            setdef options backgroundColor        -minversion 5  -validvalue formatColor      -type e.color|str.t   -default [echartsOptsTheme dataZoom.backgroundColor]
+            setdef options dataBackground         -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::dataBackground $d]
+            setdef options selectedDataBackground -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::selectedDataBackground $d]
+            setdef options fillerColor            -minversion 5  -validvalue formatColor      -type str.t|null      -default [echartsOptsTheme dataZoom.fillerColor]
+            setdef options borderColor            -minversion 5  -validvalue formatColor      -type str.t|null      -default [echartsOptsTheme dataZoom.borderColor]
+            setdef options handleIcon             -minversion 5  -validvalue {}               -type str             -default "M8.2,13.6V3.9H6.3v9.7H3.1v14.9h3.3v9.7h1.8v-9.7h3.3V13.6H8.2z\
+                                                                                                                              M9.7,24.4H4.8v-1.4h4.9V24.4z M9.7,19.1H4.8v-1.4h4.9V19.1z"
+            setdef options handleSize             -minversion 5  -validvalue {}               -type str|num         -default "100%"
+            setdef options handleStyle            -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::handleStyle $d]
+            setdef options moveHandleIcon         -minversion 5  -validvalue {}               -type str             -default "M-320.9-50L-320.9-50c18.1,0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,\
+                                                                                                                              0c-18.1,0-27.1-9-27.1-27.1V-22.9C-348-41-339-50-320.9-50z M-212.3-50L-212.3-50c18.1,\
+                                                                                                                              0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,0c-18.1,\
+                                                                                                                              0-27.1-9-27.1-27.1V-22.9C-239.4-41-230.4-50-212.3-50z M-103.7-50L-103.7-50c18.1,\
+                                                                                                                              0,27.1,9,27.1,27.1V85.7c0,18.1-9,27.1-27.1,27.1l0,\
+                                                                                                                              0c-18.1,0-27.1-9-27.1-27.1V-22.9C-130.9-41-121.8-50-103.7-50z"
+            setdef options moveHandleSize         -minversion 5  -validvalue {}               -type num             -default 3
+            setdef options moveHandleStyle        -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::moveHandleStyle $d]
+            setdef options labelPrecision         -minversion 5  -validvalue {}               -type str|num         -default "auto"
+            setdef options labelFormatter         -minversion 5  -validvalue {}               -type str|jsfunc|null -default "nothing"
+            setdef options showDetail             -minversion 5  -validvalue {}               -type bool            -default "True"
+            setdef options showDataShadow         -minversion 5  -validvalue {}               -type str             -default "auto"
+            setdef options realtime               -minversion 5  -validvalue {}               -type bool            -default "True"
+            setdef options textStyle              -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::textStyle $d "textStyle"]
+            setdef options xAxisIndex             -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options yAxisIndex             -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options radiusAxisIndex        -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options angleAxisIndex         -minversion 5  -validvalue {}               -type list.d|num|null -default "nothing"
+            setdef options filterMode             -minversion 5  -validvalue formatFilterMode -type str             -default "filter"
+            setdef options start                  -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options end                    -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options startValue             -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options endValue               -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options minSpan                -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options maxSpan                -minversion 5  -validvalue formatMaxMin     -type num|null        -default "nothing"
+            setdef options minValueSpan           -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options maxValueSpan           -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options orient                 -minversion 5  -validvalue formatOrient     -type str|null        -default "nothing"
+            setdef options zoomLock               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
+            setdef options throttle               -minversion 5  -validvalue {}               -type num             -default 100
+            setdef options rangeMode              -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
+            setdef options zlevel                 -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+            setdef options z                      -minversion 5  -validvalue {}               -type num             -default 2
+            setdef options left                   -minversion 5  -validvalue formatLeft       -type str|num|null    -default "nothing"
+            setdef options top                    -minversion 5  -validvalue formatTop        -type str|num|null    -default "nothing"
+            setdef options right                  -minversion 5  -validvalue formatRight      -type str|num|null    -default "nothing"
+            setdef options bottom                 -minversion 5  -validvalue formatBottom     -type str|num|null    -default "nothing"
+            setdef options width                  -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options height                 -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
+            setdef options brushSelect            -minversion 5  -validvalue {}               -type bool            -default "True"
+            setdef options brushStyle             -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::brushStyle $d]
+            # not supported yet...
+            # setdef options emphasis             -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $d]
+            #...
+        }
+        default {
+            error "Type name should be 'inside' or 'slider'"
+        }
+    }
+
+    # remove key(s)...
+    set d [dict remove $d dataBackground selectedDataBackground \
+                          moveHandleStyle textStyle brushStyle emphasis]
+
+    set options [merge $options $d]
+
+    return $options
 }
 
 proc ticklecharts::parallel {value} {
@@ -639,7 +619,7 @@ proc ticklecharts::brush {value} {
     setdef options brushType      -minversion 5  -validvalue formatBrushType       -type str                  -default "rect"
     setdef options brushMode      -minversion 5  -validvalue formatBrushMode       -type str                  -default "single"
     setdef options transformable  -minversion 5  -validvalue {}                    -type bool|null            -default "True"
-    setdef options brushStyle     -minversion 5  -validvalue {}                    -type dict|null            -default [ticklecharts::brushStyle $d]
+    setdef options brushStyle     -minversion 5  -validvalue {}                    -type dict|null            -default [ticklecharts::brushStyleItem $d]
     setdef options throttleType   -minversion 5  -validvalue formatThrottle        -type str                  -default "fixRate"
     setdef options throttleDelay  -minversion 5  -validvalue {}                    -type num|null             -default "nothing"
     setdef options removeOnClick  -minversion 5  -validvalue {}                    -type bool|null            -default "True"
@@ -748,7 +728,7 @@ proc ticklecharts::calendar {value} {
     set d [dict get $value -calendar]
 
     if {[llength $d] % 2} {
-        error "list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        error "list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
     }
 
     setdef options id          -minversion 5  -validvalue {}            -type str|null              -default "nothing"
