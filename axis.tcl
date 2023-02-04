@@ -3,7 +3,7 @@
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::setRadiusAxis {value} {
+proc ticklecharts::radiusAxis {value} {
 
     setdef options -id             -minversion 5  -validvalue {}                  -type str|null            -default "nothing"
     setdef options -polarIndex     -minversion 5  -validvalue {}                  -type num|null            -default "nothing"
@@ -48,7 +48,7 @@ proc ticklecharts::setRadiusAxis {value} {
     return $options
 }
 
-proc ticklecharts::setRadarCoordinate {value} {
+proc ticklecharts::radarCoordinate {value} {
 
     setdef options -id           -minversion 5  -validvalue {}               -type str|null       -default "nothing"
     setdef options -zlevel       -minversion 5  -validvalue {}               -type num|null       -default "nothing"
@@ -80,7 +80,7 @@ proc ticklecharts::setRadarCoordinate {value} {
     return $options
 }
 
-proc ticklecharts::setAngleAxis {value} {
+proc ticklecharts::angleAxis {value} {
 
     setdef options -id             -minversion 5  -validvalue {}               -type str|null            -default "nothing"
     setdef options -polarIndex     -minversion 5  -validvalue {}               -type num|null            -default "nothing"
@@ -121,7 +121,7 @@ proc ticklecharts::setAngleAxis {value} {
     return $options
 }
 
-proc ticklecharts::setXAxis {chart value} {
+proc ticklecharts::xAxis {chart value} {
     
     setdef options -id             -minversion 5       -validvalue {}                  -type str|null            -default "nothing"
     setdef options -show           -minversion 5       -validvalue {}                  -type bool                -default "True"
@@ -178,7 +178,7 @@ proc ticklecharts::setXAxis {chart value} {
     return $options
 }
 
-proc ticklecharts::setYAxis {chart value} {
+proc ticklecharts::yAxis {chart value} {
 
     setdef options -id              -minversion 5       -validvalue {}                  -type str|null            -default "nothing"
     setdef options -show            -minversion 5       -validvalue {}                  -type bool                -default "True"
@@ -237,7 +237,7 @@ proc ticklecharts::setYAxis {chart value} {
     return $options
 }
 
-proc ticklecharts::setSingleAxis {value} {
+proc ticklecharts::singleAxis {value} {
     
     setdef options -id             -minversion 5  -validvalue {}                 -type str|null            -default "nothing"
     setdef options -zlevel         -minversion 5  -validvalue {}                 -type num                 -default 0
@@ -281,7 +281,7 @@ proc ticklecharts::setSingleAxis {value} {
     return $options
 }
 
-proc ticklecharts::setParallelAxis {value} {
+proc ticklecharts::parallelAxis {value} {
 
     foreach item {*}$value {
 
