@@ -52,7 +52,7 @@ oo::define ticklecharts::jsfunc {
         return $_jsfunc
     }
     
-    method gettype {} {
+    method getType {} {
         # Returns type
         return "jsfunc"
     }

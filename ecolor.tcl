@@ -26,7 +26,7 @@ oo::define ticklecharts::eColor {
         return $_ecolor
     }
     
-    method gettype {} {
+    method getType {} {
         # Returns type
         return "eColor"
     }
@@ -35,7 +35,7 @@ oo::define ticklecharts::eColor {
 proc ticklecharts::colorItem {value} {
 
     if {[llength $value] % 2} {
-        error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+        error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
     }
 
     setdef options type        -minversion 5  -validvalue formatTypeColor    -type str|null         -default "nothing"
@@ -68,7 +68,7 @@ proc ticklecharts::colorStops {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
         }
 
         setdef options offset  -minversion 5  -validvalue {}           -type num|null         -default "nothing"

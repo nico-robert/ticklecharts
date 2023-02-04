@@ -60,7 +60,7 @@ oo::define ticklecharts::dataset {
         return $_dataset
     }
 
-    method gettype {} {
+    method getType {} {
         # Returns type
         return "dataset"
     }
