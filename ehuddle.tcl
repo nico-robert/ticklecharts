@@ -18,10 +18,6 @@ namespace eval ::huddle::types::jsfunc {
         return [wrap [list jsf $arg]]
     }
     
-    proc equal {jsf1 jsf2} {
-        return [string equal $jsf1 $jsf2]
-    }
-
     proc jsondump {huddle_object offset newline nextoff} {
         return [join [lindex $huddle_object 1 1]]
     }
@@ -29,10 +25,11 @@ namespace eval ::huddle::types::jsfunc {
 
 oo::class create ticklecharts::ehuddle {
     variable _huddle ; # list huddle value
+    variable _series ; # list type series
 
     constructor {} {
-        # init variable.
-        set _huddle {}
+        # init variables.
+        set _huddle {} ; set _series {}
     }
 }
 
@@ -67,7 +64,7 @@ oo::define ticklecharts::ehuddle {
                 "@LS"   {set value [huddle list {*}[join $data]]}
                 "@LN"   {
                             set listv [ticklecharts::ehuddleListNum $data]
-                            set value [huddle list {*}$listv]
+                            set value [format {HUDDLE {L {%s}}} $listv]
                         }
                 "@LD"   {
                             if {[llength {*}$data] == 1} {
@@ -75,7 +72,7 @@ oo::define ticklecharts::ehuddle {
                             } else {
                                 set listv [ticklecharts::ehuddleListMap $data]
                             }
-                            set value [huddle list {*}$listv]
+                            set value [format {HUDDLE {L {%s}}} $listv]
                         }
                 "@LJ" {
                     set subH {}
@@ -93,14 +90,14 @@ oo::define ticklecharts::ehuddle {
 
                     }
                 "@JS" {set value [huddle jsfunc [$data get]]}
+
                 default {error "(1) Unknown type '$type' specified for '$keyvalue'"}
             }
 
             lassign [info level 0] obj
 
             if {[ticklecharts::isAObject $obj]} {
-                lappend _huddle [huddle create $keyvalue $value]
-                return {}
+                lappend _huddle [huddle create $keyvalue $value] ; return {}
             } else {
                 return [list $keyvalue $value]
             }
@@ -128,7 +125,7 @@ oo::define ticklecharts::ehuddle {
                     "@LS"   {set value [huddle list {*}[join $info]]}
                     "@LN"   {
                                 set listv [ticklecharts::ehuddleListNum $info]
-                                set value [huddle list {*}$listv]
+                                set value [format {HUDDLE {L {%s}}} $listv]
                             }
                     "@LD"   {
                                 if {[llength {*}$info] == 1} {
@@ -136,7 +133,7 @@ oo::define ticklecharts::ehuddle {
                                 } else {
                                     set listv [ticklecharts::ehuddleListMap $info]
                                 }
-                                set value [huddle list {*}$listv]
+                                set value [format {HUDDLE {L {%s}}} $listv]
                             }
                     "@AO"   -
                     "@LO"  {
@@ -308,6 +305,10 @@ oo::define ticklecharts::ehuddle {
 
     method extract {} {
         # Combine huddle
+        if {[my llength] == 1} {
+            return {*}$_huddle
+        }
+
         return [huddle combine {*}$_huddle]
     }
 
@@ -333,7 +334,7 @@ oo::define ticklecharts::ehuddle {
                 if {[string match {*@D=*} $k] && ($k in $listk)} {
                     $_h append $k $val
                 } else {
-                    $_h set $k $val 
+                    $_h set $k $val
                 }
                 lappend listk $k
             } else {
@@ -353,6 +354,13 @@ oo::define ticklecharts::ehuddle {
                 huddle set h $valkey [$_h extract]
             } else {
                 huddle set h $valkey 0 [$_h extract]
+            }
+        }
+
+        # Add series type...
+        if {[string match {*=series*} $key]} {
+            if {[dict exists $value "@S=type"]} {
+                lappend _series [dict get $value "@S=type"]
             }
         }
         
@@ -375,6 +383,11 @@ oo::define ticklecharts::ehuddle {
         return $_huddle
     }
 
+    method getTypeSeries {} {
+        # Returns list type series.
+        return [lsort -unique $_series]
+    }
+
     method keys {} {
         # Returns the keys of huddle instance
         if {[my llength]} {
@@ -384,17 +397,6 @@ oo::define ticklecharts::ehuddle {
         }
     }
     
-    method llengthkeys {key} {
-        # Returns the length follow key
-        # 
-        # key - huddle key
-        if {$key in [my keys]} {
-            return [huddle llength [huddle get [my extract] $key]]
-        } else {
-            return 0
-        }
-    }
-
     method toJSON {} {
         # Transform huddle to JSON
         # replace special chars by space... etc.
@@ -417,11 +419,12 @@ oo::define ticklecharts::ehuddle {
 }
 
 proc ticklecharts::ehuddle_num val {
-    # To avoid checking 2 times that the value is a numeric
-    # with wrap proc hudlle inside huddle.tcl
-    #
     # Returns format hudlle num
-    return [format "HUDDLE {num %s}" $val]
+    if {![string is double -strict $val]} {
+        error "Argument 'ehuddle' num '$val' is not a number"
+    }
+
+    return [list num $val]
 }
 
 proc ticklecharts::ehuddleListNum data {
@@ -432,11 +435,11 @@ proc ticklecharts::ehuddleListNum data {
 
     if {[llength {*}$data] == 1} {
         foreach val [lindex {*}$data 0] {
-            lappend listv [huddle number $val]
+            lappend listv [ticklecharts::ehuddle_num $val]
         }
     } else {
         foreach val {*}$data {
-            lappend listv [huddle list {*}[lmap v $val {huddle number $v}]]
+            lappend listv [format {L {%s}} [lmap v $val {ticklecharts::ehuddle_num $v}]]
         }
     }
 
@@ -450,11 +453,11 @@ proc ticklecharts::ehuddleListMap data {
     set listv {}
 
     foreach val {*}$data {
-        lappend listv [huddle list {*}[lmap v $val {
+        lappend listv [format {L {%s}} [lmap v $val {
             if {[string is double -strict $v]} {
-                ticklecharts::ehuddle_num $v
+                list num $v
             } else {
-                huddle string $v
+                list s $v
             }
         }]]
     }
@@ -470,9 +473,9 @@ proc ticklecharts::ehuddleListInsert data {
 
     foreach val [lindex {*}$data 0] {
         if {[string is double -strict $val]} {
-            lappend listv [ticklecharts::ehuddle_num $val]
+            lappend listv [list num $val]
         } else {
-            lappend listv [huddle string $val]
+            lappend listv [list s $val]
         }
     }
 

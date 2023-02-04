@@ -827,16 +827,13 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
         return TCL_ERROR;
     }
 
-
     Tcl_Obj *dataObj = Tcl_NewListObj (0,NULL);
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
     Tcl_Obj* l       = Tcl_NewStringObj("L", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
-    Tcl_Obj* hl      = Tcl_NewStringObj("HUDDLE", 6);
 
     for (int i = 0; i < count; ++i) {
         Tcl_Obj *innerObj = Tcl_NewListObj (0,NULL);
-        Tcl_Obj* listTag  = Tcl_NewObj();
         Tcl_Obj* lTag     = Tcl_NewObj();
        
         Tcl_ListObjGetElements(interp, sub_elements[i], &subcount, &sub_list);
@@ -856,13 +853,9 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
 
         }
 
-        Tcl_ListObjAppendElement(interp, listTag, hl);
         Tcl_ListObjAppendElement(interp, lTag, l);
         Tcl_ListObjAppendElement(interp, lTag, innerObj);
-        Tcl_ListObjAppendElement(interp, listTag, lTag);
-
-
-        Tcl_ListObjAppendElement(interp, dataObj, listTag);
+        Tcl_ListObjAppendElement(interp, dataObj, lTag);
     }
 
     Tcl_SetObjResult(interp, dataObj);
@@ -894,10 +887,8 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_Obj *dataObj = Tcl_NewListObj (0,NULL);
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
-    Tcl_Obj* h       = Tcl_NewStringObj("HUDDLE", 6);
 
     for (int i = 0; i < count; ++i) {
-        Tcl_Obj* listTag = Tcl_NewObj();
         Tcl_Obj* dataTag = Tcl_NewObj(); 
 
         if (Tcl_GetDoubleFromObj(interp, sub_elements[i], &d) != TCL_OK) {
@@ -908,10 +899,7 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
             Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]); 
         }
 
-        Tcl_ListObjAppendElement(interp, listTag, h);
-        Tcl_ListObjAppendElement(interp, listTag, dataTag);
-
-        Tcl_ListObjAppendElement(interp, dataObj, listTag);
+        Tcl_ListObjAppendElement(interp, dataObj, dataTag);
     }
     
     Tcl_SetObjResult(interp, dataObj);
