@@ -174,7 +174,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
             if {$type eq "str"} {
                 # possible values...
-                lappend validvalue {^whit$e|^black$|^red$|^blue$|^green$|^transparent$|^inherit$|^source$|^gradient$}
+                lappend validvalue {^white$|^black$|^red$|^blue$|^green$|^transparent$|^inherit$|^source$|^gradient$}
                 lappend validvalue {^#[a-zA-Z0-9]{3,6}$}
                 lappend validvalue {^rgb\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+)\)$}
                 lappend validvalue {^rgba\(\s*([0-9]+),\s*([0-9]+),\s*([0-9]+),\s*(?:1|0?\.[0-9]+)\)$}
