@@ -273,8 +273,7 @@ proc ticklecharts::singleAxis {value} {
     # ...
 
     # remove key(s)...
-    set value [dict remove $value -nameTextStyle -axisTick \
-                                  -axisLabel -axisPointer]
+    set value [dict remove $value -nameTextStyle -axisTick -axisLabel -axisPointer]
 
     set options [merge $options $value]
 
@@ -320,7 +319,7 @@ proc ticklecharts::parallelAxis {value} {
         #...
 
         # remove key(s)...
-        set item [dict remove $item -areaSelectStyle -NameTextStyle -axisLine -axisTick -minorTick -axisLabel]
+        set item [dict remove $item -areaSelectStyle -nameTextStyle -axisLine -axisTick -minorTick -axisLabel]
 
         lappend opts [merge $options $item]
         set options {}
