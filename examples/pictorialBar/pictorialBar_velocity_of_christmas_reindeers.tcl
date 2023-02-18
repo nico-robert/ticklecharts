@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Move '-color' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Delete 'toJSON' from example (I forgot to remove it from this file...)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -58,8 +59,6 @@ $picBar AddPictorialBarSeries -name "glyph" -symbolPosition "end" -symbolSize 50
                                         [list value 2   symbol $pathSymbols(run)      symbolSize [list {40 50}]] \
                                         [list value 1   symbol $pathSymbols(walk)     symbolSize [list {40 50}]] \
                                     ]
-
-$picBar toJSON
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
