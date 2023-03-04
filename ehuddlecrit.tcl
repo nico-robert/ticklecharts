@@ -571,12 +571,12 @@ eval [string map [list \
             */
             Tcl_Obj* huddleJsonDumpC (Tcl_Interp* interp, Tcl_Obj* huddle_object, Tcl_Obj* huddle_format) {
 
-                Tcl_Obj* t;
                 Tcl_Obj* dataobj = Tcl_NewObj();
                 Tcl_Obj* nextoff = Tcl_NewObj();
                 Tcl_Obj* subobject;
                 Tcl_Obj **elements;
                 int count;
+                int len = 0;
 
                 // huddle format...
                 if (Tcl_ListObjGetElements(interp, huddle_format, &count, &elements) != TCL_OK) {
@@ -584,10 +584,10 @@ eval [string map [list \
                     exit(EXIT_FAILURE);
                 }
 
-                const char* offset  = Tcl_GetString(elements[0]);
-                char* sp = " ";
+                const char *offset = Tcl_GetStringFromObj(elements[0], &len);
+                char *sp = " ";
 
-                if (strlen(offset) == 0) {
+                if (len == 0) {
                     sp = "";
                 }
 
@@ -595,11 +595,9 @@ eval [string map [list \
                 Tcl_AppendObjToObj(nextoff, elements[2]);
                 Tcl_AppendObjToObj(nextoff, elements[0]);
 
-                t = huddleTypeC(interp, huddle_object);
+                const char *type = Tcl_GetString(huddleTypeC(interp, huddle_object));
 
-                const char* type = Tcl_GetString(t);
-
-                if (strcmp(type, "b") == 0) {
+                if (!strcmp(type, "b")) {
 
                     // boolean
                     return huddleGetStrippedC(interp, huddle_object);
@@ -621,12 +619,12 @@ eval [string map [list \
 
                     return dataobj;
 
-                } else if (strcmp(type, "null") == 0) {
+                } else if (!strcmp(type, "null")) {
 
                     // null
                     return Tcl_ObjPrintf("null");
 
-                } else if (strcmp(type, "L") == 0) {
+                } else if (!strcmp(type, "L")) {
 
                     // list
                     int len = huddleLlengthC(interp, huddle_object);
@@ -684,7 +682,7 @@ eval [string map [list \
 
                     return newlist;
 
-                } else if (strcmp(type, "D") == 0) {
+                } else if (!strcmp(type, "D")) {
 
                     // dict
                     Tcl_Obj *dictObj = huddleDictKeysC(interp, huddle_object);
@@ -764,7 +762,7 @@ eval [string map [list \
 
                     return newlist;
 
-                } else if (strcmp(type, "jsf") == 0) {
+                } else if (!strcmp(type, "jsf")) {
 
                     Tcl_Obj* index_obj       = Tcl_NewObj();
                     Tcl_Obj* index_subobj    = Tcl_NewObj();
@@ -831,6 +829,7 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
     Tcl_Obj* l       = Tcl_NewStringObj("L", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
+    Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
 
     for (int i = 0; i < count; ++i) {
         Tcl_Obj *innerObj = Tcl_NewListObj (0,NULL);
@@ -841,11 +840,13 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
         for (int j = 0; j < subcount; j++) {
             Tcl_Obj* dataTag = Tcl_NewObj();
 
-            if (Tcl_GetDoubleFromObj(interp, sub_list[j], &d) != TCL_OK) {
-                Tcl_ListObjAppendElement(interp, dataTag, s);
-                Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]); 
-            } else {
+            if (Tcl_GetDoubleFromObj(interp, sub_list[j], &d) == TCL_OK) {
                 Tcl_ListObjAppendElement(interp, dataTag, n);
+                Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]); 
+            } else if (!strcmp(Tcl_GetString(sub_list[j]), "null")) {
+                Tcl_ListObjAppendElement(interp, dataTag, null);
+            } else {
+                Tcl_ListObjAppendElement(interp, dataTag, s);
                 Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]); 
             }
 
@@ -887,15 +888,18 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_Obj *dataObj = Tcl_NewListObj (0,NULL);
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
+    Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
 
     for (int i = 0; i < count; ++i) {
         Tcl_Obj* dataTag = Tcl_NewObj(); 
 
-        if (Tcl_GetDoubleFromObj(interp, sub_elements[i], &d) != TCL_OK) {
-            Tcl_ListObjAppendElement(interp, dataTag, s);
-            Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]); 
-        } else {
+        if (Tcl_GetDoubleFromObj(interp, sub_elements[i], &d) == TCL_OK) {
             Tcl_ListObjAppendElement(interp, dataTag, n);
+            Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]);
+        } else if (!strcmp(Tcl_GetString(sub_elements[i]), "null")) {
+            Tcl_ListObjAppendElement(interp, dataTag, null);
+        } else {
+            Tcl_ListObjAppendElement(interp, dataTag, s);
             Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]); 
         }
 
