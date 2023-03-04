@@ -100,9 +100,8 @@ proc ticklecharts::addJsScript {html value} {
                 header {set item "%jsecharts%" ; set indent 3}
                 null   {set item "%jschartvar%"}
             }
-            set f [lsearch $h *$item*]
-            if {$f < 0} {
-                error "Impossible to find `$item` string in the html template file..."
+            if {[set f [lsearch $h *$item*]] < 0} {
+                error "Not possible to find `$item` string in the html template file..."
             }
             set listH [linsert $h [expr {$f + 1}] \
                       [format [list %-${indent}s %s] "" [join [$js get]]]]
@@ -119,14 +118,13 @@ proc ticklecharts::addJsScript {html value} {
                         header {set item "%jsecharts%" ; set indent 3}
                         null   {set item "%jschartvar%"}
                     }
-                    set f [lsearch $listH *$item*]
-                    if {$f < 0} {
-                        error "Impossible to find `$item` string in the html template file..."
+                    if {[set f [lsearch $listH *$item*]] < 0} {
+                        error "Not possible to find `$item` string in the html template file..."
                     }
                     set listH [linsert $listH [expr {$f + 1}] \
                               [format [list %-${indent}s %s] "" [join [$script get]]]]
                 } else {
-                    error "should be a jsfunc class... in list data script."
+                    error "should be a 'jsfunc' class... in list data script."
                 }
             }
         }
@@ -187,7 +185,6 @@ proc ticklecharts::typeOfClass {obj} {
     # obj  - Instance.
     #
     # Returns name of class or nothing.
-
     return [info object class $obj]
 }
 
@@ -197,12 +194,11 @@ proc ticklecharts::isAObject {obj} {
     # obj  - Instance.
     #
     # Returns True or False.
-
     return [info object isa object $obj]
 }
 
-proc ticklecharts::tclType value {
-    # Guess the type of the value (2nd time...)
+proc ticklecharts::typeOf {value} {
+    # Guess the type of the value.
     # 
     # value - string (everything is string !!!)
     #
@@ -211,75 +207,31 @@ proc ticklecharts::tclType value {
     if {$value eq "nothing" || $value eq "null"} {
         return null
     }
-    
-    if {[string is integer -strict $value]} {
+
+    if {[string is double -strict $value] ||
+        [string is integer -strict $value]} {
         return num
     }
-
-    if {[string is double -strict $value]} {
-        return num
-    }    
 
     if {[string equal -nocase "true" $value] ||
         [string equal -nocase "false" $value]} {
         return bool
     }
 
-    if {[llength $value] > 1} {
-        set myList [string trim $value] ; # trim value on each side.
-        if {[string index $myList 0] eq "\{" && [string index $myList end] eq "\}"} {
-            return list
-        }
+    if {[ticklecharts::isListOfList $value]} {
+        return list
     }
 
     if {[ticklecharts::isAObject $value]} {
         switch -glob -- [ticklecharts::typeOfClass $value] {
             "*::jsfunc" {return jsfunc}
             "*::eColor" {return e.color}
+            "*::eList"  {return list}
+            "*::eDict"  {return dict}
         }
     }
 
     return str
-}
-
-proc ticklecharts::isList value {
-    # Guess if value is a list (again and again !!)
-    # 
-    # value - string (everything is string !!!)
-    #
-    # Returns type of value
-    
-    if {![catch {llength {*}$value} len] && $len > 1} {
-        return list
-    } else {
-        return [ticklecharts::tclType $value]
-    }
-
-}
-
-proc ticklecharts::typeOf value {
-    # Guess the type of the value (1st time if ticklecharts::tclType is string)
-    # from https://rosettacode.org/wiki/JSON#Tcl
-    # not the best way !!
-    # 
-    # value - string (everything is string !!!)
-    #
-    # Returns type of value
-    
-    regexp {^value is a (.*?) with a refcount} \
-    [::tcl::unsupported::representation $value] -> type
-    
-    switch $type {
-        dict {
-            return dict
-        }
-        list {
-            return [ticklecharts::isList $value]
-        }
-        default {
-            return [ticklecharts::tclType $value]
-        }
-    }
 }
 
 proc ticklecharts::optsToEchartsHuddle {options} {
@@ -301,24 +253,41 @@ proc ticklecharts::optsToEchartsHuddle {options} {
         switch -exact -- $type {
             dict -
             dict.o {
-                append opts [format " ${htype}=$key {%s}" [ticklecharts::dictToEchartsHuddle $value]]
+                if {![ticklecharts::iseDictClass $value]} {
+                    error "should be a eDict class..."
+                }
+                append opts [format " ${htype}=$key {%s}" \
+                            [ticklecharts::dictToEchartsHuddle [$value get]] \
+                            ]
             }
             list.o {
                 set l {}
                 foreach val $value {
-                    lappend l [ticklecharts::dictToEchartsHuddle $val]
+                    if {[ticklecharts::iseDictClass $val] || [ticklecharts::iseListClass $val]} {
+                        lappend l [ticklecharts::dictToEchartsHuddle [$val get]]
+                    } else {
+                        lappend l [ticklecharts::dictToEchartsHuddle $val]
+                    }
                 }
                 append opts [format " ${htype}=$key {%s}" [list @AO $l]]
             }
             list.st -
             list.s {
-                append opts [format " ${htype}=$key {%s}" $value]
+                if {[ticklecharts::iseListClass $value]} {
+                    append opts [format " ${htype}=$key %s" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$key {%s}" $value]
+                }
             }
             list.dt -
             list.d  -
             list.nt -
             list.n {
-                append opts [format " ${htype}=$key {%s}" [list $value]]
+                if {[ticklecharts::iseListClass $value]} {
+                    append opts [format " ${htype}=$key {%s}" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$key {%s}" [list $value]]
+                }
             }
             list.j {
                 set l {}
@@ -328,7 +297,9 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 append opts [format " ${htype}=$key {%s}" [list $l]]
             }
             e.color {
-                append opts [format " ${htype}=$key {%s}" [ticklecharts::dictToEchartsHuddle [$value get]]]
+                append opts [format " ${htype}=$key {%s}" \
+                            [ticklecharts::dictToEchartsHuddle [$value get]] \
+                            ]
             }
             default {
                 append opts [format " ${htype}=$key %s" $value]
@@ -351,34 +322,56 @@ proc ticklecharts::dictToEchartsHuddle {options} {
     set opts {}
     
     dict for {subkey subinfo} $options {
-        lassign $subinfo svalue type
+        lassign $subinfo value type
         
         set htype [ticklecharts::ehuddleType $type]
        
         switch -exact -- $type {
             dict {
-                append opts [format " ${htype}=$subkey %s" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
+                if {![ticklecharts::iseDictClass $value]} {
+                    error "should be a eDict class..."
+                }
+                append opts [format " ${htype}=$subkey %s" \
+                            [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
+                            ]
             }
             dict.o {
-                append opts [format " ${htype}=$subkey {%s}" [list [ticklecharts::dictToEchartsHuddle $svalue]]]
+                if {![ticklecharts::iseDictClass $value]} {
+                    error "should be a eDict class..."
+                }
+                append opts [format " ${htype}=$subkey {%s}" \ 
+                            [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
+                            ]
             }
             list.st -
             list.s {
-                append opts [format " ${htype}=$subkey {%s}" $svalue]
+                if {[ticklecharts::iseListClass $value]} {
+                    append opts [format " ${htype}=$subkey %s" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$subkey {%s}" $value]
+                }
             }
             list.dt -
             list.d  -
             list.nt -
             list.n {
-                append opts [format " ${htype}=$subkey {%s}" [list $svalue]]
+                if {[ticklecharts::iseListClass $value]} {
+                    append opts [format " ${htype}=$subkey {%s}" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$subkey {%s}" [list $value]]
+                }
             }
             list.o {
                 set l {}
-                foreach val $svalue {
+                foreach val $value {
                     if {[lindex $val end] eq "list.o"} {
                         set tt {}
                         foreach vv [join [lrange $val 0 end-1]] {
-                            lappend tt [ticklecharts::dictToEchartsHuddle $vv]
+                            if {[ticklecharts::iseDictClass $vv] || [ticklecharts::iseListClass $vv]} {
+                                lappend tt [ticklecharts::dictToEchartsHuddle [$vv get]]
+                            } else {
+                                lappend tt [ticklecharts::dictToEchartsHuddle $vv]
+                            }
                         }
                         lappend l [list @D $tt]
                         continue
@@ -389,10 +382,12 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                 append opts [format " ${htype}=$subkey {%s}" [list @AO $l]]
             }
             e.color {
-                append opts [format " ${htype}=$subkey {%s}" [ticklecharts::dictToEchartsHuddle [$svalue get]]]
+                append opts [format " ${htype}=$subkey {%s}" \
+                            [ticklecharts::dictToEchartsHuddle [$value get]] \
+                            ]
             }
             default {
-                append opts [format " ${htype}=$subkey %s" $svalue]
+                append opts [format " ${htype}=$subkey %s" $value]
             }
         }
         
@@ -464,34 +459,22 @@ proc ticklecharts::keyCompare {d other} {
     #
     # Returns nothing
 
-    if {![ticklecharts::isdict $other] || $other eq ""} {
+    if {![ticklecharts::isDict $other] || $other eq ""} {
         return {}
     }
 
-    set catch 0
-
-    if {![catch {info level 3} proclevel]} {
-        if {![string match -nocase ticklecharts::* [lindex $proclevel 0]]} {
-            set proclevel [info level 2]
-        }
-    } else {
-        set proclevel [info level 2] ; set catch 1
-    }
-
-    set infoproc [lindex $proclevel 0]
-
-    if {[string match {::oo::Obj[0-9]*} $infoproc] && !$catch} {
-        set method [lindex [info level 2] 1] ; # name method I hope... 
-        set infoproc "ticklecharts::[$infoproc getType]::$method"
-    }
-
+    set infoproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
     set keys1 [dict keys $d]
 
     foreach k [dict keys $other] {
         # special case : insert 'dummy' as name of key for theming...
-        if {[string match -nocase *item $k] || [string match -nocase *dummy $k]} {continue}
+        if {[string match -nocase *item $k] || 
+            [string match -nocase *dummy $k]} {
+            continue
+        }
         if {$k ni $keys1} {
-            puts "warning ($infoproc): '$k' flag is not in '[join $keys1 ", "]' or not supported..."
+            puts "warning ($infoproc): '$k' flag is not in\
+                '[join $keys1 ", "]' or not supported..."
         }
     }
 
@@ -572,16 +555,20 @@ proc ticklecharts::merge {d other} {
             
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
+                set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
                 if {$multiversions} {
-                    error "bad type(set) for this key '$key'= $mytype should be :$type for $minversion version"
+                    error "bad type(set) for this key '$key'= $mytype\
+                           should be :$type for $minversion version"
                 } else {
-                    error "bad type(set) for this key '$key'= $mytype should be :$type"
+                    error "bad type(set) for this key '$key'= $mytype\
+                           should be :$type"
                 }
             }
 
-            # REMINDER: use 'dict remove' for this...
+            # REMINDER ME: use 'dict remove' for this...
             if {$typekey in {dict dict.o list.o}} {
-                error "type key : dict, dict.o, list.o shouldn't not be present in 'other' dict... for this '$key'"
+                error "type key : dict, dict.o, list.o shouldn't\
+                       not be present\ in 'other' dict... for this '$key'"
             }
 
             set value [dict get $other $key]
@@ -597,17 +584,22 @@ proc ticklecharts::merge {d other} {
             
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
+                set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
                 if {$multiversions} {
-                    error "bad type(default) for this key '$key'= $mytype should be :$type for $minversion version"
+                    error "bad type(default) for this key '$key'= $mytype\
+                           should be :$type for $minversion version"
                 } else {
-                    error "bad type(default) for this key '$key'= $mytype should be :$type"
+                    error "bad type(default) for this key '$key'= $mytype\
+                           should be :$type"
                 }
             }
             # Minimum properties...
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
             if {$minProperties} {
-                if {$key ni {-type -name} && $typekey ni {dict list.o list.j str.t list.st list.dt list.nt bool.t num.t}} {
+                if {$key ni {-type -name} && $typekey ni {
+                    dict list.o list.j str.t list.st list.dt list.nt bool.t num.t
+                    }} {
                     continue
                 }
             }
@@ -641,16 +633,15 @@ proc ticklecharts::vCompare {version1 version2} {
 
 proc ticklecharts::mapSpaceString {value} {
     # Replace 'spaces' by symbol '<@!>' if present.
-    # Replace '#'      by symbol '<#?>' if present.
     # Use for string type values.
     #
     # value - string
     #
     # Returns mapped string
-    return [string map {" " <@!> # <#?>} $value]
+    return [string map {" " <@!>} $value]
 }
 
-proc ticklecharts::isdict {value} {
+proc ticklecharts::isDict {value} {
     # Check if the value is a dictionary.
     #
     # value - dict
@@ -817,27 +808,33 @@ proc ticklecharts::listNs {{parentns ::}} {
     foreach ns [namespace children $parentns] {
         lappend result {*}[listNs $ns] $ns
     }
+
     return $result
 }
 
-proc ticklecharts::isListOfList {value echartsKey} {
+proc ticklecharts::keyValueIsListOfList {value key} {
+    # Check if key 'value' is a list of list...
+    #
+    # value - list options
+    # key   - key option
+    #
+    # Returns True if key value is a list of list, False otherwise.
+
+    set lflag [lsearch $value "*$key*"]
+    set range [lindex $value [expr {$lflag + 1}]]
+
+    return [ticklecharts::isListOfList $range]
+}
+
+proc ticklecharts::isListOfList {args} {
     # Check if 'value' is a list of list...
     #
-    # value      - list options
-    # echartsKey - key option
+    # args - list
     #
     # Returns True if value is a list of list, False otherwise.
 
-    set lflag [lsearch $value "*$echartsKey*"]
-    set range [lrange $value [expr {$lflag + 1}] [expr {$lflag + 1}]]
-
     # clean up the list... (spaces, \n...)
-    set str [lmap item $range {
-            lmap subitem $item {
-                list {*}$subitem
-            }
-        }
-    ]
+    regsub -all -line {(^\s+)|(\s+$)|\n} $args {} str
 
     if {[string range $str 0 1] eq "\{\{" && [string range $str end-1 end] eq "\}\}"} {
         return 1
@@ -978,27 +975,7 @@ proc ticklecharts::random {val} {
     # Returns random number.
     #
     # val - num
-
     return [expr {int(rand() * $val)}]
-}
-
-proc ticklecharts::getStackFormatProc {level} {
-    # Gets name level procedure
-    #
-    # level - num
-    #
-    # Returns name of proc if found or nothing...
-
-    for {set i $level} {$i > 0} {incr i -1} {
-        set name [lindex [info level $i] 0]
-        if {![string match {ticklecharts::*} $name] || 
-            $name eq "ticklecharts::formatEcharts"} {
-            continue
-        }
-        return $name
-    }
-
-    return {}
 }
 
 proc ticklecharts::getLevelProperties {level} {
@@ -1012,7 +989,8 @@ proc ticklecharts::getLevelProperties {level} {
 
     for {set i $level} {$i > 0} {incr i -1} {
         set name [lindex [info level $i] 0]
-        if {[string match {ticklecharts::*} $name]} {
+        if {[string match {ticklecharts::*} $name] && 
+            $name ne "ticklecharts::formatEcharts"} {
             set property [string map {ticklecharts:: ""} $name]
             if {$property ni $properties} {
                 lappend properties $property
