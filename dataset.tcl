@@ -77,21 +77,21 @@ oo::define ticklecharts::dataset {
         #
         # Returns dimension
 
-        if {![dict exists $value -dimensions]} {
+        if {![ticklecharts::keyDictExists "-dimensions" $value key]} {
             return "nothing"
         }
 
         set d {}
 
-        foreach dim [dict get $value -dimensions] {
-            if {[ticklecharts::isdict $dim] && [llength $dim] > 2 && 
+        foreach dim [dict get $value $key] {
+            if {[ticklecharts::isDict $dim] && [llength $dim] > 2 && 
                ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
 
                 setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
                 setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
                 setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
 
-                lappend d [list [merge $options $dim] dict] ; continue
+                lappend d [list [new edict [merge $options $dim]] dict] ; continue
 
             }
             lappend vald [ticklecharts::mapSpaceString $dim]
@@ -113,11 +113,11 @@ oo::define ticklecharts::dataset {
         #
         # Returns list transform value(s)
 
-        if {![dict exists $value -transform]} {
+        if {![ticklecharts::keyDictExists "-transform" $value key]} {
             return "nothing"
         }
 
-        foreach item [dict get $value -transform] {
+        foreach item [dict get $value $key] {
 
             setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
             setdef options config -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::config $item]
@@ -142,11 +142,11 @@ oo::define ticklecharts::dataset {
         #
         # Returns 'source' data value
 
-        if {![dict exists $value -source]} {
+        if {![ticklecharts::keyDictExists "-source" $value key]} {
             return "nothing"
         }
 
-        return [dict get $value -source]
+        return [dict get $value $key]
     }
 
 }

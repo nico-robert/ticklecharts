@@ -124,7 +124,8 @@ oo::define ticklecharts::Gridlayout {
 
         set g 0 ; # variable for grid*
         # Gets global options...
-        set gopts [string map {- ""} [dict keys [ticklecharts::globalOptions {}]]]
+        set optsg [ticklecharts::globalOptions {}]
+        set gopts [string map {- ""} [dict keys [$optsg get]]]
 
         foreach {key opts} [$chart options] {
 
@@ -220,8 +221,8 @@ oo::define ticklecharts::Gridlayout {
                                 set mytype [ticklecharts::typeOf $myvalue]
 
                                 switch -- $mytype {
-                                    "str" {dict set opts @S=$val $myvalue}
-                                    "num" {dict set opts @N=$val $myvalue}
+                                    "str"   {dict set opts @S=$val $myvalue}
+                                    "num"   {dict set opts @N=$val $myvalue}
                                     default {error "$val must be a str or a float... now is $mytype"}
                                 }
                             }
@@ -261,8 +262,8 @@ oo::define ticklecharts::Gridlayout {
                             set mytype [ticklecharts::typeOf $myvalue]
 
                             switch -- $mytype {
-                                "str" {dict set opts @S=$val $myvalue}
-                                "num" {dict set opts @N=$val $myvalue}
+                                "str"   {dict set opts @S=$val $myvalue}
+                                "num"   {dict set opts @N=$val $myvalue}
                                 default {error "$val must be a str or a float... now is $mytype"}
                             }
                         }
@@ -294,8 +295,8 @@ oo::define ticklecharts::Gridlayout {
                     set mytype [ticklecharts::typeOf $myvalue]
 
                     switch -- $mytype {
-                        "str" {lappend f @S=$val $myvalue}
-                        "num" {lappend f @N=$val $myvalue}
+                        "str"   {lappend f @S=$val $myvalue}
+                        "num"   {lappend f @N=$val $myvalue}
                         default {error "$val must be a str or a float... now is $mytype"}
                     }
                 }
@@ -357,7 +358,7 @@ oo::define ticklecharts::Gridlayout {
         # Insert or not global options in the top of list.
         set match2D 0 ; set match3D 0
         if {![llength [my globalKeyOptions]]} {
-            # pririority chart 2D for global options
+            # priority chart 2D for global options
             foreach chart $_charts2D {
                 if {[$chart globalOptions] ne ""} {
                     set _options [linsert $_options 0 {*}[$chart globalOptions]]
@@ -374,22 +375,24 @@ oo::define ticklecharts::Gridlayout {
             }
         }
 
+        set opts $_options
+
         # no global options adds if need.
         if {![llength [my globalKeyOptions]] && !$match2D && !$match3D} {
-            set optsg    [ticklecharts::globalOptions {}]
-            set optsEH   [ticklecharts::optsToEchartsHuddle $optsg]
-            set _options [linsert $_options 0 {*}$optsEH]
+            set optsg  [ticklecharts::globalOptions {}]
+            set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
+            set opts   [linsert $opts 0 {*}$optsEH]
         }
 
         # init ehuddle.
         set _layout [ticklecharts::ehuddle new]
 
-        foreach {key opts} $_options {
+        foreach {key value} $opts {
             lassign [split $key "="] type _
-            if {($type eq "@D" || $type eq "@L") && $opts ne ""} {
-                $_layout append $key $opts
+            if {($type eq "@D" || $type eq "@L") && $value ne ""} {
+                $_layout append $key $value
             } else {
-                $_layout set $key $opts
+                $_layout set $key $value
             }
         }
 
@@ -491,7 +494,7 @@ proc ticklecharts::gridlayoutHasDataSetObj {dts} {
 
     foreach obj [concat [ticklecharts::listNs] "::"] {
         if {[ticklecharts::isAObject $obj]} {
-            if {[info object class $obj] eq "::ticklecharts::Gridlayout"} {
+            if {[ticklecharts::typeOfClass $obj] eq "::ticklecharts::Gridlayout"} {
                 if {[$obj dataset] ne ""} {
                     set dataset [$obj dataset]
                     return 1

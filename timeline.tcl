@@ -88,7 +88,7 @@ oo::define ticklecharts::timeline {
 
         # get keys from global options & remove...
         set optsglob [ticklecharts::globalOptions {}]
-        set keysoptsglob [dict keys [ticklecharts::optsToEchartsHuddle $optsglob]]
+        set keysoptsglob [dict keys [ticklecharts::optsToEchartsHuddle [$optsglob get]]]
 
         # add keys from 'SetOptions' ticklecharts::chart*  method
         lappend infomethod [lindex [info class definition ticklecharts::chart   "SetOptions"] 1]

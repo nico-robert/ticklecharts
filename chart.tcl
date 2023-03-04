@@ -188,11 +188,13 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
 
+        set opts $_options
+
         # If globalOptions is not present, add first...
         if {![llength [my globalOptions]]} {
-            set optsg    [ticklecharts::globalOptions {}]
-            set optsEH   [ticklecharts::optsToEchartsHuddle $optsg]
-            set _options [linsert $_options 0 {*}$optsEH]
+            set optsg  [ticklecharts::globalOptions {}]
+            set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
+            set opts   [linsert $opts 0 {*}$optsEH]
         }
 
         set mixed [my isMixed]
@@ -200,24 +202,24 @@ oo::define ticklecharts::chart {
         # init ehuddle.
         set _echartshchart [ticklecharts::ehuddle new]
         
-        foreach {key opts} $_options {
+        foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[string match {*dataZoom} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[string match {*calendar} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[string match {*visualMap} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[string match {*parallelAxis} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[string match {*dataset} $key]} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
-                $_echartshchart append $key $opts
+                $_echartshchart append $key $value
             } else {
-                $_echartshchart set $key $opts
+                $_echartshchart set $key $value
             }
         }
 
@@ -931,7 +933,7 @@ oo::define ticklecharts::chart {
             }
 
             foreach itemD [$dts get] {
-                lappend opts "@D=dataset" $itemD
+                lappend opts "@D=dataset" [new edict $itemD]
             }
 
             # set dataset chart instance.
@@ -963,7 +965,7 @@ oo::define ticklecharts::chart {
             # keep compatibility with previous versions...
             # 'visualMap' now accepts 'multiple' lists or 'one' like before...
             set key "-visualMap"
-            if {![ticklecharts::isListOfList $args $key]} {
+            if {![ticklecharts::keyValueIsListOfList $args $key]} {
                 dict set args $key [list [dict get $args $key]]
             }
             foreach mapValue [dict get $args $key] {
@@ -980,7 +982,7 @@ oo::define ticklecharts::chart {
             # keep compatibility with previous versions...
             # 'dataZoom' now accepts 'one' list or 'multiple' lists like before...
             set key "-dataZoom"
-            if {![ticklecharts::isListOfList $args $key]} {
+            if {![ticklecharts::keyValueIsListOfList $args $key]} {
                 dict set args $key [list [dict get $args $key]]
             }
             foreach itemZ [dict get $args $key] {
@@ -1006,7 +1008,7 @@ oo::define ticklecharts::chart {
 
         if {[dict exists $args -calendar]} {
             set key "-calendar"
-            if {![ticklecharts::isListOfList $args $key]} {
+            if {![ticklecharts::keyValueIsListOfList $args $key]} {
                 dict set args $key [list [dict get $args $key]]
             }
             foreach cValue [dict get $args $key] {
@@ -1027,12 +1029,16 @@ oo::define ticklecharts::chart {
         set args [dict remove $args {*}$keyopts]
         # Adds global options first 
         if {![llength $_opts_global]} {
-            set _opts_global [ticklecharts::optsToEchartsHuddle [ticklecharts::globalOptions $args]]
+            set optsg        [ticklecharts::globalOptions $args]
+            set _opts_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
             lappend _options {*}$_opts_global
         }
 
         foreach {key value} $opts {
-            set f [ticklecharts::optsToEchartsHuddle $value]
+            if {![ticklecharts::isAObject $value]} {
+                error "should be an object... eDict or eList"
+            }
+            set f [ticklecharts::optsToEchartsHuddle [$value get]]
             lappend _options $key [list {*}$f]
         }
 

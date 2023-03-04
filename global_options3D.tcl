@@ -16,7 +16,7 @@ proc ticklecharts::globalOptions3D {value} {
 
     set options [merge $options $value]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::grid3D {value} {
@@ -59,5 +59,5 @@ proc ticklecharts::grid3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }

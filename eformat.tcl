@@ -17,7 +17,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     if {$formattype eq ""} {return}
     if {$value eq "nothing" || $value eq "null"} {return}
 
-    set nameproc [ticklecharts::getStackFormatProc [expr {[info level] - 1}]]
+    set nameproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
 
     switch -exact -- $formattype {
 
@@ -168,6 +168,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
             set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
+                if {[ticklecharts::iseListClass $value]} {
+                    if {[ticklecharts::isListOfList [$value get]]} {
+                        set value {*}[$value get]
+                    } else {
+                        set value [$value get]
+                    }
+                }
                 foreach val {*}$value {
                     ticklecharts::formatEcharts formatColor $val $key
                 }
@@ -406,6 +413,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
             set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
+                if {[ticklecharts::iseListClass $value]} {
+                    if {[ticklecharts::isListOfList [$value get]]} {
+                        set value {*}[$value get]
+                    } else {
+                        set value [$value get]
+                    }
+                }
                 foreach val {*}$value {
                     ticklecharts::formatEcharts formatItemSymbol $val $key
                 }
@@ -1010,11 +1024,19 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatBrushIndex -
         formatToolBox {
+            # possible values...
             set type [ticklecharts::typeOf $value]
             set validvalue {rect polygon keep clear}
 
             if {$type eq "list"} {
-                foreach val $value {
+                if {[ticklecharts::iseListClass $value]} {
+                    if {[ticklecharts::isListOfList [$value get]]} {
+                        set value {*}[$value get]
+                    } else {
+                        set value [$value get]
+                    }
+                }
+                foreach val {*}$value {
                     if {$val ni $validvalue} {
                         error "'$value' should be '[join $validvalue "' or '"]'\
                                 for this key '$key' in $nameproc"
@@ -1083,6 +1105,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
             set type [ticklecharts::typeOf $value]
 
             if {$type eq "list"} {
+                if {[ticklecharts::iseListClass $value]} {
+                    if {[ticklecharts::isListOfList [$value get]]} {
+                        set value {*}[$value get]
+                    } else {
+                        set value [$value get]
+                    }
+                }
                 foreach val {*}$value {
                     ticklecharts::formatEcharts formatTimelineMerge $val $key
                 }
@@ -1169,7 +1198,16 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatBRadius {
             # possible values...
-            if {[ticklecharts::typeOf $value] eq "list"} {
+            set type [ticklecharts::typeOf $value]
+
+            if {$type eq "list"} {
+                if {[ticklecharts::iseListClass $value]} {
+                    if {[ticklecharts::isListOfList [$value get]]} {
+                        set value {*}[$value get]
+                    } else {
+                        set value [$value get]
+                    }
+                }
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] < 0} {
                     set len [llength {*}$value]
                     if {$len != 2} {

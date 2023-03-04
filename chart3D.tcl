@@ -124,27 +124,30 @@ oo::define ticklecharts::chart3D {
 
         # init ehuddle.
 
+        set opts $_options3D
+
         # If globalOptions is not present, add first...
         if {![llength [my globalOptions]]} {
-            set optsg      [ticklecharts::globalOptions3D {}]
-            set optsEH     [ticklecharts::optsToEchartsHuddle $optsg]
-            set _options3D [linsert $_options3D 0 {*}$optsEH]
+            set optsg  [ticklecharts::globalOptions3D {}]
+            set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
+            set opts   [linsert $opts 0 {*}$optsEH]
         }
 
+        # init ehuddle.
         set _echartshchart3D [ticklecharts::ehuddle new]
         
-        foreach {key opts} $_options3D {
+        foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
-                $_echartshchart3D append $key $opts
+                $_echartshchart3D append $key $value
             } elseif {[string match {*dataZoom} $key]} {
-                $_echartshchart3D append $key $opts
+                $_echartshchart3D append $key $value
             } elseif {[string match {*visualMap} $key]} {
-                $_echartshchart3D append $key $opts
+                $_echartshchart3D append $key $value
             } elseif {[string match {*dataset} $key]} {
-                $_echartshchart3D append $key $opts
+                $_echartshchart3D append $key $value
             } else {
-                $_echartshchart3D set $key $opts
+                $_echartshchart3D set $key $value
             }
         }
 
@@ -336,7 +339,8 @@ oo::define ticklecharts::chart3D {
         $c SetOptions {*}$args2D
 
         # get base keys
-        set g2Dopts [string map {- ""} [dict keys [ticklecharts::globalOptions {}]]]
+        set optsg [ticklecharts::globalOptions {}]
+        set g2Dopts [string map {- ""} [dict keys [$optsg get]]]
         set key2d {}
         
         foreach {key info} [$c options] {
@@ -362,12 +366,16 @@ oo::define ticklecharts::chart3D {
         set newDict [dict remove $args {*}$keyopts]
         # Adds global 3D options first
         if {![llength $_opts3D_global]} {
-            set _opts3D_global [ticklecharts::optsToEchartsHuddle [ticklecharts::globalOptions3D $newDict]]
-            set _options3D [linsert $_options3D 0 {*}$_opts3D_global]
+            set optsg          [ticklecharts::globalOptions3D $newDict]
+            set _opts3D_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
+            set _options3D     [linsert $_options3D 0 {*}$_opts3D_global]
         }
 
         foreach {key value} $opts {
-            set f [ticklecharts::optsToEchartsHuddle $value]
+            if {![ticklecharts::isAObject $value]} {
+                error "should be an object... eDict or eList"
+            }
+            set f [ticklecharts::optsToEchartsHuddle [$value get]]
             lappend _options3D $key [list {*}$f]
         }
 

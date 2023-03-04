@@ -897,7 +897,7 @@ proc ticklecharts::richItem {value} {
             set type [ticklecharts::typeOf $val]
             # spaces in path... ??
             set val [ticklecharts::mapSpaceString $val]
-            setdef options backgroundColor -minversion 5  -validvalue {} -type dict -default [dict create image [list $val $type]]
+            setdef options backgroundColor -minversion 5  -validvalue {} -type dict -default [new edict [dict create image [list $val $type]]]
             # remove key image
             set item [dict remove $item backgroundColor]
         } else {
@@ -927,12 +927,12 @@ proc ticklecharts::richItem {value} {
         # map spaces key... or others...
         set key [ticklecharts::mapSpaceString $key]
 
-        lappend opts $key [list [merge $options $item] dict]
+        lappend opts $key [list [new edict [merge $options $item]] dict]
         set options {}
 
     }
 
-    return [dict create {*}$opts]
+    return [new edict $opts]
 }
 
 proc ticklecharts::boxPlotitem {value} {
@@ -1273,7 +1273,7 @@ proc ticklecharts::timelineItem {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::dataBackground {value} {
@@ -1292,7 +1292,7 @@ proc ticklecharts::dataBackground {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::selectedDataBackground {value} {
@@ -1310,7 +1310,7 @@ proc ticklecharts::selectedDataBackground {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::itemStyle {value} {
@@ -1329,11 +1329,7 @@ proc ticklecharts::itemStyle {value} {
         }
     }
 
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
-    } else {
-        set color "nothing"
-    }
+    set color [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
 
     set d [dict get $value $key]
     
@@ -1423,7 +1419,7 @@ proc ticklecharts::itemStyle {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -1452,7 +1448,7 @@ proc ticklecharts::emphasis {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::markPoint {value} {
@@ -1499,7 +1495,7 @@ proc ticklecharts::markPoint {value} {
     
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::blur {value} {
@@ -1523,7 +1519,7 @@ proc ticklecharts::blur {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::select {value} {
@@ -1548,7 +1544,7 @@ proc ticklecharts::select {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::decal {value} {
@@ -1571,7 +1567,7 @@ proc ticklecharts::decal {value} {
 
     set options [merge $options [dict get $value $key]]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::setGraphic {value} {
@@ -1584,7 +1580,7 @@ proc ticklecharts::setGraphic {value} {
     
     set options [merge $options $value]
 
-    return $options
+    return $options ; # not needs to create a eDict class
 }
 
 proc ticklecharts::childrenElements {value key} {
@@ -1792,7 +1788,7 @@ proc ticklecharts::shape {value type} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::style {value type} {
@@ -1841,7 +1837,7 @@ proc ticklecharts::style {value type} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::textConfig {value} {
@@ -1867,7 +1863,7 @@ proc ticklecharts::textConfig {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::layoutRect {value} {
@@ -1885,7 +1881,7 @@ proc ticklecharts::layoutRect {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::keyframeAnimation {value type} {
@@ -1962,7 +1958,7 @@ proc ticklecharts::propertiesAnimation {value key} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::propertiesStyle {value} {
@@ -1977,7 +1973,7 @@ proc ticklecharts::propertiesStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::typeAnimation {value key} {
@@ -1994,7 +1990,7 @@ proc ticklecharts::typeAnimation {value key} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::splitLine {value} {
@@ -2013,11 +2009,7 @@ proc ticklecharts::splitLine {value} {
         }
     }
 
-    if {[keysOptsThemeExists $levelP.show]} {
-        set showgrid [echartsOptsTheme $levelP.show]
-    } else {
-        set showgrid "True"
-    }
+    set showgrid [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
 
     set d [dict get $value $key]
 
@@ -2046,7 +2038,7 @@ proc ticklecharts::splitLine {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2066,7 +2058,7 @@ proc ticklecharts::universalTransition {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::minorSplitLine {value} {
@@ -2085,7 +2077,7 @@ proc ticklecharts::minorSplitLine {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::splitArea {value} {
@@ -2105,7 +2097,7 @@ proc ticklecharts::splitArea {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::areaStyle {value} {
@@ -2115,18 +2107,9 @@ proc ticklecharts::areaStyle {value} {
     }
 
     set levelP [ticklecharts::getLevelProperties [info level]]
-
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
-    } else {
-        set color "null"
-    }
     
-    if {[keysOptsThemeExists $levelP.opacity]} {
-        set opacity [echartsOptsTheme $levelP.opacity]
-    } else {
-        set opacity 0.5
-    }
+    set color   [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "null"}]
+    set opacity [expr {[keysOptsThemeExists $levelP.opacity] ? [echartsOptsTheme $levelP.opacity] : 0.5}]
     
     set d [dict get $value $key]
     
@@ -2141,7 +2124,7 @@ proc ticklecharts::areaStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 
@@ -2161,11 +2144,7 @@ proc ticklecharts::axisLine {value} {
         }
     }
 
-    if {[keysOptsThemeExists $levelP.show]} {
-        set show [echartsOptsTheme $levelP.show]
-    } else {
-        set show "True"
-    }
+    set show [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
     
     set d [dict get $value $key]
 
@@ -2195,7 +2174,7 @@ proc ticklecharts::axisLine {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2230,7 +2209,7 @@ proc ticklecharts::markLine {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::markLineItem {value} {
@@ -2324,7 +2303,7 @@ proc ticklecharts::labelLine {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::labelLayout {value} {
@@ -2353,7 +2332,7 @@ proc ticklecharts::labelLayout {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisTick {value} {
@@ -2400,7 +2379,7 @@ proc ticklecharts::axisTick {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2422,7 +2401,7 @@ proc ticklecharts::minorTick {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisLabel {value} {
@@ -2501,7 +2480,7 @@ proc ticklecharts::axisLabel {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2558,7 +2537,7 @@ proc ticklecharts::upperLabel {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 
@@ -2578,11 +2557,7 @@ proc ticklecharts::label {value} {
         }
     }
 
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
-    } else {
-        set color [echartsOptsTheme textStyle.color]
-    }
+    set color [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : [echartsOptsTheme textStyle.color]}]
 
     set d [dict get $value $key]
     
@@ -2662,7 +2637,7 @@ proc ticklecharts::label {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2715,7 +2690,7 @@ proc ticklecharts::endLabel {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisName {value} {
@@ -2759,7 +2734,7 @@ proc ticklecharts::axisName {value} {
 
     set options [merge $options [dict get $value $key]]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::lineStyle {value} {
@@ -2780,17 +2755,8 @@ proc ticklecharts::lineStyle {value} {
 
     set d [dict get $value $key]
 
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
-    } else {
-        set color "nothing"
-    }
-    
-    if {[keysOptsThemeExists $levelP.width]} {
-        set linewidth [echartsOptsTheme $levelP.width]
-    } else {
-        set linewidth "nothing"
-    }
+    set color     [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
+    set linewidth [expr {[keysOptsThemeExists $levelP.width] ? [echartsOptsTheme $levelP.width] : "nothing"}]
     
     setdef options color          -minversion 5  -validvalue formatColor         -type e.color|str.t|jsfunc|list.st|null -default $color
     setdef options width          -minversion 5  -validvalue {}                  -type num.t|null                        -default $linewidth
@@ -2832,7 +2798,7 @@ proc ticklecharts::lineStyle {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2899,7 +2865,7 @@ proc ticklecharts::textStyle {value key} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -2946,7 +2912,7 @@ proc ticklecharts::nameTextStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::crossStyle {value} {
@@ -2995,7 +2961,7 @@ proc ticklecharts::crossStyle {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -3022,7 +2988,7 @@ proc ticklecharts::backgroundStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::shadowStyle {value} {
@@ -3043,7 +3009,7 @@ proc ticklecharts::shadowStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::emptyCircleStyle {value} {
@@ -3071,7 +3037,7 @@ proc ticklecharts::emptyCircleStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisPointer {value} {
@@ -3106,7 +3072,7 @@ proc ticklecharts::axisPointer {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::inRange {value} {
@@ -3129,7 +3095,7 @@ proc ticklecharts::inRange {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::outOfRange {value} {
@@ -3152,7 +3118,7 @@ proc ticklecharts::outOfRange {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::controller {value} {
@@ -3172,7 +3138,7 @@ proc ticklecharts::controller {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::handleStyle {value} {
@@ -3207,7 +3173,7 @@ proc ticklecharts::handleStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::moveHandleStyle {value} {
@@ -3235,7 +3201,7 @@ proc ticklecharts::moveHandleStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::indicatorStyle {value} {
@@ -3262,7 +3228,7 @@ proc ticklecharts::indicatorStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::markArea {value} {
@@ -3294,7 +3260,7 @@ proc ticklecharts::markArea {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::rippleEffect {value} {
@@ -3314,7 +3280,7 @@ proc ticklecharts::rippleEffect {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::feature {value} {
@@ -3338,7 +3304,7 @@ proc ticklecharts::feature {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::saveAsImage {value} {
@@ -3367,7 +3333,7 @@ proc ticklecharts::saveAsImage {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::restore {value} {
@@ -3390,7 +3356,7 @@ proc ticklecharts::restore {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::dataView {value} {
@@ -3422,7 +3388,7 @@ proc ticklecharts::dataView {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::toolBoxDataZoom {value} {
@@ -3449,7 +3415,7 @@ proc ticklecharts::toolBoxDataZoom {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::magicType {value} {
@@ -3476,7 +3442,7 @@ proc ticklecharts::magicType {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::brushOpts {value} {
@@ -3497,7 +3463,7 @@ proc ticklecharts::brushOpts {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::toolBoxTitle {value type} {
@@ -3533,7 +3499,7 @@ proc ticklecharts::toolBoxTitle {value type} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::icon {value type} {
@@ -3568,7 +3534,7 @@ proc ticklecharts::icon {value type} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::iconEmphasis {value} {
@@ -3587,7 +3553,7 @@ proc ticklecharts::iconEmphasis {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::iconStyle {value key} {
@@ -3642,7 +3608,7 @@ proc ticklecharts::iconStyle {value key} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -3681,7 +3647,7 @@ proc ticklecharts::brushStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::leaves {value} {
@@ -3703,7 +3669,7 @@ proc ticklecharts::leaves {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::encode {chart value} {
@@ -3753,7 +3719,7 @@ proc ticklecharts::encode {chart value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::config {value} {
@@ -3792,7 +3758,7 @@ proc ticklecharts::config {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::parallelAxisDefault {value} {
@@ -3835,7 +3801,7 @@ proc ticklecharts::parallelAxisDefault {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::areaSelectStyle {value} {
@@ -3853,7 +3819,7 @@ proc ticklecharts::areaSelectStyle {value} {
 
     set options [merge $options $value]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::brushStyleItem {value} {
@@ -3869,7 +3835,7 @@ proc ticklecharts::brushStyleItem {value} {
 
     set options [merge $options $value]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::brushVisual {key value} {
@@ -3892,7 +3858,7 @@ proc ticklecharts::brushVisual {key value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::checkPointStyle {value} {
@@ -3944,7 +3910,7 @@ proc ticklecharts::checkPointStyle {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -4004,7 +3970,7 @@ proc ticklecharts::controlStyle {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -4052,7 +4018,7 @@ proc ticklecharts::progress {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -4078,7 +4044,7 @@ proc ticklecharts::pointer {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::anchor {value} {
@@ -4102,7 +4068,7 @@ proc ticklecharts::anchor {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::titleGauge {value} {
@@ -4153,7 +4119,7 @@ proc ticklecharts::titleGauge {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::detail {value} {
@@ -4204,7 +4170,7 @@ proc ticklecharts::detail {value} {
     
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::circular {value} {
@@ -4219,7 +4185,7 @@ proc ticklecharts::circular {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::force {value} {
@@ -4239,7 +4205,7 @@ proc ticklecharts::force {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::scaleLimit {value} {
@@ -4255,7 +4221,7 @@ proc ticklecharts::scaleLimit {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::edgeLabel {value} {
@@ -4308,7 +4274,7 @@ proc ticklecharts::edgeLabel {value} {
     
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::categories {value} {
@@ -4370,7 +4336,7 @@ proc ticklecharts::breadcrumb {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::pageIcons {value} {
@@ -4387,7 +4353,7 @@ proc ticklecharts::pageIcons {value} {
     
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::pageTextStyle {value} {
@@ -4420,7 +4386,7 @@ proc ticklecharts::pageTextStyle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::emphasisLegend {value} {
@@ -4443,7 +4409,7 @@ proc ticklecharts::emphasisLegend {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::selectorLabel {value} {
@@ -4493,7 +4459,7 @@ proc ticklecharts::selectorLabel {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::handle {value} {
@@ -4519,7 +4485,7 @@ proc ticklecharts::handle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::projection {value} {
@@ -4537,7 +4503,7 @@ proc ticklecharts::projection {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::nameMap {value} {
@@ -4562,7 +4528,7 @@ proc ticklecharts::nameMap {value} {
         set options {}
     }
 
-    return [dict create {*}$opts]
+    return [new edict $opts]
 }
 
 proc ticklecharts::calendarLabel {value time} {
@@ -4617,7 +4583,7 @@ proc ticklecharts::calendarLabel {value time} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaDecal {value} {
@@ -4637,7 +4603,7 @@ proc ticklecharts::ariaDecal {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaDecals {value} {
@@ -4662,7 +4628,7 @@ proc ticklecharts::ariaDecals {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaLabel {value} {
@@ -4685,7 +4651,7 @@ proc ticklecharts::ariaLabel {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaData {value} {
@@ -4709,7 +4675,7 @@ proc ticklecharts::ariaData {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 
@@ -4727,7 +4693,7 @@ proc ticklecharts::ariaGeneral {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaLabelSeries {value} {
@@ -4748,7 +4714,7 @@ proc ticklecharts::ariaLabelSeries {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaSeriesSingle {value} {
@@ -4766,7 +4732,7 @@ proc ticklecharts::ariaSeriesSingle {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaSeriesMultiple {value} {
@@ -4788,7 +4754,7 @@ proc ticklecharts::ariaSeriesMultiple {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ariaSeparator {value} {
@@ -4810,7 +4776,7 @@ proc ticklecharts::ariaSeparator {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::effect {value} {
@@ -4821,11 +4787,7 @@ proc ticklecharts::effect {value} {
     
     set levelP [ticklecharts::getLevelProperties [info level]]
 
-    if {[keysOptsThemeExists $levelP.symbol]} {
-        set symbol [echartsOptsTheme $levelP.symbol]
-    } else {
-        set symbol "nothing"
-    }
+    set symbol [expr {[keysOptsThemeExists $levelP.symbol] ? [echartsOptsTheme $levelP.symbol] : "nothing"}]
 
     set d [dict get $value $key]
 
@@ -4843,7 +4805,7 @@ proc ticklecharts::effect {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::mapGStyle {value} {
@@ -4899,4 +4861,22 @@ proc ticklecharts::stylers {value} {
     }
 
    return [list {*}$opts]
+}
+
+proc ticklecharts::nameTruncate {value} {
+
+    if {![ticklecharts::keyDictExists "nameTruncate" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+
+    setdef options maxWidth      -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    setdef options ellipsis      -minversion 5  -validvalue {}  -type str|null   -default "nothing"
+    setdef options placeholder   -minversion 5  -validvalue {}  -type str|null   -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return [new edict $options]
 }

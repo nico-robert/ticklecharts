@@ -104,7 +104,7 @@ proc ticklecharts::nameTextStyle3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisLine3D {value} {
@@ -131,11 +131,7 @@ proc ticklecharts::axisLine3D {value} {
         set levelP [string map {3D ""} $levelP]
     }
 
-    if {[keysOptsThemeExists $levelP.show]} {
-        set show [echartsOptsTheme $levelP.show]
-    } else {
-        set show "True"
-    }
+    set show [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
     
     set d [dict get $value $key]
 
@@ -154,7 +150,7 @@ proc ticklecharts::axisLine3D {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -182,17 +178,8 @@ proc ticklecharts::lineStyle3D {value} {
         set levelP [string map {3D ""} $levelP]
     }
 
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
-    } else {
-        set color "nothing"
-    }
-    
-    if {[keysOptsThemeExists $levelP.width]} {
-        set linewidth [echartsOptsTheme $levelP.width]
-    } else {
-        set linewidth "nothing"
-    }
+    set color     [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
+    set linewidth [expr {[keysOptsThemeExists $levelP.width] ? [echartsOptsTheme $levelP.width] : "nothing"}]
     
     setdef options color    -minversion 5  -validvalue formatColor    -type str.t|list.nt|null  -default $color
     setdef options width    -minversion 5  -validvalue {}             -type num.t|null          -default $linewidth
@@ -207,7 +194,7 @@ proc ticklecharts::lineStyle3D {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -231,7 +218,7 @@ proc ticklecharts::axisLabel3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::textStyle3D {value key} {
@@ -271,7 +258,7 @@ proc ticklecharts::textStyle3D {value key} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -299,11 +286,7 @@ proc ticklecharts::axisTick3D {value} {
         set levelP [string map {3D ""} $levelP]
     }
 
-    if {[keysOptsThemeExists $levelP.show]} {
-        set show [echartsOptsTheme $levelP.show]
-    } else {
-        set show "True"
-    }
+    set show [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
 
     set d [dict get $value $key]
 
@@ -323,7 +306,7 @@ proc ticklecharts::axisTick3D {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -351,11 +334,7 @@ proc ticklecharts::splitLine3D {value} {
         set levelP [string map {3D ""} $levelP]
     }
 
-    if {[keysOptsThemeExists $levelP.show]} {
-        set showgrid [echartsOptsTheme $levelP.show]
-    } else {
-        set showgrid "True"
-    }
+    set showgrid [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
 
     set d [dict get $value $key]
 
@@ -374,7 +353,7 @@ proc ticklecharts::splitLine3D {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -395,7 +374,7 @@ proc ticklecharts::splitArea3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::itemStyle3D {value} {
@@ -429,7 +408,7 @@ proc ticklecharts::itemStyle3D {value} {
     if {![dict size $options]} {
         return "nothing"
     } else {
-        return $options
+        return [new edict $options]
     }
 }
 
@@ -452,7 +431,7 @@ proc ticklecharts::areaStyle3D {value} {
 
     set options [merge $options [dict get $value $key]]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisPointer3D {value} {
@@ -473,7 +452,7 @@ proc ticklecharts::axisPointer3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::label3D {value} {
@@ -499,7 +478,7 @@ proc ticklecharts::label3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::emphasis3D {value} {
@@ -519,7 +498,7 @@ proc ticklecharts::emphasis3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::light3D {value} {
@@ -540,7 +519,7 @@ proc ticklecharts::light3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::main3D {value} {
@@ -561,7 +540,7 @@ proc ticklecharts::main3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ambient3D {value} {
@@ -578,7 +557,7 @@ proc ticklecharts::ambient3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::ambientCubemap3D {value} {
@@ -597,7 +576,7 @@ proc ticklecharts::ambientCubemap3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::postEffect3D {value} {
@@ -622,7 +601,7 @@ proc ticklecharts::postEffect3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::bloom3D {value} {
@@ -639,7 +618,7 @@ proc ticklecharts::bloom3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::depthOfField3D {value} {
@@ -659,7 +638,7 @@ proc ticklecharts::depthOfField3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::SSAO3D {value} {
@@ -678,7 +657,7 @@ proc ticklecharts::SSAO3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::colorCorrection3D {value} {
@@ -699,7 +678,7 @@ proc ticklecharts::colorCorrection3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::FXAA3D {value} {
@@ -715,7 +694,7 @@ proc ticklecharts::FXAA3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 
@@ -732,7 +711,7 @@ proc ticklecharts::temporalSuperSampling3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::viewControl3D {value} {
@@ -774,7 +753,7 @@ proc ticklecharts::viewControl3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::realisticMaterial3D {value} {
@@ -797,7 +776,7 @@ proc ticklecharts::realisticMaterial3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::lambertMaterial3D {value} {
@@ -815,7 +794,7 @@ proc ticklecharts::lambertMaterial3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::colorMaterial3D {value} {
@@ -833,7 +812,7 @@ proc ticklecharts::colorMaterial3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::wireframe3D {value} {
@@ -853,7 +832,7 @@ proc ticklecharts::wireframe3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::equation3D {value} {
@@ -874,7 +853,7 @@ proc ticklecharts::equation3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::parametricEquation3D {value} {
@@ -897,7 +876,7 @@ proc ticklecharts::parametricEquation3D {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::coordinate3D {value coordinate} {
@@ -915,5 +894,5 @@ proc ticklecharts::coordinate3D {value coordinate} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }

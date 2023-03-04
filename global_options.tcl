@@ -27,7 +27,7 @@ proc ticklecharts::globalOptions {value} {
 
     set options [merge $options $value]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::htmlOptions {value} { 
@@ -118,7 +118,7 @@ proc ticklecharts::title {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::grid {value} {
@@ -152,7 +152,7 @@ proc ticklecharts::grid {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::tooltip {value} {
@@ -199,7 +199,7 @@ proc ticklecharts::tooltip {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::legend {value} {
@@ -273,7 +273,7 @@ proc ticklecharts::legend {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::polar {value} {
@@ -294,7 +294,7 @@ proc ticklecharts::polar {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::visualMap {value} {
@@ -411,7 +411,7 @@ proc ticklecharts::visualMap {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::toolbox {value} {
@@ -450,7 +450,7 @@ proc ticklecharts::toolbox {value} {
 
     set options [merge $options $d]
     
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::dataZoom {value} {
@@ -563,7 +563,7 @@ proc ticklecharts::dataZoom {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::parallel {value} {
@@ -598,7 +598,7 @@ proc ticklecharts::parallel {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::brush {value} {
@@ -633,7 +633,7 @@ proc ticklecharts::brush {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::axisPointerGlobal {value} {
@@ -666,7 +666,7 @@ proc ticklecharts::axisPointerGlobal {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::geo {value} {
@@ -715,7 +715,7 @@ proc ticklecharts::geo {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::calendar {value} {
@@ -756,7 +756,7 @@ proc ticklecharts::calendar {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::aria {value} {
@@ -778,7 +778,7 @@ proc ticklecharts::aria {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
 
 proc ticklecharts::gmap {value} {
@@ -814,5 +814,5 @@ proc ticklecharts::gmap {value} {
 
     set options [merge $options $d]
 
-    return $options
+    return [new edict $options]
 }
