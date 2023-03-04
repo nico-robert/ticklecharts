@@ -155,12 +155,19 @@
                     # Several options are no longer supported when initializing the `ticklecharts::chart` class, 
                     # all of these options are initialized in `Setoptions` method now.
                   # To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :
-                    # `-databaritem` is renamed `-dataBarItem`
-                    # `-datalineitem` is renamed `-dataLineItem`
-                    # `-datapieitem` is renamed `-dataPieItem`
-                    # `-datafunnelitem` is renamed `-dataFunnelItem`
-                    # `-dataradaritem` is renamed `-dataRadarItem`
-                    # `-datacandlestickitem` is renamed `-dataCandlestickItem`
+                    # `-databaritem` is renamed `-dataBarItem`.
+                    # `-datalineitem` is renamed `-dataLineItem`.
+                    # `-datapieitem` is renamed `-dataPieItem`.
+                    # `-datafunnelitem` is renamed `-dataFunnelItem`.
+                    # `-dataradaritem` is renamed `-dataRadarItem`.
+                    # `-datacandlestickitem` is renamed `-dataCandlestickItem`.
+# 04-Mar-2023 : v3.1
+                # Code refactoring.
+                # `::tcl::unsupported::representation` Tcl command is replaced, in favor of 2 news class :
+                # ticklecharts::eDict` (Internal class to replace `dict` Tcl command when initializing)
+                # `ticklecharts::eList` (This class can replace the `list` Tcl command see [eListline.tcl](examples/line/eListline.tcl) to know
+                # why this class has been implemented for certain cases...)
+                # list.data (`list.d`) accepts now `null` values. (`set property [list {"string" 1 "null"}]` -> JSON result = `["string", 1, null]`)
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -187,10 +194,11 @@ source [file join $dir theme.tcl]
 source [file join $dir dataset.tcl]
 source [file join $dir timeline.tcl]
 source [file join $dir ecolor.tcl]
+source [file join $dir etypes.tcl]
 
 namespace eval ticklecharts {
 
-    variable version         3.0.1 ; # ticklEcharts version
+    variable version         3.1   ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version
     variable gl_version      2.0.9 ; # Echarts GL version
     variable wc_version      2.1.0 ; # wordCloud version

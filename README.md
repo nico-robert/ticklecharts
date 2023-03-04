@@ -73,7 +73,7 @@ $chart Render -width "1200px" -height "800px" -renderer "svg"
 ```
 Data series :
 -------------------------
-`-data` (x values) : 
+`-data` (x values only) : 
 ```tcl
 # Example for lineseries
 $chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
@@ -87,6 +87,7 @@ $chart AddLineSeries -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # 150 = Y value
 # And now -data in Xaxis method can be deleted and written like this :
 $chart Xaxis
+$chart Yaxis
 ```
 `-dataXXXItem` :
 ```tcl
@@ -308,7 +309,7 @@ Global variables :
 package require ticklecharts
 
 # Set theme... with variable
-# Or with class : ticklecharts::(Gridlayout|chart|timeline) new -theme "vintage"
+# Or with class : ticklecharts::(Gridlayout|chart|timeline|chart3D) new -theme "vintage"
 set ::ticklecharts::theme "vintage" ; # default "custom" 
 
 # Minimum properties...
@@ -405,7 +406,7 @@ set bar [ticklecharts::chart new]
 $bar SetOptions -legend {top "2%" left "20%"}
 
 $bar Xaxis -data [list {A B C D E}] \
-            -axisLabel [list show "True" formatter $js]
+           -axisLabel [list show "True" formatter $js]
 $bar Yaxis
 $bar AddBarSeries -data [list {50 6 80 120 30}]
 $bar AddBarSeries -data [list {20 30 50 100 25}]
@@ -533,10 +534,17 @@ Release :
         -  Rename `basic` theme to `custom` theme.
         - `theme.tcl` file has been completely reworked.
         - Several options are no longer supported when initializing the `ticklecharts::chart` class, all of these options are initialized in `Setoptions` method now.
-        - To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :
-                - `-databaritem` is renamed `-dataBarItem`
-                - `-datalineitem` is renamed `-dataLineItem`
-                - `-datapieitem` is renamed `-dataPieItem`
-                - `-datafunnelitem` is renamed `-dataFunnelItem`
-                - `-dataradaritem` is renamed `-dataRadarItem`
-                - `-datacandlestickitem` is renamed `-dataCandlestickItem`
+        - To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :  
+                - `-databaritem` is renamed `-dataBarItem`.  
+                - `-datalineitem` is renamed `-dataLineItem`.  
+                - `-datapieitem` is renamed `-dataPieItem`.  
+                - `-datafunnelitem` is renamed `-dataFunnelItem`.  
+                - `-dataradaritem` is renamed `-dataRadarItem`.  
+                - `-datacandlestickitem` is renamed `-dataCandlestickItem`.  
+*  **04-Mar-2023** : 3.1
+    - Code refactoring.
+    - `::tcl::unsupported::representation` Tcl command is replaced, in favor of 2 news class :
+        - `ticklecharts::eDict` (Internal class to replace `dict` Tcl command when initializing)
+        - `ticklecharts::eList` (This class can replace the `list` Tcl command see [line_eList.tcl](examples/line/line_eList.tcl) to know  
+           why this class has been implemented for certain cases...)
+    - list.data (`list.d`) accepts now `null` values. (`set property [list {"string" 1 "null"}]` -> JSON result = `["string", 1, null]`)
