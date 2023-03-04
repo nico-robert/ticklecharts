@@ -13,6 +13,7 @@ proc ticklecharts::radiusAxis {value} {
     setdef options -nameTextStyle  -minversion 5  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -minversion 5  -validvalue {}                  -type num|null            -default "nothing"
     setdef options -nameRotate     -minversion 5  -validvalue {}                  -type num|null            -default "nothing"
+    setdef options -nameTruncate   -minversion 5  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5  -validvalue {}                  -type bool|null           -default "nothing"
     setdef options -boundaryGap    -minversion 5  -validvalue {}                  -type bool|list.d|null    -default "nothing"
     setdef options -min            -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
@@ -41,7 +42,7 @@ proc ticklecharts::radiusAxis {value} {
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick -minorSplitLine \
                                   -axisLabel -splitLine -axisPointer \
-                                  -splitArea -nameTextStyle -minorTick]
+                                  -splitArea -nameTextStyle -minorTick -nameTruncate]
 
     set options [merge $options $value]
     
@@ -136,6 +137,7 @@ proc ticklecharts::xAxis {chart value} {
     setdef options -nameTextStyle  -minversion 5       -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -minversion 5       -validvalue {}                  -type num                 -default 15
     setdef options -nameRotate     -minversion 5       -validvalue {}                  -type num                 -default 0
+    setdef options -nameTruncate   -minversion 5       -validvalue {}                  -type dict|null           -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5       -validvalue {}                  -type bool                -default "False"
     setdef options -boundaryGap    -minversion 5       -validvalue {}                  -type bool|list.d         -default "True"
     setdef options -min            -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
@@ -171,7 +173,7 @@ proc ticklecharts::xAxis {chart value} {
     # remove key(s)...
     set value [dict remove $value -nameTextStyle -axisLine -axisTick \
                                   -minorTick -axisLabel -splitLine \
-                                  -minorSplitLine -splitArea -axisPointer]
+                                  -minorSplitLine -splitArea -axisPointer -nameTruncate]
     
     set options [merge $options $value]
 
@@ -195,6 +197,7 @@ proc ticklecharts::yAxis {chart value} {
     setdef options -nameTextStyle   -minversion 5       -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap         -minversion 5       -validvalue {}                  -type num                 -default 15
     setdef options -nameRotate      -minversion 5       -validvalue {}                  -type num                 -default 0
+    setdef options -nameTruncate    -minversion 5       -validvalue {}                  -type dict|null           -default [ticklecharts::nameTruncate $value]
     setdef options -inverse         -minversion 5       -validvalue {}                  -type bool                -default "False"
     setdef options -boundaryGap     -minversion 5       -validvalue {}                  -type bool|list.s         -default "False"
     setdef options -min             -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
@@ -230,7 +233,7 @@ proc ticklecharts::yAxis {chart value} {
     # remove key(s)...
     set value [dict remove $value -nameTextStyle -axisLine -axisTick \
                                   -minorTick -axisLabel -splitLine \
-                                  -minorSplitLine -splitArea -axisPointer]
+                                  -minorSplitLine -splitArea -axisPointer -nameTruncate]
     
     set options [merge $options $value]
 
@@ -255,6 +258,7 @@ proc ticklecharts::singleAxis {value} {
     setdef options -nameTextStyle  -minversion 5  -validvalue {}                 -type dict|null           -default [ticklecharts::nameTextStyle $value]
     setdef options -nameGap        -minversion 5  -validvalue {}                 -type num                 -default 15
     setdef options -nameRotate     -minversion 5  -validvalue {}                 -type num                 -default 0
+    setdef options -nameTruncate   -minversion 5  -validvalue {}                 -type dict|null           -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5  -validvalue {}                 -type bool                -default "False"
     setdef options -boundaryGap    -minversion 5  -validvalue {}                 -type bool|list.d         -default "True"
     setdef options -min            -minversion 5  -validvalue {}                 -type num|str|jsfunc|null -default "nothing"
@@ -273,7 +277,7 @@ proc ticklecharts::singleAxis {value} {
     # ...
 
     # remove key(s)...
-    set value [dict remove $value -nameTextStyle -axisTick -axisLabel -axisPointer]
+    set value [dict remove $value -nameTextStyle -axisTick -axisLabel -axisPointer -nameTruncate]
 
     set options [merge $options $value]
 
@@ -299,6 +303,7 @@ proc ticklecharts::parallelAxis {value} {
         setdef options -nameTextStyle   -minversion 5  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTextStyle $item]
         setdef options -nameGap         -minversion 5  -validvalue {}                  -type num|null            -default "nothing"
         setdef options -nameRotate      -minversion 5  -validvalue {}                  -type num|null            -default "nothing"
+        setdef options -nameTruncate    -minversion 5  -validvalue {}                  -type dict|null           -default [ticklecharts::nameTruncate $value]
         setdef options -inverse         -minversion 5  -validvalue {}                  -type bool|null           -default "nothing"
         setdef options -boundaryGap     -minversion 5  -validvalue {}                  -type bool|list.d|null    -default "nothing"
         setdef options -min             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -default "nothing"
@@ -319,7 +324,7 @@ proc ticklecharts::parallelAxis {value} {
         #...
 
         # remove key(s)...
-        set item [dict remove $item -areaSelectStyle -nameTextStyle -axisLine -axisTick -minorTick -axisLabel]
+        set item [dict remove $item -areaSelectStyle -nameTextStyle -axisLine -axisTick -minorTick -axisLabel -nameTruncate]
 
         lappend opts [merge $options $item]
         set options {}
