@@ -26,7 +26,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v4.0 : add try command
 # v5.0 : Rename '-datapieitem' by '-dataPieItem'
 # v6.0 : Rename 'basic' theme to 'custom'
-# v7.0 : add myTheme variable
+# v7.0 : adds myTheme variable
+# v8.0 : adds splitline + label color
 
 # example from pyecharts-gallery-master... (modify)
 
@@ -120,7 +121,7 @@ try {
 
         set bar [ticklecharts::chart new]
 
-        $bar Xaxis -type "value"
+        $bar Xaxis -type "value" -splitLine {show "True"}
         $bar Yaxis -data [list $regions] -type "category" -boundaryGap "True"
             
         $bar AddBarSeries -data [list $data] \
@@ -136,11 +137,11 @@ try {
         set line [ticklecharts::chart new]
         
         $line Xaxis -data [list $dM]
-        $line Yaxis
+        $line Yaxis -splitLine {show "True"}
         $line AddLineSeries -data [list $dmv] \
                             -markPoint [list \
                                             data [list \
-                                                    [list name "Max" value [lindex $dmv $jj] xAxis $jj yAxis [lindex $dmv $jj] itemStyle {color "#dbac00" borderColor "#dbac00"}] \
+                                                    [list name "Max" value [lindex $dmv $jj] xAxis $jj yAxis [lindex $dmv $jj] label {color "#100C2A"} itemStyle {color "#dbac00" borderColor "#dbac00"}] \
                                                 ] \
                                         ]
 
