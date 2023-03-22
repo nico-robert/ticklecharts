@@ -398,6 +398,60 @@ oo::define ticklecharts::Gridlayout {
 
         return {}
     }
+
+    method RenderTsb {args} {
+        # Export chart to Taygete Scrap Book.
+        # https://www.androwish.org/home/dir?name=undroid/tsb
+        #
+        # Be careful the tsb.tcl file should be sourced...
+        #
+        # args - Options described below.
+        #
+        # -renderer - 'canvas' or 'svg'
+        # -height   - size html canvas
+        # -merge    - If false, all of the current components
+        #             will be removed and new components will
+        #             be created according to the new option.
+        #             (false by default)
+        #
+        # Returns nothing.
+        if {![namespace exists ::tsb]} {
+            error "::tsb file should be sourced..."
+        }
+
+        if {[info exists ::tsb::ready] && !$::tsb::ready} {
+            error "::tsb is not ready..."
+        }
+
+        if {![info exists ::ID]} {
+            error "::ID tsb variable should be present..."
+        }
+
+        if {![info exists ::W]} {
+            error "::W tsb variable (window webview) should be present..."
+        }
+
+        set opts_tsb [ticklecharts::tsbOptions $args]
+        set json [my toJSON]
+
+        # 'function' inside Json is not supported...
+        # Raise an error if present.
+        ticklecharts::checkJsFunc [my options]
+
+        set height   [lindex [dict get $opts_tsb -height] 0]
+        set renderer [lindex [dict get $opts_tsb -renderer] 0]
+        set merge    [lindex [dict get $opts_tsb -merge] 0]
+
+        set idEDiv [format {id_%s%s} $::ticklecharts::tsb_uuid $::ID]
+
+        $::W call eSrc $::ticklecharts::escript    ; # load if necessary 'echarts' script
+        $::W call eSrc $::ticklecharts::eGLscript  ; # load if necessary 'echarts.GL' script
+        $::W call eSrc $::ticklecharts::wcscript   ; # load if necessary 'echarts.wordcloud' script
+        $::W call eDiv $idEDiv $height             ; # set div  + echarts height
+        after 100 [list $::W call eSeries $idEDiv $json $renderer $merge]
+
+        return {}
+    }
     
     method Render {args} {
         # Export chart to html.
@@ -479,7 +533,7 @@ oo::define ticklecharts::Gridlayout {
     }
 
     # export method
-    export Add Render SetGlobalOptions
+    export Add Render SetGlobalOptions RenderTsb
     
 }
 
