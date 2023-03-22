@@ -35,9 +35,9 @@ proc ticklecharts::htmlOptions {value} {
     #
     # value - Options described below.
     #
-    # see chart.tcl, timeline.tcl and layout.tcl files (method render)
+    # see chart.tcl, timeline.tcl and layout.tcl files (method Render)
 
-    # required values... set minProperties to false.
+    # Required values... set minProperties to false.
     variable minProperties
     variable escript
 
@@ -58,6 +58,29 @@ proc ticklecharts::htmlOptions {value} {
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
     setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
     setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
+
+    set options [merge $options $value]
+
+    set minProperties $minP
+    
+    return $options
+}
+
+proc ticklecharts::tsbOptions {value} { 
+    # Global options chart for Taygete Scrap Book
+    #
+    # value - Options described below.
+    #
+    # see chart.tcl, timeline.tcl and layout.tcl files (method RenderTsb)
+
+    # Required values... set minProperties to false.
+    variable minProperties
+
+    set minP $minProperties ; set minProperties 0
+
+    setdef options -height     -minversion {}  -validvalue {}             -type str.n|num  -default "500px"
+    setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n      -default "canvas"
+    setdef options -merge      -minversion {}  -validvalue {}             -type bool       -default "False"
 
     set options [merge $options $value]
 
