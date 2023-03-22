@@ -200,8 +200,13 @@ oo::define ticklecharts::ehuddle {
         lassign [split $key "="] type valkey
 
         # special case for timeline class
-        set infolevel2 [lindex [info level 2] 1]
-        set timeline [expr {($infolevel2 eq "timelineToHuddle") ? 1 : 0}]
+        set method [lindex [info level 2] 1]
+        set obj    [lindex [info level 1] 0]
+        set timeline [expr {
+                (($method eq "timelineToHuddle") || ($method eq "toJSON")) &&
+                [ticklecharts::istimelineClass $obj] ? 1 : 0
+            }
+        ]
 
         set listk {}
         foreach {k val} $value {

@@ -262,9 +262,14 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             }
             list.o {
                 set l {}
+                if {([llength $value] == 1) && [ticklecharts::iseListClass $value]} {
+                    set value {*}[$value get]
+                }
                 foreach val $value {
-                    if {[ticklecharts::iseDictClass $val] || [ticklecharts::iseListClass $val]} {
+                    if {[ticklecharts::iseDictClass $val]} {
                         lappend l [ticklecharts::dictToEchartsHuddle [$val get]]
+                    } elseif {[ticklecharts::iseListClass $val]} {
+                        lappend l [ticklecharts::dictToEchartsHuddle [lindex {*}[$val get] 0]]
                     } else {
                         lappend l [ticklecharts::dictToEchartsHuddle $val]
                     }
@@ -367,8 +372,10 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                     if {[lindex $val end] eq "list.o"} {
                         set tt {}
                         foreach vv [join [lrange $val 0 end-1]] {
-                            if {[ticklecharts::iseDictClass $vv] || [ticklecharts::iseListClass $vv]} {
+                            if {[ticklecharts::iseDictClass $vv]} {
                                 lappend tt [ticklecharts::dictToEchartsHuddle [$vv get]]
+                            } elseif {[ticklecharts::iseListClass $vv]} {
+                                lappend tt [ticklecharts::dictToEchartsHuddle [lindex {*}[$vv get] 0]]
                             } else {
                                 lappend tt [ticklecharts::dictToEchartsHuddle $vv]
                             }
@@ -441,7 +448,7 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
     upvar 1 $keyt typekey
     
     foreach valtype [split $type "|"] {
-        if {[string match *$mytype* "$valtype"]} {
+        if {[string match $mytype* "$valtype"]} {
             set typekey $valtype
             return 1
         }
@@ -999,4 +1006,27 @@ proc ticklecharts::getLevelProperties {level} {
     }
     
     return [join [lreverse $properties] "."]
+}
+
+proc ticklecharts::checkJsFunc {opts} {
+    # Guess if options contains a function.
+    # for 'Tayget Scrap Book'
+    #
+    # Raise an error if yes (not supported)
+    #
+    # Returns nothing
+
+    set map [string map {"{" "" "}" ""} $opts]
+
+    foreach index [lsearch -all $map "@JS=*"] {
+        if {$index > -1} {
+            set value [lindex $map $index+1]
+            switch -glob -- {*}[$value get] {
+                "*function*"     {error "'function' inside Json is not supported..."}
+                "*new echarts.*" {error "'new echarts.*' inside Json is not supported..."}
+            }
+        }
+    }
+
+    return {}
 }

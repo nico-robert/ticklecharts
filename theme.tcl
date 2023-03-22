@@ -136,13 +136,8 @@ proc ticklecharts::setTheme {value} {
             dict set opts_theme parallelAxis.axisTick.show                      "True"
             dict set opts_theme parallelAxis.axisLabel.color                    $contrastColor
 
-            dict set opts_theme xAxis.axisTick.show                             "True"
-            dict set opts_theme yAxis.axisTick.show                             "True"
-            dict set opts_theme xAxis3D.axisTick.show                           "True"
-            dict set opts_theme yAxis3D.axisTick.show                           "True"
-            dict set opts_theme zAxis3D.axisTick.show                           "True"
-            
             foreach axis {xAxis yAxis xAxis3D yAxis3D zAxis3D} {
+                dict set opts_theme ${axis}.axisTick.show                   "True"
                 dict set opts_theme ${axis}.axisLabel.color                 $contrastColor
                 dict set opts_theme ${axis}.axisLine.show                   "True"
                 dict set opts_theme ${axis}.axisLine.lineStyle.color        $contrastColor
@@ -271,14 +266,9 @@ proc ticklecharts::setTheme {value} {
 
             dict set opts_theme parallelAxis.axisTick.show                      "True"
             dict set opts_theme parallelAxis.axisLabel.color                    "#333333"
-
-            dict set opts_theme xAxis.axisTick.show                             "True"
-            dict set opts_theme yAxis.axisTick.show                             "True"
-            dict set opts_theme xAxis3D.axisTick.show                           "True"
-            dict set opts_theme yAxis3D.axisTick.show                           "True"
-            dict set opts_theme zAxis3D.axisTick.show                           "True"
             
             foreach axis {xAxis yAxis xAxis3D yAxis3D zAxis3D} {
+                dict set opts_theme ${axis}.axisTick.show                   "True"
                 dict set opts_theme ${axis}.axisLabel.color                 "#333333"
                 dict set opts_theme ${axis}.axisLine.show                   "True"
                 dict set opts_theme ${axis}.axisLine.lineStyle.color        "#333333"
@@ -407,13 +397,8 @@ proc ticklecharts::setTheme {value} {
             dict set opts_theme parallelAxis.axisTick.show                      "True"
             dict set opts_theme parallelAxis.axisLabel.color                    "#999999"
 
-            dict set opts_theme xAxis.axisTick.show                             "True"
-            dict set opts_theme yAxis.axisTick.show                             "True"
-            dict set opts_theme xAxis3D.axisTick.show                           "True"
-            dict set opts_theme yAxis3D.axisTick.show                           "True"
-            dict set opts_theme zAxis3D.axisTick.show                           "True"
-            
             foreach axis {xAxis yAxis xAxis3D yAxis3D zAxis3D} {
+                dict set opts_theme ${axis}.axisTick.show                   "True"
                 dict set opts_theme ${axis}.axisLabel.color                 "#999999"
                 dict set opts_theme ${axis}.axisLine.show                   "True"
                 dict set opts_theme ${axis}.axisLine.lineStyle.color        "#cccccc"
@@ -541,14 +526,9 @@ proc ticklecharts::setTheme {value} {
 
             dict set opts_theme parallelAxis.axisTick.show                      "True"
             dict set opts_theme parallelAxis.axisLabel.color                    "#999999"
-
-            dict set opts_theme xAxis.axisTick.show                             "True"
-            dict set opts_theme yAxis.axisTick.show                             "True"
-            dict set opts_theme xAxis3D.axisTick.show                           "True"
-            dict set opts_theme yAxis3D.axisTick.show                           "True"
-            dict set opts_theme zAxis3D.axisTick.show                           "True"
             
             foreach axis {xAxis yAxis xAxis3D yAxis3D zAxis3D} {
+                dict set opts_theme ${axis}.axisTick.show                   "True"
                 dict set opts_theme ${axis}.axisLabel.color                 "#999999"
                 dict set opts_theme ${axis}.axisLine.show                   "True"
                 dict set opts_theme ${axis}.axisLine.lineStyle.color        "#cccccc"
@@ -677,13 +657,8 @@ proc ticklecharts::setTheme {value} {
             dict set opts_theme parallelAxis.axisTick.show                      "True"
             dict set opts_theme parallelAxis.axisLabel.color                    "nothing"
 
-            dict set opts_theme xAxis.axisTick.show                             "True"
-            dict set opts_theme yAxis.axisTick.show                             "True"
-            dict set opts_theme xAxis3D.axisTick.show                           "True"
-            dict set opts_theme yAxis3D.axisTick.show                           "True"
-            dict set opts_theme zAxis3D.axisTick.show                           "True"
-            
             foreach axis {xAxis yAxis xAxis3D yAxis3D zAxis3D} {
+                dict set opts_theme ${axis}.axisTick.show                   "True"
                 dict set opts_theme ${axis}.axisLabel.color                 "nothing"
                 dict set opts_theme ${axis}.axisLine.show                   "True"
                 dict set opts_theme ${axis}.axisLine.lineStyle.color        "#6E7079"
