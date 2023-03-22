@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>object_array</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_1407e64871154c19a31d921464cf2127" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+        var chart_1407e64871154c19a31d921464cf2127 = echarts.init(document.getElementById('id_1407e64871154c19a31d921464cf2127'), null, {renderer: 'canvas'});
+        var option_1407e64871154c19a31d921464cf2127 = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [{
+      "dimensions": [
+        "product",
+        "2015",
+        "2016",
+        "2017"
+      ],
+      "source": [
+        {
+          "product": "Matcha Latte",
+          "2015": 43.3,
+          "2016": 85.8,
+          "2017": 93.7
+        },
+        {
+          "product": "Milk Tea",
+          "2015": 83.1,
+          "2016": 73.4,
+          "2017": 55.1
+        },
+        {
+          "product": "Cheese Cocoa",
+          "2015": 86.4,
+          "2016": 65.2,
+          "2017": 82.5
+        },
+        {
+          "product": "Walnut Brownie",
+          "2015": 72.4,
+          "2016": 53.9,
+          "2017": 39.1
+        }
+      ]
+    }],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "bar",
+      "name": "barseries_1",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "barseries_2",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    },
+    {
+      "type": "bar",
+      "name": "barseries_3",
+      "colorBy": "series",
+      "legendHoverLink": true,
+      "coordinateSystem": "cartesian2d",
+      "roundCap": false,
+      "showBackground": false,
+      "sampling": "max",
+      "cursor": "pointer",
+      "barMinWidth": null,
+      "barCategoryGap": "20%",
+      "large": false,
+      "largeThreshold": 400,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false
+    }
+  ]
+}
+        chart_1407e64871154c19a31d921464cf2127.setOption(option_1407e64871154c19a31d921464cf2127);
+    </script>
+  </body>
+</html>
