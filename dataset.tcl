@@ -17,33 +17,39 @@ oo::class create ticklecharts::dataset {
     variable _dataset
     variable _dimension
 
-    constructor {args} {
+    constructor {value} {
         # Initializes a new dataset Class.
         #
-        # args - dataset args.
+        # value - dataset args.
         #
         set _dimension "nothing"
 
-        if {[llength $args] != 1} {
-            error "args should be a list of 1 element for 'dataset' constructor..."
+        if {![ticklecharts::isListOfList $value]} {
+            set value [list $value]
         }
 
-        foreach item {*}$args {
+        foreach item $value {
 
             if {[llength $item] % 2} {
                 error "item list must have an even number of elements..."
             }
 
+            set source [my source $item sType]
+
             setdef options -id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
             setdef options -sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
             setdef options -dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
-            setdef options -source               -minversion 5  -validvalue {}                 -type list.d|null       -default [my source $item]
+            setdef options -source               -minversion 5  -validvalue {}                 -type list.$sType|null  -default $source
             setdef options -transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
             setdef options -fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
             setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
             setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
 
-            set item  [dict remove $item -transform -dimensions]
+            if {$sType eq "o"} {
+                set item [dict remove $item -transform -dimensions -source]
+            } else {
+                set item [dict remove $item -transform -dimensions]
+            }
 
             # set dataset...
             lappend opts [merge $options $item]
@@ -135,18 +141,85 @@ oo::define ticklecharts::dataset {
 
     }
 
-    method source {value} {
+    method source {value t} {
         # source dataset
         #
         # value - dict
+        # t     - upvar type
         #
         # Returns 'source' data value
+        upvar 1 $t type
+        set type "d"
 
         if {![ticklecharts::keyDictExists "-source" $value key]} {
             return "nothing"
         }
 
-        return [dict get $value $key]
+        # '-source' support 2 types :
+        # 1) 2d array, where dimension names can be provided in the first row/column,
+        #       or do not provide, only data. :
+        #       set source {
+        #           {"score" "amount" "product"}
+        #           {89.3 58212 "Matcha Latte"}
+        #           {57.1 78254 "Milk Tea"}
+        #           {74.4 41032 "Cheese Cocoa"}
+        #           {50.1 12755 "Cheese Brownie"}
+        #           {...}
+        #       }
+        # 2) "array of classes" format ('-source' should be a 'elist class'): 
+        #       Define the dimension of array. In cartesian coordinate system,
+        #       if the type of x-axis is category, map the first dimension to
+        #       x-axis by default, the second dimension to y-axis.
+        #       You can also specify 'series.encode' to complete the map
+        #       without specify dimensions. Please see below.
+        #       set source {
+        #           {product "Matcha Latte" "2015" 43.3 "2016" 85.8 "2017" 93.7}
+        #           {product "Milk Tea" "2015" 83.1 "2016" 73.4 "2017" 55.1}
+        #           {product "Cheese Cocoa" "2015" 86.4 "2016" 65.2 "2017" 82.5}
+        #           {...}
+        #       }
+
+        set d [dict get $value $key]
+
+        if {[ticklecharts::iseListClass $d]} {
+            if {![ticklecharts::isListOfList [$d get]]} {
+                error "'-source' should be a list of list..."
+            }
+            foreach item {*}[lindex [$d get] 0] {
+                if {[llength $item] % 2} {
+                    error "item list must have an even number of elements..."
+                }
+                set k {}
+                foreach {key info} $item {
+                    if {[llength [lsearch -all -exact $item $key]] > 1} {
+                        error "'$key' is duplicated in '$item'"
+                    }
+
+                    set _key [ticklecharts::mapSpaceString $key] ; # map spaces if present
+                    lappend k $key $_key 
+
+                    set mytype [ticklecharts::typeOf $info]
+
+                    if {$mytype ni {str num}} {
+                        error "'$info' should be a string or num for this '$key' value..."
+                    }
+
+                    setdef options $_key -minversion 5 -validvalue {} -type $mytype -default $info
+                }
+
+                lappend opts [merge $options [string map $k $item]]
+                set options {}
+            }
+
+            set type "o"
+            return [list {*}$opts]
+          
+        } else {
+            if {![ticklecharts::isListOfList $d]} {
+                error "'-source' should be a list of list..."
+            }
+            return $d
+        }
     }
 
 }
