@@ -36,7 +36,7 @@ set chart [ticklecharts::chart new]
 # Initializes X axis with values
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 ```
-:warning: Important `-data` option should be a `[list {...}]` and not `{{...}}`
+:warning: Important `-data` option should be a list of list `[list {...}]`
 ```tcl
 # Initializes Y axis
 $chart Yaxis
@@ -45,7 +45,7 @@ $chart Yaxis
 # Initializes line series
 $chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
 ```
-Here `-data` corresponds to the Y values. (:warning: `-data` option should be a `[list {...}]` and not `{{...}}`)
+Here `-data` corresponds to the Y values. (:warning: `-data` option should be a list of list `[list {...}]`)
 
 ```tcl
 # Export chart to html
@@ -73,7 +73,7 @@ $chart Render -width "1200px" -height "800px" -renderer "svg"
 ```
 Data series :
 -------------------------
-`-data` (x values only) : 
+`-data` (y values only) : 
 ```tcl
 # Example for lineseries
 $chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
@@ -381,8 +381,8 @@ $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ![line, bar and pie layout](images/line_bar_pie_layout.png)
 ```tcl
 # demo layout line + bar + pie...
-set data0 {1 2 3 4 5}
-set data1 {2 3.6 6 2 10}
+set data_0 {1 2 3 4 5}
+set data_1 {2 3.6 6 2 10}
 
 set js [ticklecharts::jsfunc new {
                 function (value, index) {
@@ -396,10 +396,10 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
                  -tooltip {show "True"} \
                  -legend {top "56%" left "20%"}    
     
-$line Xaxis -data [list $data0] -boundaryGap "False"
+$line Xaxis -data [list $data_0] -boundaryGap "False"
 $line Yaxis
-$line AddLineSeries -data [list $data0]  -areaStyle {} -smooth true
-$line AddLineSeries -data [list $data1] -smooth true
+$line AddLineSeries -data [list $data_0] -areaStyle {} -smooth true
+$line AddLineSeries -data [list $data_1] -smooth true
 
 set bar [ticklecharts::chart new]
 
@@ -548,3 +548,6 @@ Release :
         - `ticklecharts::eList` (This class can replace the `list` Tcl command see [line_eList.tcl](examples/line/line_eList.tcl) to know  
            why this class has been implemented for certain cases...)
     - list.data (`list.d`) accepts now `null` values. (`set property [list {"string" 1 "null"}]` -> JSON result = `["string", 1, null]`)
+*  **22-Mar-2023** : 3.1.1
+    - Support array for `dataset` dimension (with `ticklecharts::eList` class).
+    - Adds a new method `RenderTsb` to interact with [Taygete Scrap Book](https://wiki.tcl-lang.org/page/Taygete+Scrap+Book) (see demo next link).

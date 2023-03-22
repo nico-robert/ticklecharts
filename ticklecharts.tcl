@@ -168,6 +168,9 @@
                 # `ticklecharts::eList` (This class can replace the `list` Tcl command see [eListline.tcl](examples/line/eListline.tcl) to know
                 # why this class has been implemented for certain cases...)
                 # list.data (`list.d`) accepts now `null` values. (`set property [list {"string" 1 "null"}]` -> JSON result = `["string", 1, null]`)
+# 22-Mar-2023 : v3.1.1
+                # Support array for `dataset` dimension (with `ticklecharts::eList` class).
+                # Adds a new method `RenderTsb` to interact with Taygete Scrap Book (https://wiki.tcl-lang.org/page/Taygete+Scrap+Book).
 
 package require Tcl 8.6
 package require huddle 0.3
@@ -198,7 +201,7 @@ source [file join $dir etypes.tcl]
 
 namespace eval ticklecharts {
 
-    variable version         3.1   ; # ticklEcharts version
+    variable version         3.1.1  ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version
     variable gl_version      2.0.9 ; # Echarts GL version
     variable wc_version      2.1.0 ; # wordCloud version
@@ -221,6 +224,12 @@ namespace eval ticklecharts {
     trace add variable gmap_version    write ticklecharts::traceGmapVersion
     trace add variable wc_version      write ticklecharts::traceWCVersion
     trace add variable keyGMAPI        write ticklecharts::traceKeyGMAPI
+
+    # https://wiki.tcl-lang.org/page/Taygete+Scrap+Book
+    if {[namespace exists ::tsb]} {
+        variable tsb_uuid      [uuid] ; # Generate uuid for <div> tsb...
+        variable minProperties "True" ; # To gain speed
+    }
 
 }
 
