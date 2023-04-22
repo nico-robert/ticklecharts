@@ -2,17 +2,23 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Set new 'Add' method for chart series + use substitution for formatter property 
+#        Note : map list substitution + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 set chart [ticklecharts::chart new]
 
-$chart SetOptions -tooltip {formatter "<0123>a<0125> <br/><0123>b<0125> : <0123>c<0125>%"}
+$chart SetOptions -tooltip {formatter {"{a} <br/>{b} : {c}%"}}
                
-$chart AddGaugeSeries -detail {formatter "<0123>value<0125>"} -name "Pressure" \
-                      -dataGaugeItem {{value 50 name "SCORE"}} \
-                      -progress {show "True"}
+$chart Add "gaugeSeries" -detail {formatter {"{value}"}} \
+                         -name "Pressure" \
+                         -progress {show "True"} \
+                         -dataGaugeItem {
+                            {value 50 name "SCORE"}
+                         }
 
 
 set fbasename [file rootname [file tail [info script]]]

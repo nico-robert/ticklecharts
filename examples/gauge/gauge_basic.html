@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>gauge_basic</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_122752287340836" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_039f66da7b80434c8fcbf9ecbc08c31a" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_122752287339473 = echarts.init(document.getElementById('id_122752287340836'), null, {renderer: 'canvas'});
-        var option = {
+        var chart_039f66da7b80434c8fcbf9ecbc08c31a = echarts.init(document.getElementById('id_039f66da7b80434c8fcbf9ecbc08c31a'), null, {renderer: 'canvas'});
+        var option_039f66da7b80434c8fcbf9ecbc08c31a = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
     "#5470c6",
@@ -55,6 +55,10 @@
       "startAngle": 225,
       "endAngle": -45,
       "clockwise": true,
+      "data": [{
+          "name": "SCORE",
+          "value": 50
+        }],
       "splitNumber": 10,
       "detail": {
         "show": true,
@@ -80,14 +84,10 @@
         ],
         "formatter": "{value}"
       },
-      "silent": false,
-      "data": [{
-          "name": "SCORE",
-          "value": 50
-        }]
+      "silent": false
     }]
 }
-        chart_122752287339473.setOption(option);
+        chart_039f66da7b80434c8fcbf9ecbc08c31a.setOption(option_039f66da7b80434c8fcbf9ecbc08c31a);
     </script>
   </body>
 </html>

@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>funnel_chart</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_108521069499035" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_cbaf357ed51d4ef8a8c77b2e13f87e4b" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_108521069497608 = echarts.init(document.getElementById('id_108521069499035'), null, {renderer: 'canvas'});
-        var option = {
+        var chart_cbaf357ed51d4ef8a8c77b2e13f87e4b = echarts.init(document.getElementById('id_cbaf357ed51d4ef8a8c77b2e13f87e4b'), null, {renderer: 'canvas'});
+        var option_cbaf357ed51d4ef8a8c77b2e13f87e4b = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
     "#5470c6",
@@ -137,13 +137,13 @@
           "dashOffset": 0,
           "cap": "butt",
           "join": "bevel",
-          "miterLimit": 10,
           "shadowBlur": 0,
           "shadowColor": null,
           "shadowOffsetX": 0,
           "shadowOffsetY": 0,
           "opacity": 1
-        }
+        },
+        "length": 10
       },
       "itemStyle": {
         "borderColor": "#fff",
@@ -152,7 +152,6 @@
         "borderDashOffset": 0,
         "borderCap": "butt",
         "borderJoin": "bevel",
-        "borderMiterLimit": 10,
         "opacity": 1
       },
       "emphasis": {
@@ -224,7 +223,7 @@
       "animation": true
     }]
 }
-        chart_108521069497608.setOption(option);
+        chart_cbaf357ed51d4ef8a8c77b2e13f87e4b.setOption(option_cbaf357ed51d4ef8a8c77b2e13f87e4b);
     </script>
   </body>
 </html>

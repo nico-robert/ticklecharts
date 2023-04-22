@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>scatter_bubble_chart</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_77789446104272" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_4136519a65f04d90af71166ce7caf396" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_77789446102927 = echarts.init(document.getElementById('id_77789446104272'), null, {renderer: 'canvas'});
-        var option = {
+        var chart_4136519a65f04d90af71166ce7caf396 = echarts.init(document.getElementById('id_4136519a65f04d90af71166ce7caf396'), null, {renderer: 'canvas'});
+        var option_4136519a65f04d90af71166ce7caf396 = {
   "backgroundColor": new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [
                                             {offset: 0, color: "#f7f8fa"},
                                             {offset: 1, color: "#cdd0d5"}
@@ -105,12 +105,12 @@
         "onZero": true,
         "symbol": null,
         "lineStyle": {
+          "color": "#E0E6F1",
           "width": 1,
           "type": "dashed",
           "dashOffset": 0,
           "cap": "butt",
           "join": "bevel",
-          "miterLimit": 10,
           "shadowBlur": 0,
           "shadowColor": null,
           "shadowOffsetX": 0,
@@ -144,12 +144,12 @@
         "onZero": true,
         "symbol": null,
         "lineStyle": {
+          "color": "#E0E6F1",
           "width": 1,
           "type": "dashed",
           "dashOffset": 0,
           "cap": "butt",
           "join": "bevel",
-          "miterLimit": 10,
           "shadowBlur": 0,
           "shadowColor": null,
           "shadowOffsetX": 0,
@@ -183,7 +183,6 @@
         "borderDashOffset": 0,
         "borderCap": "butt",
         "borderJoin": "bevel",
-        "borderMiterLimit": 10,
         "shadowBlur": 10,
         "shadowColor": "rgba(120, 36, 50, 0.5)",
         "shadowOffsetY": 5,
@@ -385,7 +384,6 @@
         "borderDashOffset": 0,
         "borderCap": "butt",
         "borderJoin": "bevel",
-        "borderMiterLimit": 10,
         "shadowBlur": 10,
         "shadowColor": "rgba(120, 36, 50, 0.5)",
         "shadowOffsetY": 5,
@@ -567,7 +565,7 @@
     }
   ]
 }
-        chart_77789446102927.setOption(option);
+        chart_4136519a65f04d90af71166ce7caf396.setOption(option_4136519a65f04d90af71166ce7caf396);
     </script>
   </body>
 </html>

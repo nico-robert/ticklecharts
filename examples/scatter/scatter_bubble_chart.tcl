@@ -4,6 +4,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : delete 'show' key it's not a key option... in emphasis flag
 #        + rename 'render' to 'Render' (Note : The first letter in capital letter)
 # v3.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Set new 'Add' method for chart series + use substitution for formatter property 
+#        Note : map list substitution + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 set data {
   {
@@ -85,18 +88,18 @@ $chart SetOptions -backgroundColor $jsbackcolor \
 $chart Xaxis -splitLine {show True lineStyle {type dashed}} -type "value"
 $chart Yaxis -splitLine {show True lineStyle {type dashed}} -scale "True"
 
-# delete 'show "true"' in AddRadarSeries(emphasis) method
-$chart AddScatterSeries -name "1990" \
-                        -symbolSize $jssymbolSize \
-                        -data [lindex $data 0] \
-                        -emphasis [list focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
-                        -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem borderColor null opacity 0.75]
+# delete 'show "true"' in scatterSeries(emphasis) method
+$chart Add "scatterSeries" -name "1990" \
+                           -symbolSize $jssymbolSize \
+                           -data [lindex $data 0] \
+                           -emphasis [list focus "series" label [list show true position top formatter {"{@[3]}"}]] \
+                           -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem borderColor null opacity 0.75]
 
-$chart AddScatterSeries -name "2015" \
-                        -symbolSize $jssymbolSize \
-                        -data [lindex $data 1] \
-                        -emphasis [list focus "series" label [list show true position top formatter "<0123>@<091>3<093><0125>"]] \
-                        -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem1 borderColor null opacity 0.75]
+$chart Add "scatterSeries" -name "2015" \
+                           -symbolSize $jssymbolSize \
+                           -data [lindex $data 1] \
+                           -emphasis [list focus "series" label [list show true position top formatter {"{@[3]}"}]] \
+                           -itemStyle [list shadowBlur 10 shadowColor "rgba(120, 36, 50, 0.5)" shadowOffsetY 5 color $jsitem1 borderColor null opacity 0.75]
                         
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
