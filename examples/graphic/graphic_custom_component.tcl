@@ -3,6 +3,10 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'center' by 'middle' for children top flag
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v4.0 : Set new 'Add' method for chart series.
+#        Set showAllSymbol to 'nothing' to avoid trace warning.
+#        Note : Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -26,7 +30,7 @@ $chart Yaxis -type "category" \
              -boundaryGap True \
              -data [list {0 10 20 30 40 50 60 70 80}]
 
-$chart AddGraphic -elements {
+$chart Add "graphic" -elements {
                             {
                                 type group rotation 0.785398163397448 bounding "raw" right 110 bottom 110 z 100
                                 children {
@@ -56,7 +60,10 @@ $chart AddGraphic -elements {
                             }
 }
 
-$chart AddLineSeries -name "graphic" -smooth True -data [list {15 -50 -56.5 -46.5 -22.1 -2.5 -27.7 -55.7 -76.5}]
+$chart Add "lineSeries" -name "graphic" \
+                        -smooth True \
+                        -showAllSymbol "nothing" \
+                        -data [list {15 -50 -56.5 -46.5 -22.1 -2.5 -27.7 -55.7 -76.5}]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
