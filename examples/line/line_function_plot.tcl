@@ -3,6 +3,10 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Set new 'Add' method for chart series.
+#        Set showAllSymbol to 'nothing' to avoid trace warning.
+#        Note : Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see Add' method below)
 
 proc func x {
     set x [expr {$x / 10.}]
@@ -29,9 +33,10 @@ $chart SetOptions -animation "False" \
 $chart Xaxis -type "null" -name "x" -min -50 -max 50 -minorTick {show "True"} -minorSplitLine {show "True"}
 $chart Yaxis -type "null" -name "y" -min -20 -max 45 -minorTick {show "True"} -minorSplitLine {show "True"}
 
-$chart AddLineSeries -data [generateData] \
-                     -showSymbol "False" \
-                     -clip "True"
+$chart Add "lineSeries" -data [generateData] \
+                        -showSymbol "False" \
+                        -showAllSymbol "nothing" \
+                        -clip "True"
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
