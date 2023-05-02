@@ -81,6 +81,7 @@ proc ticklecharts::tsbOptions {value} {
     setdef options -height     -minversion {}  -validvalue {}             -type str.n|num  -default "500px"
     setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n      -default "canvas"
     setdef options -merge      -minversion {}  -validvalue {}             -type bool       -default "False"
+    setdef options -evalJSON   -minversion {}  -validvalue {}             -type bool       -default "False"
 
     set options [merge $options $value]
 
