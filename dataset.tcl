@@ -24,6 +24,9 @@ oo::class create ticklecharts::dataset {
         #
         set _dimension "nothing"
 
+        # https://stackoverflow.com/questions/16131296/the-real-namespace-of-a-class
+        set ns [namespace qualifiers [self class]]
+
         if {![ticklecharts::isListOfList $value]} {
             set value [list $value]
         }
@@ -36,14 +39,14 @@ oo::class create ticklecharts::dataset {
 
             set source [my source $item sType]
 
-            setdef options -id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
-            setdef options -sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
-            setdef options -dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
-            setdef options -source               -minversion 5  -validvalue {}                 -type list.$sType|null  -default $source
-            setdef options -transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
-            setdef options -fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
-            setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
-            setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
+            ${ns}::setdef options -id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            ${ns}::setdef options -sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
+            ${ns}::setdef options -dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
+            ${ns}::setdef options -source               -minversion 5  -validvalue {}                 -type list.$sType|null  -default $source
+            ${ns}::setdef options -transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
+            ${ns}::setdef options -fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
+            ${ns}::setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            ${ns}::setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
 
             if {$sType eq "o"} {
                 set item [dict remove $item -transform -dimensions -source]
@@ -52,7 +55,7 @@ oo::class create ticklecharts::dataset {
             }
 
             # set dataset...
-            lappend opts [merge $options $item]
+            lappend opts [${ns}::merge $options $item]
             set options {}
         }
 
@@ -88,16 +91,17 @@ oo::define ticklecharts::dataset {
         }
 
         set d {}
+        set ns [namespace qualifiers [self class]]
 
         foreach dim [dict get $value $key] {
             if {[ticklecharts::isDict $dim] && [llength $dim] > 2 && 
                ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
 
-                setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
-                setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
-                setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
+                ${ns}::setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
+                ${ns}::setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
+                ${ns}::setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
 
-                lappend d [list [new edict [merge $options $dim]] dict] ; continue
+                lappend d [list [new edict [${ns}::merge $options $dim]] dict] ; continue
 
             }
             lappend vald [ticklecharts::mapSpaceString $dim]
@@ -123,16 +127,18 @@ oo::define ticklecharts::dataset {
             return "nothing"
         }
 
+        set ns [namespace qualifiers [self class]]
+
         foreach item [dict get $value $key] {
 
-            setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
-            setdef options config -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::config $item]
-            setdef options print  -minversion 5  -validvalue {}              -type bool      -default "False"
+            ${ns}::setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
+            ${ns}::setdef options config -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::config $item]
+            ${ns}::setdef options print  -minversion 5  -validvalue {}              -type bool      -default "False"
 
             # Remove key(s)
             set item [dict remove $item config]
 
-            lappend opts [merge $options $item]
+            lappend opts [${ns}::merge $options $item]
             set options {}
 
         }
@@ -179,7 +185,8 @@ oo::define ticklecharts::dataset {
         #           {...}
         #       }
 
-        set d [dict get $value $key]
+        set d  [dict get $value $key]
+        set ns [namespace qualifiers [self class]]
 
         if {[ticklecharts::iseListClass $d]} {
             if {![ticklecharts::isListOfList [$d get]]} {
@@ -204,10 +211,10 @@ oo::define ticklecharts::dataset {
                         error "'$info' should be a string or num for this '$key' value..."
                     }
 
-                    setdef options $_key -minversion 5 -validvalue {} -type $mytype -default $info
+                    ${ns}::setdef options $_key -minversion 5 -validvalue {} -type $mytype -default $info
                 }
 
-                lappend opts [merge $options [string map $k $item]]
+                lappend opts [${ns}::merge $options [string map $k $item]]
                 set options {}
             }
 
@@ -222,4 +229,17 @@ oo::define ticklecharts::dataset {
         }
     }
 
+}
+
+proc ticklecharts::isdatasetClass {value} {
+    # Check if value is dataset class
+    #
+    # value - obj or string
+    #
+    # Returns true if 'value' is a dataset class, false otherwise.
+    return [expr {
+            [ticklecharts::isAObject $value] && 
+            [string match "*::dataset" [ticklecharts::typeOfClass $value]]
+        }
+    ]
 }
