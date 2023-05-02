@@ -64,7 +64,7 @@ oo::define ticklecharts::chart3D {
         # Returns default and options type according to a key (name of procedure)
         # to stdout.
 
-        set methodClass [info class methods ticklecharts::chart3D]
+        set methodClass [info class methods [self class]]
 
         foreach {key value} $args {
             switch -exact -- $key {
@@ -94,7 +94,7 @@ oo::define ticklecharts::chart3D {
         }
 
         foreach method $methods {
-            if {[catch {info class definition ticklecharts::chart3D $method} infomethod]} {continue}
+            if {[catch {info class definition [self class] $method} infomethod]} {continue}
             foreach linebody [split $infomethod "\n"] {
                 set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
                 set linebody [string trim $linebody]
@@ -168,41 +168,74 @@ oo::define ticklecharts::chart3D {
         #             will be removed and new components will
         #             be created according to the new option.
         #             (false by default)
+        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
+        #             to insert an JSON obj in Tsb Webview.
+        #             'eval' JSON obj is not recommended (security reasons).
+        #             JSON.parse is safe but 'function', 'js variable'
+        #             in JSON obj are not supported.
+        #             (false by default)
         #
         # Returns nothing.
-        if {![namespace exists ::tsb]} {
+
+        if {!$::ticklecharts::tsbIsReady} {
             error "::tsb file should be sourced..."
-        }
-
-        if {[info exists ::tsb::ready] && !$::tsb::ready} {
-            error "::tsb is not ready..."
-        }
-
-        if {![info exists ::ID]} {
-            error "::ID tsb variable should be present..."
-        }
-
-        if {![info exists ::W]} {
-            error "::W tsb variable (window webview) should be present..."
         }
 
         set opts_tsb [ticklecharts::tsbOptions $args]
         set json [my toJSON]
 
-        # 'function' inside Json is not supported...
-        # Raise an error if present.
-        ticklecharts::checkJsFunc [my options]
-
         set height   [lindex [dict get $opts_tsb -height] 0]
         set renderer [lindex [dict get $opts_tsb -renderer] 0]
         set merge    [lindex [dict get $opts_tsb -merge] 0]
+        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
 
-        set idEDiv [format {id_%s%s} $::ticklecharts::tsb_uuid $::ID]
+        if {!$evalJSON} {
+            ticklecharts::checkJsFunc [my options]
+        }
 
-        $::W call eSrc $::ticklecharts::escript    ; # load if necessary 'echarts' script
-        $::W call eSrc $::ticklecharts::eGLscript  ; # load if necessary 'echarts.GL' script
-        $::W call eDiv $idEDiv $height             ; # set div  + echarts height
-        after 100 [list $::W call eSeries $idEDiv $json $renderer $merge]
+        set uuid $::ticklecharts::etsb::uuid
+        # load if necessary 'echarts' js script...
+        #
+        set type ""
+        foreach script {escript eGLscript} {
+            set ejs [set ::ticklecharts::$script]
+            if {[dict exists $::ticklecharts::etsb::path $script]} {
+                set type "text"
+            } else {
+                if {[string match {https://*} $ejs]} {
+                    set type "source"
+                } else {
+                    # If I understand, it is not possible to insert 
+                    # a local file directly with the 'src' attribute in Webview.
+                    #
+                    if {![file exists $ejs]} {
+                        error "could not find this file :'$ejs'"
+                    }
+                    try {
+                        set f [open $ejs r] ; # read *.js file
+                        set ejs [read $f] ; close $f
+                        # write full js script... inside tsb
+                        set ::ticklecharts::$script $ejs
+                        set type "text"
+                        dict incr ::ticklecharts::etsb::path $script
+                    } on error {result options} {
+                        return -options $options $result
+                    }
+                }
+            }
+            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
+        }
+        set idEDiv [format {id_%s%s} $uuid $::ID]
+        # set div + echarts height
+        #
+        $::W call eDiv $idEDiv $height
+        # 
+        after 100 [list $::W call eSeries \
+                                  $idEDiv $json \
+                                  $renderer $merge \
+                                  $evalJSON]
+
+        set ::ticklecharts::theme "custom"
 
         return {}
     }
@@ -372,6 +405,46 @@ oo::define ticklecharts::chart3D {
         return {}
     }
 
+    method Add {args} {
+        # This method is identical to methods for adding series, it is a 
+        # different way of writing it.
+        #
+        # The first argument takes the name of the series to be added
+        # By example to add a Bar 3D series,
+        # you should write like this :
+        # $chart Add "bar3DSeries" -data ...
+        # It is the same thing that main method.
+        #
+        # Note : Probably that in my next major release, I would choose
+        # this way of writing to add a 3D series... To ensure conformity with other
+        # classes (layout, timeline)
+        #
+        # Returns nothing
+
+        switch -exact -- [lindex $args 0] {
+            "line3DSeries"  {my AddLine3DSeries   {*}[lrange $args 1 end]}
+            "bar3DSeries"   {my AddBar3DSeries    {*}[lrange $args 1 end]}
+            "surfaceSeries" {my AddSurfaceSeries  {*}[lrange $args 1 end]}
+            default         {
+                set lb [info class definition [self class] [self method]]
+                set series {}
+                foreach line [split $lb "\n"] {
+                    set line [string trim $line]
+                    if {[regexp {\"([a-zA-Z]+)\"\s+\{my} $line -> case]} {
+                        lappend series $case
+                    }
+                }
+                set series [format {%s or %s} \
+                           [join [lrange $series 0 end-1] ", "] \
+                           [lindex $series end]]
+                error "First arg should be (case sensitive):'$series'\
+                       instead of '[lindex $args 0]'"
+            }
+        }
+
+        return {}
+    }
+
     method SetOptions {args} {
         # Add options chart3D (available for all charts 3D)
         #
@@ -379,7 +452,7 @@ oo::define ticklecharts::chart3D {
         #
         # args - Options described below.
         #
-        # -grid3D        - grid3D options      https://echarts.apache.org/en/option-gl.html#grid3D
+        # -grid3D   - grid3D options  https://echarts.apache.org/en/option-gl.html#grid3D
         #
         # Returns nothing    
         set opts {}
@@ -417,6 +490,7 @@ oo::define ticklecharts::chart3D {
         set keyList [list {*}[dict keys $opts] {*}$key2d]
         set keyopts [lmap k $keyList {lassign [split $k "="] _ key ; format -%s $key}]
         set newDict [dict remove $args {*}$keyopts]
+
         # Adds global 3D options first
         if {![llength $_opts3D_global]} {
             set optsg          [ticklecharts::globalOptions3D $newDict]
@@ -425,18 +499,19 @@ oo::define ticklecharts::chart3D {
         }
 
         foreach {key value} $opts {
-            if {![ticklecharts::isAObject $value]} {
-                error "should be an object... eDict or eList"
+            if {[ticklecharts::iseDictClass $value] || [ticklecharts::iseListClass $value]} {
+                set f [ticklecharts::optsToEchartsHuddle [$value get]]
+                lappend _options3D $key [list {*}$f]
+            } else {
+                error "should be an object... eDict or eList for this key: '$key'"
             }
-            set f [ticklecharts::optsToEchartsHuddle [$value get]]
-            lappend _options3D $key [list {*}$f]
         }
 
         return {}
     }
 
-    # export method
+    # export of methods
     export AddLine3DSeries AddBar3DSeries AddSurfaceSeries \
-           Xaxis3D Yaxis3D Zaxis3D SetOptions Render RenderTsb
+           Xaxis3D Yaxis3D Zaxis3D SetOptions Render RenderTsb Add
 
 }
