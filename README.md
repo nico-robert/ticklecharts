@@ -1,6 +1,6 @@
 ticklEcharts - chart library
 ==========================
-Tcl wrapper for [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript Visualization library).
+Tcl wrapper around [Apache ECharts JavaScript library](https://echarts.apache.org/en/index.html).
 
 ![Photo gallery](images/all.png)
 
@@ -19,7 +19,7 @@ set chart [ticklecharts::chart new]
 
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 $chart Yaxis
-$chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
+$chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 
 $chart Render
 ```
@@ -43,7 +43,7 @@ $chart Yaxis
 ```
 ```tcl
 # Initializes line series
-$chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
+$chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 ```
 Here `-data` corresponds to the Y values. (:warning: `-data` option should be a list of list `[list {...}]`)
 
@@ -64,7 +64,7 @@ $chart Render
 | _-jsecharts_ | full path `echarts.min.js` file (by default `cdn` script)
 | _-jsvar_ | variable name js (default value : `option_[ticklecharts::uuid]`)
 | _-script_ | jsfunc (default value : `"null"`)
-| _-class_ | specify container's CSS class (default value : `"chart-container"`)
+| _-class_ | specify container's CSS (default value : `"chart-container"`)
 | _-style_ | add inline style (default value : `width:'-width'; height:'-height';`)
 
 ```tcl
@@ -76,13 +76,13 @@ Data series :
 `-data` (y values only) : 
 ```tcl
 # Example for lineseries
-$chart AddLineSeries -data [list {150 230 224 218 135 147 260}]
+$chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 $chart Yaxis
 ```
 `-data` (x, y values) : 
 ```tcl
 # Example for lineseries
-$chart AddLineSeries -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
+$chart Add "lineSeries" -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # Mon = X value
 # 150 = Y value
 # And now -data in Xaxis method can be deleted and written like this :
@@ -93,7 +93,7 @@ $chart Yaxis
 ```tcl
 # Example for lineseries
 # Additional options on the graph... see ticklecharts::lineItem in options.tcl
-$chart AddLineSeries -dataLineItem {
+$chart Add "lineSeries" -dataLineItem {
                                 {name "Mon" value 150}
                                 {name "Tue" value 230}
                                 {name "Wed" value 224}
@@ -119,7 +119,7 @@ $chart SetOptions -dataset $obj
 # Add line series.
 $chart Xaxis
 $chart Yaxis
-$chart AddLineSeries -seriesLayoutBy "row"
+$chart Add "lineSeries" -seriesLayoutBy "row"
 ```
 Useful methods :
 -------------------------
@@ -168,8 +168,8 @@ $chart getOptions -option title
 ```
 2. Delete _series_ by index:
 ```tcl
-$chart AddLineSeries -data [list {1 2 3 4}]
-$chart AddBarSeries  -data [list {4 5 6 7}]
+$chart Add "lineSeries" -data [list {1 2 3 4}]
+$chart Add "barSeries"  -data [list {4 5 6 7}]
 
 # Delete bar series :
 $chart deleteSeries 1
@@ -330,6 +330,9 @@ set ::ticklecharts::echarts_version "X.X.X" ; # Echarts version
 set ::ticklecharts::gl_version      "X.X.X" ; # Echarts GL version
 set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
 set ::ticklecharts::wc_version      "X.X.X" ; # wordcloud version
+
+ # Verify if a URL exists when num version changed.
+set ::ticklecharts::checkURL "True" ; # default "False"
 ```
 `Note` : _All the above variables can be modified in the `ticklecharts.tcl` file_.
 
@@ -360,16 +363,16 @@ $chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5
                                    -axisLabel {formatter "<0123>value<0125> °C"}
 
 # Add bars...
-$chart AddBarSeries -name "Evaporation" \
-                    -data [list {2.0 4.9 7.0 23.2 25.6 76.7 135.6 162.2 32.6 20.0 6.4 3.3}]
+$chart Add "barSeries" -name "Evaporation" \
+                       -data [list {2.0 4.9 7.0 23.2 25.6 76.7 135.6 162.2 32.6 20.0 6.4 3.3}]
                     
-$chart AddBarSeries -name "Precipitation" \
-                    -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}]                    
+$chart Add "barSeries" -name "Precipitation" \
+                       -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}]                    
 
 # Add line...                    
-$chart AddLineSeries -name "Temperature" \
-                     -yAxisIndex 1 \
-                     -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
+$chart Add "lineSeries" -name "Temperature" \
+                        -yAxisIndex 1 \
+                        -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
 
 
 set fbasename [file rootname [file tail [info script]]]
@@ -398,8 +401,8 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
     
 $line Xaxis -data [list $data_0] -boundaryGap "False"
 $line Yaxis
-$line AddLineSeries -data [list $data_0] -areaStyle {} -smooth true
-$line AddLineSeries -data [list $data_1] -smooth true
+$line Add "lineSeries" -data [list $data_0] -areaStyle {} -smooth true
+$line Add "lineSeries" -data [list $data_1] -smooth true
 
 set bar [ticklecharts::chart new]
 
@@ -408,16 +411,16 @@ $bar SetOptions -legend {top "2%" left "20%"}
 $bar Xaxis -data [list {A B C D E}] \
            -axisLabel [list show "True" formatter $js]
 $bar Yaxis
-$bar AddBarSeries -data [list {50 6 80 120 30}]
-$bar AddBarSeries -data [list {20 30 50 100 25}]
+$bar Add "barSeries" -data [list {50 6 80 120 30}]
+$bar Add "barSeries" -data [list {20 30 50 100 25}]
 
 set pie [ticklecharts::chart new]
 
 $pie SetOptions -legend {top "6%" left "65%"} 
 
-$pie AddPieSeries -name "Access From" -radius [list {"50%" "70%"}] \
-                  -labelLine {show "True"} \
-                  -dataPieItem {
+$pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
+                     -labelLine {show "True"} \
+                     -dataPieItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}
@@ -551,3 +554,19 @@ Release :
 *  **22-Mar-2023** : 3.1.1
     - Support array for `dataset` dimension (with `ticklecharts::eList` class).
     - Adds a new method `RenderTsb` to interact with [Taygete Scrap Book](https://wiki.tcl-lang.org/page/Taygete+Scrap+Book) (see demo next link).
+*  **02-May-2023** : 3.1.2
+    - Adds new `Add` method for `chart` and `chart3D` class (To reflect this changes some examples + README file have been updated).   
+    e.g : To add a `pie series` you should write like this : `$chart Add "pieSeries" -data ...` instead of      
+    `$chart AddPieSeries -data ...` (Note: the `main` method is still active)   
+        - _Note_ : Probably that in my `next` major release, I would choose this way of writing to add a series...   
+          To ensure conformity with other classes (`Gridlayout`, `timeline`)
+    - `RenderTsb` method has been updated :
+        - New argument `-evalJSON` has been added (see [this file](examples/tsb/README.md) for detail).
+        - This new minor release allows to load an entire `JS script` instead of `https://` link.
+    - Adds a `trace` command for series (The goal here is to find if certain values match each other).   
+    Currently only tested for `line` series.
+    - Adds a new command `ticklecharts::urlExists?` + global variable `::ticklecharts::checkURL`   
+    to verify if URL exists (disabled by default) when the num version changed. Uses `curl` command (Available for Windows and Mac OS)
+    - Fixed a bug for the `multiversion` property, when the num version is lower than the `-minversion` property.
+    - `pkgIndex.tcl` file has been completely reworked.
+    - Cosmetic changes.

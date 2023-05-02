@@ -171,68 +171,46 @@
 # 22-Mar-2023 : v3.1.1
                 # Support array for `dataset` dimension (with `ticklecharts::eList` class).
                 # Adds a new method `RenderTsb` to interact with Taygete Scrap Book (https://wiki.tcl-lang.org/page/Taygete+Scrap+Book).
+# 02-May-2023 : v3.1.2
+                # Adds new `Add` method for `chart` and `chart3D` class (To reflect this changes some examples + README file have been updated).   
+                   # e.g : To add a `pie series` you should write like this : `$chart Add "pieSeries" -data ...` instead of      
+                   # `$chart AddPieSeries -data ...` (Note: the `main` method is still active)   
+                   #     Note : Probably that in my `next` major release, I would choose this way of writing to add a series...   
+                   #     To ensure conformity with other classes (`Gridlayout`, `timeline`)
+                # `RenderTsb` method has been updated :
+                   #     New argument `-evalJSON` has been added (see [this file](examples/tsb/README.md) for detail).
+                   #     This new minor release allows to load an entire `JS script` instead of `https://` link.
+                # Adds a `trace` command for series (The goal here is to find if certain values match each other).   
+                   # Currently only tested for `line` series.
+                # Adds a new command `ticklecharts::urlExists?` + global variable `::ticklecharts::checkURL`   
+                   # to verify if URL exists (disabled by default) when the num version changed. Uses `curl` command (Available for Windows and Mac OS)
+                # Fixed a bug for the `multiversion` property, when the num version is lower than the `-minversion` property.
+                # `pkgIndex.tcl` file has been completely reworked.
+                # Cosmetic changes.
+
 
 package require Tcl 8.6
 package require huddle 0.3
 
-set dir [file dirname [file normalize [info script]]]
-
-source [file join $dir utils.tcl]
-source [file join $dir chart.tcl]
-source [file join $dir chart3D.tcl]
-source [file join $dir ehuddle.tcl]
-source [file join $dir huddle_patch.tcl]
-source [file join $dir eformat.tcl]
-source [file join $dir jsfunc.tcl]
-source [file join $dir layout.tcl]
-source [file join $dir global_options.tcl]
-source [file join $dir global_options3D.tcl]
-source [file join $dir series.tcl]
-source [file join $dir series3D.tcl]
-source [file join $dir options.tcl]
-source [file join $dir options3D.tcl]
-source [file join $dir axis.tcl]
-source [file join $dir axis3D.tcl]
-source [file join $dir theme.tcl]
-source [file join $dir dataset.tcl]
-source [file join $dir timeline.tcl]
-source [file join $dir ecolor.tcl]
-source [file join $dir etypes.tcl]
-
 namespace eval ticklecharts {
-
-    variable version         3.1.1  ; # ticklEcharts version
+    variable version         3.1.2 ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version
     variable gl_version      2.0.9 ; # Echarts GL version
     variable wc_version      2.1.0 ; # wordCloud version
     variable gmap_version    1.5.0 ; # gmap version
     variable keyGMAPI        "??"  ; # Please replace '??' with your own API key.
-    variable edir            $dir
+    variable edir            [file dirname [file normalize [info script]]]
     variable theme           "custom"
     variable htmlstdout      "True"
     variable minProperties   "False"
-    variable htmltemplate    [file join $dir html template.html]
+    variable tsbIsReady      "False" ; # Tsb package.
+    variable checkURL        "False" ; # Verify if a URL exists.
+    variable htmltemplate    [file join $edir html template.html]
     variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
     variable eGLscript       "https://cdn.jsdelivr.net/npm/echarts-gl@${gl_version}/dist/echarts-gl.min.js"
     variable wcscript        "https://cdn.jsdelivr.net/npm/echarts-wordcloud@${wc_version}/dist/echarts-wordcloud.min.js"
     variable gmscript        "https://cdn.jsdelivr.net/npm/echarts-extension-gmap@${gmap_version}/dist/echarts-extension-gmap.min.js"
     variable gapiscript      "https://maps.googleapis.com/maps/api/js?key=${keyGMAPI}"
-    
-    # When version is modified add trace command.
-    trace add variable echarts_version write ticklecharts::traceEchartsVersion
-    trace add variable gl_version      write ticklecharts::traceEchartsGLVersion
-    trace add variable gmap_version    write ticklecharts::traceGmapVersion
-    trace add variable wc_version      write ticklecharts::traceWCVersion
-    trace add variable keyGMAPI        write ticklecharts::traceKeyGMAPI
-
-    # https://wiki.tcl-lang.org/page/Taygete+Scrap+Book
-    if {[namespace exists ::tsb]} {
-        variable tsb_uuid      [uuid] ; # Generate uuid for <div> tsb...
-        variable minProperties "True" ; # To gain speed
-    }
-
 }
-
-namespace import ticklecharts::setdef ticklecharts::merge
 
 package provide ticklecharts $::ticklecharts::version
