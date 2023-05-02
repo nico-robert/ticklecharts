@@ -72,10 +72,12 @@ proc ticklecharts::linksItem {value key} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
+
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            error "item list for '$levelP' must have an even number of elements..."
         }
 
         setdef options source      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -86,7 +88,7 @@ proc ticklecharts::linksItem {value key} {
         setdef options blur        -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
         setdef options select      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
 
-        if {[infoNameProc 2 "graphSeries"]} {
+        if {[ticklecharts::whichSeries? $levelP] eq "graphSeries"} {
             setdef options source            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
             setdef options target            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
             setdef options symbol            -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
@@ -1269,7 +1271,6 @@ proc ticklecharts::timelineItem {value} {
 
     # remove key(s)...
     set d [dict remove $d tooltip]
-    
 
     set options [merge $options $d]
 
@@ -1333,79 +1334,82 @@ proc ticklecharts::itemStyle {value} {
 
     set d [dict get $value $key]
     
-    setdef options color            -minversion 5  -validvalue formatColor         -type e.color|str.t|jsfunc|null -default $color
-    setdef options borderColor      -minversion 5  -validvalue formatColor         -type e.color|str|null          -default "rgb(0, 0, 0)"
-    setdef options borderWidth      -minversion 5  -validvalue {}                  -type num|null                  -default "nothing"
-    setdef options borderType       -minversion 5  -validvalue formatBorderType    -type str|num|list.n            -default "solid"
-    setdef options borderDashOffset -minversion 5  -validvalue {}                  -type num|null                  -default 0
-    setdef options borderCap        -minversion 5  -validvalue formatCap           -type str                       -default "butt"
-    setdef options borderJoin       -minversion 5  -validvalue formatJoin          -type str                       -default "bevel"
-    setdef options borderMiterLimit -minversion 5  -validvalue {}                  -type num                       -default 10
-    setdef options shadowBlur       -minversion 5  -validvalue {}                  -type num|null                  -default "nothing"
-    setdef options shadowColor      -minversion 5  -validvalue formatColor         -type str|null                  -default "nothing"
-    setdef options shadowOffsetX    -minversion 5  -validvalue {}                  -type num|null                  -default "nothing"
-    setdef options shadowOffsetY    -minversion 5  -validvalue {}                  -type num|null                  -default "nothing"
-    setdef options opacity          -minversion 5  -validvalue formatOpacity       -type num|null                  -default 1
-    setdef options decal            -minversion 5  -validvalue {}                  -type dict|null                 -default [ticklecharts::decal $d]
+    setdef options color            -minversion 5  -validvalue formatColor         -type e.color|str.t|jsfunc|null -trace 0  -default $color
+    setdef options borderColor      -minversion 5  -validvalue formatColor         -type e.color|str|null          -trace 0  -default "rgb(0, 0, 0)"
+    setdef options borderWidth      -minversion 5  -validvalue {}                  -type num|null                  -trace 0  -default "nothing"
+    setdef options borderType       -minversion 5  -validvalue formatBorderType    -type str|num|list.n            -trace 0  -default "solid"
+    setdef options borderDashOffset -minversion 5  -validvalue {}                  -type num|null                  -trace 0  -default 0
+    setdef options borderCap        -minversion 5  -validvalue formatCap           -type str                       -trace 0  -default "butt"
+    setdef options borderJoin       -minversion 5  -validvalue formatJoin          -type str                       -trace 1  -default "bevel"
+    setdef options borderMiterLimit -minversion 5  -validvalue {}                  -type num|null                  -trace 1  -default "nothing"
+    setdef options shadowBlur       -minversion 5  -validvalue {}                  -type num|null                  -trace 0  -default "nothing"
+    setdef options shadowColor      -minversion 5  -validvalue formatColor         -type str|null                  -trace 0  -default "nothing"
+    setdef options shadowOffsetX    -minversion 5  -validvalue {}                  -type num|null                  -trace 0  -default "nothing"
+    setdef options shadowOffsetY    -minversion 5  -validvalue {}                  -type num|null                  -trace 0  -default "nothing"
+    setdef options opacity          -minversion 5  -validvalue formatOpacity       -type num|null                  -trace 0  -default 1
+    setdef options decal            -minversion 5  -validvalue {}                  -type dict|null                 -trace 0  -default [ticklecharts::decal $d]
     #...
     
     if {[infoNameProc 2 "legend"]} {
-        setdef options color            -minversion 5  -validvalue formatColor   -type e.color|str|jsfunc|null -default "inherit"
-        setdef options borderColor      -minversion 5  -validvalue formatColor   -type e.color|str|null        -default "inherit"
-        setdef options borderWidth      -minversion 5  -validvalue {}            -type str|num|null            -default "auto"
-        setdef options borderDashOffset -minversion 5  -validvalue {}            -type str|num|null            -default "inherit"
-        setdef options borderCap        -minversion 5  -validvalue formatCap     -type str                     -default "inherit"
-        setdef options borderJoin       -minversion 5  -validvalue formatJoin    -type str                     -default "inherit"
-        setdef options borderMiterLimit -minversion 5  -validvalue {}            -type num|str                 -default "inherit"
-        setdef options opacity          -minversion 5  -validvalue formatOpacity -type str|num|null            -default "inherit"
+        setdef options color            -minversion 5  -validvalue formatColor   -type e.color|str|jsfunc|null -trace 0  -default "inherit"
+        setdef options borderColor      -minversion 5  -validvalue formatColor   -type e.color|str|null        -trace 0  -default "inherit"
+        setdef options borderWidth      -minversion 5  -validvalue {}            -type str|num|null            -trace 0  -default "auto"
+        setdef options borderDashOffset -minversion 5  -validvalue {}            -type str|num|null            -trace 0  -default "inherit"
+        setdef options borderCap        -minversion 5  -validvalue formatCap     -type str                     -trace 0  -default "inherit"
+        setdef options borderJoin       -minversion 5  -validvalue formatJoin    -type str                     -trace 0  -default "inherit"
+        setdef options borderMiterLimit -minversion 5  -validvalue {}            -type num|str                 -trace 0  -default "inherit"
+        setdef options opacity          -minversion 5  -validvalue formatOpacity -type str|num|null            -trace 0  -default "inherit"
     }
 
-    if {[infoNameProc 2 "pieSeries"] || [infoNameProc 2 "sunburstSeries"]} {
-        setdef options borderColor  -minversion 5  -validvalue formatColor   -type e.color|str|null     -default "nothing"
-        setdef options borderRadius -minversion 5  -validvalue formatBRadius -type str|num|list.d|null  -default "nothing"
-    }
+    switch -exact -- [ticklecharts::whichSeries? $levelP] {
+        "pieSeries" - "sunburstSeries" {
+            setdef options borderColor  -minversion 5  -validvalue formatColor   -type e.color|str|null    -trace 0 -default "nothing"
+            setdef options borderRadius -minversion 5  -validvalue formatBRadius -type str|num|list.d|null -trace 0 -default "nothing"
+        }
+        "treeSeries" {
+            setdef options borderColor  -minversion 5  -validvalue formatColor   -type e.color|str|null -trace 0 -default "#c23531"
+            setdef options borderWidth  -minversion 5  -validvalue {}            -type str|num|null     -trace 0 -default 1.5
+        }
+        "sankeySeries" {
+            setdef options borderColor  -minversion 5  -validvalue formatColor   -type e.color|str|null -trace 0 -default "inherit"
+        }
+        "barSeries" {
+            setdef options borderRadius -minversion 5  -validvalue {} -type num|list.n|null -trace 0  -default "nothing"
 
-    if {[infoNameProc 2 "treeSeries"]} {
-        setdef options borderColor      -minversion 5  -validvalue formatColor   -type e.color|str|null  -default "#c23531"
-        setdef options borderWidth      -minversion 5  -validvalue {}            -type str|num|null      -default 1.5
-    }
+            if {([dict exists $value -coordinateSystem] && [dict get $value -coordinateSystem] eq "polar") ||
+                ([ticklecharts::procDefaultValue "barSeries" "-coordinateSystem"] eq "polar")} {
+                setdef options borderRadius -minversion "5.4.2" -validvalue {} -type num|list.n|null -trace 0 -default "nothing"
+            }
+        }
+        "heatmapSeries" {
+            setdef options borderRadius -minversion "5.3.1" -validvalue {}  -type num|list.n|null -trace 0 -default "nothing"
+        }
+        "candlestickSeries" {
+            set color0       [expr {[keysOptsThemeExists $levelP.color0]       ? [echartsOptsTheme $levelP.color0] : "nothing"}]
+            set borderColor0 [expr {[keysOptsThemeExists $levelP.borderColor0] ? [echartsOptsTheme $levelP.borderColor0] : "nothing"}]
 
-    if {[infoNameProc 2 "sankeySeries"]} {
-        setdef options borderColor      -minversion 5  -validvalue formatColor   -type e.color|str|null  -default "inherit"
-    }
+            setdef options color0           -minversion 5       -validvalue formatColor   -type e.color|str.t|null  -trace 0  -default $color0
+            setdef options borderColor0     -minversion 5       -validvalue formatColor   -type e.color|str.t|null  -trace 0  -default $borderColor0
+            setdef options borderColorDoji  -minversion "5.4.1" -validvalue formatColor   -type e.color|str|null    -trace 0  -default "nothing"
+        }
 
-    if {[infoNameProc 2 "barSeries"]} {
-        setdef options borderRadius     -minversion 5  -validvalue {} -type num|null -default "nothing"
-    }
-
-    if {[infoNameProc 2 "heatmapSeries"]} {
-        setdef options borderRadius     -minversion "5.3.1" -validvalue {}  -type num|list.n|null -default "nothing"
-    }
-
-    if {[infoNameProc 2 "candlestickSeries"]} {
-        set color0       [expr {[keysOptsThemeExists $levelP.color0]       ? [echartsOptsTheme $levelP.color0] : "nothing"}]
-        set borderColor0 [expr {[keysOptsThemeExists $levelP.borderColor0] ? [echartsOptsTheme $levelP.borderColor0] : "nothing"}]
-
-        setdef options color0           -minversion 5       -validvalue formatColor   -type e.color|str.t|null  -default $color0
-        setdef options borderColor0     -minversion 5       -validvalue formatColor   -type e.color|str.t|null  -default $borderColor0
-        setdef options borderColorDoji  -minversion "5.4.1" -validvalue formatColor   -type e.color|str|null    -default "nothing"
     }
 
     if {[infoNameProc 2 "timelineOpts"]} {
-        setdef options color           -minversion 5  -validvalue formatColor   -type e.color|str.t|null      -default $color
-        setdef options borderColor     -minversion 5  -validvalue formatColor   -type e.color|str|null        -default "nothing"
+        setdef options color           -minversion 5  -validvalue formatColor   -type e.color|str.t|null  -trace 0  -default $color
+        setdef options borderColor     -minversion 5  -validvalue formatColor   -type e.color|str|null    -trace 0  -default "nothing"
     }
 
     if {[infoNameProc 3 "anchor"]} {
         # gauge series...
-        setdef options borderColor   -minversion 5  -validvalue formatColor  -type e.color|str|null  -default "nothing"
+        setdef options borderColor   -minversion 5  -validvalue formatColor  -type e.color|str|null  -trace 0  -default "nothing"
     }
 
     if {[infoNameProc 3 "levelsTreeMapItem"]} {
-        setdef options borderColor            -minversion 5  -validvalue formatColor -type e.color|str|null     -default "nothing"
-        setdef options borderRadius           -minversion 5  -validvalue {}          -type str|num|list.d|null  -default "nothing"
-        setdef options gapWidth               -minversion 5  -validvalue {}          -type num|null             -default "nothing"
-        setdef options borderColorSaturation  -minversion 5  -validvalue {}          -type num|null             -default "nothing"
+        setdef options borderColor            -minversion 5  -validvalue formatColor -type e.color|str|null     -trace 0  -default "nothing"
+        setdef options borderRadius           -minversion 5  -validvalue {}          -type str|num|list.d|null  -trace 0  -default "nothing"
+        setdef options gapWidth               -minversion 5  -validvalue {}          -type num|null             -trace 0  -default "nothing"
+        setdef options borderColorSaturation  -minversion 5  -validvalue {}          -type num|null             -trace 0  -default "nothing"
     }
 
     # remove key(s)...
@@ -2021,8 +2025,8 @@ proc ticklecharts::splitLine {value} {
     setdef options symbolOffset    -minversion 5  -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
 
-    if {[infoNameProc 2 "gaugeSeries"]} {
-        # add flag length series-gauge.splitLine
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
+        # add 'length' property to series-gauge.splitLine
         setdef options length    -minversion 5  -validvalue {} -type num|null -default "nothing"
         setdef options distance  -minversion 5  -validvalue {} -type num|null -default "nothing"
     }
@@ -2156,7 +2160,7 @@ proc ticklecharts::axisLine {value} {
     setdef options symbolOffset    -minversion 5  -validvalue {}               -type list.n|num|null -default "nothing"
     setdef options lineStyle       -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
 
-    if {[infoNameProc 2 "gaugeSeries"]} {
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
         setdef options show      -minversion 5  -validvalue {} -type bool -default "True"
         setdef options roundCap  -minversion 5  -validvalue {} -type bool -default "False"
         # remove flag from dict options... not present in series-gauge.axisLine
@@ -2279,6 +2283,7 @@ proc ticklecharts::labelLine {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
     setdef options show         -minversion 5  -validvalue {} -type bool          -default "True"
@@ -2289,13 +2294,14 @@ proc ticklecharts::labelLine {value} {
     setdef options lineStyle    -minversion 5  -validvalue {} -type dict|null     -default [ticklecharts::lineStyle $d]
     #...
 
-    if {[infoNameProc 2 "pieSeries"]} {
-        setdef options length           -minversion 5  -validvalue {} -type num|null  -default "nothing"
-        setdef options maxSurfaceAngle  -minversion 5  -validvalue {} -type num|null  -default "nothing"
-    }
-
-    if {[infoNameProc 2 "funnelSeries"]} {
-        setdef options length           -minversion 5  -validvalue {} -type num|null  -default "nothing"
+    switch -exact -- [ticklecharts::whichSeries? $levelP] {
+        "pieSeries" {
+            setdef options length           -minversion 5  -validvalue {} -type num|null  -default "nothing"
+            setdef options maxSurfaceAngle  -minversion 5  -validvalue {} -type num|null  -default "nothing"
+        }
+        "funnelSeries" {
+            setdef options length -minversion 5  -validvalue {} -type num|null  -default "nothing"
+        }
     }
 
     # remove key(s)...
@@ -2362,8 +2368,8 @@ proc ticklecharts::axisTick {value} {
     setdef options length          -minversion 5  -validvalue {}             -type num            -default 5
     setdef options lineStyle       -minversion 5  -validvalue {}             -type dict|null      -default [ticklecharts::lineStyle $d]
 
-    if {[infoNameProc 2 "gaugeSeries"]} {
-        # add flag 'distance' series-gauge.axisTick
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
+        # add 'distance' property to series-gauge.axisTick
         setdef options splitNumber  -minversion 5  -validvalue {} -type num|null -default "nothing"
         setdef options distance     -minversion 5  -validvalue {} -type num|null -default "nothing"
     }
@@ -2466,8 +2472,8 @@ proc ticklecharts::axisLabel {value} {
     setdef options ellipsis             -minversion 5       -validvalue {}                      -type str                -default "..."
     #...
 
-    if {[infoNameProc 2 "gaugeSeries"]} {
-        # add flag 'distance' series-gauge.axisLabel
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
+        # add 'distance' property to series-gauge.axisLabel
         setdef options rotate    -minversion "5.4.0" -validvalue formatGaugeALrotate -type str|num  -default 0
         setdef options distance  -minversion 5       -validvalue {}                  -type num|null -default "nothing"
     }
@@ -2561,69 +2567,70 @@ proc ticklecharts::label {value} {
 
     set d [dict get $value $key]
     
-    setdef options show                 -minversion 5  -validvalue {}                      -type bool               -default "True"
-    setdef options offset               -minversion 5  -validvalue {}                      -type list.n|null        -default "nothing"
-    setdef options position             -minversion 5  -validvalue formatPosition          -type str|list.d|null    -default "nothing"
-    setdef options distance             -minversion 5  -validvalue {}                      -type num|list.n|null    -default "nothing"
-    setdef options rotate               -minversion 5  -validvalue formatRotate            -type num                -default 0
-    setdef options formatter            -minversion 5  -validvalue {}                      -type str|jsfunc|null    -default "nothing"
-    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str.t|null -default $color
-    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle         -type str                -default "normal"
-    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight        -type str|num            -default "normal"
-    setdef options fontFamily           -minversion 5  -validvalue {}                      -type str                -default "sans-serif"
-    setdef options fontSize             -minversion 5  -validvalue {}                      -type num|null           -default 12
-    setdef options align                -minversion 5  -validvalue formatTextAlign         -type str|null           -default "nothing"
-    setdef options verticalAlign        -minversion 5  -validvalue formatVerticalTextAlign -type str|null           -default "nothing"
-    setdef options lineHeight           -minversion 5  -validvalue {}                      -type num|null           -default 12
-    setdef options backgroundColor      -minversion 5  -validvalue formatColor             -type e.color|str|null   -default "nothing"
-    setdef options borderColor          -minversion 5  -validvalue formatColor             -type str|null           -default "nothing"
-    setdef options borderWidth          -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options borderType           -minversion 5  -validvalue formatBorderType        -type str|num|list.n     -default "solid"
-    setdef options borderDashOffset     -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options borderRadius         -minversion 5  -validvalue {}                      -type num                -default 2
-    setdef options padding              -minversion 5  -validvalue {}                      -type num|list.n|null    -default "nothing"
-    setdef options shadowColor          -minversion 5  -validvalue formatColor             -type str                -default "transparent"
-    setdef options shadowBlur           -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options shadowOffsetX        -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options shadowOffsetY        -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options width                -minversion 5  -validvalue {}                      -type num|null           -default "nothing"
-    setdef options height               -minversion 5  -validvalue {}                      -type num|null           -default "nothing"
-    setdef options textBorderColor      -minversion 5  -validvalue formatColor             -type str|null           -default "null"
-    setdef options textBorderWidth      -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType    -type str|num|list.n     -default "solid"
-    setdef options textBorderDashOffset -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options textShadowColor      -minversion 5  -validvalue formatColor             -type str                -default "transparent"
-    setdef options textShadowBlur       -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num                -default 0
-    setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str                -default "truncate"
-    setdef options ellipsis             -minversion 5  -validvalue {}                      -type str                -default "..."
-    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null          -default [ticklecharts::richItem $d]
+    setdef options show                 -minversion 5  -validvalue {}                      -type bool               -trace 0  -default "True"
+    setdef options offset               -minversion 5  -validvalue {}                      -type list.n|null        -trace 0  -default "nothing"
+    setdef options position             -minversion 5  -validvalue formatPosition          -type str|list.d|null    -trace 0  -default "nothing"
+    setdef options distance             -minversion 5  -validvalue {}                      -type num|list.n|null    -trace 1  -default "nothing"
+    setdef options rotate               -minversion 5  -validvalue formatRotate            -type num                -trace 0  -default 0
+    setdef options formatter            -minversion 5  -validvalue {}                      -type str|jsfunc|null    -trace 0  -default "nothing"
+    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str.t|null -trace 0  -default $color
+    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle         -type str                -trace 0  -default "normal"
+    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight        -type str|num            -trace 0  -default "normal"
+    setdef options fontFamily           -minversion 5  -validvalue {}                      -type str                -trace 0  -default "sans-serif"
+    setdef options fontSize             -minversion 5  -validvalue {}                      -type num|null           -trace 0  -default 12
+    setdef options align                -minversion 5  -validvalue formatTextAlign         -type str|null           -trace 0  -default "nothing"
+    setdef options verticalAlign        -minversion 5  -validvalue formatVerticalTextAlign -type str|null           -trace 0  -default "nothing"
+    setdef options lineHeight           -minversion 5  -validvalue {}                      -type num|null           -trace 0  -default 12
+    setdef options backgroundColor      -minversion 5  -validvalue formatColor             -type e.color|str|null   -trace 0  -default "nothing"
+    setdef options borderColor          -minversion 5  -validvalue formatColor             -type str|null           -trace 0  -default "nothing"
+    setdef options borderWidth          -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options borderType           -minversion 5  -validvalue formatBorderType        -type str|num|list.n     -trace 0  -default "solid"
+    setdef options borderDashOffset     -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options borderRadius         -minversion 5  -validvalue {}                      -type num                -trace 0  -default 2
+    setdef options padding              -minversion 5  -validvalue {}                      -type num|list.n|null    -trace 0  -default "nothing"
+    setdef options shadowColor          -minversion 5  -validvalue formatColor             -type str                -trace 0  -default "transparent"
+    setdef options shadowBlur           -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options shadowOffsetX        -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options shadowOffsetY        -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options width                -minversion 5  -validvalue {}                      -type num|null           -trace 0  -default "nothing"
+    setdef options height               -minversion 5  -validvalue {}                      -type num|null           -trace 0  -default "nothing"
+    setdef options textBorderColor      -minversion 5  -validvalue formatColor             -type str|null           -trace 0  -default "null"
+    setdef options textBorderWidth      -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType    -type str|num|list.n     -trace 0  -default "solid"
+    setdef options textBorderDashOffset -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options textShadowColor      -minversion 5  -validvalue formatColor             -type str                -trace 0  -default "transparent"
+    setdef options textShadowBlur       -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num                -trace 0  -default 0
+    setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str                -trace 0  -default "truncate"
+    setdef options ellipsis             -minversion 5  -validvalue {}                      -type str                -trace 1  -default "..."
+    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null          -trace 0  -default [ticklecharts::richItem $d]
     #...
 
     if {[infoNameProc 3 "axisPointer"]} {
         set options [dict remove $options position distance rotate align verticalAlign borderType borderDashOffset borderRadius]
 
-        setdef options precision  -minversion 5  -validvalue {} -type str|num  -default "auto"
-        setdef options margin     -minversion 5  -validvalue {} -type num|null -default 3
+        setdef options precision  -minversion 5  -validvalue {} -type str|num  -trace 0  -default "auto"
+        setdef options margin     -minversion 5  -validvalue {} -type num|null -trace 0  -default 3
     }
 
-    if {[infoNameProc 2 "pieSeries"]} {
-        setdef options alignTo             -minversion 5  -validvalue formatAlignTo -type str          -default "none"
-        setdef options edgeDistance        -minversion 5  -validvalue {}            -type str|num|null -default "25%"
-        setdef options bleedMargin         -minversion 5  -validvalue {}            -type num|null     -default 10
-        setdef options margin              -minversion 5  -validvalue {}            -type num|null     -default "nothing"
-        setdef options distanceToLabelLine -minversion 5  -validvalue {}            -type num          -default 5
-    }
-
-    if {[infoNameProc 2 "sunburstSeries"]} {
-        setdef options rotate       -minversion 5  -validvalue formatRotate    -type num|str         -default "radial"
-        setdef options align        -minversion 5  -validvalue formatTextAlign -type str|null        -default "center"
-        setdef options minAngle     -minversion 5  -validvalue {}              -type num|null        -default "nothing"
-        setdef options position     -minversion 5  -validvalue formatPosition  -type str|list.d|null -default "inside"
-        setdef options distance     -minversion 5  -validvalue {}              -type num|null        -default 5
-        setdef options borderRadius -minversion 5  -validvalue {}              -type num             -default 0
-        setdef options offset       -minversion 5  -validvalue {}              -type list.n|null     -default "nothing"
+    switch -exact -- [ticklecharts::whichSeries? $levelP] {
+        "pieSeries" {
+            setdef options alignTo             -minversion 5  -validvalue formatAlignTo -type str          -trace 0  -default "none"
+            setdef options edgeDistance        -minversion 5  -validvalue {}            -type str|num|null -trace 0  -default "25%"
+            setdef options bleedMargin         -minversion 5  -validvalue {}            -type num|null     -trace 0  -default 10
+            setdef options margin              -minversion 5  -validvalue {}            -type num|null     -trace 0  -default "nothing"
+            setdef options distanceToLabelLine -minversion 5  -validvalue {}            -type num          -trace 0  -default 5
+        }
+        "sunburstSeries" {
+            setdef options rotate       -minversion 5  -validvalue formatRotate    -type num|str         -trace 0 -default "radial"
+            setdef options align        -minversion 5  -validvalue formatTextAlign -type str|null        -trace 0 -default "center"
+            setdef options minAngle     -minversion 5  -validvalue {}              -type num|null        -trace 0 -default "nothing"
+            setdef options position     -minversion 5  -validvalue formatPosition  -type str|list.d|null -trace 0 -default "inside"
+            setdef options distance     -minversion 5  -validvalue {}              -type num|null        -trace 0 -default 5
+            setdef options borderRadius -minversion 5  -validvalue {}              -type num             -trace 0 -default 0
+            setdef options offset       -minversion 5  -validvalue {}              -type list.n|null     -trace 0 -default "nothing"
+        }
     }
 
     # remove key(s) from dict value rich...
@@ -2649,43 +2656,43 @@ proc ticklecharts::endLabel {value} {
 
     set d [dict get $value $key]
 
-    setdef options show                 -minversion 5  -validvalue {}                      -type bool             -default "False"
-    setdef options distance             -minversion 5  -validvalue {}                      -type num              -default 5
-    setdef options rotate               -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options offset               -minversion 5  -validvalue {}                      -type list.d|null      -default "nothing"
-    setdef options formatter            -minversion 5  -validvalue {}                      -type str|jsfunc|null  -default "nothing"
-    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str|null -default "inherit"
-    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle         -type str              -default "normal"
-    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight        -type str|num          -default "normal"
-    setdef options fontFamily           -minversion 5  -validvalue {}                      -type str              -default "sans-serif"
-    setdef options fontSize             -minversion 5  -validvalue {}                      -type num              -default 12
-    setdef options align                -minversion 5  -validvalue formatTextAlign         -type str              -default "left"
-    setdef options verticalAlign        -minversion 5  -validvalue formatVerticalTextAlign -type str              -default "top"
-    setdef options lineHeight           -minversion 5  -validvalue {}                      -type num              -default 12
-    setdef options backgroundColor      -minversion 5  -validvalue formatColor             -type e.color|str      -default "transparent"
-    setdef options borderColor          -minversion 5  -validvalue formatColor             -type str|null         -default "nothing"
-    setdef options borderWidth          -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options borderType           -minversion 5  -validvalue formatBorderType        -type str|num|list.n   -default "solid"
-    setdef options borderDashOffset     -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options borderRadius         -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options padding              -minversion 5  -validvalue {}                      -type num|list.n       -default 0
-    setdef options shadowColor          -minversion 5  -validvalue formatColor             -type str              -default "transparent"
-    setdef options shadowBlur           -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options shadowOffsetX        -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options shadowOffsetY        -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options width                -minversion 5  -validvalue {}                      -type num              -default 100
-    setdef options height               -minversion 5  -validvalue {}                      -type num              -default 100
-    setdef options textBorderColor      -minversion 5  -validvalue formatColor             -type str|null         -default "null"
-    setdef options textBorderWidth      -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType    -type str|num|list.n   -default "solid"
-    setdef options textBorderDashOffset -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options textShadowColor      -minversion 5  -validvalue formatColor             -type str              -default "transparent"
-    setdef options textShadowBlur       -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num              -default 0
-    setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str              -default "truncate"
-    setdef options ellipsis             -minversion 5  -validvalue {}                      -type str              -default "..."
-    setdef options valueAnimation       -minversion 5  -validvalue {}                      -type bool|null        -default "nothing"
+    setdef options show                 -minversion 5  -validvalue {}                      -type bool             -trace 0  -default "False"
+    setdef options distance             -minversion 5  -validvalue {}                      -type num              -trace 0  -default 5
+    setdef options rotate               -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options offset               -minversion 5  -validvalue {}                      -type list.d|null      -trace 0  -default "nothing"
+    setdef options formatter            -minversion 5  -validvalue {}                      -type str|jsfunc|null  -trace 0  -default "nothing"
+    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str|null -trace 0  -default "inherit"
+    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle         -type str              -trace 0  -default "normal"
+    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight        -type str|num          -trace 0  -default "normal"
+    setdef options fontFamily           -minversion 5  -validvalue {}                      -type str              -trace 0  -default "sans-serif"
+    setdef options fontSize             -minversion 5  -validvalue {}                      -type num              -trace 0  -default 12
+    setdef options align                -minversion 5  -validvalue formatTextAlign         -type str              -trace 0  -default "left"
+    setdef options verticalAlign        -minversion 5  -validvalue formatVerticalTextAlign -type str              -trace 0  -default "top"
+    setdef options lineHeight           -minversion 5  -validvalue {}                      -type num              -trace 0  -default 12
+    setdef options backgroundColor      -minversion 5  -validvalue formatColor             -type e.color|str      -trace 0  -default "transparent"
+    setdef options borderColor          -minversion 5  -validvalue formatColor             -type str|null         -trace 0  -default "nothing"
+    setdef options borderWidth          -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options borderType           -minversion 5  -validvalue formatBorderType        -type str|num|list.n   -trace 0  -default "solid"
+    setdef options borderDashOffset     -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options borderRadius         -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options padding              -minversion 5  -validvalue {}                      -type num|list.n       -trace 0  -default 0
+    setdef options shadowColor          -minversion 5  -validvalue formatColor             -type str              -trace 0  -default "transparent"
+    setdef options shadowBlur           -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options shadowOffsetX        -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options shadowOffsetY        -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options width                -minversion 5  -validvalue {}                      -type num              -trace 0  -default 100
+    setdef options height               -minversion 5  -validvalue {}                      -type num              -trace 0  -default 100
+    setdef options textBorderColor      -minversion 5  -validvalue formatColor             -type str|null         -trace 0  -default "null"
+    setdef options textBorderWidth      -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType    -type str|num|list.n   -trace 0  -default "solid"
+    setdef options textBorderDashOffset -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options textShadowColor      -minversion 5  -validvalue formatColor             -type str              -trace 0  -default "transparent"
+    setdef options textShadowBlur       -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num              -trace 0  -default 0
+    setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str              -trace 0  -default "truncate"
+    setdef options ellipsis             -minversion 5  -validvalue {}                      -type str              -trace 1  -default "..."
+    setdef options valueAnimation       -minversion 5  -validvalue {}                      -type bool|null        -trace 0  -default "nothing"
     #...
 
     set options [merge $options $d]
@@ -2758,34 +2765,34 @@ proc ticklecharts::lineStyle {value} {
     set color     [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
     set linewidth [expr {[keysOptsThemeExists $levelP.width] ? [echartsOptsTheme $levelP.width] : "nothing"}]
     
-    setdef options color          -minversion 5  -validvalue formatColor         -type e.color|str.t|jsfunc|list.st|null -default $color
-    setdef options width          -minversion 5  -validvalue {}                  -type num.t|null                        -default $linewidth
-    setdef options type           -minversion 5  -validvalue formatLineStyleType -type list.n|num|str                    -default "solid"
-    setdef options dashOffset     -minversion 5  -validvalue {}                  -type num                               -default 0
-    setdef options cap            -minversion 5  -validvalue formatCap           -type str                               -default "butt"
-    setdef options join           -minversion 5  -validvalue formatJoin          -type str                               -default "bevel"
-    setdef options miterLimit     -minversion 5  -validvalue {}                  -type num                               -default 10
-    setdef options shadowBlur     -minversion 5  -validvalue {}                  -type num                               -default 0
-    setdef options shadowColor    -minversion 5  -validvalue formatColor         -type str|null                          -default "null"
-    setdef options shadowOffsetX  -minversion 5  -validvalue {}                  -type num                               -default 0
-    setdef options shadowOffsetY  -minversion 5  -validvalue {}                  -type num                               -default 0
-    setdef options curveness      -minversion 5  -validvalue {}                  -type num|null                          -default "nothing"
-    setdef options opacity        -minversion 5  -validvalue formatOpacity       -type num|null                          -default 1
+    setdef options color          -minversion 5  -validvalue formatColor         -type e.color|str.t|jsfunc|list.st|null -trace 0  -default $color
+    setdef options width          -minversion 5  -validvalue {}                  -type num.t|null                        -trace 0  -default $linewidth
+    setdef options type           -minversion 5  -validvalue formatLineStyleType -type list.n|num|str                    -trace 0  -default "solid"
+    setdef options dashOffset     -minversion 5  -validvalue {}                  -type num                               -trace 0  -default 0
+    setdef options cap            -minversion 5  -validvalue formatCap           -type str                               -trace 0  -default "butt"
+    setdef options join           -minversion 5  -validvalue formatJoin          -type str                               -trace 1  -default "bevel"
+    setdef options miterLimit     -minversion 5  -validvalue {}                  -type num|null                          -trace 1  -default "nothing"
+    setdef options shadowBlur     -minversion 5  -validvalue {}                  -type num                               -trace 0  -default 0
+    setdef options shadowColor    -minversion 5  -validvalue formatColor         -type str|null                          -trace 0  -default "null"
+    setdef options shadowOffsetX  -minversion 5  -validvalue {}                  -type num                               -trace 0  -default 0
+    setdef options shadowOffsetY  -minversion 5  -validvalue {}                  -type num                               -trace 0  -default 0
+    setdef options curveness      -minversion 5  -validvalue {}                  -type num|null                          -trace 0  -default "nothing"
+    setdef options opacity        -minversion 5  -validvalue formatOpacity       -type num|null                          -trace 0  -default 1
     #...
     
     if {[infoNameProc 2 "legend"]} {                                          
-        setdef options color      -minversion 5  -validvalue formatColor         -type e.color|str|null  -default "inherit"
-        setdef options width      -minversion 5  -validvalue {}                  -type str|num|null      -default "auto"
-        setdef options type       -minversion 5  -validvalue formatLineStyleType -type list.n|num|str    -default "inherit"
-        setdef options dashOffset -minversion 5  -validvalue {}                  -type num|str           -default "inherit"
-        setdef options cap        -minversion 5  -validvalue formatCap           -type str               -default "inherit"
-        setdef options join       -minversion 5  -validvalue formatJoin          -type str               -default "inherit"
-        setdef options miterLimit -minversion 5  -validvalue {}                  -type num|str           -default "inherit"
-        setdef options shadowBlur -minversion 5  -validvalue {}                  -type num|str           -default "inherit"
-        setdef options opacity    -minversion 5  -validvalue formatOpacity       -type num|str           -default "inherit"
+        setdef options color      -minversion 5  -validvalue formatColor         -type e.color|str|null  -trace 0  -default "inherit"
+        setdef options width      -minversion 5  -validvalue {}                  -type str|num|null      -trace 0  -default "auto"
+        setdef options type       -minversion 5  -validvalue formatLineStyleType -type list.n|num|str    -trace 0  -default "inherit"
+        setdef options dashOffset -minversion 5  -validvalue {}                  -type num|str           -trace 0  -default "inherit"
+        setdef options cap        -minversion 5  -validvalue formatCap           -type str               -trace 0  -default "inherit"
+        setdef options join       -minversion 5  -validvalue formatJoin          -type str               -trace 0  -default "inherit"
+        setdef options miterLimit -minversion 5  -validvalue {}                  -type num|str           -trace 0  -default "inherit"
+        setdef options shadowBlur -minversion 5  -validvalue {}                  -type num|str           -trace 0  -default "inherit"
+        setdef options opacity    -minversion 5  -validvalue formatOpacity       -type num|str           -trace 0  -default "inherit"
     }
 
-    if {[infoNameProc 2 "gaugeSeries"]} {
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
         # remove flag from dict options... not present in series-gauge.axisLine
         set options [dict remove $options type dashOffset cap join miterLimit opacity]
     }
@@ -2824,37 +2831,37 @@ proc ticklecharts::textStyle {value key} {
     set fontSize   [expr {[keysOptsThemeExists $levelP.fontSize]   ? [echartsOptsTheme $levelP.fontSize] : "nothing"}]
     set fontWeight [expr {[keysOptsThemeExists $levelP.fontWeight] ? [echartsOptsTheme $levelP.fontWeight] : "nothing"}]
 
-    setdef options color                -minversion 5  -validvalue formatColor          -type str.t|jsfunc|null -default $color
-    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle      -type str               -default "normal"
-    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight     -type str.t|num.t|null  -default $fontWeight
-    setdef options fontFamily           -minversion 5  -validvalue {}                   -type str               -default "sans-serif"
-    setdef options fontSize             -minversion 5  -validvalue {}                   -type num.t|null        -default $fontSize
-    setdef options lineHeight           -minversion 5  -validvalue {}                   -type num|null          -default "nothing"
-    setdef options width                -minversion 5  -validvalue {}                   -type num               -default 100
-    setdef options height               -minversion 5  -validvalue {}                   -type num               -default 50
-    setdef options textBorderColor      -minversion 5  -validvalue {}                   -type str|null          -default "null"
-    setdef options textBorderWidth      -minversion 5  -validvalue {}                   -type num               -default 0
-    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n    -default "solid"
-    setdef options textBorderDashOffset -minversion 5  -validvalue {}                   -type num               -default 0
-    setdef options textShadowColor      -minversion 5  -validvalue formatColor          -type str               -default "transparent"
-    setdef options textShadowBlur       -minversion 5  -validvalue {}                   -type num               -default 0
-    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                   -type num               -default 0
-    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                   -type num               -default 0
-    setdef options overflow             -minversion 5  -validvalue formatOverflow       -type str|null          -default "null"
-    setdef options ellipsis             -minversion 5  -validvalue {}                   -type str               -default "..."
+    setdef options color                -minversion 5  -validvalue formatColor          -type str.t|jsfunc|null -trace 0  -default $color
+    setdef options fontStyle            -minversion 5  -validvalue formatFontStyle      -type str               -trace 0  -default "normal"
+    setdef options fontWeight           -minversion 5  -validvalue formatFontWeight     -type str.t|num.t|null  -trace 0  -default $fontWeight
+    setdef options fontFamily           -minversion 5  -validvalue {}                   -type str               -trace 0  -default "sans-serif"
+    setdef options fontSize             -minversion 5  -validvalue {}                   -type num.t|null        -trace 0  -default $fontSize
+    setdef options lineHeight           -minversion 5  -validvalue {}                   -type num|null          -trace 0  -default "nothing"
+    setdef options width                -minversion 5  -validvalue {}                   -type num               -trace 0  -default 100
+    setdef options height               -minversion 5  -validvalue {}                   -type num               -trace 0  -default 50
+    setdef options textBorderColor      -minversion 5  -validvalue {}                   -type str|null          -trace 0  -default "null"
+    setdef options textBorderWidth      -minversion 5  -validvalue {}                   -type num               -trace 0  -default 0
+    setdef options textBorderType       -minversion 5  -validvalue formatTextBorderType -type str|num|list.n    -trace 0  -default "solid"
+    setdef options textBorderDashOffset -minversion 5  -validvalue {}                   -type num               -trace 0  -default 0
+    setdef options textShadowColor      -minversion 5  -validvalue formatColor          -type str               -trace 0  -default "transparent"
+    setdef options textShadowBlur       -minversion 5  -validvalue {}                   -type num               -trace 0  -default 0
+    setdef options textShadowOffsetX    -minversion 5  -validvalue {}                   -type num               -trace 0  -default 0
+    setdef options textShadowOffsetY    -minversion 5  -validvalue {}                   -type num               -trace 0  -default 0
+    setdef options overflow             -minversion 5  -validvalue formatOverflow       -type str|null          -trace 0  -default "null"
+    setdef options ellipsis             -minversion 5  -validvalue {}                   -type str               -trace 1  -default "..."
     #...
 
-    if {[infoNameProc 2 "wordcloudSeries"]} {
-        setdef options fontSize    -minversion 5  -validvalue {}  -type null  -default "nothing"
-        setdef options lineHeight  -minversion 5  -validvalue {}  -type null  -default "nothing"
-        setdef options width       -minversion 5  -validvalue {}  -type null  -default "nothing"
-        setdef options height      -minversion 5  -validvalue {}  -type null  -default "nothing"
-        setdef options ellipsis    -minversion 5  -validvalue {}  -type null  -default "nothing"
+    if {[ticklecharts::whichSeries? $levelP] eq "wordcloudSeries"} {
+        setdef options fontSize    -minversion 5  -validvalue {}  -type null  -trace 0  -default "nothing"
+        setdef options lineHeight  -minversion 5  -validvalue {}  -type null  -trace 0  -default "nothing"
+        setdef options width       -minversion 5  -validvalue {}  -type null  -trace 0  -default "nothing"
+        setdef options height      -minversion 5  -validvalue {}  -type null  -trace 0  -default "nothing"
+        setdef options ellipsis    -minversion 5  -validvalue {}  -type null  -trace 0  -default "nothing"
     }
 
     if {$key eq "subtextStyle"} {
-        setdef options align         -minversion 5  -validvalue formatTextAlign         -type str|null  -default "nothing"
-        setdef options verticalAlign -minversion 5  -validvalue formatVerticalTextAlign -type str|null  -default "nothing" 
+        setdef options align         -minversion 5  -validvalue formatTextAlign         -type str|null  -trace 0  -default "nothing"
+        setdef options verticalAlign -minversion 5  -validvalue formatVerticalTextAlign -type str|null  -trace 0  -default "nothing" 
     }
 
     set options [merge $options $d]
@@ -3996,8 +4003,7 @@ proc ticklecharts::progress {value} {
     setdef options itemStyle   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $d]
     setdef options lineStyle   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::lineStyle $d]
 
-
-    if {[infoNameProc 2 "gaugeSeries"]} {
+    if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
         setdef options show     -minversion 5  -validvalue {} -type bool -default "False"
         setdef options overlap  -minversion 5  -validvalue {} -type bool -default "True"
         setdef options width    -minversion 5  -validvalue {} -type num  -default 10
