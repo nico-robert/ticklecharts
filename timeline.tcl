@@ -43,7 +43,7 @@ oo::define ticklecharts::timeline {
         #
         # args - Options described in proc ticklecharts::timelineOpts below.
         #
-        # return nothing
+        # Returns nothing
 
         set _opts {}
         lappend _opts "@L=timeline" [ticklecharts::timelineOpts $args]
@@ -54,7 +54,7 @@ oo::define ticklecharts::timeline {
     method Add {chart args} {
         # Add data dict to timeline options
         #
-        # return nothing
+        # Returns nothing
 
         if {[llength $args] == 0} {
             error "data should be present... for timeline option"
@@ -150,7 +150,7 @@ oo::define ticklecharts::timeline {
         #
         # Be careful the tsb.tcl file should be sourced...
         #
-        # # args - Options described below.
+        # args - Options described below.
         #
         # -renderer - 'canvas' or 'svg'
         # -height   - size html canvas
@@ -158,44 +158,76 @@ oo::define ticklecharts::timeline {
         #             will be removed and new components will
         #             be created according to the new option.
         #             (false by default)
+        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
+        #             to insert an JSON obj in Tsb Webview.
+        #             'eval' JSON obj is not recommended (security reasons).
+        #             JSON.parse is safe but 'function', 'js variable'
+        #             in JSON obj are not supported.
+        #             (false by default)
         #
         # Returns nothing.
-        if {![namespace exists ::tsb]} {
+
+        if {!$::ticklecharts::tsbIsReady} {
             error "::tsb file should be sourced..."
-        }
-
-        if {[info exists ::tsb::ready] && !$::tsb::ready} {
-            error "::tsb is not ready..."
-        }
-
-        if {![info exists ::ID]} {
-            error "::ID tsb variable should be present..."
-        }
-
-        if {![info exists ::W]} {
-            error "::W tsb variable (window webview) should be present..."
         }
 
         set opts_tsb [ticklecharts::tsbOptions $args]
         set json [my toJSON]
 
-        # 'function' inside Json is not supported...
-        # Raise an error if present.
-        foreach chart $_charts {
-            ticklecharts::checkJsFunc [$chart options]
-        }
-
         set height   [lindex [dict get $opts_tsb -height] 0]
         set renderer [lindex [dict get $opts_tsb -renderer] 0]
         set merge    [lindex [dict get $opts_tsb -merge] 0]
+        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
 
-        set idEDiv [format {id_%s%s} $::ticklecharts::tsb_uuid $::ID]
+        if {!$evalJSON} {
+            foreach chart $_charts {
+                ticklecharts::checkJsFunc [$chart options]
+            }
+        }
 
-        $::W call eSrc $::ticklecharts::escript    ; # load if necessary 'echarts' script
-        $::W call eSrc $::ticklecharts::eGLscript  ; # load if necessary 'echarts.GL' script
-        $::W call eSrc $::ticklecharts::wcscript   ; # load if necessary 'echarts.wordcloud' script
-        $::W call eDiv $idEDiv $height             ; # set div  + echarts height
-        after 100 [list $::W call eSeries $idEDiv $json $renderer $merge]
+        set uuid $::ticklecharts::etsb::uuid
+        # load if necessary 'echarts' js script...
+        #
+        set type ""
+        foreach script {escript eGLscript wcscript} {
+            set ejs [set ::ticklecharts::$script]
+            if {[dict exists $::ticklecharts::etsb::path $script]} {
+                set type "text"
+            } else {
+                if {[ticklecharts::isURL? $ejs]} {
+                    set type "source"
+                } else {
+                    # If I understand, it is not possible to insert 
+                    # a local file directly with the 'src' attribute in Webview.
+                    #
+                    if {![file exists $ejs]} {
+                        error "could not find this file :'$ejs'"
+                    }
+                    try {
+                        set f [open $ejs r] ; # read *.js file
+                        set ejs [read $f] ; close $f
+                        # write full js script... inside tsb
+                        set ::ticklecharts::$script $ejs
+                        set type "text"
+                        dict incr ::ticklecharts::etsb::path $script
+                    } on error {result options} {
+                        return -options $options $result
+                    }
+                }
+            }
+            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
+        }
+        set idEDiv [format {id_%s%s} $uuid $::ID]
+        # set div + echarts height
+        #
+        $::W call eDiv $idEDiv $height
+        # 
+        after 100 [list $::W call eSeries \
+                                  $idEDiv $json \
+                                  $renderer $merge \
+                                  $evalJSON]
+
+        set ::ticklecharts::theme "custom"
 
         return {}
     }
@@ -229,9 +261,16 @@ oo::define ticklecharts::timeline {
         set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
-        set fp [open $outputFile w+]
-        puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
-        close $fp
+        # Replaces json data in html...
+        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
+
+        try {
+            set   fp [open $outputFile w+]
+            puts  $fp $jsonData
+            close $fp
+        } on error {result options} {
+            error [dict get $options -errorinfo]
+        }
         
         if {$::ticklecharts::htmlstdout} {
             puts [format {html:%s} [file nativename $outputFile]]
@@ -240,7 +279,7 @@ oo::define ticklecharts::timeline {
         return $outputFile
     }
 
-    # export method
+    # export of methods
     export Add SetOptions Render RenderTsb
 
 }
