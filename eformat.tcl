@@ -14,8 +14,9 @@ proc ticklecharts::formatEcharts {formattype value key} {
     # Returns nothing.
     variable echarts_version
 
-    if {$formattype eq ""} {return}
-    if {$value eq "nothing" || $value eq "null"} {return}
+    if {$formattype eq "" || $value eq "nothing" || $value eq "null"} {
+        return
+    }
 
     set nameproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
 
@@ -453,44 +454,16 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {cartesian2d polar geo}
 
-            if {[infoNameProc 2 "themeRiverSeries"]} {
-                set validvalue {single}
-            }
-
-            if {[infoNameProc 2 "parallelSeries"]} {
-                set validvalue {parallel}
-            }
-        
-            if {[infoNameProc 2 "graphSeries"]} {
-                append validvalue " calendar none"
-            }
-
-            if {[infoNameProc 2 "pieSeries"]} {
-                append validvalue " calendar none gmap"
-            }
-
-            if {[infoNameProc 2 "heatmapSeries"]} {
-                append validvalue " calendar gmap"
-            }
-
-            if {[infoNameProc 2 "graphSeries"]} {
-                lappend validvalue calendar
-            }
-
-            if {[infoNameProc 2 "scatterSeries"]} {
-                append validvalue " calendar gmap"
-            }
-
-            if {[infoNameProc 2 "linesSeries"]} {
-                lappend validvalue gmap
-            }
-
-            if {[infoNameProc 2 "line3DSeries"]} {
-                set validvalue cartesian3D
-            }
-
-            if {[infoNameProc 2 "bar3DSeries"]} {
-                set validvalue {cartesian3D geo3D globe}
+            switch -exact -- [ticklecharts::whichSeries? $nameproc] {
+                "themeRiverSeries" {set validvalue "single"}
+                "parallelSeries"   {set validvalue "parallel"}
+                "graphSeries"      {append validvalue " calendar none"}
+                "pieSeries"        {append validvalue " calendar none gmap"}
+                "heatmapSeries"    {append validvalue " calendar gmap"}
+                "scatterSeries"    {append validvalue " calendar gmap"}
+                "linesSeries"      {lappend validvalue gmap}
+                "line3DSeries"     {set validvalue "cartesian3D"}
+                "bar3DSeries"      {set validvalue {cartesian3D geo3D globe}}
             }
 
             if {$value ni $validvalue} {
@@ -588,16 +561,14 @@ proc ticklecharts::formatEcharts {formattype value key} {
                         insideBottom insideTopLeft insideBottomLeft insideTopRight insideBottomRight
                     }
 
-                if {[infoNameProc 2 "barSeries"] && [ticklecharts::vCompare $echarts_version "5.2.0"] >= 0} {
-                    append validvalue " start insideStart middle insideEnd end"
-                }
-
-                if {[infoNameProc 2 "sunburstSeries"]} {
-                    append validvalue " outside"
-                }
-
-                if {[infoNameProc 2 "pieSeries"]} {
-                    set validvalue {outside inside inner center outer}
+                switch -exact -- [ticklecharts::whichSeries? $nameproc] {
+                    "barSeries" {
+                        if {[ticklecharts::vCompare $echarts_version "5.2.0"] >= 0} {
+                            append validvalue " start insideStart middle insideEnd end"
+                        }
+                    }
+                    "sunburstSeries" {append validvalue " outside"}
+                    "pieSeries"      {set validvalue {outside inside inner center outer}}
                 }
 
                 if {[infoNameProc 3 "calendar"]} {
@@ -606,7 +577,8 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
                 if {[infoNameProc 3 "markLine"]} {
                     set validvalue {
-                            start middle end insideStart insideStartTop insideStartBottom insideMiddle insideMiddleTop insideMiddleBottom
+                            start middle end insideStart insideStartTop insideStartBottom
+                            insideMiddle insideMiddleTop insideMiddleBottom
                             insideEnd insideEndTop insideEndBottom
                         }
                 }
@@ -726,7 +698,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {none self series ancestor descendant adjacency}
 
-            if {[infoNameProc 2 "treeSeries"]} {
+            if {[ticklecharts::whichSeries? $nameproc] eq "treeSeries"} {
                 if {[ticklecharts::vCompare $echarts_version "5.3.3"] >= 0} {
                     set validvalue {none ancestor descendant relative}
                 } else {
@@ -859,7 +831,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {rootToNode link}
 
-            if {[infoNameProc 2 "treemapSeries"]} {
+            if {[ticklecharts::whichSeries? $nameproc] eq "treemapSeries"} {
                 set validvalue {link zoomToNode}
             }
 
@@ -889,7 +861,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             # possible values...
             set validvalue {orthogonal radial}
 
-            if {[infoNameProc 2 "graphSeries"]} {
+            if {[ticklecharts::whichSeries? $nameproc] eq "graphSeries"} {
                 set validvalue {none circular force}
             }
 
