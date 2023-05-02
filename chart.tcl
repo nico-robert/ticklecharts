@@ -41,7 +41,7 @@ oo::class create ticklecharts::chart {
         set _opts_global {}
         set _options     {}
         set _dataset     {}
-        
+
         # Guess if current script has a 'Gridlayout' dataset.
         if {[ticklecharts::gridlayoutHasDataSetObj dataset]} {
             set _dataset $dataset
@@ -84,13 +84,13 @@ oo::define ticklecharts::chart {
         # includes dataset
         return $_dataset
     }
-    
+
     method isMixed {} {
         # Check if series options there is severals types (line, bar...)
         #
         # Returns true if severals types, otherwise false.
         set ktype {}
-    
+
         foreach {key opts} $_options {
             if {[string match {*series} $key]} {
                 if {[dict exists $opts @S=type]} {
@@ -110,7 +110,7 @@ oo::define ticklecharts::chart {
         #
         # Returns default and options type according to a key (name of procedure)
 
-        set methodClass [info class methods ticklecharts::chart]
+        set methodClass [info class methods [self class]]
 
         foreach {key value} $args {
             switch -exact -- $key {
@@ -140,7 +140,7 @@ oo::define ticklecharts::chart {
         }
 
         foreach method $methods {
-            if {[catch {info class definition ticklecharts::chart $method} infomethod]} {continue}
+            if {[catch {info class definition [self class] $method} infomethod]} {continue}
             foreach linebody [split $infomethod "\n"] {
                 set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
                 set linebody [string trim $linebody]
@@ -200,7 +200,7 @@ oo::define ticklecharts::chart {
 
         # init ehuddle.
         set _echartshchart [ticklecharts::ehuddle new]
-        
+
         foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
@@ -239,42 +239,74 @@ oo::define ticklecharts::chart {
         #             will be removed and new components will
         #             be created according to the new option.
         #             (false by default)
+        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
+        #             to insert an JSON obj in Tsb Webview.
+        #             'eval' JSON obj is not recommended (security reasons).
+        #             JSON.parse is safe but 'function', 'js variable'
+        #             in JSON obj are not supported.
+        #             (false by default)
         #
         # Returns nothing.
-        if {![namespace exists ::tsb]} {
+
+        if {!$::ticklecharts::tsbIsReady} {
             error "::tsb file should be sourced..."
-        }
-
-        if {[info exists ::tsb::ready] && !$::tsb::ready} {
-            error "::tsb is not ready..."
-        }
-
-        if {![info exists ::ID]} {
-            error "::ID tsb variable should be present..."
-        }
-
-        if {![info exists ::W]} {
-            error "::W tsb variable (window webview) should be present..."
         }
 
         set opts_tsb [ticklecharts::tsbOptions $args]
         set json [my toJSON]
 
-        # 'function' inside Json is not supported...
-        # Raise an error if present.
-        ticklecharts::checkJsFunc [my options]
-
         set height   [lindex [dict get $opts_tsb -height] 0]
         set renderer [lindex [dict get $opts_tsb -renderer] 0]
         set merge    [lindex [dict get $opts_tsb -merge] 0]
+        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
 
-        set idEDiv [format {id_%s%s} $::ticklecharts::tsb_uuid $::ID]
+        if {!$evalJSON} {
+            ticklecharts::checkJsFunc [my options]
+        }
 
-        $::W call eSrc $::ticklecharts::escript    ; # load if necessary 'echarts' script
-        $::W call eSrc $::ticklecharts::eGLscript  ; # load if necessary 'echarts.GL' script
-        $::W call eSrc $::ticklecharts::wcscript   ; # load if necessary 'echarts.wordcloud' script
-        $::W call eDiv $idEDiv $height             ; # set div  + echarts height
-        after 100 [list $::W call eSeries $idEDiv $json $renderer $merge]
+        set uuid $::ticklecharts::etsb::uuid
+        # load if necessary 'echarts' js script...
+        #
+        set type ""
+        foreach script {escript eGLscript wcscript} {
+            set ejs [set ::ticklecharts::$script]
+            if {[dict exists $::ticklecharts::etsb::path $script]} {
+                set type "text"
+            } else {
+                if {[ticklecharts::isURL? $ejs]} {
+                    set type "source"
+                } else {
+                    # If I understand, it is not possible to insert 
+                    # a local file directly with the 'src' attribute in Webview.
+                    #
+                    if {![file exists $ejs]} {
+                        error "could not find this file :'$ejs'"
+                    }
+                    try {
+                        set f [open $ejs r] ; # read *.js file
+                        set ejs [read $f] ; close $f
+                        # write full js script... inside tsb
+                        set ::ticklecharts::$script $ejs
+                        set type "text"
+                        dict incr ::ticklecharts::etsb::path $script
+                    } on error {result options} {
+                        error [dict get $options -errorinfo]
+                    }
+                }
+            }
+            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
+        }
+        set idEDiv [format {id_%s%s} $uuid $::ID]
+        # set div + echarts height
+        #
+        $::W call eDiv $idEDiv $height
+        # 
+        after 100 [list $::W call eSeries \
+                                  $idEDiv $json \
+                                  $renderer $merge \
+                                  $evalJSON]
+
+        set ::ticklecharts::theme "custom"
 
         return {}
     }
@@ -308,10 +340,17 @@ oo::define ticklecharts::chart {
         set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
-        set fp [open $outputFile w+]
-        puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
-        close $fp
-        
+        # Replaces json data in html...
+        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
+
+        try {
+            set   fp [open $outputFile w+]
+            puts  $fp $jsonData
+            close $fp
+        } on error {result options} {
+            error [dict get $options -errorinfo]
+        }
+
         if {$::ticklecharts::htmlstdout} {
             puts [format {html:%s} [file nativename $outputFile]]
         }
@@ -342,10 +381,10 @@ oo::define ticklecharts::chart {
         if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
             error "radiusAxis or angleAxis not supported with 'Xaxis'"
         }
-    
+
         set options [ticklecharts::xAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @D=xAxis [list {*}$f]
 
         return {}
@@ -366,15 +405,15 @@ oo::define ticklecharts::chart {
         if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
             error "radiusAxis or angleAxis not supported with 'Yaxis'"
         }
-    
+
         set options [ticklecharts::yAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @D=yAxis [list {*}$f]
 
-        return {}        
+        return {}
     }
-    
+
     method RadiusAxis {args} {
         # Init Radius axis chart (available only for polar chart)
         #
@@ -384,21 +423,21 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#radiusAxis
         #
-        # Returns nothing    
+        # Returns nothing
         set mykeys [my keys]
-    
+
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
             error "xAxis or yAxis not supported with 'radiusAxis'"
         }
-        
+
         set options [ticklecharts::radiusAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @L=radiusAxis [list {*}$f]
 
         return {}
     }
-    
+
     method AngleAxis {args} {
         # Init Angle axis chart (available only for polar chart)
         #
@@ -408,16 +447,16 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#angleAxis
         #
-        # Returns nothing      
+        # Returns nothing
         set mykeys [my keys]
-    
+
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
             error "xAxis or yAxis not supported with 'angleAxis'"
         }
-        
+
         set options [ticklecharts::angleAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @L=angleAxis [list {*}$f]
 
         return {}
@@ -432,11 +471,11 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#graphic
         #
-        # Returns nothing      
-        
+        # Returns nothing
+
         set options [ticklecharts::setGraphic $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @L=graphic [list {*}$f]
 
         return {}
@@ -451,16 +490,16 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#radar
         #
-        # Returns nothing      
+        # Returns nothing
         set mykeys [my keys]
-    
+
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
             error "xAxis or yAxis not supported with 'Radar coordinate'"
         }
-        
+
         set options [ticklecharts::radarCoordinate $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @D=radar [list {*}$f]
 
         return {}
@@ -475,16 +514,16 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#singleAxis
         #
-        # Returns nothing      
+        # Returns nothing
         set mykeys [my keys]
-    
+
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
             error "xAxis or yAxis not supported with 'SingleAxis'"
         }
-        
+
         set options [ticklecharts::singleAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options @D=singleAxis [list {*}$f]
 
         return {}
@@ -499,13 +538,13 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#parallelAxis
         #
-        # Returns nothing    
+        # Returns nothing
         set mykeys [my keys]
-    
+
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
             error "xAxis or yAxis not supported with 'parallelAxis'"
         }
-        
+
         set options [ticklecharts::parallelAxis $args]
         foreach axis $options {
             set f [ticklecharts::optsToEchartsHuddle $axis]
@@ -524,7 +563,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-bar
         #
-        # Returns nothing      
+        # Returns nothing
         incr _indexbarseries
 
         set options [ticklecharts::barSeries $_indexbarseries [self] $args]
@@ -534,7 +573,7 @@ oo::define ticklecharts::chart {
 
         return {}
     }
-    
+
     method AddLineSeries {args} {
         # Add data series chart (use only for line chart)
         #
@@ -544,7 +583,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-line
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexlineseries
 
         set options [ticklecharts::lineSeries $_indexlineseries [self] $args]
@@ -564,7 +603,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-pie
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexpieseries
 
         set options [ticklecharts::pieSeries $_indexpieseries [self] $args]
@@ -584,7 +623,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-funnel
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexfunnelseries
 
         set options [ticklecharts::funnelSeries $_indexfunnelseries [self] $args]
@@ -604,7 +643,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-radar
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexradarseries
 
         set options [ticklecharts::radarSeries $_indexradarseries $args]
@@ -614,7 +653,7 @@ oo::define ticklecharts::chart {
 
         return {}
     }
-    
+
     method AddScatterSeries {args} {
         # Add data series chart (use only for scatter chart)
         #
@@ -624,7 +663,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-scatter
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexscatterseries
 
         set options [ticklecharts::scatterSeries $_indexscatterseries [self] $args]
@@ -644,7 +683,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-heatmap
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexheatmapseries
 
         set options [ticklecharts::heatmapSeries $_indexheatmapseries [self] $args]
@@ -664,7 +703,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-sunburst
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexsunburstseries
 
         set options [ticklecharts::sunburstSeries $_indexsunburstseries $args]
@@ -684,7 +723,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-tree
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indextreeseries
 
         set options [ticklecharts::treeSeries $_indextreeseries $args]
@@ -704,7 +743,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-themeriver
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexthemeriverseries
 
         set options [ticklecharts::themeRiverSeries $_indexthemeriverseries $args]
@@ -724,7 +763,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-sankey
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexsankeyseries
 
         set options [ticklecharts::sankeySeries $_indexsankeyseries $args]
@@ -744,7 +783,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-pictorialBar
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexpictorialbarseries
 
         set options [ticklecharts::pictorialBarSeries $_indexpictorialbarseries [self] $args]
@@ -764,7 +803,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-candlesticks
         #
-        # Returns nothing     
+        # Returns nothing 
         incr _indexcandlestickseries
 
         set options [ticklecharts::candlestickSeries $_indexcandlestickseries [self] $args]
@@ -784,7 +823,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-parallel
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexparallelseries
 
         set options [ticklecharts::parallelSeries $_indexparallelseries $args]
@@ -804,7 +843,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-gauge
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexgaugeseries
 
         set options [ticklecharts::gaugeSeries $_indexgaugeseries $args]
@@ -824,7 +863,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-graph
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexgraphseries
 
         set options [ticklecharts::graphSeries $_indexgraphseries $args]
@@ -844,7 +883,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://github.com/ecomfe/echarts-wordcloud
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexwordCloudseries
 
         set options [ticklecharts::wordcloudSeries $_indexwordCloudseries $args]
@@ -864,7 +903,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-boxplot
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexboxplotseries
 
         set options [ticklecharts::boxplotSeries $_indexboxplotseries [self] $args]
@@ -884,7 +923,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-treemap
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indextreemapseries
 
         set options [ticklecharts::treemapSeries $_indextreemapseries $args]
@@ -904,7 +943,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-map
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexmapseries
 
         set options [ticklecharts::mapSeries $_indexmapseries [self] $args]
@@ -924,7 +963,7 @@ oo::define ticklecharts::chart {
         # or
         # from doc : https://echarts.apache.org/en/option.html#series-lines
         #
-        # Returns nothing     
+        # Returns nothing
         incr _indexlinesseries
 
         set options [ticklecharts::linesSeries $_indexlinesseries [self] $args]
@@ -934,7 +973,66 @@ oo::define ticklecharts::chart {
 
         return {}
     }
-    
+
+    method Add {args} {
+        # This method is identical to methods for adding series, it is a 
+        # different way of writing it.
+        #
+        # The first argument takes the name of the series to be added
+        # By example to add a line series,
+        # you should write like this :
+        # $chart Add "lineSeries" -data ...
+        # It is the same thing that main method.
+        #
+        # Note : Probably that in my next major release, I would choose
+        # this way of writing to add a series... To ensure conformity with other
+        # classes (layout, timeline)
+        #
+        # Returns nothing
+
+        switch -exact -- [lindex $args 0] {
+            "barSeries"          {my AddBarSeries           {*}[lrange $args 1 end]}
+            "lineSeries"         {my AddLineSeries          {*}[lrange $args 1 end]}
+            "pieSeries"          {my AddPieSeries           {*}[lrange $args 1 end]}
+            "funnelSeries"       {my AddFunnelSeries        {*}[lrange $args 1 end]}
+            "radarSeries"        {my AddRadarSeries         {*}[lrange $args 1 end]}
+            "scatterSeries"      {my AddScatterSeries       {*}[lrange $args 1 end]}
+            "heatmapSeries"      {my AddHeatmapSeries       {*}[lrange $args 1 end]}
+            "graphic"            {my AddGraphic             {*}[lrange $args 1 end]}
+            "sunburstSeries"     {my AddSunburstSeries      {*}[lrange $args 1 end]}
+            "treeSeries"         {my AddTreeSeries          {*}[lrange $args 1 end]}
+            "themeRiverSeries"   {my AddThemeRiverSeries    {*}[lrange $args 1 end]}
+            "sankeySeries"       {my AddSankeySeries        {*}[lrange $args 1 end]}
+            "pictorialBarSeries" {my AddPictorialBarSeries  {*}[lrange $args 1 end]}
+            "candlestickSeries"  {my AddCandlestickSeries   {*}[lrange $args 1 end]}
+            "parallelSeries"     {my AddParallelSeries      {*}[lrange $args 1 end]}
+            "gaugeSeries"        {my AddGaugeSeries         {*}[lrange $args 1 end]}
+            "graphSeries"        {my AddGraphSeries         {*}[lrange $args 1 end]}
+            "wordCloudSeries"    {my AddWordCloudSeries     {*}[lrange $args 1 end]}
+            "boxPlotSeries"      {my AddBoxPlotSeries       {*}[lrange $args 1 end]}
+            "treeMapSeries"      {my AddTreeMapSeries       {*}[lrange $args 1 end]}
+            "mapSeries"          {my AddMapSeries           {*}[lrange $args 1 end]}
+            "linesSeries"        {my AddLinesSeries         {*}[lrange $args 1 end]}
+            default              {
+                set lb [info class definition [self class] [self method]]
+                set series {}
+                foreach line [split $lb "\n"] {
+                    set line [string trim $line]
+                    if {[regexp {\"([a-zA-Z]+)\"\s+\{my} $line -> case]} {
+                        lappend series $case
+                    }
+                }
+                set series [format {%s or %s} \
+                           [join [lrange $series 0 end-1] ", "] \
+                           [lindex $series end]]
+                error "First arg should be (case sensitive):'$series'\
+                       instead of '[lindex $args 0]'"
+            }
+        }
+
+        return {}
+    }
+
     method SetOptions {args} {
         # Add options chart (available for all charts)
         #
@@ -976,13 +1074,13 @@ oo::define ticklecharts::chart {
         # -aria                    - https://echarts.apache.org/en/option.html#aria
         # -gmap                    - https://github.com/plainheart/echarts-extension-gmap
         #
-        # Returns nothing    
+        # Returns nothing
         set opts {}
 
         if {[dict exists $args -dataset]} {
             set dts [dict get $args -dataset]
-            if {![ticklecharts::isAObject $dts] || [$dts getType] ne "dataset"} {
-                error "key value -dataset should be a 'dataset' Class..."
+            if {![ticklecharts::isdatasetClass $dts]} {
+                error "key value '-dataset' should be a 'dataset' Class..."
             }
 
             foreach itemD [$dts get] {
@@ -992,19 +1090,19 @@ oo::define ticklecharts::chart {
             # set dataset chart instance.
             set _dataset $dts
         }
-    
+
         if {[dict exists $args -title]} {
             lappend opts "@D=title" [ticklecharts::title $args]
         }
-        
+
         if {[dict exists $args -polar]} {
             lappend opts "@L=polar" [ticklecharts::polar $args]
         }
-        
+
         if {[dict exists $args -legend]} {
             lappend opts "@D=legend" [ticklecharts::legend $args]
         }
-        
+
         if {[dict exists $args -tooltip]} {
             lappend opts "@D=tooltip" [ticklecharts::tooltip $args]
         }
@@ -1012,7 +1110,7 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -grid]} {
             lappend opts "@D=grid" [ticklecharts::grid $args]
         }
-        
+
         if {[dict exists $args -visualMap]} {
             # v2.8.1
             # keep compatibility with previous versions...
@@ -1050,7 +1148,7 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -brush]} {
             lappend opts "@L=brush" [ticklecharts::brush $args]
         }
-    
+
         if {[dict exists $args -axisPointer]} {
             lappend opts "@L=axisPointer" [ticklecharts::axisPointerGlobal $args]
         }
@@ -1080,6 +1178,7 @@ oo::define ticklecharts::chart {
         # delete keys from args to avoid warning for global options
         set keyopts [lmap k [dict keys $opts] {lassign [split $k "="] _ key ; format -%s $key}]
         set args [dict remove $args {*}$keyopts]
+
         # Adds global options first 
         if {![llength $_opts_global]} {
             set optsg        [ticklecharts::globalOptions $args]
@@ -1088,20 +1187,21 @@ oo::define ticklecharts::chart {
         }
 
         foreach {key value} $opts {
-            if {![ticklecharts::isAObject $value]} {
-                error "should be an object... eDict or eList"
+            if {[ticklecharts::iseDictClass $value] || [ticklecharts::iseListClass $value]} {
+                set f [ticklecharts::optsToEchartsHuddle [$value get]]
+                lappend _options $key [list {*}$f]
+            } else {
+                error "should be an object... eDict or eList for this key: '$key'"
             }
-            set f [ticklecharts::optsToEchartsHuddle [$value get]]
-            lappend _options $key [list {*}$f]
         }
 
         return {}
     }
 
-    # export method
+    # export of methods
     export AddBarSeries AddLineSeries AddPieSeries AddFunnelSeries AddRadarSeries AddScatterSeries \
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries RenderTsb
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries RenderTsb Add
 }
