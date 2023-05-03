@@ -12,7 +12,7 @@ trace add variable ticklecharts::echarts_version write [list ticklecharts::trace
 trace add variable ticklecharts::gl_version      write [list ticklecharts::traceEchartsGLVersion "2.0.0" $::ticklecharts::gl_version] 
 trace add variable ticklecharts::gmap_version    write [list ticklecharts::traceGmapVersion      "1.5.0" $::ticklecharts::gmap_version]
 trace add variable ticklecharts::wc_version      write [list ticklecharts::traceWCVersion        "2.0.0" $::ticklecharts::wc_version]
-trace add variable ticklecharts::keyGMAPI        write ticklecharts::traceKeyGMAPI
+trace add variable ticklecharts::keyGMAPI        write [list ticklecharts::traceKeyGMAPI]
 
 trace add execution ticklecharts::xAxis      leave ticklecharts::trackEnd
 trace add execution ticklecharts::yAxis      leave ticklecharts::trackEnd
