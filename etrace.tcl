@@ -241,7 +241,7 @@ proc ticklecharts::trackEnd {call args} {
                             # https://echarts.apache.org/en/option.html#series-line.showAllSymbol
                             if {[dict exists $etrace $obj.xAxis]} {
                                 set _d [dict get $etrace $obj.xAxis] 
-                                if {$value ne "nothing" && [dict exists $_d -type]} {
+                                if {($value ne "nothing") && [dict exists $_d -type]} {
                                     set v [lindex [dict get $_d -type] 0]
                                     if {$v ne "category"} {
                                         puts "warning (trace): xAxis.type should be set to 'category'\
@@ -254,7 +254,7 @@ proc ticklecharts::trackEnd {call args} {
                             # https://echarts.apache.org/en/option.html#series-line.stack
                             if {[dict exists $etrace $obj.yAxis]} {
                                 set _d [dict get $etrace $obj.yAxis] 
-                                if {$value ne "nothing" && [dict exists $_d -type]} {
+                                if {($value ne "nothing") && [dict exists $_d -type]} {
                                     set v [lindex [dict get $_d -type] 0]
                                     if {$v in {time category}} {
                                         puts "warning (trace): yAxis.type should be set to 'value' or 'log'\
@@ -267,7 +267,7 @@ proc ticklecharts::trackEnd {call args} {
                             # https://echarts.apache.org/en/option.html#series-line.label.distance
                             if {[dict exists $etrace $obj.lineSeries.label]} {
                                 set _d [dict get $etrace $obj.lineSeries.label]
-                                if {$value ne "nothing" && [dict exists $_d position]} {
+                                if {($value ne "nothing") && [dict exists $_d position]} {
                                     set v [lindex [dict get $_d position] 0]
                                     if {$v ni {top insideRight}} {
                                         puts "warning (trace): lineSeries.label.position is valid only\
@@ -281,7 +281,7 @@ proc ticklecharts::trackEnd {call args} {
                             # Available for all series-line.***.miterLimit
                             if {[dict exists $etrace $obj.[lindex $trace 1]]} {
                                 set _d [dict get $etrace $obj.[lindex $trace 1]]
-                                if {$value ne "nothing" && [dict exists $_d join]} {
+                                if {($value ne "nothing") && [dict exists $_d join]} {
                                     set v [lindex [dict get $_d join] 0]
                                     if {$v ne "miter"} {
                                         puts "warning (trace): [lindex $trace 1].miterLimit is valid only\
@@ -295,7 +295,7 @@ proc ticklecharts::trackEnd {call args} {
                             # Available for all series-line.***.join
                             if {[dict exists $etrace $obj.[lindex $trace 1]]} {
                                 set _d [dict get $etrace $obj.[lindex $trace 1]]
-                                if {$value eq "miter" && [dict exists $_d miterLimit]} {
+                                if {($value eq "miter") && [dict exists $_d miterLimit]} {
                                     set v [lindex [dict get $_d miterLimit] 0]
                                     if {$v eq "nothing"} {
                                         puts "warning (trace): [lindex $trace 1].join is valid only\
@@ -309,7 +309,7 @@ proc ticklecharts::trackEnd {call args} {
                             # Available for all series-line.***.borderMiterLimit
                             if {[dict exists $etrace $obj.[lindex $trace 1]]} {
                                 set _d [dict get $etrace $obj.[lindex $trace 1]]
-                                if {$value ne "nothing" && [dict exists $_d borderJoin]} {
+                                if {($value ne "nothing") && [dict exists $_d borderJoin]} {
                                     set v [lindex [dict get $_d borderJoin] 0]
                                     if {$v ne "miter"} {
                                         puts "warning (trace): [lindex $trace 1].borderMiterLimit is valid only\
@@ -323,7 +323,7 @@ proc ticklecharts::trackEnd {call args} {
                             # Available for all series-line.***.borderJoin
                             if {[dict exists $etrace $obj.[lindex $trace 1]]} {
                                 set _d [dict get $etrace $obj.[lindex $trace 1]]
-                                if {$value eq "miter" && [dict exists $_d borderMiterLimit]} {
+                                if {($value eq "miter") && [dict exists $_d borderMiterLimit]} {
                                     set v [lindex [dict get $_d borderMiterLimit] 0]
                                     if {$v eq "nothing"} {
                                         puts "warning (trace): [lindex $trace 1].borderJoin is valid only\
@@ -337,7 +337,7 @@ proc ticklecharts::trackEnd {call args} {
                             # Available for all series-line.***.ellipsis
                             if {[dict exists $etrace $obj.[lindex $trace 1]]} {
                                 set _d [dict get $etrace $obj.[lindex $trace 1]]
-                                if {$value ne "nothing" && [dict exists $_d overflow]} {
+                                if {($value ne "nothing") && [dict exists $_d overflow]} {
                                     set v [lindex [dict get $_d overflow] 0]
                                     if {$v ne "truncate"} {
                                         puts "warning (trace): [lindex $trace 1].ellipsis to be displayed when\

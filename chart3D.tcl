@@ -266,18 +266,25 @@ oo::define ticklecharts::chart3D {
 
         set opts_html  [ticklecharts::htmlOptions $args]
         set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputfile [lindex [dict get $opts_html -outfile] 0]
+        set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
 
-        set fp [open $outputfile w+]
-        puts $fp [string map [list %json% "var $jsvar = $json"] $newhtml]
-        close $fp
+        # Replaces json data in html...
+        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
+
+        try {
+            set   fp [open $outputFile w+]
+            puts  $fp $jsonData
+            close $fp
+        } on error {result options} {
+            error [dict get $options -errorinfo]
+        }
         
         if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} $outputfile]
+            puts [format {html:%s} $outputFile]
         }
 
-        return $outputfile
+        return $outputFile
     }
 
     method toJSON {} {

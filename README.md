@@ -555,7 +555,7 @@ Release :
     - Support array for `dataset` dimension (with `ticklecharts::eList` class).
     - Adds a new method `RenderTsb` to interact with [Taygete Scrap Book](https://wiki.tcl-lang.org/page/Taygete+Scrap+Book) (see demo next link).
 *  **02-May-2023** : 3.1.2
-    - Adds new `Add` method for `chart` and `chart3D` class (To reflect this changes some examples + README file have been updated).   
+    - Adds new `Add` method for `chart` and `chart3D` classes (To reflect this changes some examples + README file have been updated).   
     e.g : To add a `pie series` you should write like this : `$chart Add "pieSeries" -data ...` instead of      
     `$chart AddPieSeries -data ...` (Note: the `main` method is still active)   
         - _Note_ : Probably that in my `next` major release, I would choose this way of writing to add a series...   
