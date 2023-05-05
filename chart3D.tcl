@@ -417,9 +417,8 @@ oo::define ticklecharts::chart3D {
         # different way of writing it.
         #
         # The first argument takes the name of the series to be added
-        # By example to add a Bar 3D series,
-        # you should write like this :
-        # $chart Add "bar3DSeries" -data ...
+        # By example to add a Bar 3D series, you should write like this :
+        # > $chart Add "bar3DSeries" -data ...
         # It is the same thing that main method.
         #
         # Note : Probably that in my next major release, I would choose
@@ -461,7 +460,11 @@ oo::define ticklecharts::chart3D {
         #
         # -grid3D   - grid3D options  https://echarts.apache.org/en/option-gl.html#grid3D
         #
-        # Returns nothing    
+        # Returns nothing
+        if {[llength $args] % 2} {
+            error "[self] SetOptions \$args must have an even number of elements..."
+        }
+  
         set opts {}
 
         # Set options from chart '2D' class...

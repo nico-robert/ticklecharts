@@ -86,7 +86,8 @@ oo::define ticklecharts::chart {
     }
 
     method isMixed {} {
-        # Check if series options there is severals types (line, bar...)
+        # Check if series options 
+        # there are severals types (line, bar...)
         #
         # Returns true if severals types, otherwise false.
         set ktype {}
@@ -108,7 +109,8 @@ oo::define ticklecharts::chart {
         # -option  - name of option
         # -axis    - name of axis
         #
-        # Returns default and options type according to a key (name of procedure)
+        # Returns default and options type
+        # according to a key (name of procedure)
 
         set methodClass [info class methods [self class]]
 
@@ -979,9 +981,8 @@ oo::define ticklecharts::chart {
         # different way of writing it.
         #
         # The first argument takes the name of the series to be added
-        # By example to add a line series,
-        # you should write like this :
-        # $chart Add "lineSeries" -data ...
+        # By example to add a line series, you should write like this :
+        # > $chart Add "lineSeries" -data ...
         # It is the same thing that main method.
         #
         # Note : Probably that in my next major release, I would choose
@@ -1075,6 +1076,10 @@ oo::define ticklecharts::chart {
         # -gmap                    - https://github.com/plainheart/echarts-extension-gmap
         #
         # Returns nothing
+        if {[llength $args] % 2} {
+            error "[self] SetOptions \$args must have an even number of elements..."
+        }
+
         set opts {}
 
         if {[dict exists $args -dataset]} {

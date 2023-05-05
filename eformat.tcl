@@ -15,7 +15,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
     variable echarts_version
 
     if {$formattype eq "" || $value eq "nothing" || $value eq "null"} {
-        return
+        return {}
     }
 
     set nameproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
