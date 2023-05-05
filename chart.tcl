@@ -1023,6 +1023,7 @@ oo::define ticklecharts::chart {
                         lappend series $case
                     }
                 }
+                set series [lsort -dictionary $series]
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
