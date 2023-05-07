@@ -564,7 +564,7 @@ Release :
         - New argument `-evalJSON` has been added (see [this file](examples/tsb/README.md) for detail).
         - This new minor release allows to load an entire `JS script` instead of `https://` link.
     - Adds a `trace` command for series (The goal here is to find if certain values match each other).   
-    Currently only tested for `line` series.
+    Currently only supported for `line` series.
     - Adds a new command `ticklecharts::urlExists?` + global variable `::ticklecharts::checkURL`   
     to verify if URL exists (disabled by default) when the num version changed. Uses `curl` command (Available for Windows and Mac OS)
     - Fixed a bug for the `multiversion` property, when the num version is lower than the `-minversion` property.
