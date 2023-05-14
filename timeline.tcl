@@ -7,6 +7,8 @@ namespace eval ticklecharts {}
 # between multiple ECharts options.
 
 oo::class create ticklecharts::timeline {
+    superclass ticklecharts::chart
+
     variable _base    ; # huddle
     variable _data    ; # list data value
     variable _charts  ; # list charts
@@ -27,7 +29,7 @@ oo::class create ticklecharts::timeline {
 }
 
 oo::define ticklecharts::timeline {
-    
+
     method getType {} {
         # Returns type
         return "timeline"
@@ -36,6 +38,11 @@ oo::define ticklecharts::timeline {
     method get {} {
         # Gets huddle object
         return $_base
+    }
+
+    method charts {} {
+        # Gets list charts.
+        return $_charts
     }
 
     method SetOptions {args} {
@@ -62,7 +69,8 @@ oo::define ticklecharts::timeline {
 
         if {![expr {[$chart getType] eq "chart" || [$chart getType] eq "chart3D" ||
                     [$chart getType] eq "gridlayout"}]} {
-            error "first argument for 'Add' method should be a 'chart', 'chart3D' or 'gridlayout' class."
+            error "first argument for 'Add' method should be a 'chart',\
+                  'chart3D' or 'gridlayout' class."
         }
 
         lappend _data [ticklecharts::timelineItem $args]
@@ -120,13 +128,12 @@ oo::define ticklecharts::timeline {
         }
         # Add baseOption
         $_base append "@L=baseOption" $baseOption
-        
+
         # add all charts to 'option' key
-        foreach chart $_charts {
-            set optschart [$chart options]
+        foreach chart [my charts] {
             set option {}
 
-            foreach {key value} $optschart {
+            foreach {key value} [$chart options] {
                 lappend option $key $value
             }
 
@@ -139,7 +146,7 @@ oo::define ticklecharts::timeline {
     method toJSON {} {
         # Returns json timeline data.
         my timelineToHuddle ; # transform to huddle
-        
+
         # ehuddle jsondump
         return [[my get] toJSON]
     }
@@ -167,69 +174,8 @@ oo::define ticklecharts::timeline {
         #
         # Returns nothing.
 
-        if {!$::ticklecharts::tsbIsReady} {
-            error "::tsb file should be sourced..."
-        }
-
-        set opts_tsb [ticklecharts::tsbOptions $args]
-        set json [my toJSON]
-
-        set height   [lindex [dict get $opts_tsb -height] 0]
-        set renderer [lindex [dict get $opts_tsb -renderer] 0]
-        set merge    [lindex [dict get $opts_tsb -merge] 0]
-        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
-
-        if {!$evalJSON} {
-            foreach chart $_charts {
-                ticklecharts::checkJsFunc [$chart options]
-            }
-        }
-
-        set uuid $::ticklecharts::etsb::uuid
-        # load if necessary 'echarts' js script...
-        #
-        set type ""
-        foreach script {escript eGLscript wcscript} {
-            set ejs [set ::ticklecharts::$script]
-            if {[dict exists $::ticklecharts::etsb::path $script]} {
-                set type "text"
-            } else {
-                if {[ticklecharts::isURL? $ejs]} {
-                    set type "source"
-                } else {
-                    # If I understand, it is not possible to insert 
-                    # a local file directly with the 'src' attribute in Webview.
-                    #
-                    if {![file exists $ejs]} {
-                        error "could not find this file :'$ejs'"
-                    }
-                    try {
-                        set f [open $ejs r] ; # read *.js file
-                        set ejs [read $f] ; close $f
-                        # write full js script... inside tsb
-                        set ::ticklecharts::$script $ejs
-                        set type "text"
-                        dict incr ::ticklecharts::etsb::path $script
-                    } on error {result options} {
-                        return -options $options $result
-                    }
-                }
-            }
-            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
-        }
-        set idEDiv [format {id_%s%s} $uuid $::ID]
-        # set div + echarts height
-        #
-        $::W call eDiv $idEDiv $height
-        # 
-        after 100 [list $::W call eSeries \
-                                  $idEDiv $json \
-                                  $renderer $merge \
-                                  $evalJSON]
-
-        set ::ticklecharts::theme "custom"
-
-        return {}
+        # superclass ticklecharts::chart
+        next {*}$args
     }
 
     method Render {args} {
@@ -252,31 +198,8 @@ oo::define ticklecharts::timeline {
         #
         # Returns full path html file.
 
-        my timelineToHuddle ; # transform to huddle
-        set myhuddle [my get]
-        set json     [$myhuddle toJSON] ; # jsondump
-
-        set opts_html  [ticklecharts::htmlOptions $args]
-        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputFile [lindex [dict get $opts_html -outfile] 0]
-        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
-
-        # Replaces json data in html...
-        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
-
-        try {
-            set   fp [open $outputFile w+]
-            puts  $fp $jsonData
-            close $fp
-        } on error {result options} {
-            error [dict get $options -errorinfo]
-        }
-        
-        if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} [file nativename $outputFile]]
-        }
-
-        return $outputFile
+        # superclass ticklecharts::chart
+        next {*}$args
     }
 
     # export of methods
@@ -288,6 +211,10 @@ proc ticklecharts::timelineOpts {value} {
     # timeline options
     #
     # Returns dict options
+
+    if {[llength $value] % 2} {
+        error "\[self\] SetOptions \$value must have an even number of elements..."
+    }
 
     setdef options -show                -minversion 5  -validvalue {}                      -type bool                 -default "True"
     setdef options -type                -minversion 5  -validvalue formatTimelineType      -type str                  -default "slider"
@@ -323,17 +250,51 @@ proc ticklecharts::timelineOpts {value} {
     setdef options -progress            -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::progress $value]
     setdef options -emphasis            -minversion 5  -validvalue {}                      -type dict|null            -default [ticklecharts::emphasis $value]
     #...
-    
+
     # remove key(s)...
-    if {[llength $value]} {
-        set value [dict remove $value -lineStyle -label -itemStyle \
+    set value [dict remove $value -lineStyle -label -itemStyle \
                                       -checkpointStyle -controlStyle \
                                       -progress -emphasis]
-    }
 
     set options [merge $options $value]
 
     return $options
+}
+
+proc ticklecharts::timelineItem {value} {
+    # timeline item options
+    #
+    # Returns dict options
+
+    if {![dict exists $value -data]} {
+        error "key data not present..."
+    }
+
+    if {[llength $value] % 2} {
+        error "value list must have an even number of elements..."
+    }
+
+    set d [dict get $value -data]
+
+    if {![dict exists $d value]} {
+        error "key 'value' must be present in -data '[ticklecharts::getLevelProperties [info level]]'"
+    }
+
+    # force string value for this key below
+    # with 'eString' class.
+    dict set d value [new estr [dict get $d value]]
+
+    setdef options value       -minversion 5  -validvalue {}               -type str|null    -default "nothing"
+    setdef options symbol      -minversion 5  -validvalue formatItemSymbol -type str|null    -default "nothing"
+    setdef options symbolSize  -minversion 5  -validvalue {}               -type num|null    -default "nothing"
+    setdef options tooltip     -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::tooltip $d]
+
+    # remove key(s)...
+    set d [dict remove $d tooltip]
+
+    set options [merge $options $d]
+
+    return [new edict $options]
 }
 
 proc ticklecharts::istimelineClass {value} {

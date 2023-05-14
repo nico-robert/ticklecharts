@@ -8,6 +8,8 @@ namespace eval ticklecharts {}
 # The first chart needs to be a graph with an x/y axis.
 
 oo::class create ticklecharts::Gridlayout {
+    superclass ticklecharts::chart
+
     variable _layout       ; # huddle
     variable _indexchart2D ; # grid index chart2D
     variable _indexchart3D ; # grid index chart3D
@@ -43,7 +45,7 @@ oo::define ticklecharts::Gridlayout {
     }
 
     method options {} {
-        # Gets options object
+        # Gets options
         return $_options
     }
 
@@ -422,69 +424,11 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns nothing.
 
-        if {!$::ticklecharts::tsbIsReady} {
-            error "::tsb file should be sourced..."
-        }
+         # superclass ticklecharts::chart
+        next {*}$args
 
-        set opts_tsb [ticklecharts::tsbOptions $args]
-        set json [my toJSON]
-
-        set height   [lindex [dict get $opts_tsb -height] 0]
-        set renderer [lindex [dict get $opts_tsb -renderer] 0]
-        set merge    [lindex [dict get $opts_tsb -merge] 0]
-        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
-
-        if {!$evalJSON} {
-            ticklecharts::checkJsFunc [my options]
-        }
-
-        set uuid $::ticklecharts::etsb::uuid
-        # load if necessary 'echarts' js script...
-        #
-        set type ""
-        foreach script {escript eGLscript wcscript} {
-            set ejs [set ::ticklecharts::$script]
-            if {[dict exists $::ticklecharts::etsb::path $script]} {
-                set type "text"
-            } else {
-                if {[ticklecharts::isURL? $ejs]} {
-                    set type "source"
-                } else {
-                    # If I understand, it is not possible to insert 
-                    # a local file directly with the 'src' attribute in Webview.
-                    #
-                    if {![file exists $ejs]} {
-                        error "could not find this file :'$ejs'"
-                    }
-                    try {
-                        set f [open $ejs r] ; # read *.js file
-                        set ejs [read $f] ; close $f
-                        # write full js script... inside tsb
-                        set ::ticklecharts::$script $ejs
-                        set type "text"
-                        dict incr ::ticklecharts::etsb::path $script
-                    } on error {result options} {
-                        return -options $options $result
-                    }
-                }
-            }
-            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
-        }
-        set idEDiv [format {id_%s%s} $uuid $::ID]
-        # set div + echarts height
-        #
-        $::W call eDiv $idEDiv $height
-        # 
-        after 100 [list $::W call eSeries \
-                                  $idEDiv $json \
-                                  $renderer $merge \
-                                  $evalJSON]
-
-        set ::ticklecharts::theme "custom"
-
-        return {}
     }
-    
+
     method Render {args} {
         # Export chart to html.
         #
@@ -505,37 +449,14 @@ oo::define ticklecharts::Gridlayout {
         #
         # Returns full path html file.
 
-        my layoutToHuddle ; # transform to huddle
-        set myhuddle [my get]
-        set json     [$myhuddle toJSON] ; # jsondump
-
-        set opts_html  [ticklecharts::htmlOptions $args]
-        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputFile [lindex [dict get $opts_html -outfile] 0]
-        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
-
-        # Replaces json data in html...
-        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
-
-        try {
-            set   fp [open $outputFile w+]
-            puts  $fp $jsonData
-            close $fp
-        } on error {result options} {
-            error [dict get $options -errorinfo]
-        }
-
-        if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} [file nativename $outputFile]]
-        }
-
-        return $outputFile
+         # superclass ticklecharts::chart
+        next {*}$args
     }
 
     method toJSON {} {
         # Returns json chart data.
         my layoutToHuddle ; # transform to huddle
-        
+
         # ehuddle jsondump
         return [[my get] toJSON]
     }
@@ -573,7 +494,7 @@ oo::define ticklecharts::Gridlayout {
 
     # export of methods
     export Add Render SetGlobalOptions RenderTsb
-    
+
 }
 
 proc ticklecharts::gridlayoutHasDataSetObj {dts} {

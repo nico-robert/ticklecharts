@@ -4,6 +4,8 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart3D {
+    superclass ticklecharts::chart
+
     variable _echartshchart3D         ; # huddle
     variable _options3D               ; # list options chart3D
     variable _opts3D_global           ; # list global options chart
@@ -39,7 +41,9 @@ oo::define ticklecharts::chart3D {
     }
 
     method globalOptions {} {
-        # Returns if global options is present.
+        # Note : This variable can be empty.
+        #
+        # Returns global options.
         return $_opts3D_global
     }
 
@@ -49,72 +53,33 @@ oo::define ticklecharts::chart3D {
     }
 
     method dataset {} {
-        # Returns if chart3D instance 
-        # includes dataset
+        # Note : This variable can be empty.
+        #
+        # Returns dataset
         return $_dataset
     }
 
     method getOptions {args} {
         # args - Options described below.
         #
-        # -series  - name of series
-        # -option  - name of option
-        # -axis    - name of axis
+        # -series         - name of series
+        # -option         - name of option
+        # -globalOptions  - global options (no value required)
+        # -axis           - name of axis
         #
-        # Returns default and options type according to a key (name of procedure)
-        # to stdout.
+        # Returns default and options type
+        # according to a key (name of procedure)
+        # If nothing is found then returns an empty string.
 
-        set methodClass [info class methods [self class]]
-
-        foreach {key value} $args {
-            switch -exact -- $key {
-                "-series" {
-                    set methods [lsearch -all -inline -nocase $methodClass *series*]
-                    lappend methods [lsearch -all -inline -nocase $methodClass *graphic*]
-                }
-                "-option" {
-                    set methods {SetOptions}
-                }
-                "-globalOptions" {
-                    # no value required...
-                    return [ticklecharts::infoOptions "globalOptions3D"]
-                }
-                "-axis" {
-                    set methods [lsearch -all -inline -nocase $methodClass *axis*]
-                    lappend methods [lsearch -all -inline -nocase $methodClass *coordinate*]
-                }
-                default {error "Unknown key '$key' specified"}
-            }
-
-            if {$value eq ""} {
-                error "A value should be specified..."
-            }
-
-            set info $value
-        }
-
-        foreach method $methods {
-            if {[catch {info class definition [self class] $method} infomethod]} {continue}
-            foreach linebody [split $infomethod "\n"] {
-                set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
-                set linebody [string trim $linebody]
-                if {[string match -nocase "*ticklecharts::*$info*" $linebody]} {
-                    if {[regexp {ticklecharts::([A-Za-z0-9]+)\s} $linebody -> match]} {
-                        return [ticklecharts::infoOptions $match]
-                    }
-                }
-            }
-        }
+        # superclass ticklecharts::chart
+        next {*}$args
     }
 
     method keys {} {
         # Returns keys without type.
-        set k {}
-        foreach {key opts} $_options3D {
-            lappend k [lindex [split $key "="] 1]
-        }
 
-        return $k
+        # superclass ticklecharts::chart
+        next
     }
 
     method chart3DToHuddle {} {
@@ -122,11 +87,9 @@ oo::define ticklecharts::chart3D {
         #
         # Returns nothing
 
-        # init ehuddle.
-
         set opts $_options3D
 
-        # If globalOptions is not present, add first...
+        # If globalOptions is not present, adds global options first...
         if {![llength [my globalOptions]]} {
             set optsg  [ticklecharts::globalOptions3D {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
@@ -135,7 +98,7 @@ oo::define ticklecharts::chart3D {
 
         # init ehuddle.
         set _echartshchart3D [ticklecharts::ehuddle new]
-        
+
         foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
@@ -177,67 +140,9 @@ oo::define ticklecharts::chart3D {
         #
         # Returns nothing.
 
-        if {!$::ticklecharts::tsbIsReady} {
-            error "::tsb file should be sourced..."
-        }
+        # superclass ticklecharts::chart
+        next {*}$args
 
-        set opts_tsb [ticklecharts::tsbOptions $args]
-        set json [my toJSON]
-
-        set height   [lindex [dict get $opts_tsb -height] 0]
-        set renderer [lindex [dict get $opts_tsb -renderer] 0]
-        set merge    [lindex [dict get $opts_tsb -merge] 0]
-        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
-
-        if {!$evalJSON} {
-            ticklecharts::checkJsFunc [my options]
-        }
-
-        set uuid $::ticklecharts::etsb::uuid
-        # load if necessary 'echarts' js script...
-        #
-        set type ""
-        foreach script {escript eGLscript} {
-            set ejs [set ::ticklecharts::$script]
-            if {[dict exists $::ticklecharts::etsb::path $script]} {
-                set type "text"
-            } else {
-                if {[string match {https://*} $ejs]} {
-                    set type "source"
-                } else {
-                    # If I understand, it is not possible to insert 
-                    # a local file directly with the 'src' attribute in Webview.
-                    #
-                    if {![file exists $ejs]} {
-                        error "could not find this file :'$ejs'"
-                    }
-                    try {
-                        set f [open $ejs r] ; # read *.js file
-                        set ejs [read $f] ; close $f
-                        # write full js script... inside tsb
-                        set ::ticklecharts::$script $ejs
-                        set type "text"
-                        dict incr ::ticklecharts::etsb::path $script
-                    } on error {result options} {
-                        return -options $options $result
-                    }
-                }
-            }
-            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
-        }
-        set idEDiv [format {id_%s%s} $uuid $::ID]
-        # set div + echarts height
-        #
-        $::W call eDiv $idEDiv $height
-        # 
-        after 100 [list $::W call eSeries \
-                                  $idEDiv $json \
-                                  $renderer $merge \
-                                  $evalJSON]
-
-        set ::ticklecharts::theme "custom"
-
-        return {}
     }
 
     method Render {args} {
@@ -260,37 +165,14 @@ oo::define ticklecharts::chart3D {
         #
         # Returns full path html file.
 
-        my chart3DToHuddle ; # transform to huddle
-        set myhuddle [my get]
-        set json     [$myhuddle toJSON] ; # jsondump
-
-        set opts_html  [ticklecharts::htmlOptions $args]
-        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
-        set outputFile [lindex [dict get $opts_html -outfile] 0]
-        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
-
-        # Replaces json data in html...
-        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
-
-        try {
-            set   fp [open $outputFile w+]
-            puts  $fp $jsonData
-            close $fp
-        } on error {result options} {
-            error [dict get $options -errorinfo]
-        }
-        
-        if {$::ticklecharts::htmlstdout} {
-            puts [format {html:%s} $outputFile]
-        }
-
-        return $outputFile
+        # superclass ticklecharts::chart
+        next {*}$args
     }
 
     method toJSON {} {
         # Returns json chart data.
         my chart3DToHuddle ; # transform to huddle
-        
+
         # ehuddle jsondump
         return [[my get] toJSON]
     }
@@ -305,10 +187,10 @@ oo::define ticklecharts::chart3D {
         # from doc : https://echarts.apache.org/en/option-gl.html#xAxis3D
         #
         # Returns nothing
-    
+
         set options [ticklecharts::xAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options3D @D=xAxis3D [list {*}$f]
 
         return {}
@@ -324,10 +206,10 @@ oo::define ticklecharts::chart3D {
         # from doc : https://echarts.apache.org/en/option-gl.html#yAxis3D
         #
         # Returns nothing
-    
+
         set options [ticklecharts::yAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options3D @D=yAxis3D [list {*}$f]
 
         return {}
@@ -343,10 +225,10 @@ oo::define ticklecharts::chart3D {
         # from doc : https://echarts.apache.org/en/option-gl.html#zAxis3D
         #
         # Returns nothing
-    
+
         set options [ticklecharts::zAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
-        
+
         lappend _options3D @D=zAxis3D [list {*}$f]
 
         return {}
@@ -465,7 +347,7 @@ oo::define ticklecharts::chart3D {
         if {[llength $args] % 2} {
             error "[self] SetOptions \$args must have an even number of elements..."
         }
-  
+
         set opts {}
 
         # Set options from chart '2D' class...
@@ -479,7 +361,7 @@ oo::define ticklecharts::chart3D {
         set optsg [ticklecharts::globalOptions {}]
         set g2Dopts [string map {- ""} [dict keys [$optsg get]]]
         set key2d {}
-        
+
         foreach {key info} [$c options] {
             lassign [split $key "="] _ k
             if {$k in $g2Dopts} {continue}
@@ -503,7 +385,7 @@ oo::define ticklecharts::chart3D {
         set newDict [dict remove $args {*}$keyopts]
 
         # Adds global 3D options first
-        if {![llength $_opts3D_global]} {
+        if {![llength [my globalOptions]]} {
             set optsg          [ticklecharts::globalOptions3D $newDict]
             set _opts3D_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
             set _options3D     [linsert $_options3D 0 {*}$_opts3D_global]
