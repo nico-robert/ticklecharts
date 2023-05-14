@@ -3,7 +3,7 @@
 #
 namespace eval ticklecharts {
     namespace ensemble create -command ::new
-    namespace export elist edict
+    namespace export elist edict estr
 }
 
 oo::class create ticklecharts::eList {
@@ -21,7 +21,7 @@ oo::define ticklecharts::eList {
         # Returns list
         return $_elist
     }
-    
+
     method getType {} {
         # Returns type
         return "eList"
@@ -75,7 +75,7 @@ oo::define ticklecharts::eDict {
         # Returns dict
         return $_edict
     }
-    
+
     method getType {} {
         # Returns type
         return "eDict"
@@ -115,3 +115,46 @@ proc ticklecharts::iseDictClass {value} {
     ]
 }
 
+oo::class create ticklecharts::eString {
+    variable _estring
+
+    constructor {str} {
+        # Initializes a new eString Class.
+        #
+        set _estring $str
+    }
+}
+
+oo::define ticklecharts::eString {
+    method get {} {
+        # Returns string
+        return $_estring
+    }
+
+    method getType {} {
+        # Returns type
+        return "eString"
+    }
+}
+
+proc ticklecharts::estr {str} {
+    # This procedure substitutes a pure Tcl string...
+    # 
+    # str - string
+    #
+    # Returns a eList object
+    return [ticklecharts::eString new $str]
+}
+
+proc ticklecharts::iseStringClass {value} {
+    # Check if value is eString class
+    #
+    # value - obj or string
+    #
+    # Returns true if 'value' is a eString class, false otherwise.
+    return [expr {
+            [string match {::oo::Obj[0-9]*} $value] && 
+            [string match "*::eString" [ticklecharts::typeOfClass $value]]
+        }
+    ]
+}
