@@ -67,26 +67,26 @@ eval [string map [list \
             * source : https://www.geeksforgeeks.org/c-program-replace-word-text-another-given-word/
             *----------------------------------------------------------------------
             */
-            char* replaceWord(const char* s, const char* oldW, const char* newW) {
+            char* replaceWord (const char* s, const char* oldW, const char* newW) {
                 char* result;
                 int i, cnt = 0;
                 int newWlen = strlen(newW);
                 int oldWlen = strlen(oldW);
-            
+
                 // Counting the number of times old word
                 // occur in the string
                 for (i = 0; s[i] != '\0'; i++) {
                     if (strstr(&s[i], oldW) == &s[i]) {
                         cnt++;
-            
+
                         // Jumping to index after the old word.
                         i += oldWlen - 1;
                     }
                 }
-            
+
                 // Making new string of enough length
                 result = (char*)malloc(i + cnt * (newWlen - oldWlen) + 1);
-            
+
                 i = 0;
                 while (*s) {
                     // compare the substring with the result
@@ -98,7 +98,7 @@ eval [string map [list \
                         result[i++] = *s++;
                     }
                 }
-            
+
                 result[i] = '\0';
                 return result;
             }
@@ -133,12 +133,12 @@ eval [string map [list \
 
                 const char* head = Tcl_GetString(headobj);
 
-                if (strcmp(head, "D") == 0) {
+                if (!strcmp(head, "D")) {
 
                     fprintf(stderr, "error dict Callback strip not supported...\n");
                     exit(EXIT_FAILURE);
 
-                } else if (strcmp(head, "L") == 0) {
+                } else if (!strcmp(head, "L")) {
 
                     if (Tcl_ListObjGetElements(interp, srcobj, &count, &elements) != TCL_OK) {
                         fprintf(stderr, "error(huddleTypeCallbackStripC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
@@ -153,7 +153,7 @@ eval [string map [list \
                     fprintf(stderr, "Callback Strip not supported...\n");
                     exit(EXIT_FAILURE);
                 }
-                
+
                 return resObj;
             }
             /*
@@ -170,14 +170,14 @@ eval [string map [list \
 
                 const char* head = Tcl_GetString(headobj);
 
-                if (strcmp(head, "D") == 0) {
+                if (!strcmp(head, "D")) {
 
                     if (Tcl_DictObjGet(interp, srcobj, pathobj, &index_obj) != TCL_OK) {
                         fprintf(stderr, "error get value from dict...\n");
                         exit(EXIT_FAILURE);
                     }
 
-                } else if (strcmp(head, "L") == 0) {
+                } else if (!strcmp(head, "L")) {
 
                     if (Tcl_ListObjGetElements(interp, srcobj, &count, &elements) != TCL_OK) {
                         fprintf(stderr, "error(huddleTypeCallbackGetSubNodeC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
@@ -209,7 +209,7 @@ eval [string map [list \
                 const char* type = Tcl_GetString(objtype);
 
                 for (int i = 0; i < huddleTLen; ++i) {
-                    if (strcmp(type, huddletype[i]) == 0) {
+                    if (!strcmp(type, huddletype[i])) {
                         return 1;
                     }
                 }
@@ -226,8 +226,8 @@ eval [string map [list \
                 const char* src = Tcl_GetString(objtype);
 
                 for (int i = 0; i < huddleTLen; ++i) {
-                    if (strcmp(src, hcontainer[i][0]) == 0) {
-                        if (strcmp(hcontainer[i][1], "yes") == 0) {
+                    if (!strcmp(src, hcontainer[i][0])) {
+                        if (!strcmp(hcontainer[i][1], "yes")) {
                             return 1;
                         } else {
                             return 0;
@@ -242,11 +242,11 @@ eval [string map [list \
             * isHuddleC --
             *----------------------------------------------------------------------
             */
-            int isHuddleC(Tcl_Interp* interp, Tcl_Obj* huddle_object) {
+            int isHuddleC (Tcl_Interp* interp, Tcl_Obj* huddle_object) {
 
                 int count, result;
                 Tcl_Obj **elements;
-                
+
                 if (Tcl_ListObjGetElements(interp, huddle_object, &count, &elements) != TCL_OK) {
                     fprintf(stderr, "error(isHuddleC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
                     exit(EXIT_FAILURE);
@@ -307,12 +307,12 @@ eval [string map [list \
                 // head = elements[0]
                 // src  = elements[1]
 
-                if (infoTypeExistsC(elements[0]) == 0) {
+                if (!infoTypeExistsC(elements[0])) {
                     fprintf(stderr, "Type doesn't exists...\n");
                     exit(EXIT_FAILURE);
                 }
 
-                if (isContainerC(elements[0]) == 0) {
+                if (!isContainerC(elements[0])) {
                     // not a container
                     obj = elements[1];
                 } else {
@@ -348,7 +348,7 @@ eval [string map [list \
                 Tcl_Obj* targetnode;
                 Tcl_Obj* obj;
 
-                if (isHuddleC(interp, huddle_object) == 0) {
+                if (!isHuddleC(interp, huddle_object)) {
                     fprintf(stderr, "huddle_object is not Huddle...\n");
                     exit(EXIT_FAILURE);
                 }
@@ -371,7 +371,7 @@ eval [string map [list \
             * huddleFindNodeC --
             *----------------------------------------------------------------------
             */
-            Tcl_Obj* huddleFindNodeC(Tcl_Interp* interp, Tcl_Obj* node, Tcl_Obj* path) {
+            Tcl_Obj* huddleFindNodeC (Tcl_Interp* interp, Tcl_Obj* node, Tcl_Obj* path) {
 
                 int count;
                 Tcl_Obj **elements;
@@ -384,11 +384,12 @@ eval [string map [list \
                     obj = node;
                 } else {
                     Tcl_ListObjGetElements(interp, node, &count, &elements);
-                    obj = huddleTypeCallbackGetSubNodeC(interp, elements[0], elements[1], pathelements[0]);
+                    // fixed 'segmentation fault' when path (key) contains spaces. (v3.1.3)
+                    obj = huddleTypeCallbackGetSubNodeC(interp, elements[0], elements[1], path);
                 }
 
                 return obj;
-                
+
             }
             /*
             *----------------------------------------------------------------------
@@ -407,7 +408,7 @@ eval [string map [list \
             Tcl_Obj* huddleGetStrippedC (Tcl_Interp* interp,Tcl_Obj* huddle_object) {
 
                 Tcl_Obj* obj = Tcl_NewObj();
-                
+
                 return huddleRetrieveHuddleC(interp, huddle_object, obj, 1);
             }
             /*
@@ -421,7 +422,7 @@ eval [string map [list \
                 int count;
                 Tcl_Obj **elements;
 
-                if (isHuddleC(interp, huddle_object) == 0) {
+                if (!isHuddleC(interp, huddle_object)) {
                     fprintf(stderr, "huddle_object is not Huddle...\n");
                     exit(EXIT_FAILURE);
                 }
@@ -506,7 +507,7 @@ eval [string map [list \
                         Tcl_DictObjPut (interp, dict, elements[i], elements[i+1]);
                     }
                 }
-            
+
                 return dict;
             }
             /*
@@ -542,7 +543,7 @@ eval [string map [list \
                     }
                     Tcl_AppendObjToObj(resObjPtr, elements[i]);
                 }
-                
+
                 return resObjPtr;
             }
             /*
@@ -575,8 +576,7 @@ eval [string map [list \
                 Tcl_Obj* nextoff = Tcl_NewObj();
                 Tcl_Obj* subobject;
                 Tcl_Obj **elements;
-                int count;
-                int len = 0;
+                int count, len;
 
                 // huddle format...
                 if (Tcl_ListObjGetElements(interp, huddle_format, &count, &elements) != TCL_OK) {
@@ -584,12 +584,15 @@ eval [string map [list \
                     exit(EXIT_FAILURE);
                 }
 
-                const char *offset = Tcl_GetStringFromObj(elements[0], &len);
+                if (count != 3) {
+                    fprintf(stderr, "error(huddleJsonDumpC): 'format should be a list of 3 elments'\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                Tcl_GetStringFromObj(elements[0], &len);
                 char *sp = " ";
 
-                if (len == 0) {
-                    sp = "";
-                }
+                if (len == 0) {sp = "";}
 
                 // nextoff > $begin$offset
                 Tcl_AppendObjToObj(nextoff, elements[2]);
@@ -602,12 +605,12 @@ eval [string map [list \
                     // boolean
                     return huddleGetStrippedC(interp, huddle_object);
 
-                } else if (strcmp(type, "num") == 0) {
+                } else if (!strcmp(type, "num")) {
 
                     // number
                     return huddleGetStrippedC(interp, huddle_object);
 
-                } else if (strcmp(type, "s") == 0) {
+                } else if (!strcmp(type, "s")) {
 
                     // string
                     Tcl_Obj* q = Tcl_NewStringObj("\"", 1);
@@ -834,7 +837,7 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
     for (int i = 0; i < count; ++i) {
         Tcl_Obj *innerObj = Tcl_NewListObj (0,NULL);
         Tcl_Obj* lTag     = Tcl_NewObj();
-       
+
         Tcl_ListObjGetElements(interp, sub_elements[i], &subcount, &sub_list);
 
         for (int j = 0; j < subcount; j++) {
@@ -851,7 +854,6 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
             }
 
             Tcl_ListObjAppendElement(interp, innerObj, dataTag);
-
         }
 
         Tcl_ListObjAppendElement(interp, lTag, l);
@@ -905,7 +907,7 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
 
         Tcl_ListObjAppendElement(interp, dataObj, dataTag);
     }
-    
+
     Tcl_SetObjResult(interp, dataObj);
 
     return TCL_OK;
