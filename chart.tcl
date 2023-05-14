@@ -60,34 +60,37 @@ oo::class create ticklecharts::chart {
 oo::define ticklecharts::chart {
 
     method get {} {
-        # Gets huddle object
+        # Gets huddle object.
         return $_echartshchart
     }
 
     method options {} {
-        # Gets chart list options
+        # Gets chart list options.
         return $_options
     }
 
     method globalOptions {} {
-        # Returns if global options is present.
+        # Note : This variable can be empty.
+        #
+        # Returns global options.
         return $_opts_global
     }
 
     method getType {} {
-        # Gets type class
+        # Gets type class.
         return "chart"
     }
 
     method dataset {} {
-        # Returns if chart instance 
-        # includes dataset
+        # Note : This variable can be empty.
+        #
+        # Returns dataset
         return $_dataset
     }
 
     method isMixed {} {
         # Check if series options 
-        # there are severals types (line, bar...)
+        # have severals types (line, bar...).
         #
         # Returns true if severals types, otherwise false.
         set ktype {}
@@ -105,14 +108,17 @@ oo::define ticklecharts::chart {
     method getOptions {args} {
         # args - Options described below.
         #
-        # -series  - name of series
-        # -option  - name of option
-        # -axis    - name of axis
+        # -series         - name of series
+        # -option         - name of option
+        # -globalOptions  - global options (no value required)
+        # -axis           - name of axis
         #
         # Returns default and options type
-        # according to a key (name of procedure)
+        # according to a key (name of procedure).
+        # If nothing is found then returns an empty string.
 
-        set methodClass [info class methods [self class]]
+        set typeOfClass [ticklecharts::typeOfClass [self]]
+        set methodClass [info class methods $typeOfClass]
 
         foreach {key value} $args {
             switch -exact -- $key {
@@ -125,7 +131,11 @@ oo::define ticklecharts::chart {
                 }
                 "-globalOptions" {
                     # no value required...
-                    return [ticklecharts::infoOptions "globalOptions"]
+                    if {[my getType] eq "chart3D"} {
+                        return [ticklecharts::infoOptions "globalOptions3D"]
+                    } else {
+                        return [ticklecharts::infoOptions "globalOptions"]
+                    }
                 }
                 "-axis" {
                     set methods [lsearch -all -inline -nocase $methodClass *axis*]
@@ -142,23 +152,25 @@ oo::define ticklecharts::chart {
         }
 
         foreach method $methods {
-            if {[catch {info class definition [self class] $method} infomethod]} {continue}
+            if {[catch {info class definition $typeOfClass $method} infomethod]} {continue}
             foreach linebody [split $infomethod "\n"] {
                 set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
                 set linebody [string trim $linebody]
                 if {[string match -nocase "*ticklecharts::*$info*" $linebody]} {
-                    if {[regexp {ticklecharts::([A-Za-z]+)\s} $linebody -> match]} {
+                    if {[regexp {ticklecharts::([A-Za-z0-9]+)\s} $linebody -> match]} {
                         return [ticklecharts::infoOptions $match]
                     }
                 }
             }
         }
+
+        return {}
     }
 
     method keys {} {
         # Returns keys without type.
         set k {}
-        foreach {key opts} $_options {
+        foreach {key opts} [my options] {
             lappend k [lindex [split $key "="] 1]
         }
 
@@ -170,7 +182,7 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
         set i -1 ; set j 0 ; set k 0
-        foreach {key opts} $_options {
+        foreach {key opts} [my options] {
             if {[string match {*series} $key]} {
                 if {[incr i] == $index} {
                     set k 1 ; break
@@ -179,19 +191,19 @@ oo::define ticklecharts::chart {
             incr j 2
         }
 
-        if {$k} {set _options [lreplace $_options $j [expr {$j + 1}]]}
+        if {$k} {set _options [lreplace [my options] $j [expr {$j + 1}]]}
 
         return {}
     }
 
     method chartToHuddle {} {
-        # Transform list to ehudlle
+        # Transform list to ehudlle.
         #
         # Returns nothing
 
         set opts $_options
 
-        # If globalOptions is not present, add first...
+        # If globalOptions is not present, adds global options first...
         if {![llength [my globalOptions]]} {
             set optsg  [ticklecharts::globalOptions {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
@@ -263,7 +275,11 @@ oo::define ticklecharts::chart {
         set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
 
         if {!$evalJSON} {
-            ticklecharts::checkJsFunc [my options]
+            if {[my getType] eq "timeline"} {
+                foreach c [my charts] {ticklecharts::checkJsFunc [$c options]} 
+            } else {
+                ticklecharts::checkJsFunc [my options]
+            }
         }
 
         set uuid $::ticklecharts::etsb::uuid
@@ -281,9 +297,6 @@ oo::define ticklecharts::chart {
                     # If I understand, it is not possible to insert 
                     # a local file directly with the 'src' attribute in Webview.
                     #
-                    if {![file exists $ejs]} {
-                        error "could not find this file :'$ejs'"
-                    }
                     try {
                         set f [open $ejs r] ; # read *.js file
                         set ejs [read $f] ; close $f
@@ -333,9 +346,8 @@ oo::define ticklecharts::chart {
         #
         # Returns full path html file.
 
-        my chartToHuddle ; # transform to huddle
+        set json     [my toJSON] ; # jsondump
         set myhuddle [my get]
-        set json     [$myhuddle toJSON] ; # jsondump
 
         set opts_html  [ticklecharts::htmlOptions $args]
         set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
@@ -363,7 +375,7 @@ oo::define ticklecharts::chart {
     method toJSON {} {
         # Returns json chart data.
         my chartToHuddle ; # transform to huddle
-        
+
         # ehuddle jsondump
         return [[my get] toJSON]
     }
@@ -1186,7 +1198,7 @@ oo::define ticklecharts::chart {
         set args [dict remove $args {*}$keyopts]
 
         # Adds global options first 
-        if {![llength $_opts_global]} {
+        if {![llength [my globalOptions]]} {
             set optsg        [ticklecharts::globalOptions $args]
             set _opts_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
             lappend _options {*}$_opts_global
