@@ -90,19 +90,23 @@ oo::define ticklecharts::dataset {
             return "nothing"
         }
 
-        set d {}
+        set d {} ; set vald {}
         set ns [namespace qualifiers [self class]]
 
         foreach dim [dict get $value $key] {
-            if {[ticklecharts::isDict $dim] && [llength $dim] > 2 && 
-               ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type])} {
+            if {[ticklecharts::iseDictClass $dim] || ([ticklecharts::isDict $dim] && 
+               ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type]))} {
+
+                if {[ticklecharts::iseDictClass $dim]} {
+                    set dim [$dim get]
+                }
 
                 ${ns}::setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
                 ${ns}::setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
                 ${ns}::setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
 
-                lappend d [list [new edict [${ns}::merge $options $dim]] dict] ; continue
-
+                lappend d [list [new edict [${ns}::merge $options $dim]] dict]
+                continue
             }
             lappend vald [ticklecharts::mapSpaceString $dim]
         }
@@ -202,8 +206,9 @@ oo::define ticklecharts::dataset {
                         error "'$key' is duplicated in '$item'"
                     }
 
-                    set _key [ticklecharts::mapSpaceString $key] ; # map spaces if present
-                    lappend k $key $_key 
+                    # replaces spaces if present...
+                    set mapKey [ticklecharts::mapSpaceString $key]
+                    lappend k $key $mapKey 
 
                     set mytype [ticklecharts::typeOf $info]
 
@@ -211,7 +216,7 @@ oo::define ticklecharts::dataset {
                         error "'$info' should be a string or num for this '$key' value..."
                     }
 
-                    ${ns}::setdef options $_key -minversion 5 -validvalue {} -type $mytype -default $info
+                    ${ns}::setdef options $mapKey -minversion 5 -validvalue {} -type $mytype -default $info
                 }
 
                 lappend opts [${ns}::merge $options [string map $k $item]]
@@ -220,7 +225,7 @@ oo::define ticklecharts::dataset {
 
             set type "o"
             return [list {*}$opts]
-          
+
         } else {
             if {![ticklecharts::isListOfList $d]} {
                 error "'-source' should be a list of list..."
