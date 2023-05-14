@@ -140,7 +140,7 @@ proc ticklecharts::readHTMLTemplate {} {
     set fp [open $htmltemplate r]
     set html [read $fp]
     close $fp
-    
+
     return $html
 }
 
@@ -215,10 +215,11 @@ proc ticklecharts::typeOf {value} {
 
     if {[ticklecharts::isAObject $value]} {
         switch -glob -- [ticklecharts::typeOfClass $value] {
-            "*::jsfunc" {return jsfunc}
-            "*::eColor" {return e.color}
-            "*::eList"  {return list}
-            "*::eDict"  {return dict}
+            "*::jsfunc"  {return jsfunc}
+            "*::eColor"  {return e.color}
+            "*::eList"   {return list}
+            "*::eDict"   {return dict}
+            "*::eString" {return str}
         }
     }
 
@@ -237,7 +238,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
 
     dict for {key info} $options {
         lassign $info value type trace
-        
+
         set key   [string map {- ""} $key]
         set htype [ticklecharts::ehuddleType $type]
 
@@ -292,6 +293,13 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                             [ticklecharts::dictToEchartsHuddle [$value get]] \
                             ]
             }
+            str - str.t {
+                if {[ticklecharts::iseStringClass $value]} {
+                    append opts [format " ${htype}=$key {%s}" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$key %s" $value]
+                }
+            }
             default {
                 append opts [format " ${htype}=$key %s" $value]
             }
@@ -314,7 +322,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
 
     dict for {subkey subinfo} $options {
         lassign $subinfo value type trace
-        
+
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
@@ -375,6 +383,13 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                             [ticklecharts::dictToEchartsHuddle [$value get]] \
                             ]
             }
+            str - str.t {
+                if {[ticklecharts::iseStringClass $value]} {
+                    append opts [format " ${htype}=$subkey {%s}" [$value get]]
+                } else {
+                    append opts [format " ${htype}=$subkey %s" $value]
+                }
+            }
             default {
                 append opts [format " ${htype}=$subkey %s" $value]
             }
@@ -400,7 +415,7 @@ proc ticklecharts::setdef {d key args} {
 
     upvar 1 $d _dict
 
-    # distinguishes between the 3 libraries.
+    # Distinguishes between the 3 libraries.
     set versionLib $echarts_version ; # for Echarts see ticklecharts.tcl
     set trace 0
 
@@ -430,7 +445,7 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
     # Returns true if mytype is found, false otherwise
 
     upvar 1 $keyt typekey
-    
+
     foreach valtype [split $type "|"] {
         if {[string match $mytype* "$valtype"]} {
             set typekey $valtype
@@ -499,7 +514,7 @@ proc ticklecharts::merge {d other} {
                 set namevalue [dict get $other $key]
                 # Force string representation.
                 if {[ticklecharts::typeOf $namevalue] ne "str"} {
-                    dict set other $key [string cat $namevalue "<s!>"]
+                    dict set other $key [new estr $namevalue]
                 }
             }
         }
@@ -605,14 +620,14 @@ proc ticklecharts::merge {d other} {
             }
         }
 
-        # Removes spaces by special characters.
+        # Replaces spaces by special characters.
         if {$typekey in {str str.t}} {
             set value [ticklecharts::mapSpaceString $value]
         }
 
         # Adds trace key.
         set levelP [expr {
-                $trace ? [ticklecharts::getLevelProperties [info level]] : "nothing"
+                $trace ? [ticklecharts::getLevelProperties [info level]] : "null"
             }
         ]
 
@@ -639,13 +654,13 @@ proc ticklecharts::vCompare {version1 version2} {
 }
 
 proc ticklecharts::mapSpaceString {value} {
-    # Replace 'spaces' by symbol '<@!>' if present.
-    # Use for string type values.
+    # Replaces 'space' character by ascii 
+    # character '\040' if present.
     #
     # value - string
     #
-    # Returns mapped string
-    return [string map {" " <@!>} $value]
+    # Returns mapped string.
+    return [string map {" " "\\040"} $value]
 }
 
 proc ticklecharts::isDict {value} {
@@ -656,7 +671,6 @@ proc ticklecharts::isDict {value} {
     # Returns true if 'value' is a dictionary, otherwise false.
     return [expr {![catch {dict size $value}]}]
 }
-
 
 proc ticklecharts::infoOptions {key {indent 0}} {
     # Gets default options according to key procedure.
