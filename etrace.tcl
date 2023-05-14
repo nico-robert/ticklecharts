@@ -50,7 +50,7 @@ proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
     }
 
     # Verify if a URL exists.
-    # Output warnig message if url doesn't exists
+    # Output warning message if url doesn't exists
     if {$::ticklecharts::checkURL && [ticklecharts::isURL? $escript]} {
         ticklecharts::urlExists? $escript
     }
@@ -85,7 +85,7 @@ proc ticklecharts::traceEchartsGLVersion {minversion baseversion args} {
     }
 
     # Verify if a URL exists.
-    # Output warnig message if url doesn't exists
+    # Output warning message if url doesn't exists
     if {$::ticklecharts::checkURL && [ticklecharts::isURL? $eGLscript]} {
         ticklecharts::urlExists? $eGLscript
     }
@@ -120,7 +120,7 @@ proc ticklecharts::traceGmapVersion {minversion baseversion args} {
     }
 
     # Verify if a URL exists.
-    # Output warnig message if url doesn't exists
+    # Output warning message if url doesn't exists
     if {$::ticklecharts::checkURL && [ticklecharts::isURL? $gmscript]} {
         ticklecharts::urlExists? $gmscript
     }
@@ -155,7 +155,7 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
     }
 
     # Verify if a URL exists.
-    # Output warnig message if url doesn't exists
+    # Output warning message if url doesn't exists
     if {$::ticklecharts::checkURL && [ticklecharts::isURL? $wcscript]} {
         ticklecharts::urlExists? $wcscript
     }

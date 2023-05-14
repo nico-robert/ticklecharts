@@ -62,7 +62,7 @@ proc ticklecharts::htmlOptions {value} {
     set options [merge $options $value]
 
     set minProperties $minP
-    
+
     return $options
 }
 
@@ -86,7 +86,7 @@ proc ticklecharts::tsbOptions {value} {
     set options [merge $options $value]
 
     set minProperties $minP
-    
+
     return $options
 }
 
@@ -133,7 +133,7 @@ proc ticklecharts::title {value} {
     # force string representation for 'text' and 'subtext' keys if exists...
     foreach key {text subtext} {
         if {[dict exists $d $key]} {
-            dict set d $key [string cat [dict get $d $key] "<s!>"]
+            dict set d $key [new estr [dict get $d $key]]
         }
     }
 
@@ -296,7 +296,7 @@ proc ticklecharts::legend {value} {
     set d [dict remove $d itemStyle lineStyle textStyle dataLegendItem pageTextStyle]
 
     set options [merge $options $d]
-    
+
     return [new edict $options]
 }
 
@@ -317,7 +317,7 @@ proc ticklecharts::polar {value} {
     #...
 
     set options [merge $options $d]
-    
+
     return [new edict $options]
 }
 
@@ -434,7 +434,7 @@ proc ticklecharts::visualMap {value} {
     set d [dict remove $d pieces inRange outOfRange controller textStyle handleStyle indicatorStyle]
 
     set options [merge $options $d]
-    
+
     return [new edict $options]
 }
 
@@ -466,14 +466,13 @@ proc ticklecharts::toolbox {value} {
     setdef options height     -minversion 5  -validvalue {}           -type str|num|null  -default "auto"
     # not supported yet...
     # setdef options tooltip  -minversion 5  -validvalue {} -type dict|null     -default "nothing"
-    
-    
+
     # remove key(s)...
     set d [dict remove $d feature iconStyle emphasis]
     #...
 
     set options [merge $options $d]
-    
+
     return [new edict $options]
 }
 
@@ -651,7 +650,7 @@ proc ticklecharts::brush {value} {
     setdef options outOfBrush     -minversion 5  -validvalue {}                    -type dict|null            -default [ticklecharts::brushVisual "outOfBrush" $d]
     setdef options z              -minversion 5  -validvalue {}                    -type num                  -default 10000
     #...
-    
+
     # remove key(s)...
     set d [dict remove $d brushStyle inBrush outOfBrush]
 
@@ -730,7 +729,7 @@ proc ticklecharts::geo {value} {
     setdef options layoutSize      -minversion 5        -validvalue {}                  -type num|str|null   -default "nothing"
     setdef options regions         -minversion 5        -validvalue {}                  -type list.o|null    -default [ticklecharts::regionsItem $d]
     setdef options silent          -minversion 5        -validvalue {}                  -type bool           -default "False"
-    setdef options tooltip         -minversion 5        -validvalue {}                  -type dict|null      -default [ticklecharts::tooltip $d]    
+    setdef options tooltip         -minversion 5        -validvalue {}                  -type dict|null      -default [ticklecharts::tooltip $d]
     #...
 
     # remove key(s)...
@@ -772,7 +771,7 @@ proc ticklecharts::calendar {value} {
     setdef options dayLabel    -minversion 5  -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "dayLabel"]
     setdef options monthLabel  -minversion 5  -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "monthLabel"]
     setdef options yearLabel   -minversion 5  -validvalue {}            -type dict|null             -default [ticklecharts::calendarLabel $d "yearLabel"]
-    setdef options silent      -minversion 5  -validvalue {}            -type bool                  -default "False"  
+    setdef options silent      -minversion 5  -validvalue {}            -type bool                  -default "False"
     #...
 
     # remove key(s)...
