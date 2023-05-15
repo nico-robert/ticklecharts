@@ -2,6 +2,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
+#        Note : map list formatter + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -17,7 +20,7 @@ set source {
 
 set dset [ticklecharts::dataset new [list \
                                         [list -source $source] \
-                                        [list -transform {{type "boxplot" config {itemNameFormatter "expr <0123>value<0125>"}}}] \
+                                        [list -transform {{type "boxplot" config {itemNameFormatter {"expr {value}"}}}}] \
                                         [list -fromDatasetIndex 1 -fromTransformResult 1]
                                     ] \
 ]
@@ -30,18 +33,23 @@ $chart SetOptions -tooltip {trigger "item" axisPointer {type "shadow"}} \
                   -title {text "Michelson-Morley Experiment" left "center"}
 
 
-$chart Xaxis -type "category" -boundaryGap "True" -nameGap 30 -splitArea {show "False"} -splitLine {show "False"}
-$chart Yaxis -type "value" -name "km/s minus 299,000" -splitArea {show "True"}
+$chart Xaxis -type "category" \
+             -boundaryGap "True" \
+             -nameGap 30 \
+             -splitArea {show "False"} \
+             -splitLine {show "False"}
 
+$chart Yaxis -type "value" \
+             -name "km/s minus 299,000" \
+             -splitArea {show "True"}
 
+$chart Add "boxPlotSeries" -name "boxplot" \
+                           -datasetIndex 1
 
-$chart AddBoxPlotSeries -name "boxplot" \
-                        -datasetIndex 1
+$chart Add "scatterSeries" -name "outlier" \
+                           -datasetIndex 2
 
-$chart AddScatterSeries -name "outlier" \
-                        -datasetIndex 2
-
-$chart AddGraphic -elements {
+$chart Add "graphic" -elements {
                                 {
                                 type group left 10% top 90%
                                 children {
@@ -61,8 +69,8 @@ $chart AddGraphic -elements {
                                                     }
                                             }
                                         }
-                            }
-}
+                                    }
+                                }
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

@@ -5,6 +5,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        + rename 'render' to 'Render' (Note : The first letter in capital letter)
 # v3.0 : Rename '-dataradaritem' by '-dataRadarItem'
 #        Move '-color' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
+#        Note : map list formatter + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -44,7 +47,7 @@ $chart RadarCoordinate -indicatoritem {
                         -shape "circle" \
                         -splitNumber 4 \
                         -radius 120 \
-                        -axisName {color "#428BD4" formatter "【<0123>value<0125>】"} \
+                        -axisName {color "#428BD4" formatter {"【{value}】"}} \
                         -splitLine {lineStyle {color "rgba(211, 253, 250, 0.8)"}} \
                         -splitArea [list show true areaStyle [list color [list {#77EADF #26C3BE #64AFE9 #428BD4}] \
                                                                    shadowColor "rgba(0, 0, 0, 0.2)" \
@@ -63,8 +66,8 @@ $chart RadarCoordinate -indicatoritem {
                         -radius 120 \
                         -axisName [list color "#fff" backgroundColor "#666" borderRadius 3 padding [list {3 5}]]
 
-$chart AddRadarSeries -emphasis {lineStyle {width 4}} \
-                      -dataRadarItem [list \
+$chart Add "radarSeries" -emphasis {lineStyle {width 4}} \
+                         -dataRadarItem [list \
                                             [list name "Data A" \
                                                   value [list {100 8 0.4 -80 2000}] \
                                             ] \
@@ -75,8 +78,8 @@ $chart AddRadarSeries -emphasis {lineStyle {width 4}} \
                                      ]
 
 # delete 'show "true"' in AddRadarSeries(areaStyle) method
-$chart AddRadarSeries -radarIndex 1 \
-                      -dataRadarItem [list \
+$chart Add "radarSeries" -radarIndex 1 \
+                         -dataRadarItem [list \
                                             [list name "Data C" \
                                                   value [list {120 118 130 100 99 70}] \
                                                   symbol rect \

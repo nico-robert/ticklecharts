@@ -4,6 +4,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Adds pieces.
 # v2.0 : Adds markarea.
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v4.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
+#        Note : map list formatter + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -33,23 +36,23 @@ $chart Xaxis -boundaryGap "False" \
                           15:00 16:15 17:30 18:45 20:00 21:15
                           22:30 23:45}]
                                         
-$chart Yaxis -axisLabel   {formatter "<0123>value<0125> W"} \
+$chart Yaxis -axisLabel   {formatter {"{value} W"}} \
              -axisPointer {snap "True"}
 
-$chart AddLineSeries -smooth "True" \
-                     -name {Electricity} \
-                     -data [list {300 280 250 260 270
+$chart Add "lineSeries" -smooth "True" \
+                        -name "Electricity" \
+                        -data [list {300 280 250 260 270
                                   300 550 500 400 390
                                   380 390 400 500 600
                                   750 800 700 600 400
                                   }] \
-                    -markArea {
-                        itemStyle {color "rgba(255, 173, 177, 0.4)"}
-                        data {
-                            {{name "Morning Peak" xAxis "07:30"} {xAxis "10:00"}}
-                            {{name "Evening Peak" xAxis "17:30"} {xAxis "21:15"}}
+                        -markArea {
+                            itemStyle {color "rgba(255, 173, 177, 0.4)"}
+                            data {
+                                {{name "Morning Peak" xAxis "07:30"} {xAxis "10:00"}}
+                                {{name "Evening Peak" xAxis "17:30"} {xAxis "21:15"}}
+                                }
                             }
-                        }
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]

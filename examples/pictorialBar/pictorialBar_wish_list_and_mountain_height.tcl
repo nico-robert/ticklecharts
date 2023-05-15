@@ -2,6 +2,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Move '-backgroundColor', '-animationEasing' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
+#        Note : map list formatter + Add***Series will be deleted in the next major release, 
+#               in favor of this writing. (see formatter property + 'Add' method below)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -83,16 +86,22 @@ try {
                               symbolPosition "end" \
                         ]
 
-    $picBar AddPictorialBarSeries -name "All" -emphasis {scale "True"} \
-                                  -symbolRepeatDirection "end" \
-                                  -label {show True position top formatter "<0123>c<0125> m" fontSize 16 color "#e54035"} \
-                                  -markLine [list symbol [list {"none" "none"}] label {show false} lineStyle {color "#e54035" width 2 type "dashed" dashOffset 1} data {objectItem {yAxis 8844}}] \
-                                  -data $datapicItem
+    $picBar Add "pictorialBarSeries" -name "All" \
+                                     -emphasis {scale "True"} \
+                                     -symbolRepeatDirection "end" \
+                                     -label {show True position top formatter {"{c} m"} fontSize 16 color "#e54035"} \
+                                     -markLine [list symbol [list {"none" "none"}] label {show false} lineStyle {color "#e54035" width 2 type "dashed" dashOffset 1} data {objectItem {yAxis 8844}}] \
+                                     -data $datapicItem
 
 
-    $picBar AddPictorialBarSeries -name "All" -barGap "-100%" -symbol "circle" -itemStyle {color "#185491"} -silent "True" \
-                                  -symbolOffset [list {0 "50%"}] -z "-10" \
-                                  -data [list \
+    $picBar Add "pictorialBarSeries" -name "All" \
+                                     -barGap "-100%" \
+                                     -symbol "circle" \
+                                     -itemStyle {color "#185491"} \
+                                     -silent "True" \
+                                     -symbolOffset [list {0 "50%"}] \
+                                     -z "-10" \
+                                     -data [list \
                                             [list value 1 symbolSize [list {150% 50}]] \
                                             [list value "null"] \
                                             [list value 1 symbolSize [list {200% 50}]] \
