@@ -468,7 +468,7 @@ proc ticklecharts::label3D {value} {
     setdef options formatter  -minversion 5  -validvalue {}  -type str|jsfunc|null  -default "nothing"
     setdef options margin     -minversion 5  -validvalue {}  -type num|null         -default "nothing"
 
-    if {[ticklecharts::whichSeries? $levelP] eq "bar3DSeries" || [infoNameProc {2 3} "emphasis3D"]} {
+    if {[ticklecharts::whichSeries? $levelP] eq "bar3DSeries" || [infoNameProc $levelP "bar3DSeries.emphasis3D*"]} {
         setdef options distance   -minversion 5  -validvalue {}  -type num|null  -default "nothing"
         setdef options textStyle  -minversion 5  -validvalue {}  -type dict|null -default [ticklecharts::textStyle3D $d textStyle]
     }

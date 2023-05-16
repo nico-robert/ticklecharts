@@ -776,22 +776,16 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     return [join $dataInfo "\n"]
 }
 
-proc ticklecharts::infoNameProc {level name} {
+proc ticklecharts::infoNameProc {levelP name} {
     # Gets name of proc follow level.
     #
-    # level  - level number or list level numbers
-    # name   - name proc without namespace
+    # levelP - properties
+    # name   - Name to be found in properties
     #
-    # Returns True if name match with current level, False otherwise.
+    # Returns True if name match with current level properties,
+    # False otherwise.
 
-    set lnum 0
-
-    foreach num $level {
-        lassign [info level $num] infonameproc
-        incr lnum [string match *$name $infonameproc]
-    }
-
-    return $lnum
+    return [string match $name $levelP]
 }
 
 proc ticklecharts::echartsOptsTheme {name} {

@@ -1319,7 +1319,7 @@ proc ticklecharts::itemStyle {value} {
     setdef options decal            -minversion 5  -validvalue {}                  -type dict|null                 -trace 0  -default [ticklecharts::decal $d]
     #...
 
-    if {[infoNameProc 2 "legend"]} {
+    if {[infoNameProc $levelP "legend.itemStyle"]} {
         setdef options color            -minversion 5  -validvalue formatColor   -type e.color|str|jsfunc|null -trace 0  -default "inherit"
         setdef options borderColor      -minversion 5  -validvalue formatColor   -type e.color|str|null        -trace 0  -default "inherit"
         setdef options borderWidth      -minversion 5  -validvalue {}            -type str|num|null            -trace 0  -default "auto"
@@ -1364,17 +1364,17 @@ proc ticklecharts::itemStyle {value} {
 
     }
 
-    if {[infoNameProc 2 "timelineOpts"]} {
+    if {[infoNameProc $levelP "timelineOpts.*"]} {
         setdef options color           -minversion 5  -validvalue formatColor   -type e.color|str.t|null  -trace 0  -default $color
         setdef options borderColor     -minversion 5  -validvalue formatColor   -type e.color|str|null    -trace 0  -default "nothing"
     }
 
-    if {[infoNameProc 3 "anchor"]} {
+    if {[infoNameProc $levelP "gaugeSeries.anchor.*"]} {
         # gauge series...
         setdef options borderColor   -minversion 5  -validvalue formatColor  -type e.color|str|null  -trace 0  -default "nothing"
     }
 
-    if {[infoNameProc 3 "levelsTreeMapItem"]} {
+    if {[infoNameProc $levelP "treemapSeries.levelsTreeMapItem.*"]} {
         setdef options borderColor            -minversion 5  -validvalue formatColor -type e.color|str|null     -trace 0  -default "nothing"
         setdef options borderRadius           -minversion 5  -validvalue {}          -type str|num|list.d|null  -trace 0  -default "nothing"
         setdef options gapWidth               -minversion 5  -validvalue {}          -type num|null             -trace 0  -default "nothing"
@@ -2576,7 +2576,7 @@ proc ticklecharts::label {value} {
     setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null          -trace 0  -default [ticklecharts::richItem $d]
     #...
 
-    if {[infoNameProc 3 "axisPointer"]} {
+    if {[infoNameProc $levelP "*.axisPointer.*"]} {
         set options [dict remove $options position distance rotate align verticalAlign borderType borderDashOffset borderRadius]
 
         setdef options precision  -minversion 5  -validvalue {} -type str|num  -trace 0  -default "auto"
@@ -2749,7 +2749,7 @@ proc ticklecharts::lineStyle {value} {
     setdef options opacity        -minversion 5  -validvalue formatOpacity       -type num|null                          -trace 0  -default 1
     #...
 
-    if {[infoNameProc 2 "legend"]} {
+    if {[infoNameProc $levelP "legend.lineStyle"]} {
         setdef options color      -minversion 5  -validvalue formatColor         -type e.color|str|null  -trace 0  -default "inherit"
         setdef options width      -minversion 5  -validvalue {}                  -type str|num|null      -trace 0  -default "auto"
         setdef options type       -minversion 5  -validvalue formatLineStyleType -type list.n|num|str    -trace 0  -default "inherit"
@@ -3123,6 +3123,7 @@ proc ticklecharts::handleStyle {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
     setdef options color            -minversion 5  -validvalue formatColor      -type e.color|str|null    -default "nothing"
@@ -3139,7 +3140,7 @@ proc ticklecharts::handleStyle {value} {
     setdef options opacity          -minversion 5  -validvalue formatOpacity    -type num|null            -default "nothing"
     #...
 
-    if {[infoNameProc 2 "dataZoom"]} {
+    if {[infoNameProc $levelP "*dataZoom.handleStyle"]} {
         setdef options color            -minversion 5  -validvalue formatColor  -type e.color|str|null    -default "#fff"
         setdef options borderColor      -minversion 5  -validvalue formatColor  -type str|null            -default "#ACB8D1"
         setdef options borderWidth      -minversion 5  -validvalue {}           -type num|null            -default 0
@@ -4738,9 +4739,10 @@ proc ticklecharts::ariaSeparator {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
-    if {![infoNameProc 5 "ariaSeriesMultiple"]} {
+    if {![infoNameProc $levelP "*ariaSeriesMultiple*"]} {
         setdef options middle  -minversion 5  -validvalue {}  -type str   -default ","
         setdef options end     -minversion 5  -validvalue {}  -type str   -default ""
     } else {
