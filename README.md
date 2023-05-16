@@ -1,6 +1,6 @@
 ticklEcharts - chart library
 ==========================
-Tcl wrapper around [Apache ECharts JavaScript library](https://echarts.apache.org/en/index.html).
+Tcl wrapper around [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript library).
 
 ![Photo gallery](images/all.png)
 
@@ -92,7 +92,7 @@ $chart Yaxis
 `-dataXXXItem` :
 ```tcl
 # Example for lineseries
-# Additional options on the graph... see ticklecharts::lineItem in options.tcl
+# Additional options are valid... see ticklecharts::lineItem in options.tcl
 $chart Add "lineSeries" -dataLineItem {
                                 {name "Mon" value 150}
                                 {name "Tue" value 230}
@@ -105,14 +105,16 @@ $chart Add "lineSeries" -dataLineItem {
 ```
 `dataset` (class) :
 ```tcl
-set data {
+set data(0) {
         {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
         {"value" 150 230 224 218 135 147 260}
         }
 
 # Init dataset class.
-# Note : Starting from version '2.6', it is possible to add several 'source' for the same class.
-set obj [ticklecharts::dataset new [list [list -source $data -sourceHeader "True"]]]
+# Note : Starting from version '2.6', it is possible 
+#        to add several 'source' for the same class like this :
+# > [list [list -source $data(0) -sourceHeader "True"] [list -source $data(1) ...]]]
+set obj [ticklecharts::dataset new [list -source $data(0) -sourceHeader "True"]]
 
 # Add 'obj' dataset to chart class. 
 $chart SetOptions -dataset $obj
@@ -218,7 +220,7 @@ $chart Xaxis -axisLabel [list show "True" \
     - In Tcl you can use _substitution_ e.g.:
     > formatter `{"{b0}: {c0}<br />{b1}: {c1}"}`
     
-    - Or use list map to replace some `Tcl` special chars e.g.:
+    - Or use list map (deprecated) to replace some `Tcl` special chars e.g.:
     > formatter `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
 
     | Symbol        | Map      |
@@ -331,7 +333,7 @@ set ::ticklecharts::gl_version      "X.X.X" ; # Echarts GL version
 set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
 set ::ticklecharts::wc_version      "X.X.X" ; # wordcloud version
 
- # Verify if a URL exists when num version changed.
+ # Verify if a URL exists when Echarts version changed.
 set ::ticklecharts::checkURL "True" ; # default "False"
 ```
 `Note` : _All the above variables can be modified in the `ticklecharts.tcl` file_.
@@ -356,11 +358,11 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" c
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
 
-# ticklecharts::jsfunc...
+# Uses Tcl substitution for 'formatter' property...
 $chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50 \
-                                   -axisLabel {formatter "<0123>value<0125> ml"}
+                                   -axisLabel {formatter {"{value} ml"}}
 $chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5 \
-                                   -axisLabel {formatter "<0123>value<0125> °C"}
+                                   -axisLabel {formatter {"{value} °C"}}
 
 # Add bars...
 $chart Add "barSeries" -name "Evaporation" \
@@ -384,8 +386,8 @@ $chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
 ![line, bar and pie layout](images/line_bar_pie_layout.png)
 ```tcl
 # demo layout line + bar + pie...
-set data_0 {1 2 3 4 5}
-set data_1 {2 3.6 6 2 10}
+set data(0) {1 2 3 4 5}
+set data(1) {2 3.6 6 2 10}
 
 set js [ticklecharts::jsfunc new {
                 function (value, index) {
@@ -399,10 +401,10 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
                  -tooltip {show "True"} \
                  -legend {top "56%" left "20%"}    
     
-$line Xaxis -data [list $data_0] -boundaryGap "False"
+$line Xaxis -data [list $data(0)] -boundaryGap "False"
 $line Yaxis
-$line Add "lineSeries" -data [list $data_0] -areaStyle {} -smooth true
-$line Add "lineSeries" -data [list $data_1] -smooth true
+$line Add "lineSeries" -data [list $data(0)] -areaStyle {} -smooth true
+$line Add "lineSeries" -data [list $data(1)] -smooth true
 
 set bar [ticklecharts::chart new]
 
@@ -569,4 +571,11 @@ Release :
     to verify if URL exists (disabled by default) when the num version changed. Uses `curl` command (Available for Windows and Mac OS)
     - Fixed a bug for the `multiversion` property, when the num version is lower than the `-minversion` property.
     - `pkgIndex.tcl` file has been completely reworked.
+    - Cosmetic changes.
+*  **16-May-2023** : 3.1.3
+    - Adds a new class `ticklecharts::eString` to replace a string.
+    - Invoke `superclass` method for `chart3D`, `timeline` and `Gridlayout` classes.
+    - Fixed a bug when the keys have a space `critcl::cproc critHuddleDump`.
+    - dataset class support `ticklecharts::eDict` class for `-dimensions` property.
+    - Keeps updating some examples to set new `Add` method for chart series.
     - Cosmetic changes.

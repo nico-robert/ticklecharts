@@ -181,23 +181,29 @@
                    #     New argument `-evalJSON` has been added (see [this file](examples/tsb/README.md) for detail).
                    #     This new minor release allows to load an entire `JS script` instead of `https://` link.
                 # Adds a `trace` command for series (The goal here is to find if certain values match each other).   
-                   # Currently only tested for `line` series.
+                   # Currently only supported for `line` series.
                 # Adds a new command `ticklecharts::urlExists?` + global variable `::ticklecharts::checkURL`   
                    # to verify if URL exists (disabled by default) when the num version changed. Uses `curl` command (Available for Windows and Mac OS)
                 # Fixed a bug for the `multiversion` property, when the num version is lower than the `-minversion` property.
                 # `pkgIndex.tcl` file has been completely reworked.
                 # Cosmetic changes.
-
+# 16-May-2023 : v3.1.3
+                # Adds a new class `ticklecharts::eString` to replace a string.
+                # Invoke `superclass` method for `chart3D`, `timeline` and `Gridlayout` classes.
+                # Fixed a bug when the keys have a space `critcl::cproc critHuddleDump`.
+                # dataset class support `ticklecharts::eDict` class for `-dimensions` property.
+                # Keeps updating some examples to set new `Add` method for chart series.
+                # Cosmetic changes.
 
 package require Tcl 8.6
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.1.2 ; # ticklEcharts version
-    variable echarts_version 5.4.1 ; # Echarts version
-    variable gl_version      2.0.9 ; # Echarts GL version
-    variable wc_version      2.1.0 ; # wordCloud version
-    variable gmap_version    1.5.0 ; # gmap version
+    variable version         3.1.3 ; # ticklEcharts version
+    variable echarts_version 5.4.1 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-4-1)
+    variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
+    variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
+    variable gmap_version    1.5.0 ; # gmap version       (https://github.com/plainheart/echarts-extension-gmap)
     variable keyGMAPI        "??"  ; # Please replace '??' with your own API key.
     variable edir            [file dirname [file normalize [info script]]]
     variable theme           "custom"
