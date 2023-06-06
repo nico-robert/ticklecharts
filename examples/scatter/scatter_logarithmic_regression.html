@@ -1,0 +1,616 @@
+ <!DOCTYPE html>
+ <html lang="en" style="height: 100%">
+ <head>
+   <meta charset="UTF-8">
+   <title>scatter_logarithmic_regression</title>
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//echarts-stat@latest/dist/ecStat.min.js"></script>
+ </head>
+   <body style="height: 100%; margin: 0">
+     <div id="container" style="height: 100%"></div>
+     <script>
+       var chart = echarts.init(document.getElementById("container"), null, {
+         renderer: "canvas"
+       });
+       echarts.registerTransform(ecStat.transform.regression);
+       var option = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "dataset": [
+    {"source": [
+        [
+          28604,
+          77,
+          17096869,
+          "Australia",
+          1990
+        ],
+        [
+          31163,
+          77.4,
+          27662440,
+          "Canada",
+          1990
+        ],
+        [
+          1516,
+          68,
+          1154605773,
+          "China",
+          1990
+        ],
+        [
+          13670,
+          74.7,
+          10582082,
+          "Cuba",
+          1990
+        ],
+        [
+          28599,
+          75,
+          4986705,
+          "Finland",
+          1990
+        ],
+        [
+          29476,
+          77.1,
+          56943299,
+          "France",
+          1990
+        ],
+        [
+          31476,
+          75.4,
+          78958237,
+          "Germany",
+          1990
+        ],
+        [
+          28666,
+          78.1,
+          254830,
+          "Iceland",
+          1990
+        ],
+        [
+          1777,
+          57.7,
+          870601776,
+          "India",
+          1990
+        ],
+        [
+          29550,
+          79.1,
+          122249285,
+          "Japan",
+          1990
+        ],
+        [
+          2076,
+          67.9,
+          20194354,
+          "North Korea",
+          1990
+        ],
+        [
+          12087,
+          72,
+          42972254,
+          "South Korea",
+          1990
+        ],
+        [
+          24021,
+          75.4,
+          3397534,
+          "New Zealand",
+          1990
+        ],
+        [
+          43296,
+          76.8,
+          4240375,
+          "Norway",
+          1990
+        ],
+        [
+          10088,
+          70.8,
+          38195258,
+          "Poland",
+          1990
+        ],
+        [
+          19349,
+          69.6,
+          147568552,
+          "Russia",
+          1990
+        ],
+        [
+          10670,
+          67.3,
+          53994605,
+          "Turkey",
+          1990
+        ],
+        [
+          26424,
+          75.7,
+          57110117,
+          "United Kingdom",
+          1990
+        ],
+        [
+          37062,
+          75.4,
+          252847810,
+          "United States",
+          1990
+        ],
+        [
+          44056,
+          81.8,
+          23968973,
+          "Australia",
+          2015
+        ],
+        [
+          43294,
+          81.7,
+          35939927,
+          "Canada",
+          2015
+        ],
+        [
+          13334,
+          76.9,
+          1376048943,
+          "China",
+          2015
+        ],
+        [
+          21291,
+          78.5,
+          11389562,
+          "Cuba",
+          2015
+        ],
+        [
+          38923,
+          80.8,
+          5503457,
+          "Finland",
+          2015
+        ],
+        [
+          37599,
+          81.9,
+          64395345,
+          "France",
+          2015
+        ],
+        [
+          44053,
+          81.1,
+          80688545,
+          "Germany",
+          2015
+        ],
+        [
+          42182,
+          82.8,
+          329425,
+          "Iceland",
+          2015
+        ],
+        [
+          5903,
+          66.8,
+          1311050527,
+          "India",
+          2015
+        ],
+        [
+          36162,
+          83.5,
+          126573481,
+          "Japan",
+          2015
+        ],
+        [
+          1390,
+          71.4,
+          25155317,
+          "North Korea",
+          2015
+        ],
+        [
+          34644,
+          80.7,
+          50293439,
+          "South Korea",
+          2015
+        ],
+        [
+          34186,
+          80.6,
+          4528526,
+          "New Zealand",
+          2015
+        ],
+        [
+          64304,
+          81.6,
+          5210967,
+          "Norway",
+          2015
+        ],
+        [
+          24787,
+          77.3,
+          38611794,
+          "Poland",
+          2015
+        ],
+        [
+          23038,
+          73.13,
+          143456918,
+          "Russia",
+          2015
+        ],
+        [
+          19360,
+          76.5,
+          78665830,
+          "Turkey",
+          2015
+        ],
+        [
+          38225,
+          81.4,
+          64715810,
+          "United Kingdom",
+          2015
+        ],
+        [
+          53354,
+          79.1,
+          321773631,
+          "United States",
+          2015
+        ]
+      ]},
+    {"transform": [{
+          "type": "filter",
+          "config": {
+            "dimension": 4,
+            "eq": 1990
+          },
+          "print": false
+        }]},
+    {"transform": [{
+          "type": "filter",
+          "config": {
+            "dimension": 4,
+            "eq": 2015
+          },
+          "print": false
+        }]},
+    {"transform": [{
+          "type": "ecStat:regression",
+          "config": {"method": "logarithmic"},
+          "print": false
+        }]}
+  ],
+  "title": [{
+      "show": true,
+      "text": "1990 and 2015 per capital life expectancy and GDP",
+      "target": "blank",
+      "subtext": "By ecStat.regression",
+      "sublink": "https://github.com/ecomfe/echarts-stat",
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": 10,
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "1990",
+        "2015"
+      ]
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "cross",
+        "axis": "auto",
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "visualMap": [{
+      "type": "continuous",
+      "min": 20000,
+      "max": 1500000000,
+      "calculable": false,
+      "realtime": true,
+      "inverse": false,
+      "precision": 0,
+      "itemWidth": 20,
+      "itemHeight": 140,
+      "align": "auto",
+      "textGap": 10,
+      "show": false,
+      "dimension": 2,
+      "seriesIndex": [
+        0,
+        1
+      ],
+      "hoverLink": true,
+      "inRange": {"symbolSize": [
+          10,
+          70
+        ]},
+      "zlevel": 0,
+      "z": 4,
+      "left": "auto",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "orient": "vertical",
+      "padding": 5,
+      "backgroundColor": "rgba(0,0,0,0)",
+      "borderColor": "#ccc",
+      "borderWidth": 0,
+      "handleSize": "120%",
+      "indicatorIcon": "circle",
+      "indicatorSize": "50%"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "value",
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": true,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#E0E6F1",
+          "width": 1,
+          "type": "dashed",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "splitLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "#E0E6F1",
+          "width": 1,
+          "type": "dashed",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "scatter",
+      "name": "1990",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": 10,
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "datasetIndex": 1
+    },
+    {
+      "type": "scatter",
+      "name": "2015",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "legendHoverLink": true,
+      "symbol": "circle",
+      "symbolSize": 10,
+      "symbolKeepAspect": true,
+      "large": false,
+      "largeThreshold": 2000,
+      "cursor": "pointer",
+      "clip": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "datasetIndex": 2
+    },
+    {
+      "type": "line",
+      "name": "line",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "circle",
+      "symbolSize": 0.1,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "label": {
+        "show": true,
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "labelLayout": {
+        "moveOverlap": "shiftX",
+        "dx": -20,
+        "align": "left",
+        "verticalAlign": "top"
+      },
+      "smooth": true,
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "encode": {
+        "label": 2,
+        "tooltip": [1]
+      },
+      "datasetIndex": 3
+    }
+  ]
+}
+       chart.setOption(option);
+       window.addEventListener("resize", chart.resize);
+     </script>
+   </body>
+ </html>
