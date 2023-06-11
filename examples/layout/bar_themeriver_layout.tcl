@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -14,9 +15,10 @@ set js [ticklecharts::jsfunc new {function (value, index) {
 set themeriver [ticklecharts::chart new]
                   
 $themeriver SingleAxis -type "time"
-$themeriver AddThemeRiverSeries -emphasis {itemStyle {shadowBlur 20 shadowColor "rgba(0, 0, 0, 0.8)"}} \
-                                -data {{"2015/11/08" 10 "DQ"} {"2015/11/09" 15 "DQ"} {"2015/11/10" 35 "DQ"} {"2015/11/11" 38 "DQ"}
-                                       {"2015/11/12" 22 "DQ"} {"2015/11/13" 16 "DQ"} {"2015/11/14" 7 "DQ"} {"2015/11/15" 2 "DQ"}
+$themeriver Add "themeRiverSeries" -emphasis {itemStyle {shadowBlur 20 shadowColor "rgba(0, 0, 0, 0.8)"}} \
+                                   -data {
+                                        {"2015/11/08" 10 "DQ"} {"2015/11/09" 15 "DQ"} {"2015/11/10" 35 "DQ"} {"2015/11/11" 38 "DQ"}
+                                        {"2015/11/12" 22 "DQ"} {"2015/11/13" 16 "DQ"} {"2015/11/14" 7 "DQ"} {"2015/11/15" 2 "DQ"}
                                         {"2015/11/16" 17 "DQ"} {"2015/11/17" 33 "DQ"} {"2015/11/18" 40 "DQ"} {"2015/11/19" 32 "DQ"}
                                         {"2015/11/20" 26 "DQ"} {"2015/11/21" 35 "DQ"} {"2015/11/22" 40 "DQ"} {"2015/11/23" 32 "DQ"}
                                         {"2015/11/24" 26 "DQ"} {"2015/11/25" 22 "DQ"} {"2015/11/26" 16 "DQ"} {"2015/11/27" 22 "DQ"}
@@ -44,13 +46,13 @@ $themeriver AddThemeRiverSeries -emphasis {itemStyle {shadowBlur 20 shadowColor 
                                         {"2015/11/13" 16 "DD"} {"2015/11/14" 7 "DD"} {"2015/11/15" 2 "DD"} {"2015/11/16" 17 "DD"} {"2015/11/17" 33 "DD"} {"2015/11/18" 4 "DD"}
                                         {"2015/11/19" 32 "DD"} {"2015/11/20" 26 "DD"} {"2015/11/21" 35 "DD"} {"2015/11/22" 40 "DD"} {"2015/11/23" 32 "DD"} {"2015/11/24" 26 "DD"}
                                         {"2015/11/25" 22 "DD"} {"2015/11/26" 16 "DD"} {"2015/11/27" 22 "DD"} {"2015/11/28" 10 "DD"}
-                                     }
+                                    }
 
 set bar [ticklecharts::chart new]
 
 $bar Xaxis -data [list {A B C D E}] -axisLabel [dict create show "True" formatter $js]
 $bar Yaxis
-$bar AddBarSeries -data [list {50 6 80 120 30}]
+$bar Add "barSeries" -data [list {50 6 80 120 30}]
 
 
 set layout [ticklecharts::Gridlayout new]

@@ -3,13 +3,14 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'color' string color by 'rgb' color match
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 set chart [ticklecharts::chart new]
 
-$chart AddGraphic -elements [list \
+$chart Add "graphic" -elements [list \
                             {
                                 type circle bounding "raw" z 100 right 300 bottom 160
                                 shape {

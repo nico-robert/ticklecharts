@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -127,7 +130,7 @@ try {
                         }]]
         }
 
-        $chart AddTreeMapSeries -label [list \
+        $chart Add "treeMapSeries" -label [list \
                                         position "insideTopLeft" \
                                         formatter $js \
                                         richitem [list \
@@ -137,13 +140,13 @@ try {
                                                 name {fontSize 12 color "#fff"} \
                                                 hr {width "100%" borderColor "rgba(255,255,255,0.2)" borderWidth 0.5 height 0 lineHeight 10} \
                                         ] \
-                                ] \
-                                -itemStyle {borderColor black} \
-                                -levels [getLevelOption $idx] \
-                                -name $mode \
-                                -top 80 \
-                                -visualDimension [expr {$idx == 2 ? 2 : "null"}] \
-                                -data [buildData $idx $datajson]
+                                    ] \
+                                    -itemStyle {borderColor black} \
+                                    -levels [getLevelOption $idx] \
+                                    -name $mode \
+                                    -top 80 \
+                                    -visualDimension [expr {$idx == 2 ? 2 : "null"}] \
+                                    -data [buildData $idx $datajson]
 
         incr idx
     }

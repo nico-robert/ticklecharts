@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-datapieitem' by '-dataPieItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,8 +25,8 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
     
 $line Xaxis -data [list $num] -boundaryGap "False"
 $line Yaxis
-$line AddLineSeries -data [list $num]  -areaStyle {} -smooth true
-$line AddLineSeries -data [list $num1] -smooth true
+$line Add "lineSeries" -data [list $num]  -areaStyle {} -smooth true
+$line Add "lineSeries" -data [list $num1] -smooth true
 
 set bar [ticklecharts::chart new]
 
@@ -34,16 +35,16 @@ $bar SetOptions -legend {top "2%" left "20%"}
 $bar Xaxis -data [list {A B C D E}] \
             -axisLabel [dict create show "True" formatter $js]
 $bar Yaxis
-$bar AddBarSeries -data [list {50 6 80 120 30}]
-$bar AddBarSeries -data [list {20 30 50 100 25}]
+$bar Add "barSeries" -data [list {50 6 80 120 30}]
+$bar Add "barSeries" -data [list {20 30 50 100 25}]
 
 set pie [ticklecharts::chart new]
 
 $pie SetOptions -legend {top "6%" left "65%"} 
 
-$pie AddPieSeries -name "Access From" -radius [list {"50%" "70%"}] \
-                  -labelLine {show "True"} \
-                  -dataPieItem {
+$pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
+                     -labelLine {show "True"} \
+                     -dataPieItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}

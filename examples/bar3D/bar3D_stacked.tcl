@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc generateData {} {
     set data {}
 
@@ -24,10 +27,10 @@ $chart3D Zaxis3D -type "value"
 
 
 for {set i 0} {$i < 10} {incr i} {
-    $chart3D AddBar3DSeries -data [generateData] \
-                            -stack "stack" \
-                            -shading "lambert" \
-                            -emphasis {label {show "False"}}
+    $chart3D Add "bar3DSeries" -data [generateData] \
+                               -stack "stack" \
+                               -shading "lambert" \
+                               -emphasis {label {show "False"}}
 }
 
 

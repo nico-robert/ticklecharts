@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : delete borderColor in SetOptions(-legend) it's not a key option.
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -26,19 +27,19 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"} \
                   -legend {top 2% left 3% orient vertical dataLegendItem {{name "tree1" icon "rect"} {name "tree2" icon "rect"}}} \
                 
-$chart AddTreeSeries -name "tree1" -top "5%" -left "7%" -bottom "2%" -right "60%" -symbolSize 7 \
-                     -label {position "left" verticalAlign "middle" align "right"} \
-                     -leaves {label {position "right" verticalAlign "middle" align "left"}} \
-                     -emphasis {focus "descendant"} \
-                     -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
-                     -data [list $data]
+$chart Add "treeSeries" -name "tree1" -top "5%" -left "7%" -bottom "2%" -right "60%" -symbolSize 7 \
+                        -label {position "left" verticalAlign "middle" align "right"} \
+                        -leaves {label {position "right" verticalAlign "middle" align "left"}} \
+                        -emphasis {focus "descendant"} \
+                        -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
+                        -data [list $data]
 
-$chart AddTreeSeries -name "tree2" -top "20%" -left "60%" -bottom "22%" -right "18%" -symbolSize 7 \
-                     -label {position "left" verticalAlign "middle" align "right"} \
-                     -leaves {label {position "right" verticalAlign "middle" align "left"}} \
-                     -emphasis {focus "descendant"} \
-                     -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
-                     -data [list $data2]
+$chart Add "treeSeries" -name "tree2" -top "20%" -left "60%" -bottom "22%" -right "18%" -symbolSize 7 \
+                        -label {position "left" verticalAlign "middle" align "right"} \
+                        -leaves {label {position "right" verticalAlign "middle" align "left"}} \
+                        -emphasis {focus "descendant"} \
+                        -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
+                        -data [list $data2]
 
 
 

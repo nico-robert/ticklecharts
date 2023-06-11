@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Since v3.0.1 '-dataZoom' can be written like this -dataZoom {key "value"} instead of -dataZoom {{key "value"}} (for one list)
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -59,17 +60,17 @@ try {
             lappend links [list source $idx target [expr {$idx + 1}]]
         }
 
-        $chart AddGraphSeries -name $country \
-                              -coordinateSystem "cartesian2d" \
-                              -dataGraphItem $d \
-                              -links $links \
-                              -edgeSymbol [list {"none" "arrow"}] \
-                              -edgeSymbolSize 5 \
-                              -legendHoverLink "False" \
-                              -lineStyle {color "#333"} \
-                              -itemStyle {borderWidth 1 borderColor "#333"} \
-                              -label {color "#333" position "right"} \
-                              -symbolSize 10
+        $chart Add "graphSeries" -name $country \
+                                 -coordinateSystem "cartesian2d" \
+                                 -dataGraphItem $d \
+                                 -links $links \
+                                 -edgeSymbol [list {"none" "arrow"}] \
+                                 -edgeSymbolSize 5 \
+                                 -legendHoverLink "False" \
+                                 -lineStyle {color "#333"} \
+                                 -itemStyle {borderWidth 1 borderColor "#333"} \
+                                 -label {color "#333" position "right"} \
+                                 -symbolSize 10
     }
 
     set fbasename [file rootname [file tail [info script]]]

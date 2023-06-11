@@ -15,6 +15,9 @@ proc getVirtualData {year} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -84,15 +87,15 @@ $chart SetOptions -tooltip {position "top"} \
                                 ] \
                             ]
 
-$chart AddGraphSeries -edgeSymbol [list {none arrow}] \
-                      -coordinateSystem "calendar" \
-                      -links $links \
-                      -data $graphData \
-                      -symbolSize 10 \
-                      -calendarIndex 0
+$chart Add "graphSeries" -edgeSymbol [list {none arrow}] \
+                         -coordinateSystem "calendar" \
+                         -links $links \
+                         -data $graphData \
+                         -symbolSize 10 \
+                         -calendarIndex 0
 
-$chart AddHeatmapSeries -coordinateSystem "calendar" \
-                        -data [list {*}[getVirtualData 2022]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" \
+                           -data [list {*}[getVirtualData 2022]]
 
 # js func
 set js1 [ticklecharts::jsfunc new {
@@ -101,11 +104,11 @@ set js1 [ticklecharts::jsfunc new {
         }
 }]
 
-$chart AddScatterSeries -type "effectScatter" \
-                        -coordinateSystem "calendar" \
-                        -calendarIndex 1 \
-                        -symbolSize $js1 \
-                        -data [list {*}[getVirtualData 2022]]
+$chart Add "scatterSeries" -type "effectScatter" \
+                           -coordinateSystem "calendar" \
+                           -calendarIndex 1 \
+                           -symbolSize $js1 \
+                           -data [list {*}[getVirtualData 2022]]
 
 # js func
 set js2 [ticklecharts::jsfunc new {
@@ -114,15 +117,15 @@ set js2 [ticklecharts::jsfunc new {
         }
 }]
 
-$chart AddScatterSeries -type "scatter" \
-                        -coordinateSystem "calendar" \
-                        -calendarIndex 2 \
-                        -symbolSize $js2 \
-                        -data [list {*}[getVirtualData 2022]]
+$chart Add "scatterSeries" -type "scatter" \
+                           -coordinateSystem "calendar" \
+                           -calendarIndex 2 \
+                           -symbolSize $js2 \
+                           -data [list {*}[getVirtualData 2022]]
 
-$chart AddHeatmapSeries -coordinateSystem "calendar" \
-                        -calendarIndex 3 \
-                        -data [list {*}[getVirtualData 2022]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" \
+                           -calendarIndex 3 \
+                           -data [list {*}[getVirtualData 2022]]
 
 
 set fbasename [file rootname [file tail [info script]]]

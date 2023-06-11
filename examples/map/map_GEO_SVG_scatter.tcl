@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -40,16 +43,16 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip {} \
                   -geo {tooltip {show "true"} map "iceland_svg" roam "True"}
 
-$chart AddScatterSeries -type "effectScatter" -coordinateSystem "geo" -geoIndex 0 -symbolSize $jsscatter \
-                        -itemStyle {color "#b02a02"} -encode {tooltip 2} \
-                        -data [list \
-                            {488.2358421078053 459.70913833075736 100} \
-                            {770.3415644319939 757.9672194986475 30} \
-                            {1180.0329284196291 743.6141808346214 80} \
-                            {894.03790632245 1188.1985153835008 61} \
-                            {1372.98925630313 477.3839988649537 70} \
-                            {1378.62251255796 935.6708486282843 81} \
-                        ]
+$chart Add "scatterSeries" -type "effectScatter" -coordinateSystem "geo" -geoIndex 0 -symbolSize $jsscatter \
+                           -itemStyle {color "#b02a02"} -encode {tooltip 2} \
+                           -data [list \
+                               {488.2358421078053 459.70913833075736 100} \
+                               {770.3415644319939 757.9672194986475 30} \
+                               {1180.0329284196291 743.6141808346214 80} \
+                               {894.03790632245 1188.1985153835008 61} \
+                               {1372.98925630313 477.3839988649537 70} \
+                               {1378.62251255796 935.6708486282843 81} \
+                           ]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

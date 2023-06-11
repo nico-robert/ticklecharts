@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Rename '-datapieitem' by '-dataPieItem'
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -38,64 +39,64 @@ $chart SetOptions -tooltip {} \
 ]
 
 # value : [lng, lat]
-$chart AddScatterSeries -name "City" -symbolSize 15 \
-                        -coordinateSystem "gmap" \
-                        -type "effectScatter" \
-                        -dataScatterItem [list \
-                                            [list name "Bayonne" value [list {-1.4724319938245576 43.49308776293058}]] \
-                                            [list name "Paris" value [list {2.34960965438873 48.860204769341884}]] \
-                                            [list name "Marseille" value [list {5.372546427576347 43.29511510366016}]] \
-                                        ] \
-                        -itemStyle {color "#f4e925" shadowBlur 10 shadowColor #333}
+$chart Add "scatterSeries" -name "City" -symbolSize 15 \
+                           -coordinateSystem "gmap" \
+                           -type "effectScatter" \
+                           -dataScatterItem [list \
+                                               [list name "Bayonne" value [list {-1.4724319938245576 43.49308776293058}]] \
+                                               [list name "Paris" value [list {2.34960965438873 48.860204769341884}]] \
+                                               [list name "Marseille" value [list {5.372546427576347 43.29511510366016}]] \
+                                           ] \
+                           -itemStyle {color "#f4e925" shadowBlur 10 shadowColor #333}
 
 
 # center : [lng, lat]
-$chart AddPieSeries -name "pie" \
-                    -coordinateSystem "gmap" \
-                    -selectedOffset 30 \
-                    -center [list {-6.43676598655016 46.12723458558478}] \
-                    -radius 90 \
-                    -dataPieItem {
-                      {value 300 name "Bayonne"}
-                      {value 735 name "Paris"}
-                      {value 580 name "Marseille"}
-                    }
+$chart Add "pieSeries" -name "pie" \
+                       -coordinateSystem "gmap" \
+                       -selectedOffset 30 \
+                       -center [list {-6.43676598655016 46.12723458558478}] \
+                       -radius 90 \
+                       -dataPieItem {
+                         {value 300 name "Bayonne"}
+                         {value 735 name "Paris"}
+                         {value 580 name "Marseille"}
+                       }
 
 # coords : start point = [lng, lat], end point [lng, lat]
-$chart AddLinesSeries -name "Arrow" \
-                      -coordinateSystem "gmap" \
-                      -large "False" \
-                      -progressiveThreshold 3000 \
-                      -progressive 400 \
-                      -polyline "False" \
-                      -effect {
-                                show "True"
-                                trailLength 0.5
-                                period 4
-                                color "red"
-                                symbol "arrow"
-                                symbolSize 10
-                              } \
-                      -symbolSize 12 \
-                      -symbol [list {none arrow}] \
-                      -dataLinesItem [list \
-                                        [list coords [list \
-                                                    {-1.4724319938245576 43.49308776293058} \
-                                                    {2.34960965438873 48.860204769341884} \
-                                                ] \
-                                        ] \
-                                        [list coords [list \
-                                                    {2.34960965438873 48.860204769341884} \
-                                                    {5.372546427576347 43.29511510366016} \
-                                                ] \
-                                        ] \
-                                        [list coords [list \
-                                                    {5.372546427576347 43.29511510366016} \
-                                                    {-1.4724319938245576 43.49308776293058} \
-                                                ] \
-                                        ] \
-                      ] \
-                      -lineStyle {width 1 opacity 1 curveness 0.2 type solid}
+$chart Add "linesSeries" -name "Arrow" \
+                         -coordinateSystem "gmap" \
+                         -large "False" \
+                         -progressiveThreshold 3000 \
+                         -progressive 400 \
+                         -polyline "False" \
+                         -effect {
+                                   show "True"
+                                   trailLength 0.5
+                                   period 4
+                                   color "red"
+                                   symbol "arrow"
+                                   symbolSize 10
+                                 } \
+                         -symbolSize 12 \
+                         -symbol [list {none arrow}] \
+                         -dataLinesItem [list \
+                                           [list coords [list \
+                                                       {-1.4724319938245576 43.49308776293058} \
+                                                       {2.34960965438873 48.860204769341884} \
+                                                   ] \
+                                           ] \
+                                           [list coords [list \
+                                                       {2.34960965438873 48.860204769341884} \
+                                                       {5.372546427576347 43.29511510366016} \
+                                                   ] \
+                                           ] \
+                                           [list coords [list \
+                                                       {5.372546427576347 43.29511510366016} \
+                                                       {-1.4724319938245576 43.49308776293058} \
+                                                   ] \
+                                           ] \
+                         ] \
+                         -lineStyle {width 1 opacity 1 curveness 0.2 type solid}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

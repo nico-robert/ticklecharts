@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-datafunnelitem' by '-dataFunnelItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -12,22 +13,22 @@ set line [ticklecharts::chart new]
                
 $line Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}]
 $line Yaxis
-$line AddLineSeries -data [list {120 200 150 80 70 110 130}]
+$line Add "lineSeries" -data [list {120 200 150 80 70 110 130}]
 
 # funnel
 set funnel [ticklecharts::chart new]
 
-$funnel AddFunnelSeries -name "Funnel" \
-                       -width "30%" \
-                       -height "30%" \
-                       -min 0 \
-                       -max 100 \
-                       -sort none \
-                       -label {show True position "inside"} \
-                       -labelLine {length 10 lineStyle {width 1 type "solid"}} \
-                       -itemStyle {borderColor "#fff" borderWidth 1} \
-                       -emphasis  {label {fontSize 20}} \
-                       -dataFunnelItem {
+$funnel Add "funnelSeries" -name "Funnel" \
+                           -width "30%" \
+                           -height "30%" \
+                           -min 0 \
+                           -max 100 \
+                           -sort none \
+                           -label {show True position "inside"} \
+                           -labelLine {length 10 lineStyle {width 1 type "solid"}} \
+                           -itemStyle {borderColor "#fff" borderWidth 1} \
+                           -emphasis  {label {fontSize 20}} \
+                           -dataFunnelItem {
                                         {value 120 name Mon}
                                         {value 200 name Tue}
                                         {value 150 name Wed}

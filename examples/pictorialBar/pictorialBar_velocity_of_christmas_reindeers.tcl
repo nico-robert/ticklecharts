@@ -3,6 +3,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Move '-color' from constructor to 'SetOptions' method with v3.0.1
 # v3.0 : Delete 'toJSON' from example (I forgot to remove it from this file...)
+# v4.0 : Update example with the new 'Add' method for chart series.
+
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -39,17 +41,17 @@ $picBar Yaxis -type "value" \
               -axisTick {show False}
               
 
-$picBar AddPictorialBarSeries -name "hill" \
-                              -barCategoryGap "-130%" \
-                              -symbol "path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z" \
-                              -itemStyle {opacity 0.5 borderColor "nothing"} \
-                              -emphasis {scale False itemStyle {borderColor "nothing" opacity 1}} \
-                              -z 10 \
-                              -data {{value 123} {value 60} {value 25} {value 18} {value 12} {value 9} {value 2} {value 1}}
+$picBar Add "pictorialBarSeries" -name "hill" \
+                                 -barCategoryGap "-130%" \
+                                 -symbol "path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z" \
+                                 -itemStyle {opacity 0.5 borderColor "nothing"} \
+                                 -emphasis {scale False itemStyle {borderColor "nothing" opacity 1}} \
+                                 -z 10 \
+                                 -data {{value 123} {value 60} {value 25} {value 18} {value 12} {value 9} {value 2} {value 1}}
 
-$picBar AddPictorialBarSeries -name "glyph" -symbolPosition "end" -symbolSize 50 \
-                              -barGap "-100%" -barCategoryGap "nothing" -symbolOffset [list {0 "-120%"}] \
-                              -data [list \
+$picBar Add "pictorialBarSeries" -name "glyph" -symbolPosition "end" -symbolSize 50 \
+                                 -barGap "-100%" -barCategoryGap "nothing" -symbolOffset [list {0 "-120%"}] \
+                                 -data [list \
                                         [list value 123 symbol $pathSymbols(reindeer) symbolSize [list {60 60}]] \
                                         [list value 60  symbol $pathSymbols(rocket)   symbolSize [list {50 60}]] \
                                         [list value 25  symbol $pathSymbols(plane)    symbolSize [list {65 35}]] \

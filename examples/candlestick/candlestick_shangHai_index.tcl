@@ -3,6 +3,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc calculateMA {dayCount data} {
 
     set result {}
@@ -148,8 +151,8 @@ $chart Xaxis -data [list $categoryData] -boundaryGap "False" -axisLine {onZero "
 
 $chart Yaxis -scale "True" -splitArea {show "True"}
 
-$chart AddCandlestickSeries -name "日K" -data $values -itemStyle [list color $upColor color0 $downColor borderColor $upBorderColor borderColor0 $downBorderColor] \
-                            -markPoint [list \
+$chart Add "candlestickSeries" -name "日K" -data $values -itemStyle [list color $upColor color0 $downColor borderColor $upBorderColor borderColor0 $downBorderColor] \
+                               -markPoint [list \
                                 data [list \
                                     [list name "Mark" coord [list {"2013/5/31" 2300}] value 2300 itemStyle {color "rgb(41,60,85)"}] \
                                     {name "highest value" type "max" valueDim "highest"} \
@@ -170,10 +173,10 @@ $chart AddCandlestickSeries -name "日K" -data $values -itemStyle [list color $u
                                             } \
                                         ]
 
-$chart AddLineSeries -name "MA5"  -data [list [calculateMA 5 $values]]  -smooth "True" -lineStyle {opacity 0.5}
-$chart AddLineSeries -name "MA10" -data [list [calculateMA 10 $values]] -smooth "True" -lineStyle {opacity 0.5}
-$chart AddLineSeries -name "MA20" -data [list [calculateMA 20 $values]] -smooth "True" -lineStyle {opacity 0.5}
-$chart AddLineSeries -name "MA30" -data [list [calculateMA 30 $values]] -smooth "True" -lineStyle {opacity 0.5}
+$chart Add "lineSeries" -name "MA5"  -data [list [calculateMA 5 $values]]  -smooth "True" -lineStyle {opacity 0.5}
+$chart Add "lineSeries" -name "MA10" -data [list [calculateMA 10 $values]] -smooth "True" -lineStyle {opacity 0.5}
+$chart Add "lineSeries" -name "MA20" -data [list [calculateMA 20 $values]] -smooth "True" -lineStyle {opacity 0.5}
+$chart Add "lineSeries" -name "MA30" -data [list [calculateMA 30 $values]] -smooth "True" -lineStyle {opacity 0.5}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

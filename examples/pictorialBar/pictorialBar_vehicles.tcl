@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -36,25 +39,25 @@ $picBar Xaxis -type "value" \
               -axisTick {show False} \
               -axisLine {show False}
 
-$picBar AddPictorialBarSeries -name "2015" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
-                              -barCategoryGap "40%" \
-                              -data [list \
+$picBar Add "pictorialBarSeries" -name "2015" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
+                                 -barCategoryGap "40%" \
+                                 -data [list \
                                         [list value 157 symbol $pathSymbols(reindeer)] \
                                         [list value 21  symbol $pathSymbols(ship)] \
                                         [list value 66  symbol $pathSymbols(plane)] \
                                         [list value 78  symbol $pathSymbols(train)] \
                                         [list value 123 symbol $pathSymbols(car)] \
-                                    ]
+                                ]
 
-$picBar AddPictorialBarSeries -name "2016" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
-                              -barGap "10%" \
-                              -data [list \
+$picBar Add "pictorialBarSeries" -name "2016" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
+                                 -barGap "10%" \
+                                 -data [list \
                                         [list value 184 symbol $pathSymbols(reindeer)] \
                                         [list value 29  symbol $pathSymbols(ship)] \
                                         [list value 73  symbol $pathSymbols(plane)] \
                                         [list value 91  symbol $pathSymbols(train)] \
                                         [list value 95  symbol $pathSymbols(car)] \
-                                    ]
+                                ]
 
 
 set fbasename [file rootname [file tail [info script]]]

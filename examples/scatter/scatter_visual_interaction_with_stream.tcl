@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'center' by 'middle' for visualMap top flag
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -35,7 +36,7 @@ try {
     $chart Xaxis -type "value"
     $chart Yaxis
 
-    $chart AddScatterSeries -name "price-area" -symbolSize 5 \
+    $chart Add "scatterSeries" -name "price-area" -symbolSize 5 \
                             -data $datajson
 
     set fbasename [file rootname [file tail [info script]]]

@@ -15,6 +15,9 @@ proc getVirtualData {year} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -28,9 +31,9 @@ $chart SetOptions -tooltip {position "top"} \
                                 [list orient "vertical" range 2022 left 520 bottom 10 dayLabel {margin 5} cellSize [list {20 "auto"}]] \
                             ]
 
-$chart AddHeatmapSeries -coordinateSystem "calendar" -calendarIndex 0 -data [list {*}[getVirtualData 2020]]
-$chart AddHeatmapSeries -coordinateSystem "calendar" -calendarIndex 1 -data [list {*}[getVirtualData 2021]]
-$chart AddHeatmapSeries -coordinateSystem "calendar" -calendarIndex 2 -data [list {*}[getVirtualData 2022]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" -calendarIndex 0 -data [list {*}[getVirtualData 2020]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" -calendarIndex 1 -data [list {*}[getVirtualData 2021]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" -calendarIndex 2 -data [list {*}[getVirtualData 2022]]
 
 
 set fbasename [file rootname [file tail [info script]]]

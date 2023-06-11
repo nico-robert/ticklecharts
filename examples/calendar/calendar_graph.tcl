@@ -15,6 +15,9 @@ proc getVirtualData {year} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -52,27 +55,27 @@ $chart SetOptions -tooltip {} \
                                 inRange [list color [list {#5291FF #C7DBFF}]] \
                             ]
 
-$chart AddGraphSeries -edgeSymbol [list {none arrow}] \
-                      -coordinateSystem "calendar" \
-                      -links $links \
-                      -data $graphData \
-                      -z 20 \
-                      -symbolSize 15 \
-                      -calendarIndex 0 \
-                      -itemStyle {
-                        color "rgb(255,255,0)"
-                        shadowBlur 9
-                        shadowOffsetX 1.5
-                        shadowOffsetY 3
-                        shadowColor "#555"
-                      } \
-                      -lineStyle {
-                        color "#D10E00"
-                        width 1
-                        opacity 1
-                      }
+$chart Add "graphSeries" -edgeSymbol [list {none arrow}] \
+                         -coordinateSystem "calendar" \
+                         -links $links \
+                         -data $graphData \
+                         -z 20 \
+                         -symbolSize 15 \
+                         -calendarIndex 0 \
+                         -itemStyle {
+                           color "rgb(255,255,0)"
+                           shadowBlur 9
+                           shadowOffsetX 1.5
+                           shadowOffsetY 3
+                           shadowColor "#555"
+                         } \
+                         -lineStyle {
+                           color "#D10E00"
+                           width 1
+                           opacity 1
+                         }
 
-$chart AddHeatmapSeries -coordinateSystem "calendar" -data [list {*}[getVirtualData 2022]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" -data [list {*}[getVirtualData 2022]]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

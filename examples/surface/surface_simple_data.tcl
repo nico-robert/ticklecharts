@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc float_range {start end step} {
     set temp {}
     while 1 {
@@ -45,8 +48,8 @@ $chart3D Xaxis3D -type "value"
 $chart3D Yaxis3D -type "value"
 $chart3D Zaxis3D -type "value"
 
-$chart3D AddSurfaceSeries -wireframe {} \
-                          -data [surface3d_data]
+$chart3D Add "surfaceSeries" -wireframe {} \
+                             -data [surface3d_data]
 
 
 set fbasename [file rootname [file tail [info script]]]

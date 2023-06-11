@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-color' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -36,15 +37,15 @@ $line1 Xaxis -axisTick {show True alignWithLabel "True"} -position bottom \
              
 $line1 Yaxis
 
-$line1 AddLineSeries -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}] \
-                     -name "Precipitation(2015)" \
-                     -smooth "True" \
-                     -emphasis {focus "series"}
+$line1 Add "lineSeries" -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}] \
+                        -name "Precipitation(2015)" \
+                        -smooth "True" \
+                        -emphasis {focus "series"}
                    
-$line1 AddLineSeries -data [list {3.9 5.9 11.1 18.7 48.3 69.2 231.6 46.6 55.4 18.4 10.3 0.7}] \
-                     -name "Precipitation(2016)" \
-                     -smooth "True" \
-                     -emphasis {focus "series"}
+$line1 Add "lineSeries" -data [list {3.9 5.9 11.1 18.7 48.3 69.2 231.6 46.6 55.4 18.4 10.3 0.7}] \
+                        -name "Precipitation(2016)" \
+                        -smooth "True" \
+                        -emphasis {focus "series"}
              
                
 

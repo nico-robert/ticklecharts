@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -16,8 +17,8 @@ $line SetOptions -title   {text "Line..." top "55%"} \
     
 $line Xaxis -data [list $num] -boundaryGap "False"
 $line Yaxis
-$line AddLineSeries -data [list $num]  -areaStyle {} -smooth true
-$line AddLineSeries -data [list $num1] -smooth true
+$line Add "lineSeries" -data [list $num]  -areaStyle {} -smooth true
+$line Add "lineSeries" -data [list $num1] -smooth true
 
 
 set polar [ticklecharts::chart new]
@@ -29,10 +30,10 @@ $polar SetOptions -polar {radius "50%"} \
 $polar RadiusAxis -data [list {v w x y z}] -type "category" -z 10
 $polar AngleAxis  -max 2 -startAngle 30 -splitLine {show "False"}
 
-$polar AddBarSeries -data [list {4 3 2 1 0}] \
-                    -coordinateSystem "polar" \
-                    -name "Without Round Cap" \
-                    -itemStyle {borderColor "red" opacity 0.8 borderWidth 1}
+$polar Add "barSeries" -data [list {4 3 2 1 0}] \
+                       -coordinateSystem "polar" \
+                       -name "Without Round Cap" \
+                       -itemStyle {borderColor "red" opacity 0.8 borderWidth 1}
 
 
 set layout [ticklecharts::Gridlayout new]

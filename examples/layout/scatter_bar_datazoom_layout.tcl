@@ -9,6 +9,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-animation' from constructor to 'SetOptions' method with v3.0.1
 #        Delete bar formatter for '-axisLabel'
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -40,7 +41,7 @@ $scatter SetOptions -animation false \
 $scatter Xaxis -type "value" -min "dataMin" -max "dataMax" -splitLine {show "True"}
 $scatter Yaxis -type "value" -min "dataMin" -max "dataMax" -splitLine {show "True"}
 
-$scatter AddScatterSeries -name "scatter"  -itemStyle {opacity 0.8 borderColor nothing} -data $data1 -symbolSize $js
+$scatter Add "scatterSeries" -name "scatter" -itemStyle {opacity 0.8 borderColor nothing} -data $data1 -symbolSize $js
 
 # bar
 set bar [ticklecharts::chart new]
@@ -53,7 +54,7 @@ $bar SetOptions -dataZoom [list \
 $bar Xaxis -type "category" -data [list {A B C D E}] \
            -axisLabel {show "True"}
 $bar Yaxis -type "value"
-$bar AddBarSeries -data [list {50 6 80 120 30}]
+$bar Add "barSeries" -data [list {50 6 80 120 30}]
 
 
 set layout [ticklecharts::Gridlayout new]

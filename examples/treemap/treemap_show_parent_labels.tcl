@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -44,17 +47,17 @@ try {
     $chart SetOptions -title {text "Disk Usage" left "center"} \
                       -tooltip [list formatter $tooltip]
      
-    $chart AddTreeMapSeries -name "Disk Usage" \
-                            -visibleMin 300 \
-                            -label {show "True" formatter {"{b}"}} \
-                            -upperLabel {show "True" height 30 overflow "truncate"} \
-                            -itemStyle {borderColor "#fff"} \
-                            -data $datajson \
-                            -levels [list \
-                                {itemStyle {borderColor "#777" borderWidth 0 gapWidth 1} upperLabel {show "False"}} \
-                                {itemStyle {borderColor "#555" borderWidth 5 gapWidth 1} emphasis {itemStyle {borderColor "#ddd"}}} \
-                                [list colorSaturation [list {0.35 0.5}] itemStyle {borderWidth 5 gapWidth 1 borderColorSaturation 0.6}] \
-                            ]
+    $chart Add "treeMapSeries" -name "Disk Usage" \
+                               -visibleMin 300 \
+                               -label {show "True" formatter {"{b}"}} \
+                               -upperLabel {show "True" height 30 overflow "truncate"} \
+                               -itemStyle {borderColor "#fff"} \
+                               -data $datajson \
+                               -levels [list \
+                                   {itemStyle {borderColor "#777" borderWidth 0 gapWidth 1} upperLabel {show "False"}} \
+                                   {itemStyle {borderColor "#555" borderWidth 5 gapWidth 1} emphasis {itemStyle {borderColor "#ddd"}}} \
+                                   [list colorSaturation [list {0.35 0.5}] itemStyle {borderWidth 5 gapWidth 1 borderColorSaturation 0.6}] \
+                               ]
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

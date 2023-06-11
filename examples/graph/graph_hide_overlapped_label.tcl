@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,16 +25,16 @@ try {
     $chart SetOptions -tooltip {} \
                       -legend [list dataLegendItem [dict get $datajson categories]]
 
-    $chart AddGraphSeries -name "Les Miserables" \
-                          -layout "none" \
-                          -dataGraphItem [dict get $datajson nodes] \
-                          -links [dict get $datajson links] \
-                          -categories [dict get $datajson categories] \
-                          -roam "True" \
-                          -label {position "right" formatter {"{b}"}} \
-                          -labelLayout {hideOverlap "True"} \
-                          -scaleLimit {min 0.4 max 2} \
-                          -lineStyle {color "source" curveness 0.3}
+    $chart Add "graphSeries" -name "Les Miserables" \
+                             -layout "none" \
+                             -dataGraphItem [dict get $datajson nodes] \
+                             -links [dict get $datajson links] \
+                             -categories [dict get $datajson categories] \
+                             -roam "True" \
+                             -label {position "right" formatter {"{b}"}} \
+                             -labelLayout {hideOverlap "True"} \
+                             -scaleLimit {min 0.4 max 2} \
+                             -lineStyle {color "source" curveness 0.3}
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

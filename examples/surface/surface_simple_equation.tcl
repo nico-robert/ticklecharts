@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -27,12 +30,12 @@ $chart3D Xaxis3D -type "value"
 $chart3D Yaxis3D -type "value"
 $chart3D Zaxis3D -type "value"
 
-$chart3D AddSurfaceSeries -wireframe {} \
-                          -equation [list \
-                            x {step 0.05} \
-                            y {step 0.05} \
-                            z $js \
-                          ]
+$chart3D Add "surfaceSeries" -wireframe {} \
+                             -equation [list \
+                               x {step 0.05} \
+                               y {step 0.05} \
+                               z $js \
+                             ]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

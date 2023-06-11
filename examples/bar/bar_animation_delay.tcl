@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-animationEasing', '-animationDelayUpdate' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 for {set i 0} {$i < 100} {incr i} {
     lappend xAxisData [string cat "A" $i]
@@ -29,17 +30,17 @@ $chart SetOptions -animationEasing "elasticOut" \
 
 $chart Xaxis -data [list $xAxisData] -splitLine {show "False"}
 $chart Yaxis
-$chart AddBarSeries -name "bar" \
-                    -data [list $data1] \
-                    -emphasis {focus "series"} \
-                    -animationDelay [ticklecharts::jsfunc new {function (idx) {
+$chart Add "barSeries" -name "bar" \
+                       -data [list $data1] \
+                       -emphasis {focus "series"} \
+                       -animationDelay [ticklecharts::jsfunc new {function (idx) {
                                 return idx * 10;
                             }}]
 
-$chart AddBarSeries -name "bar2" \
-                    -data [list $data2] \
-                    -emphasis {focus "series"} \
-                    -animationDelay [ticklecharts::jsfunc new {function (idx) {
+$chart Add "barSeries" -name "bar2" \
+                       -data [list $data2] \
+                       -emphasis {focus "series"} \
+                       -animationDelay [ticklecharts::jsfunc new {function (idx) {
                                 return idx * 10 + 100;
                             }}]
 

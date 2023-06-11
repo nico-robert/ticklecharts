@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -24,10 +27,10 @@ $chart3D Zaxis3D -type "value"
 
 set data 
 
-$chart3D AddBar3DSeries -data [lmap item $data {list [lindex $item 1] [lindex $item 0] [lindex $item 2]}] \
-                        -shading "lambert" \
-                        -label {show "False" textStyle {fontSize 16 borderWidth 1}} \
-                        -emphasis {label {textStyle {fontSize 20 color "#900"}} itemStyle {color "#900"}}
+$chart3D Add "bar3DSeries" -data [lmap item $data {list [lindex $item 1] [lindex $item 0] [lindex $item 2]}] \
+                           -shading "lambert" \
+                           -label {show "False" textStyle {fontSize 16 borderWidth 1}} \
+                           -emphasis {label {textStyle {fontSize 20 color "#900"}} itemStyle {color "#900"}}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

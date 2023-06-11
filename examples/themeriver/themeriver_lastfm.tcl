@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -65,8 +68,8 @@ set chart [ticklecharts::chart new]
   
 $chart SingleAxis -max "dataMax" -z 0
 
-$chart AddThemeRiverSeries -label {show false} \
-                           -data $data
+$chart Add "themeRiverSeries" -label {show false} \
+                              -data $data
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

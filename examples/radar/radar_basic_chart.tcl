@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-dataradaritem' by '-dataRadarItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -21,8 +22,8 @@ $chart RadarCoordinate -indicatoritem {
                                         {name "Marketing" max 25000}
                                     } 
 
-$chart AddRadarSeries -name "Budget vs spending" \
-                      -dataRadarItem [list \
+$chart Add "radarSeries" -name "Budget vs spending" \
+                         -dataRadarItem [list \
                                             [list name "Allocated Budget" value [list {4200 3000 20000 35000 50000 18000}]] \
                                             [list name "Actual Spending" value [list {5000 14000 28000 26000 42000 21000}]] \
                                      ]

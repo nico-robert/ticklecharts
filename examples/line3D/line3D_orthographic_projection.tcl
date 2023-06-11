@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v3.0 : Update example with the new 'Add' method for chart series.
+
 set data {}
 
 for {set t 0} {$t < 25} {set t [expr {$t + 0.001}]} {
@@ -28,7 +31,7 @@ $chart3D Xaxis3D -type "value"
 $chart3D Yaxis3D -type "value"
 $chart3D Zaxis3D -type "value"
 
-$chart3D AddLine3DSeries -data $data -lineStyle {width 4}
+$chart3D Add "line3DSeries" -data $data -lineStyle {width 4}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

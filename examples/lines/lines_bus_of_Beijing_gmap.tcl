@@ -28,6 +28,9 @@ proc busLine {data} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -71,21 +74,21 @@ try {
                                     }
                         ]
 
-    $chart AddLinesSeries -coordinateSystem "gmap" \
-                          -polyline "True" \
-                          -silent "True" \
-                          -lineStyle {opacity 0.2 width 1} \
-                          -progressiveThreshold 500 \
-                          -progressive 200 \
-                          -dataLinesItem $busLine
+    $chart Add "linesSeries" -coordinateSystem "gmap" \
+                             -polyline "True" \
+                             -silent "True" \
+                             -lineStyle {opacity 0.2 width 1} \
+                             -progressiveThreshold 500 \
+                             -progressive 200 \
+                             -dataLinesItem $busLine
 
-    $chart AddLinesSeries -coordinateSystem "gmap" \
-                          -polyline "True" \
-                          -silent "True" \
-                          -lineStyle {width 0} \
-                          -dataLinesItem $busLine \
-                          -effect {constantSpeed 20 show "True" trailLength 0.1 symbolSize 1.5 symbol "nothing"} \
-                          -zlevel 1
+    $chart Add "linesSeries" -coordinateSystem "gmap" \
+                             -polyline "True" \
+                             -silent "True" \
+                             -lineStyle {width 0} \
+                             -dataLinesItem $busLine \
+                             -effect {constantSpeed 20 show "True" trailLength 0.1 symbolSize 1.5 symbol "nothing"} \
+                             -zlevel 1
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

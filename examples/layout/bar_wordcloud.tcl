@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Delete 'echarts-wordcloud.js' with jsfunc. It is inserted automatically when writing the html file.
 # v4.0 : Rename '-databaritem' by '-dataBarItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v5.0 : Update example with the new 'Add' method for chart series.
 
 proc fakerRandomValue {{min 10} {max 1000}} {
 
@@ -90,11 +91,11 @@ $bar SetOptions -title   {text "layout bar + wordCloud..."} \
     
 $bar Xaxis -data [list {"Tcl" "Tk"}]
 $bar Yaxis
-$bar AddBarSeries -dataBarItem [list \
+$bar Add "barSeries" -dataBarItem [list \
                                     [list value [llength $tcl_commands]] \
                                     [list value [llength $tk_commands] itemStyle {color "#91cc75" borderColor "nothing"}] \
                                 ] \
-                  -label {show "True" position "top" distance 8}
+                     -label {show "True" position "top" distance 8}
 
 # Add wordCloud serie
 set wc [ticklecharts::chart new]
@@ -108,15 +109,15 @@ set js [ticklecharts::jsfunc new {
                 }
           }]
 
-$wc AddWordCloudSeries -gridSize 0 \
-                       -sizeRange [list {3 120}] \
-                       -shape "pentagon" \
-                       -width  50% \
-                       -height 50% \
-                       -drawOutOfBound "False" \
-                       -keepAspect "True" \
-                       -textStyle [list color $js] \
-                       -dataWCItem [cmdTclTk [concat $tcl_commands $tk_commands]]
+$wc Add "wordCloudSeries" -gridSize 0 \
+                          -sizeRange [list {3 120}] \
+                          -shape "pentagon" \
+                          -width  50% \
+                          -height 50% \
+                          -drawOutOfBound "False" \
+                          -keepAspect "True" \
+                          -textStyle [list color $js] \
+                          -dataWCItem [cmdTclTk [concat $tcl_commands $tk_commands]]
 
 # Add bar + wordCloud chart...
 set layout [ticklecharts::Gridlayout new]

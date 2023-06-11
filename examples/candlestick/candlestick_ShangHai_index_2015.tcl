@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -303,11 +306,11 @@ $chart SetOptions -tooltip  {trigger "axis" axisPointer {animation "False" type 
 $chart Xaxis -type "category" -data [list [getDate $rawData]] -axisLine {show "True" lineStyle {color "#8392A5"}}
 $chart Yaxis -type "value" -scale "True" -axisLine {lineStyle {color "#8392A5"}} -splitLine {show "False"}
 
-$chart AddCandlestickSeries -name "Day" -data [getItem $rawData] -itemStyle {color "#FD1050" color0 "#0CF49B" borderColor "#FD1050" borderColor0 "#0CF49B"}
-$chart AddLineSeries -name "MA5"  -data [list [calculateMA 5 $rawData]]  -smooth "True" -showSymbol "False" -lineStyle {width 1}
-$chart AddLineSeries -name "MA10" -data [list [calculateMA 10 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
-$chart AddLineSeries -name "MA20" -data [list [calculateMA 20 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
-$chart AddLineSeries -name "MA30" -data [list [calculateMA 30 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
+$chart Add "candlestickSeries" -name "Day" -data [getItem $rawData] -itemStyle {color "#FD1050" color0 "#0CF49B" borderColor "#FD1050" borderColor0 "#0CF49B"}
+$chart Add "lineSeries" -name "MA5"  -data [list [calculateMA 5 $rawData]]  -smooth "True" -showSymbol "False" -lineStyle {width 1}
+$chart Add "lineSeries" -name "MA10" -data [list [calculateMA 10 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
+$chart Add "lineSeries" -name "MA20" -data [list [calculateMA 20 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
+$chart Add "lineSeries" -name "MA30" -data [list [calculateMA 30 $rawData]] -smooth "True" -showSymbol "False" -lineStyle {width 1}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

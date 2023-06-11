@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-dataradaritem' by '-dataRadarItem' + 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -12,7 +13,7 @@ set bar [ticklecharts::chart new]
                
 $bar Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}]
 $bar Yaxis
-$bar AddBarSeries -data [list {120 200 150 80 70 110 130}]
+$bar Add "barSeries" -data [list {120 200 150 80 70 110 130}]
 
 # radar
 set radar [ticklecharts::chart new]
@@ -30,8 +31,8 @@ $radar RadarCoordinate -radius 190 \
                                         {name "Marketing" max 25000}
                                     } 
 
-$radar AddRadarSeries -name "Budget vs spending" \
-                      -dataRadarItem [list \
+$radar Add "radarSeries" -name "Budget vs spending" \
+                         -dataRadarItem [list \
                                             [list name "Allocated Budget" value [list {4200 3000 20000 35000 50000 18000}]] \
                                             [list name "Actual Spending" value [list {5000 14000 28000 26000 42000 21000}]] \
                                      ]

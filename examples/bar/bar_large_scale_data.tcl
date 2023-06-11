@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc commify number {
     # From wiki (always !!) 
     # https://wiki.tcl-lang.org/page/commas+added+to+numbers
@@ -34,7 +37,7 @@ set baseValue [expr {rand() * 1000}]
 set base [clock scan {2011-01-01<n?>0:0:0} -format {%Y-%m-%d<n?>%H:%M:%S}]
 set smallBaseValue 0
 
-set dataCount 50000
+set dataCount 5000
 
 lassign [generateData $dataCount] categoryData valueData
 
@@ -57,8 +60,9 @@ $chart Xaxis -type "category" -silent "false" -splitLine {show "False"} -splitAr
 $chart Yaxis -type "value"    -splitArea {show "False"}
 
 
-$chart AddBarSeries  -name "Fake Data" -data [list $valueData] \
-                     -large "True"
+$chart Add "barSeries" -name "Fake Data" \
+                       -data [list $valueData] \
+                       -large "True"
 
 
 set fbasename [file rootname [file tail [info script]]]

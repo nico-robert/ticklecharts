@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : re-working 'dataset' class should be a list of list...
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,10 +25,10 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -legend {} -tooltip {} -dataset $dset
 
 
-$chart AddPieSeries -radius 20% -center [list {25% 30%}] ; # No encode specified, by default, it is '2012'
-$chart AddPieSeries -radius 20% -center [list {75% 30%}] -encode {itemName "product" value "2013"}
-$chart AddPieSeries -radius 20% -center [list {25% 75%}] -encode {itemName "product" value "2014"}
-$chart AddPieSeries -radius 20% -center [list {75% 75%}] -encode {itemName "product" value "2015"}
+$chart Add "pieSeries" -radius 20% -center [list {25% 30%}] ; # No encode specified, by default, it is '2012'
+$chart Add "pieSeries" -radius 20% -center [list {75% 30%}] -encode {itemName "product" value "2013"}
+$chart Add "pieSeries" -radius 20% -center [list {25% 75%}] -encode {itemName "product" value "2014"}
+$chart Add "pieSeries" -radius 20% -center [list {75% 75%}] -encode {itemName "product" value "2015"}
 
 
 set fbasename [file rootname [file tail [info script]]]

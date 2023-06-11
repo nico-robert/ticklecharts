@@ -15,6 +15,9 @@ proc getVirtualData {year} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -28,7 +31,7 @@ $chart SetOptions -title {top 30 left "center" text "Daily Step Count"} \
                                 itemStyle {borderWidth 0.5} yearLabel {show false} cellSize [list {"auto" 13}] \
                             ]
 
-$chart AddHeatmapSeries -coordinateSystem "calendar" -data [list {*}[getVirtualData 2022]]
+$chart Add "heatmapSeries" -coordinateSystem "calendar" -data [list {*}[getVirtualData 2022]]
 
 
 set fbasename [file rootname [file tail [info script]]]

@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : destroy layout class (problem source all.tcl...)
 # v3.0 : re-working 'dataset' class should be a list of list...
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -26,9 +27,9 @@ set bar [ticklecharts::chart new]
 
 $bar Xaxis -type "category"
 $bar Yaxis
-$bar AddBarSeries -name "BarSerie1" -seriesLayoutBy "row"
-$bar AddBarSeries -name "BarSerie2" -seriesLayoutBy "row"
-$bar AddBarSeries -name "BarSerie3" -seriesLayoutBy "row"
+$bar Add "barSeries" -name "BarSerie1" -seriesLayoutBy "row"
+$bar Add "barSeries" -name "BarSerie2" -seriesLayoutBy "row"
+$bar Add "barSeries" -name "BarSerie3" -seriesLayoutBy "row"
 
 
 # These series are in the second grid.
@@ -37,10 +38,10 @@ set bar1 [ticklecharts::chart new]
 $bar1 Xaxis -type "category"
 $bar1 Yaxis
 
-$bar1 AddBarSeries -name "BarSerie4" -xAxisIndex 1 -yAxisIndex 1
-$bar1 AddBarSeries -name "BarSerie5" -xAxisIndex 1 -yAxisIndex 1
-$bar1 AddBarSeries -name "BarSerie6" -xAxisIndex 1 -yAxisIndex 1
-$bar1 AddBarSeries -name "BarSerie7" -xAxisIndex 1 -yAxisIndex 1
+$bar1 Add "barSeries" -name "BarSerie4" -xAxisIndex 1 -yAxisIndex 1
+$bar1 Add "barSeries" -name "BarSerie5" -xAxisIndex 1 -yAxisIndex 1
+$bar1 Add "barSeries" -name "BarSerie6" -xAxisIndex 1 -yAxisIndex 1
+$bar1 Add "barSeries" -name "BarSerie7" -xAxisIndex 1 -yAxisIndex 1
 
 $layout Add $bar  -bottom "55%"
 $layout Add $bar1 -top "55%"

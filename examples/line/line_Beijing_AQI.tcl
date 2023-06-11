@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Add dataZoom
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -46,7 +47,7 @@ try {
     $chart Xaxis -data [list [lmap a $datajson {lindex $a 0}]]
     $chart Yaxis
 
-    $chart AddLineSeries -name "Beijing AQI" \
+    $chart Add "lineSeries" -name "Beijing AQI" \
                         -data [list [lmap a $datajson {lindex $a 1}]] \
                         -markLine {silent "True" lineStyle {color "#333" type "dashed" dashOffset 1 width 1} \
                                         data {

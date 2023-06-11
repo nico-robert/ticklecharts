@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc generateData {} {
     set data {}
 
@@ -28,15 +31,15 @@ $chart3D Xaxis3D -type "value"
 $chart3D Yaxis3D -type "value"
 $chart3D Zaxis3D -type "value" -min 0 -max 10
 
-$chart3D AddBar3DSeries -data [generateData] \
-                        -barSize 4 \
-                        -bevelSize 0.4 \
-                        -bevelSmoothness 4 \
-                        -shading "realistic" \
-                        -realisticMaterial {roughness 0.3 metalness 1} \
-                        -label {show "False" textStyle {fontSize 16 borderWidth 1}} \
-                        -itemStyle {color "#ccc"} \
-                        -emphasis {label {show "False"}}
+$chart3D Add "bar3DSeries" -data [generateData] \
+                           -barSize 4 \
+                           -bevelSize 0.4 \
+                           -bevelSmoothness 4 \
+                           -shading "realistic" \
+                           -realisticMaterial {roughness 0.3 metalness 1} \
+                           -label {show "False" textStyle {fontSize 16 borderWidth 1}} \
+                           -itemStyle {color "#ccc"} \
+                           -emphasis {label {show "False"}}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

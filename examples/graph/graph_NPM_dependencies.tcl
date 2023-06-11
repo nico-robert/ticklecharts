@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Move '-animationDurationUpdate', '-animationEasingUpdate' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -26,26 +27,26 @@ try {
                       -animationEasingUpdate "quinticInOut" \
                       -title {text "NPM Dependencies"}
 
-    $chart AddGraphSeries -layout "none" \
-                          -dataGraphItem [lmap node [dict get $datajson nodes] {
-                                format {x %s y %s id %s name %s symbolSize %s itemStyle {color %s borderColor "nothing"}} \
-                                    [dict get $node x] \
-                                    [dict get $node y] \
-                                    [dict get $node id] \
-                                    [dict get $node label] \
-                                    [dict get $node size] \
-                                    [dict get $node color]
-                                }
-                          ] \
-                          -edges [lmap edge [dict get $datajson edges] {
-                                format {source %s target %s} \
-                                    [dict get $edge sourceID] \
-                                    [dict get $edge targetID] 
-                            }
-                          ] \
-                          -emphasis {focus "adjacency" label {position "right" show "True"}} \
-                          -roam "True" \
-                          -lineStyle {width 0.5 curveness 0.3 opacity 0.7}
+    $chart Add "graphSeries" -layout "none" \
+                             -dataGraphItem [lmap node [dict get $datajson nodes] {
+                                   format {x %s y %s id %s name %s symbolSize %s itemStyle {color %s borderColor "nothing"}} \
+                                       [dict get $node x] \
+                                       [dict get $node y] \
+                                       [dict get $node id] \
+                                       [dict get $node label] \
+                                       [dict get $node size] \
+                                       [dict get $node color]
+                                   }
+                             ] \
+                             -edges [lmap edge [dict get $datajson edges] {
+                                   format {source %s target %s} \
+                                       [dict get $edge sourceID] \
+                                       [dict get $edge targetID] 
+                               }
+                             ] \
+                             -emphasis {focus "adjacency" label {position "right" show "True"}} \
+                             -roam "True" \
+                             -lineStyle {width 0.5 curveness 0.3 opacity 0.7}
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

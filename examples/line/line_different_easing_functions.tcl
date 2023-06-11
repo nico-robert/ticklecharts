@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc line_linear {k} {
     return $k
 }
@@ -273,13 +276,13 @@ foreach func [lsort -dictionary [info procs line_*]] {
     $line Yaxis -type "value" -show "False" -min -0.4 -max 1.4 -gridIndex $count
 
 
-    $line AddLineSeries -name $name  \
-                        -xAxisIndex $count \
-                        -yAxisIndex $count \
-                        -data $data \
-                        -showSymbol "False" \
-                        -animationEasing $name \
-                        -animationDuration 1000
+    $line Add "lineSeries" -name $name  \
+                           -xAxisIndex $count \
+                           -yAxisIndex $count \
+                           -data $data \
+                           -showSymbol "False" \
+                           -animationEasing $name \
+                           -animationDuration 1000
 
     $layout Add $line -left   $left \
                       -top    $top \

@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -12,8 +13,9 @@ $chart SetOptions -backgroundColor "#FFFFFF" \
                   -title {subtext "Data From lisachristina1234 on GitHub" left "center"} \
                   -tooltip {trigger "item"}
                
-$chart AddSankeySeries -bottom 25 -left 50 -top 20 -right 150 \
-                       -data {{name "Werne" itemStyle {color "#f18bbf" borderColor "#f18bbf"}}
+$chart Add "sankeySeries" -bottom 25 -left 50 -top 20 -right 150 \
+                          -data {
+                              {name "Werne" itemStyle {color "#f18bbf" borderColor "#f18bbf"}}
                               {name "Duesseldorf" itemStyle {color "#0078D7" borderColor "#0078D7"}}
                               {name "Cambridge" itemStyle {color "#3891A7" borderColor "#3891A7"}}
                               {name "Colma" itemStyle {color "#0037DA" borderColor "#0037DA"}}
@@ -112,7 +114,7 @@ $chart AddSankeySeries -bottom 25 -left 50 -top 20 -right 150 \
                               {name "FRF" itemStyle {color "#5ba33b" borderColor "#5ba33b"}}
                               {name "Cergy" itemStyle {color "#B4009E" borderColor "#B4009E"}}
                               {name "Paris" itemStyle {color "#666666" borderColor "#666666"}}} \
-                       -links {
+                          -links {
                               {source "FRF" target "Colomiers" value 357.8399963378906}
                               {source "SuperiorCard" target "FRF" value 894.5999908447266}
                               {source "DEM" target "München" value 178.9199981689453}

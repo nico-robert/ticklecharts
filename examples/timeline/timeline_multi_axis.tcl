@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc fakerRandomData {min max len} {
 
     set range [expr {$max - $min}]
@@ -40,8 +43,8 @@ for {set i 2018} {$i < 2023} {incr i} {
     $chart Xaxis -type category -data [list [fakerRandomXaxisData]] 
     $chart Yaxis -type value
 
-    $chart AddBarSeries -data [list [fakerRandomData 10 100 12]]
-    $chart AddBarSeries -data [list [fakerRandomData 50 200 12]]
+    $chart Add "barSeries" -data [list [fakerRandomData 10 100 12]]
+    $chart Add "barSeries" -data [list [fakerRandomData 50 200 12]]
 
     $timeline Add $chart -data [list value $i]
 

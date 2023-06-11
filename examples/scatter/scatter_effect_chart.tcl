@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -10,11 +11,11 @@ set chart [ticklecharts::chart new]
 
 $chart Xaxis -type "value" -scale "True"
 $chart Yaxis -scale "True"
-$chart AddScatterSeries -type "effectScatter" \
-                        -symbolSize 20 \
-                        -data [list {172.7 105.2} {153.4 42}]
+$chart Add "scatterSeries" -type "effectScatter" \
+                           -symbolSize 20 \
+                           -data [list {172.7 105.2} {153.4 42}]
                        
-$chart AddScatterSeries -data [list {161.2 51.6} {167.5 59.0} {159.5 49.2} {157.0 63.0} {155.8 53.6} \
+$chart Add "scatterSeries" -data [list {161.2 51.6} {167.5 59.0} {159.5 49.2} {157.0 63.0} {155.8 53.6} \
                                 {170.0 59.0} {159.1 47.6} {166.0 69.8} {176.2 66.8} {160.2 75.2} \
                                 {172.5 55.2} {170.9 54.2} {172.9 62.5} {153.4 42.0} {160.0 50.0} \
                                 {147.2 49.8} {168.2 49.2} {175.0 73.2} {157.0 47.8} {167.6 68.8} \

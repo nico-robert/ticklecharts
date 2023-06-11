@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -22,9 +25,9 @@ try {
                       -tooltip {trigger "item" triggerOn "mousemove"}
 
 
-    $chart AddSankeySeries -data [dict get $datajson nodes] -links [dict get $datajson links] \
-                           -emphasis {focus "adjacency"} \
-                           -lineStyle {color "gradient" curveness 0.5 opacity 0.2}
+    $chart Add "sankeySeries" -data [dict get $datajson nodes] -links [dict get $datajson links] \
+                              -emphasis {focus "adjacency"} \
+                              -lineStyle {color "gradient" curveness 0.5 opacity 0.2}
             
 
     set fbasename [file rootname [file tail [info script]]]

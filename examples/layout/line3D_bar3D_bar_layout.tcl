@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 set dataLine {}
 
 set r 2
@@ -30,8 +33,8 @@ set bar [ticklecharts::chart new]
 
 $bar Xaxis -data [list {A B C D E}]
 $bar Yaxis
-$bar AddBarSeries -data [list {50 6 80 120 30}]
-$bar AddBarSeries -data [list {20 30 50 100 25}]
+$bar Add "barSeries" -data [list {50 6 80 120 30}]
+$bar Add "barSeries" -data [list {20 30 50 100 25}]
 
 #line 3d
 set line3D [ticklecharts::chart3D new]
@@ -42,7 +45,7 @@ $line3D Xaxis3D -type "value"
 $line3D Yaxis3D -type "value"
 $line3D Zaxis3D -type "value"
 
-$line3D AddLine3DSeries -data $dataLine -lineStyle {width 5}
+$line3D Add "line3DSeries" -data $dataLine -lineStyle {width 5}
 
 #Bar 3d
 set bar3D [ticklecharts::chart3D new]
@@ -56,9 +59,9 @@ $bar3D Xaxis3D -type "value" -max 0.2
 $bar3D Yaxis3D -type "value"
 $bar3D Zaxis3D -type "value"
 
-$bar3D AddBar3DSeries -data $dataBar \
-                      -shading "lambert" \
-                      -barSize 2.5
+$bar3D Add "bar3DSeries" -data $dataBar \
+                         -shading "lambert" \
+                         -barSize 2.5
 
 
 $layout Add $line3D -top "1%" -width "45%" -left "5%"

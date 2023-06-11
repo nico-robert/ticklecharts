@@ -19,6 +19,9 @@ proc getchild {value} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -52,12 +55,12 @@ try {
 
     $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"}
                 
-    $chart AddTreeSeries -top "20%" -left "2%" -bottom "8%" -right "2%" -symbol "circle" -symbolSize 7 -orient "BT" \
-                         -label {position "bottom" verticalAlign "middle" align "right" rotate 90} \
-                         -leaves {label {position "top" verticalAlign "middle" align "left" rotate 90}} \
-                         -emphasis {focus "descendant"} \
-                         -expandAndCollapse "True" -animationDurationUpdate 750 \
-                         -data [list [json::json2dict [join $newdata "\n"]]]
+    $chart Add "treeSeries" -top "20%" -left "2%" -bottom "8%" -right "2%" -symbol "circle" -symbolSize 7 -orient "BT" \
+                            -label {position "bottom" verticalAlign "middle" align "right" rotate 90} \
+                            -leaves {label {position "top" verticalAlign "middle" align "left" rotate 90}} \
+                            -emphasis {focus "descendant"} \
+                            -expandAndCollapse "True" -animationDurationUpdate 750 \
+                            -data [list [json::json2dict [join $newdata "\n"]]]
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

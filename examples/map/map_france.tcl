@@ -28,6 +28,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v6.0 : Rename 'basic' theme to 'custom'
 # v7.0 : adds myTheme variable
 # v8.0 : adds splitline + label color
+# v9.0 : Update example with the new 'Add' method for chart series.
 
 # example from pyecharts-gallery-master... (modify)
 
@@ -116,30 +117,30 @@ try {
 
         set map [ticklecharts::chart new]
         # echarts.registerMap = "法国" 
-        $map AddMapSeries -map "法国" -label {show "False"} \
-                        -dataMapItem $dataItem
+        $map Add "mapSeries" -map "法国" -label {show "False"} \
+                             -dataMapItem $dataItem
 
         set bar [ticklecharts::chart new]
 
         $bar Xaxis -type "value" -splitLine {show "True"}
         $bar Yaxis -data [list $regions] -type "category" -boundaryGap "True"
             
-        $bar AddBarSeries -data [list $data] \
-                        -emphasis {focus "series"}
+        $bar Add "barSeries" -data [list $data] \
+                             -emphasis {focus "series"}
 
 
         set pie [ticklecharts::chart new]
 
-        $pie AddPieSeries -radius "17%" \
-                          -dataPieItem $dataItem
+        $pie Add "pieSeries" -radius "17%" \
+                             -dataPieItem $dataItem
 
 
         set line [ticklecharts::chart new]
         
         $line Xaxis -data [list $dM]
         $line Yaxis -splitLine {show "True"}
-        $line AddLineSeries -data [list $dmv] \
-                            -markPoint [list \
+        $line Add "lineSeries" -data [list $dmv] \
+                               -markPoint [list \
                                             data [list \
                                                     [list name "Max" value [lindex $dmv $jj] xAxis $jj yAxis [lindex $dmv $jj] label {color "#100C2A"} itemStyle {color "#dbac00" borderColor "#dbac00"}] \
                                                 ] \

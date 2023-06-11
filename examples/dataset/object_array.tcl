@@ -3,6 +3,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 set dimensions {product 2015 2016 2017}
 
 # set source as 'eList class' to declare an 'array object'
@@ -26,9 +29,9 @@ $chart Yaxis -type "value"
 
 # Declare several bar series, each will be mapped
 # to a column of dataset.source by default.
-$chart AddBarSeries
-$chart AddBarSeries
-$chart AddBarSeries
+$chart Add "barSeries"
+$chart Add "barSeries"
+$chart Add "barSeries"
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

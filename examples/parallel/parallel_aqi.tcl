@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Add ParallelAxis as method instead of a option.
 # v3.0 : Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -142,9 +143,9 @@ $chart ParallelAxis [list [list -dim 0 -name [dict get [lindex $schema 0] text] 
                                       [list -dim 7 -name [dict get [lindex $schema 7] text] -type "category" -data [list [list "优" "良" "轻度污染" "中度污染" "重度污染" "严重污染"]]] \
                                 ]
 
-$chart AddParallelSeries -name "Beijing"   -lineStyle {width 1 opacity 0.5} -data [list {*}$dataBJ]
-$chart AddParallelSeries -name "Shanghai"  -lineStyle {width 1 opacity 0.5} -data [list {*}$dataSH]
-$chart AddParallelSeries -name "Guangzhou" -lineStyle {width 1 opacity 0.5} -data [list {*}$dataGZ]
+$chart Add "parallelSeries" -name "Beijing"   -lineStyle {width 1 opacity 0.5} -data [list {*}$dataBJ]
+$chart Add "parallelSeries" -name "Shanghai"  -lineStyle {width 1 opacity 0.5} -data [list {*}$dataSH]
+$chart Add "parallelSeries" -name "Guangzhou" -lineStyle {width 1 opacity 0.5} -data [list {*}$dataGZ]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

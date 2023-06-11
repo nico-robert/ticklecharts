@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -32,8 +35,8 @@ try {
     $chart3D Yaxis3D -type "category"
     $chart3D Zaxis3D
 
-    $chart3D AddBar3DSeries -shading "lambert" \
-                            -encode [list x "Year" y "Country" z "Life Expectancy" tooltip [list {0 1 2 3 4}]]
+    $chart3D Add "bar3DSeries" -shading "lambert" \
+                               -encode [list x "Year" y "Country" z "Life Expectancy" tooltip [list {0 1 2 3 4}]]
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

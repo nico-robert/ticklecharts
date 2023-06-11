@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : re-working 'dataset' class should be a list of list...
 # v3.0 : Fixes bug (or not !) with echarts version 5.4.1... when borderColor is set with itemStyle
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -103,8 +104,8 @@ $candlestick Xaxis -type "category" -boundaryGap "False" \
 
 $candlestick Yaxis -scale "True" -splitArea {show "True"}
 
-$candlestick AddCandlestickSeries -itemStyle [list color $upColor color0 $downColor borderColor $upBorderColor borderColor0 $downBorderColor] \
-                                  -encode [list x 0 y [list {1 4 3 2}]]
+$candlestick Add "candlestickSeries" -itemStyle [list color $upColor color0 $downColor borderColor $upBorderColor borderColor0 $downBorderColor] \
+                                     -encode [list x 0 y [list {1 4 3 2}]]
 
 
 set bar [ticklecharts::chart new]
@@ -124,12 +125,12 @@ if {[ticklecharts::vCompare $::ticklecharts::echarts_version "5.3.0"] >= 0} {
     set itemS {color "#7fbe9e"}
 }
 
-$bar AddBarSeries -name "Volume" \
-                  -xAxisIndex 1 \
-                  -yAxisIndex 1 \
-                  -itemStyle $itemS \
-                  -large "True" \
-                  -encode {x 0 y 5}
+$bar Add "barSeries" -name "Volume" \
+                     -xAxisIndex 1 \
+                     -yAxisIndex 1 \
+                     -itemStyle $itemS \
+                     -large "True" \
+                     -encode {x 0 y 5}
 
 $layout Add $candlestick -left "10%" -right "10%" -bottom 200
 $layout Add $bar         -left "10%" -right "10%" -height 80 -bottom 80

@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : delete -animation in AddHeatmapSeries method it's not a key option
 #        + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -164,10 +165,10 @@ $chart Xaxis -type "category" -data [list $xdata]
 $chart Yaxis -type "category" -data [list $ydata] -boundaryGap "True"
 
 # delete '-animation false' in AddHeatmapSeries method
-$chart AddHeatmapSeries -name "Gaussian" \
-                        -data $data \
-                        -progressive 1000 \
-                        -emphasis {itemStyle {borderColor #333 borderWidth 1}}
+$chart Add "heatmapSeries" -name "Gaussian" \
+                           -data $data \
+                           -progressive 1000 \
+                           -emphasis {itemStyle {borderColor #333 borderWidth 1}}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

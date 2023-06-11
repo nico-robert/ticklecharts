@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : delete align in SetOptions(-title) textStyle method, it's not a key option.
 #        add subtextStyle in SetOptions(-title).
 #        delete silent in AddSunburstSeries(levels) label, it's not a key option.
+# v3.0 : Update example with the new 'Add' method for chart series.
+
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -32,16 +34,16 @@ $chart SetOptions -title {
                         } \
                   
                
-$chart AddSunburstSeries -radius [list {0 80%}] \
-                         -label {rotate "radial"} \
-                         -emphasis {focus "ancestor"} \
-                         -data $data \
-                         -levels [list \
-                                {} \
-                                [list radius [list {15% 35%}] itemStyle {borderWidth 2} label {rotate "tangential"}] \
-                                [list radius [list {35% 70%}] label {align "right"}] \
-                                [list radius [list {70% 72%}] label {position "outside" padding 3} itemStyle {borderWidth 3}] \
-                         ]
+$chart Add "sunburstSeries" -radius [list {0 80%}] \
+                            -label {rotate "radial"} \
+                            -emphasis {focus "ancestor"} \
+                            -data $data \
+                            -levels [list \
+                                   {} \
+                                   [list radius [list {15% 35%}] itemStyle {borderWidth 2} label {rotate "tangential"}] \
+                                   [list radius [list {35% 70%}] label {align "right"}] \
+                                   [list radius [list {70% 72%}] label {position "outside" padding 3} itemStyle {borderWidth 3}] \
+                            ]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

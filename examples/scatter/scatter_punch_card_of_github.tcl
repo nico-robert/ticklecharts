@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -70,9 +71,9 @@ $chart SetOptions -title {text "Punch Card of Github"} \
 $chart Xaxis -data [list $hours] -boundaryGap false -splitLine {show True} -axisLine {show False}
 $chart Yaxis -data [list $days]  -axisLine {show False} -type "category"
 
-$chart AddScatterSeries -name "Punch Card" \
-                        -symbolSize $jssymbolSize \
-                        -data [mapdata $data] -animationDelay $jsanimation
+$chart Add "scatterSeries" -name "Punch Card" \
+                           -symbolSize $jssymbolSize \
+                           -data [mapdata $data] -animationDelay $jsanimation
                         
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

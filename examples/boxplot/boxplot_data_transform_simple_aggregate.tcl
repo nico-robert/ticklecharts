@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -71,29 +72,29 @@ try {
     $chart Yaxis -type "category"
 
 
-    $chart AddBoxPlotSeries -name "boxplot" \
-                            -datasetId "income_aggregate" \
-                            -itemStyle {color "#b8c5f2" borderColor "nothing"} \
-                            -encode [list \
-                                x [list {min Q1 median Q3 max}] \
-                                y "Country" \
-                                itemName "Country" \
-                                tooltip [list {min Q1 median Q3 max}] \
-                            ]
+    $chart Add "boxPlotSeries" -name "boxplot" \
+                               -datasetId "income_aggregate" \
+                               -itemStyle {color "#b8c5f2" borderColor "nothing"} \
+                               -encode [list \
+                                   x [list {min Q1 median Q3 max}] \
+                                   y "Country" \
+                                   itemName "Country" \
+                                   tooltip [list {min Q1 median Q3 max}] \
+                               ]
 
-    $chart AddScatterSeries -name "detail" \
-                            -datasetId "since_year" \
-                            -symbolSize 6 \
-                            -tooltip {trigger "item"} \
-                            -label {show "True" position "top" align "left" verticalAlign "middle" rotate 90 fontSize 12} \
-                            -itemStyle {color "#d00000"} \
-                            -encode [list \
-                                x "Income" \
-                                y "Country" \
-                                itemName "Year" \
-                                label "Year" \
-                                tooltip [list {Country Year Income}] \
-                            ]
+    $chart Add "scatterSeries" -name "detail" \
+                               -datasetId "since_year" \
+                               -symbolSize 6 \
+                               -tooltip {trigger "item"} \
+                               -label {show "True" position "top" align "left" verticalAlign "middle" rotate 90 fontSize 12} \
+                               -itemStyle {color "#d00000"} \
+                               -encode [list \
+                                   x "Income" \
+                                   y "Country" \
+                                   itemName "Year" \
+                                   label "Year" \
+                                   tooltip [list {Country Year Income}] \
+                               ]
 
 
     set fbasename [file rootname [file tail [info script]]]

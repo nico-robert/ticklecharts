@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -45,11 +46,11 @@ $chart SetOptions -animation "False" \
                
 $chart Xaxis -data [list {A B C D E}] -boundaryGap "True" -splitArea {show "True"}
 $chart Yaxis -max 2
-$chart AddLineSeries -stack "all" \
-                     -name "line" \
-                     -symbolSize 6 \
-                     -data [list {0.3 1.4 1.2 1 0.6}] \
-                     -markLine [list data $markLine label [list distance [list {20 8}]]]
+$chart Add "lineSeries" -stack "all" \
+                        -name "line" \
+                        -symbolSize 6 \
+                        -data [list {0.3 1.4 1.2 1 0.6}] \
+                        -markLine [list data $markLine label [list distance [list {20 8}]]]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

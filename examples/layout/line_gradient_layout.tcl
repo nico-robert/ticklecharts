@@ -1,5 +1,6 @@
 # v1.0 : Initial example
 # v2.0 : Add toolbox utility + rename 'render' to 'Render' (Note : The first letter in capital letter)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
@@ -35,7 +36,7 @@ $line1 SetOptions -title     {text "Gradient along the y axis" left "center"} \
 
 $line1 Xaxis -data [list [lmap v $data {lindex $v 0}]]                             
 $line1 Yaxis
-$line1 AddLineSeries -name "GradientYAxis" -showSymbol "False" -data [list [lmap v $data {lindex $v 1}]]
+$line1 Add "lineSeries" -name "GradientYAxis" -showSymbol "False" -data [list [lmap v $data {lindex $v 1}]]
 
 # Second graph...
 set line2 [ticklecharts::chart new]
@@ -45,7 +46,7 @@ $line2 SetOptions -title     {text "Gradient along the x axis" left "center" top
 
 $line2 Xaxis -data [list [lmap v $data {lindex $v 0}]]                             
 $line2 Yaxis
-$line2 AddLineSeries -name "GradientXAxis" -showSymbol "False" -data [list [lmap v $data {lindex $v 1}]]
+$line2 Add "lineSeries" -name "GradientXAxis" -showSymbol "False" -data [list [lmap v $data {lindex $v 1}]]
 
 
 set fbasename [file rootname [file tail [info script]]]

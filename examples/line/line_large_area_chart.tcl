@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Init 'data' variable
+# v3.0 : Update example with the new 'Add' method for chart series.s
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -41,11 +42,11 @@ $chart Xaxis -type "category" -boundaryGap "false" -data [list $date]
 $chart Yaxis -type "value"    -boundaryGap [list {0 "100%"}]
 
 
-$chart AddLineSeries -name "Fake Data" -data [list $data] \
-                     -symbol "none" \
-                     -sampling "lttb" \
-                     -itemStyle {color "rgb(255, 70, 131)"} \
-                     -areaStyle [list color $jscolor] 
+$chart Add "lineSeries" -name "Fake Data" -data [list $data] \
+                        -symbol "none" \
+                        -sampling "lttb" \
+                        -itemStyle {color "rgb(255, 70, 131)"} \
+                        -areaStyle [list color $jscolor] 
 
 
 set fbasename [file rootname [file tail [info script]]]

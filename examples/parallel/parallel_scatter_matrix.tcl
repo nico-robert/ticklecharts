@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Add ParallelAxis as method instead of a option.
 # v3.0 : Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -43,10 +44,10 @@ proc generateGrids {layout data} {
                            -axisLabel [list show $show] \
                            -gridIndex $index -scale "True"
 
-            $scatter AddScatterSeries -symbolSize $::SYMBOL_SIZE \
-                                      -xAxisIndex $index \
-                                      -yAxisIndex $index \
-                                      -data [list {*}[retrieveScatterData $data $i $j]]
+            $scatter Add "scatterSeries" -symbolSize $::SYMBOL_SIZE \
+                                         -xAxisIndex $index \
+                                         -yAxisIndex $index \
+                                         -data [list {*}[retrieveScatterData $data $i $j]]
 
             
             $layout Add $scatter -left   [format {%s%%} [expr {$::BASE_LEFT + $i * ($::GRID_WIDTH + $::GAP)}]] \
@@ -208,7 +209,7 @@ $parallel ParallelAxis [list [list -dim 0 -name [dict get [lindex $schema 0] tex
                                 ]
 
 
-$parallel AddParallelSeries -name "parallel" -smooth "True" -lineStyle {width 1 opacity 0.3} -data [list {*}$rawData]
+$parallel Add "parallelSeries" -name "parallel" -smooth "True" -lineStyle {width 1 opacity 0.3} -data [list {*}$rawData]
 
 generateGrids $layout $rawData
 

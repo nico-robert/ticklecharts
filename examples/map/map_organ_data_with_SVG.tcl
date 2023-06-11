@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -52,7 +55,7 @@ $chart SetOptions -tooltip {} \
 $chart Xaxis -type "value"
 $chart Yaxis -type "category" -data [list {heart large-intestine small-intestine spleen kidney lung liver}] -boundaryGap "True"
 
-$chart AddBarSeries -emphasis {focus "self"} -data [list {121 321 141 52 198 289 139}]
+$chart Add "barSeries" -emphasis {focus "self"} -data [list {121 321 141 52 198 289 139}]
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

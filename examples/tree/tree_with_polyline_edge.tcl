@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -16,13 +19,13 @@ set chart [ticklecharts::chart new]
 
 $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"} 
                 
-$chart AddTreeSeries -name "tree1" -top "10%" -left "8%" -bottom "22%" -right "20%" -symbolSize 7 \
-                     -label {position "left" verticalAlign "middle" align "right" backgroundColor "#fff"} \
-                     -leaves {label {position "right" verticalAlign "middle" align "left"}} \
-                     -emphasis {focus "descendant"} \
-                     -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
-                     -edgeShape polyline -edgeForkPosition "63%" -initialTreeDepth 3 -lineStyle {width 2} \
-                     -data [list $data]
+$chart Add "treeSeries" -name "tree1" -top "10%" -left "8%" -bottom "22%" -right "20%" -symbolSize 7 \
+                        -label {position "left" verticalAlign "middle" align "right" backgroundColor "#fff"} \
+                        -leaves {label {position "right" verticalAlign "middle" align "left"}} \
+                        -emphasis {focus "descendant"} \
+                        -expandAndCollapse "True" -animationDuration 550 -animationDurationUpdate 750 \
+                        -edgeShape polyline -edgeForkPosition "63%" -initialTreeDepth 3 -lineStyle {width 2} \
+                        -data [list $data]
 
 
 set fbasename [file rootname [file tail [info script]]]

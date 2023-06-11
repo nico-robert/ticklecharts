@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 proc fakerRandomData {min max len} {
 
     set range [expr {$max - $min}]
@@ -28,7 +31,7 @@ for {set i 2008} {$i < 2023} {incr i} {
                  -data [list {"Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"}] \
                  -boundaryGap "True"
 
-    $chart AddBarSeries -data [list [fakerRandomData 10 100 12]]
+    $chart Add "barSeries" -data [list [fakerRandomData 10 100 12]]
 
     $timeline Add $chart -data [list value $i]
 

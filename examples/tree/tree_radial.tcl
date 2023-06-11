@@ -1,5 +1,8 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -20,9 +23,9 @@ try {
 
     $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"}
                 
-    $chart AddTreeSeries -top "18%" -bottom "14%" -layout "radial" -symbol "emptyCircle" -symbolSize 7 -initialTreeDepth 3 \
-                         -emphasis {focus "descendant"} \
-                         -data [list $datajson]
+    $chart Add "treeSeries" -top "18%" -bottom "14%" -layout "radial" -symbol "emptyCircle" -symbolSize 7 -initialTreeDepth 3 \
+                            -emphasis {focus "descendant"} \
+                            -data [list $datajson]
 
     set fbasename [file rootname [file tail [info script]]]
     set dirname [file dirname [info script]]

@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -20,8 +21,8 @@ $chart Yaxis -data [list {"Brazil" "Indonesia" "USA" "India" "China" "World"}] \
            -boundaryGap "True"
 
 
-$chart AddBarSeries -name "2011" -data [list {18203 23489 29034 104970 131744 630230}] 
-$chart AddBarSeries -name "2012" -data [list {19325 23438 31000 121594 134141 681807}] 
+$chart Add "barSeries" -name "2011" -data [list {18203 23489 29034 104970 131744 630230}] 
+$chart Add "barSeries" -name "2012" -data [list {19325 23438 31000 121594 134141 681807}] 
 
 
 set fbasename [file rootname [file tail [info script]]]

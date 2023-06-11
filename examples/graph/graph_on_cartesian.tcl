@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -22,15 +23,15 @@ $chart SetOptions -title {text "Graph on Cartesian"} -tooltip {}
 $chart Xaxis -type "category" -boundaryGap "False" -data [list $axisData]
 $chart Yaxis -type "value"
 
-$chart AddGraphSeries -layout "none" \
-                      -coordinateSystem "cartesian2d" \
-                      -symbolSize "40" \
-                      -label {show "True"} \
-                      -edgeSymbol     [list {circle arrow}] \
-                      -edgeSymbolSize [list {4 10}] \
-                      -dataGraphItem $data \
-                      -links $links \
-                      -lineStyle {color "#2f4554"}
+$chart Add "graphSeries" -layout "none" \
+                         -coordinateSystem "cartesian2d" \
+                         -symbolSize "40" \
+                         -label {show "True"} \
+                         -edgeSymbol     [list {circle arrow}] \
+                         -edgeSymbolSize [list {4 10}] \
+                         -dataGraphItem $data \
+                         -links $links \
+                         -lineStyle {color "#2f4554"}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

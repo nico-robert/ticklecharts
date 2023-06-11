@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-databaritem' by '-dataBarItem' & `-datalineitem' by '-dataLineItem'
 #        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -41,26 +42,26 @@ $picBar Xaxis -data [list $category] -axisLine {show "True" lineStyle {color "#c
 $picBar Yaxis -splitLine {show "False"} -axisLine {lineStyle {color "#ccc"}}
 
 
-$picBar AddLineSeries -name "line" -smooth "True" \
-                      -dataLineItem $lineData \
-                      -showAllSymbol "True" \
-                      -symbol "emptyCircle" \
-                      -symbolSize 15
+$picBar Add "lineSeries" -name "line" -smooth "True" \
+                         -dataLineItem $lineData \
+                         -showAllSymbol "True" \
+                         -symbol "emptyCircle" \
+                         -symbolSize 15
 
-$picBar AddBarSeries -name "bar" -barWidth 10 \
-                     -itemStyle [list borderRadius 5 color $jscolor1 borderColor "nothing"] \
-                     -data [list $barData] -z "-12"
+$picBar Add "barSeries" -name "bar" -barWidth 10 \
+                        -itemStyle [list borderRadius 5 color $jscolor1 borderColor "nothing"] \
+                        -data [list $barData] -z "-12"
 
-$picBar AddBarSeries -name "line" -barWidth 10 -barGap "-100%" \
-                     -itemStyle [list color $jscolor2 borderColor "nothing"] \
-                     -dataBarItem $lineData -z "-12"
+$picBar Add "barSeries" -name "line" -barWidth 10 -barGap "-100%" \
+                        -itemStyle [list color $jscolor2 borderColor "nothing"] \
+                        -dataBarItem $lineData -z "-12"
 
-$picBar AddPictorialBarSeries -name "dotted" -symbol "rect" -itemStyle {borderColor "nothing" color "#0f375f"} \
-                              -symbolRepeat "True" \
-                              -symbolSize [list {12 4}] \
-                              -symbolMargin 1 \
-                              -z "-10" \
-                              -data $lineData
+$picBar Add "pictorialBarSeries" -name "dotted" -symbol "rect" -itemStyle {borderColor "nothing" color "#0f375f"} \
+                                 -symbolRepeat "True" \
+                                 -symbolSize [list {12 4}] \
+                                 -symbolMargin 1 \
+                                 -z "-10" \
+                                 -data $lineData
 
 
 set fbasename [file rootname [file tail [info script]]]

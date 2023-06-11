@@ -8,6 +8,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : init data1, data2, data3 (problem source all.tcl)
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-animation' from constructor to 'SetOptions' method with v3.0.1
+# v4.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -40,9 +41,9 @@ $chart SetOptions -animation false \
 $chart Xaxis -type "value" -min "dataMin" -max "dataMax" -splitLine {show "True"}
 $chart Yaxis -type "value" -min "dataMin" -max "dataMax" -splitLine {show "True"}
 
-$chart AddScatterSeries -name "scatter"  -itemStyle {opacity 0.8 borderColor nothing} -data $data1 -symbolSize $js
-$chart AddScatterSeries -name "scatter2" -itemStyle {opacity 0.8 borderColor nothing} -data $data2 -symbolSize $js
-$chart AddScatterSeries -name "scatter3" -itemStyle {opacity 0.8 borderColor nothing} -data $data3 -symbolSize $js
+$chart Add "scatterSeries" -name "scatter"  -itemStyle {opacity 0.8 borderColor nothing} -data $data1 -symbolSize $js
+$chart Add "scatterSeries" -name "scatter2" -itemStyle {opacity 0.8 borderColor nothing} -data $data2 -symbolSize $js
+$chart Add "scatterSeries" -name "scatter3" -itemStyle {opacity 0.8 borderColor nothing} -data $data3 -symbolSize $js
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

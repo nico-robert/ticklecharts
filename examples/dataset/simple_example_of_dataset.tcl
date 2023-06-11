@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : re-working 'dataset' class should be a list of list...
+# v3.0 : Update example with the new 'Add' method for chart series.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -23,9 +24,9 @@ $bar SetOptions -legend {} -tooltip {} -dataset $dset
 
 $bar Xaxis -type "category"
 $bar Yaxis
-$bar AddBarSeries
-$bar AddBarSeries
-$bar AddBarSeries
+$bar Add "barSeries"
+$bar Add "barSeries"
+$bar Add "barSeries"
 
 
 set fbasename [file rootname [file tail [info script]]]

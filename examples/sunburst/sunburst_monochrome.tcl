@@ -1,16 +1,19 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update example with the new 'Add' method for chart series.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 set chart [ticklecharts::chart new]
                
-$chart AddSunburstSeries -radius [list {15% 80%}] \
-                         -sort null \
-                         -emphasis {focus ancestor} \
-                         -label {rotate radial show false} \
-                         -itemStyle {color #ddd borderWidth 2} \
-                         -data {
+$chart Add "sunburstSeries" -radius [list {15% 80%}] \
+                            -sort null \
+                            -emphasis {focus ancestor} \
+                            -label {rotate radial show false} \
+                            -itemStyle {color #ddd borderWidth 2} \
+                            -data {
                                 {
                                     children {
                                                 {
@@ -117,7 +120,7 @@ $chart AddSunburstSeries -radius [list {15% 80%}] \
                                                 }
                                     itemStyle {color "#F54F4A"}
                                 }
-                             }
+                            }
                              
 
 set fbasename [file rootname [file tail [info script]]]
