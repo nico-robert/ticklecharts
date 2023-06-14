@@ -120,8 +120,8 @@ set template {
                 renderer: "canvas"
               });
               echarts.registerTransform(ecStat.transform.regression);
-              %json%
-              chart.setOption(%jsvar%);
+              var option = %json%;
+              chart.setOption(option);
               window.addEventListener("resize", chart.resize);
             </script>
           </body>
@@ -131,5 +131,4 @@ set template {
 $chart Render -outfile [file join $dirname $fbasename.html] \
               -title $fbasename \
               -script [list [list $jsheader]] \
-              -jsvar "option" \
               -template $template ; # template string.
