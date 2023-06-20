@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Replaces '-dataMapItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -35,7 +36,7 @@ $chart SetOptions -tooltip {} \
 
 $chart Add "mapSeries" -name "French Beef Cuts" -map "Beef_cuts_France" -roam true -emphasis {label {show "False"}} \
                        -selectedMode false \
-                       -dataMapItem {
+                       -dataItem {
                            {name "Queue" value 15 }
                            {name "Langue" value 35 }
                            {name "Plat de joue" value 15 }

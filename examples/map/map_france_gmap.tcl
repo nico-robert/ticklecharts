@@ -3,6 +3,9 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-datapieitem' by '-dataPieItem'
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataScatterItem' by '-dataItem' (both properties are available).
+#        Replaces '-dataPieItem' by '-dataItem' (both properties are available).
+#        Replaces '-dataLinesItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -42,11 +45,11 @@ $chart SetOptions -tooltip {} \
 $chart Add "scatterSeries" -name "City" -symbolSize 15 \
                            -coordinateSystem "gmap" \
                            -type "effectScatter" \
-                           -dataScatterItem [list \
-                                               [list name "Bayonne" value [list {-1.4724319938245576 43.49308776293058}]] \
-                                               [list name "Paris" value [list {2.34960965438873 48.860204769341884}]] \
-                                               [list name "Marseille" value [list {5.372546427576347 43.29511510366016}]] \
-                                           ] \
+                           -dataItem [list \
+                                        [list name "Bayonne" value [list {-1.4724319938245576 43.49308776293058}]] \
+                                        [list name "Paris" value [list {2.34960965438873 48.860204769341884}]] \
+                                        [list name "Marseille" value [list {5.372546427576347 43.29511510366016}]] \
+                                    ] \
                            -itemStyle {color "#f4e925" shadowBlur 10 shadowColor #333}
 
 
@@ -56,7 +59,7 @@ $chart Add "pieSeries" -name "pie" \
                        -selectedOffset 30 \
                        -center [list {-6.43676598655016 46.12723458558478}] \
                        -radius 90 \
-                       -dataPieItem {
+                       -dataItem {
                          {value 300 name "Bayonne"}
                          {value 735 name "Paris"}
                          {value 580 name "Marseille"}
@@ -79,7 +82,7 @@ $chart Add "linesSeries" -name "Arrow" \
                                  } \
                          -symbolSize 12 \
                          -symbol [list {none arrow}] \
-                         -dataLinesItem [list \
+                         -dataItem [list \
                                            [list coords [list \
                                                        {-1.4724319938245576 43.49308776293058} \
                                                        {2.34960965438873 48.860204769341884} \

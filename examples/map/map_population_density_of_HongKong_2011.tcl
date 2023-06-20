@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Replaces '-dataMapItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -38,7 +39,7 @@ $chart SetOptions -title {
 
 
 $chart Add "mapSeries" -name "香港18区人口密度" -map "HK" -label {show "True"} \
-                       -dataMapItem {
+                       -dataItem {
                            {name 中西区 value 20057.34 }
                            {name 湾仔 value 15477.48 }
                            {name 东区 value 31686.1 }

@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Set new 'Add' method for chart series + use substitution for formatter property 
 #        Note : map list substitution + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v4.0 : Replaces '-dataGaugeItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -15,9 +16,7 @@ $chart SetOptions -tooltip {formatter {"{a} <br/>{b} : {c}%"}}
                
 $chart Add "gaugeSeries" -detail {formatter {"{value}"}} \
                          -name "Pressure" \
-                         -dataGaugeItem { 
-                            {value 50 name "SCORE"}
-                         }
+                         -dataItem {{value 50 name "SCORE"}}
 
 
 set fbasename [file rootname [file tail [info script]]]

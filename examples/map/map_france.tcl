@@ -19,16 +19,17 @@ proc dateMapValue {start end} {
 
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
-# v1.0 : Initial example
-# v2.0 : destroy all 'gridlayout' for source all.tcl + init set theme to basic
-# v3.0 : Set theme on timeline Class instead layout Class.
-#        Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
-# v4.0 : add try command
-# v5.0 : Rename '-datapieitem' by '-dataPieItem'
-# v6.0 : Rename 'basic' theme to 'custom'
-# v7.0 : adds myTheme variable
-# v8.0 : adds splitline + label color
-# v9.0 : Update example with the new 'Add' method for chart series.
+# v1.0  : Initial example
+# v2.0  : destroy all 'gridlayout' for source all.tcl + init set theme to basic
+# v3.0  : Set theme on timeline Class instead layout Class.
+#         Problem with tooltip when theming is set, correction 'textStyle' in file option.tcl
+# v4.0  : add try command
+# v5.0  : Rename '-datapieitem' by '-dataPieItem'
+# v6.0  : Rename 'basic' theme to 'custom'
+# v7.0  : adds myTheme variable
+# v8.0  : adds splitline + label color
+# v9.0  : Update example with the new 'Add' method for chart series.
+# v10.0 : Replaces '-dataMapItem' by '-dataItem' (both properties are available).
 
 # example from pyecharts-gallery-master... (modify)
 
@@ -118,7 +119,7 @@ try {
         set map [ticklecharts::chart new]
         # echarts.registerMap = "法国" 
         $map Add "mapSeries" -map "法国" -label {show "False"} \
-                             -dataMapItem $dataItem
+                             -dataItem $dataItem
 
         set bar [ticklecharts::chart new]
 
@@ -132,7 +133,7 @@ try {
         set pie [ticklecharts::chart new]
 
         $pie Add "pieSeries" -radius "17%" \
-                             -dataPieItem $dataItem
+                             -dataItem $dataItem
 
 
         set line [ticklecharts::chart new]

@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Rename '-datapieitem' by '-dataPieItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -31,7 +32,7 @@ $pie SetOptions -title {text "Pie scrollable legend" subtext "Fake Data" left "c
 $pie Add "pieSeries" -name "echarts pie" \
                      -radius "55%" -center [list {40% 50%}] \
                      -emphasis {itemStyle {shadowBlur 10 shadowOffsetX 0 shadowColor "rgba(0, 0, 0, 0.5)"}} \
-                     -dataPieItem $data
+                     -dataItem $data
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

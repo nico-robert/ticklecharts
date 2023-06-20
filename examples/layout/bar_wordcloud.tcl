@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v4.0 : Rename '-databaritem' by '-dataBarItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v5.0 : Update example with the new 'Add' method for chart series.
+# v6.0 : Replaces '-dataBarItem' by '-dataItem' (both properties are available).
 
 proc fakerRandomValue {{min 10} {max 1000}} {
 
@@ -91,7 +92,7 @@ $bar SetOptions -title   {text "layout bar + wordCloud..."} \
     
 $bar Xaxis -data [list {"Tcl" "Tk"}]
 $bar Yaxis
-$bar Add "barSeries" -dataBarItem [list \
+$bar Add "barSeries" -dataItem [list \
                                     [list value [llength $tcl_commands]] \
                                     [list value [llength $tk_commands] itemStyle {color "#91cc75" borderColor "nothing"}] \
                                 ] \

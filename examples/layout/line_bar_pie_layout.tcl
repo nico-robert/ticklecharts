@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Rename '-datapieitem' by '-dataPieItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -44,7 +45,7 @@ $pie SetOptions -legend {top "6%" left "65%"}
 
 $pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
                      -labelLine {show "True"} \
-                     -dataPieItem {
+                     -dataItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}

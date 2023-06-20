@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataGaugeItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -31,7 +32,7 @@ $chart Add "gaugeSeries" -name "hour" -startAngle 90 -endAngle -270 -min 0 -max 
                                               width 12 length "55%" offsetCenter [list {0 "8%"}] itemStyle {borderColor "nothing" color "#C0911F" shadowColor "rgba(0, 0, 0, 0.3)" shadowBlur 8 shadowOffsetX 2 shadowOffsetY 4}] \
                          -detail        {show "False"} \
                          -title         [list offsetCenter [list {0 "30%"}]] \
-                         -dataGaugeItem {{value 10}}
+                         -dataItem      {{value 10}}
 
 
 $chart Add "gaugeSeries" -name "minute" -startAngle 90 -endAngle -270 -min 0 -max 60 -clockwise "True" \
@@ -45,7 +46,7 @@ $chart Add "gaugeSeries" -name "minute" -startAngle 90 -endAngle -270 -min 0 -ma
                                               width 8 length "70%" offsetCenter [list {0 "8%"}] itemStyle {borderColor "nothing" color "#C0911F" shadowColor "rgba(0, 0, 0, 0.3)" shadowBlur 8 shadowOffsetX 2 shadowOffsetY 4}] \
                          -detail        {show "False"} \
                          -title         [list offsetCenter [list {0 "-40%"}]] \
-                         -dataGaugeItem {{value 30}}
+                         -dataItem      {{value 30}}
 
 
 $chart Add "gaugeSeries" -name "second" -startAngle 90 -endAngle -270 -min 0 -max 60 -clockwise "True" -animationEasingUpdate "bounceOut"\
@@ -59,7 +60,7 @@ $chart Add "gaugeSeries" -name "second" -startAngle 90 -endAngle -270 -min 0 -ma
                                               width 8 length "70%" offsetCenter [list {0 "8%"}] itemStyle {borderColor "nothing" color "#C0911F" shadowColor "rgba(0, 0, 0, 0.3)" shadowBlur 8 shadowOffsetX 2 shadowOffsetY 4}] \
                          -detail        {show "False"} \
                          -title         [list offsetCenter [list {0 "-40%"}]] \
-                         -dataGaugeItem {{value 18}}
+                         -dataItem      {{value 18}}
 
 
 set fbasename [file rootname [file tail [info script]]]

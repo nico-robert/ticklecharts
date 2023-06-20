@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataGaugeItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -35,7 +36,7 @@ $chart Add "gaugeSeries" -startAngle 180 -endAngle 0 -min 0 -max 240 -splitNumbe
                                                                value {fontSize 50 fontWeight "bolder" color "#777"} \
                                                                unit  [list fontSize 20 color "#999" padding [list {0 0 -20 10}]] \
                                   ]] \
-                         -dataGaugeItem {{value 100}}
+                         -dataItem {{value 100}}
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

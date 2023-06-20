@@ -23,6 +23,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Force string representation with 'new estr' class instead of mapping with special character (v3.1.3)
 #        + Set new 'Add' method for chart series.
+# v4.0 : Replaces '-dataGraphItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -43,7 +44,7 @@ foreach val $datas {
                              -top   [format {%s%%} [expr {($idx / 4) * 25}]] \
                              -width  "25%" \
                              -height "25%" \
-                             -dataGraphItem [lindex $val 1] \
+                             -dataItem [lindex $val 1] \
                              -force {repulsion 60 edgeLength 2} \
                              -edges [lmap v [lindex $val 3] {
                                 format {source %s target %s} [new estr [lindex $v 0]] [new estr [lindex $v 1]]

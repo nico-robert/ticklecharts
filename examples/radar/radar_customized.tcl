@@ -8,6 +8,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v4.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
 #        Note : map list formatter + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v5.0 : Replaces '-dataRadarItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -67,7 +68,7 @@ $chart RadarCoordinate -indicatoritem {
                         -axisName [list color "#fff" backgroundColor "#666" borderRadius 3 padding [list {3 5}]]
 
 $chart Add "radarSeries" -emphasis {lineStyle {width 4}} \
-                         -dataRadarItem [list \
+                         -dataItem [list \
                                             [list name "Data A" \
                                                   value [list {100 8 0.4 -80 2000}] \
                                             ] \
@@ -79,7 +80,7 @@ $chart Add "radarSeries" -emphasis {lineStyle {width 4}} \
 
 # delete 'show "true"' in AddRadarSeries(areaStyle) method
 $chart Add "radarSeries" -radarIndex 1 \
-                         -dataRadarItem [list \
+                         -dataItem [list \
                                             [list name "Data C" \
                                                   value [list {120 118 130 100 99 70}] \
                                                   symbol rect \

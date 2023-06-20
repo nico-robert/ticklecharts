@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Rename '-databaritem' by '-dataBarItem' & `-datalineitem' by '-dataLineItem'
 #        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataBarItem' by '-dataItem' (both properties are available).
+#        Replaces '-dataLineItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -43,7 +45,7 @@ $picBar Yaxis -splitLine {show "False"} -axisLine {lineStyle {color "#ccc"}}
 
 
 $picBar Add "lineSeries" -name "line" -smooth "True" \
-                         -dataLineItem $lineData \
+                         -dataItem $lineData \
                          -showAllSymbol "True" \
                          -symbol "emptyCircle" \
                          -symbolSize 15
@@ -54,7 +56,7 @@ $picBar Add "barSeries" -name "bar" -barWidth 10 \
 
 $picBar Add "barSeries" -name "line" -barWidth 10 -barGap "-100%" \
                         -itemStyle [list color $jscolor2 borderColor "nothing"] \
-                        -dataBarItem $lineData -z "-12"
+                        -dataItem $lineData -z "-12"
 
 $picBar Add "pictorialBarSeries" -name "dotted" -symbol "rect" -itemStyle {borderColor "nothing" color "#0f375f"} \
                                  -symbolRepeat "True" \

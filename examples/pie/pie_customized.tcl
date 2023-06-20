@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -25,7 +26,7 @@ $pie Add "pieSeries" -name "Access From" -radius "55%" \
                      -labelLine {show true lineStyle {color "rgba(255, 255, 255, 0.3)"} smooth 0.2 length 10 length2 20} \
                      -itemStyle {color "#c23531" shadowBlur 200 shadowColor "rgba(0, 0, 0, 0.5)"} \
                      -animationType "scale" -animationEasing "elasticOut" -animationDelay $js \
-                     -dataPieItem {
+                     -dataItem {
                          {value 400 name "Search Engine"}
                          {value 335 name "Direct"}
                          {value 310 name "Email"}

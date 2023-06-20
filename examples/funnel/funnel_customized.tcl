@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Set new 'Add' method for chart series + use substitution for formatter property 
 #        Note : map list substitution + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v4.0 : Replaces '-dataFunnelItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,13 +25,13 @@ $chart Add "funnelSeries" -name "Expected" \
                           -labelLine {show false} \
                           -itemStyle {opacity 0.7} \
                           -emphasis  {label {position "inside" formatter {"{b}Expected: {c}%"}}} \
-                          -dataFunnelItem {
-                                            {value 60 name Visit}
-                                            {value 40 name Inquiry}
-                                            {value 20 name Order}
-                                            {value 80 name Click}
-                                            {value 100 name Show}
-                                        }
+                          -dataItem {
+                                    {value 60 name Visit}
+                                    {value 40 name Inquiry}
+                                    {value 20 name Order}
+                                    {value 80 name Click}
+                                    {value 100 name Show}
+                                }
 
 $chart Add "funnelSeries" -name "Actual" \
                           -left "10%" \
@@ -40,13 +41,13 @@ $chart Add "funnelSeries" -name "Actual" \
                           -label {show True position "inside" formatter {"{c}%"} color "#fff"} \
                           -itemStyle {opacity 0.5 borderColor "#fff" borderWidth 2} \
                           -emphasis  {label {position "inside" formatter {"{b}Actual: {c}%"}}} \
-                          -dataFunnelItem {
-                                               {value 30 name Visit}
-                                               {value 10 name Inquiry}
-                                               {value 5 name Order}
-                                               {value 80 name Click}
-                                               {value 80 name Show}
-                                           } \
+                          -dataItem {
+                                    {value 30 name Visit}
+                                    {value 10 name Inquiry}
+                                    {value 5 name Order}
+                                    {value 80 name Click}
+                                    {value 80 name Show}
+                                } \
                           -z 100
                           # Ensure outer shape will not be over inner shape when hover (z = 100).
                        

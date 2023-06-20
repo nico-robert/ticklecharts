@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Replaces '-dataLinesItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -36,7 +37,7 @@ $chart Add "linesSeries" -name "Arrow" \
                                  } \
                          -symbolSize 12 \
                          -symbol [list {none arrow}] \
-                         -dataLinesItem [list \
+                         -dataItem [list \
                                            [list coords [list \
                                                        {-1.4724319938245576 43.49308776293058} \
                                                        {2.34960965438873 48.860204769341884} \

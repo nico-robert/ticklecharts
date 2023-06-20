@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Move '-animationDuration', '-animationEasingUpdate' from constructor to 'SetOptions' method with v3.0.1
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Replaces '-dataGraphItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -41,7 +42,7 @@ try {
 
     $chart Add "graphSeries" -name "Les Miserables" \
                              -layout "none" \
-                             -dataGraphItem $datanodes \
+                             -dataItem $datanodes \
                              -links [dict get $datajson links] \
                              -categories [dict get $datajson categories] \
                              -roam "True" \

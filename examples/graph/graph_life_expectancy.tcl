@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Since v3.0.1 '-dataZoom' can be written like this -dataZoom {key "value"} instead of -dataZoom {{key "value"}} (for one list)
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Replaces '-dataGraphItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -62,7 +63,7 @@ try {
 
         $chart Add "graphSeries" -name $country \
                                  -coordinateSystem "cartesian2d" \
-                                 -dataGraphItem $d \
+                                 -dataItem $d \
                                  -links $links \
                                  -edgeSymbol [list {"none" "arrow"}] \
                                  -edgeSymbolSize 5 \

@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Rename '-datafunnelitem' by '-dataFunnelItem' +
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataFunnelItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -28,15 +29,15 @@ $funnel Add "funnelSeries" -name "Funnel" \
                            -labelLine {length 10 lineStyle {width 1 type "solid"}} \
                            -itemStyle {borderColor "#fff" borderWidth 1} \
                            -emphasis  {label {fontSize 20}} \
-                           -dataFunnelItem {
-                                        {value 120 name Mon}
-                                        {value 200 name Tue}
-                                        {value 150 name Wed}
-                                        {value 80 name Thu}
-                                        {value 70 name Fri}
-                                        {value 110 name Sat}
-                                        {value 130 name Sun}
-                                        }
+                           -dataItem {
+                                    {value 120 name Mon}
+                                    {value 200 name Tue}
+                                    {value 150 name Wed}
+                                    {value 80 name Thu}
+                                    {value 70 name Fri}
+                                    {value 110 name Sat}
+                                    {value 130 name Sun}
+                                }
 
 set layout [ticklecharts::Gridlayout new]
 $layout Add $line   -bottom "60%" -width "30%" -left "5%"

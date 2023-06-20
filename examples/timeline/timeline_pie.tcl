@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Rename '-datapieitem' by '-dataPieItem'
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
 
 proc fakerRandomValue {min max} {
 
@@ -30,7 +31,7 @@ for {set i 2019} {$i < 2023} {incr i} {
     $pie SetOptions -title [list text "Data $i"]
 
     $pie Add "pieSeries" -radius [list {"30%" "55%"}] -roseType "radius" \
-                         -dataPieItem [dataPie]
+                         -dataItem [dataPie]
 
     $timeline Add $pie -data [list value "Data $i"]
 

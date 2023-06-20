@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Set new 'Add' method for chart series + use substitution for formatter property 
 #        Note : map list substitution + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v4.0 : Replaces '-dataFunnelItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -23,13 +24,13 @@ $chart Add "funnelSeries" -name "ExpectFunneled" \
                           -width "40%" \
                           -height "45%" \
                           -funnelAlign "right" \
-                          -dataFunnelItem {
-                                            {value 60 name "Prod C"}
-                                            {value 30 name "Prod D"}
-                                            {value 10 name "Prod E"}
-                                            {value 80 name "Prod B"}
-                                            {value 100 name "Prod A"}
-                                          }
+                          -dataItem {
+                                    {value 60 name "Prod C"}
+                                    {value 30 name "Prod D"}
+                                    {value 10 name "Prod E"}
+                                    {value 80 name "Prod B"}
+                                    {value 100 name "Prod A"}
+                                }
 
 $chart Add "funnelSeries" -name "Pyramid" \
                           -left "5%" \
@@ -38,13 +39,13 @@ $chart Add "funnelSeries" -name "Pyramid" \
                           -height "45%" \
                           -funnelAlign "right" \
                           -sort "ascending" \
-                          -dataFunnelItem {
-                                            {value 60 name "Prod C"}
-                                            {value 30 name "Prod D"}
-                                            {value 10 name "Prod E"}
-                                            {value 80 name "Prod B"}
-                                            {value 100 name "Prod A"}
-                                          }
+                          -dataItem {
+                                    {value 60 name "Prod C"}
+                                    {value 30 name "Prod D"}
+                                    {value 10 name "Prod E"}
+                                    {value 80 name "Prod B"}
+                                    {value 100 name "Prod A"}
+                                }
 
 $chart Add "funnelSeries" -name "Funnel" \
                           -left "55%" \
@@ -52,13 +53,13 @@ $chart Add "funnelSeries" -name "Funnel" \
                           -width "40%" \
                           -height "45%" \
                           -funnelAlign "left" \
-                          -dataFunnelItem {
-                                            {value 60 name "Prod C"}
-                                            {value 30 name "Prod D"}
-                                            {value 10 name "Prod E"}
-                                            {value 80 name "Prod B"}
-                                            {value 100 name "Prod A"}
-                                          }
+                          -dataItem {
+                                    {value 60 name "Prod C"}
+                                    {value 30 name "Prod D"}
+                                    {value 10 name "Prod E"}
+                                    {value 80 name "Prod B"}
+                                    {value 100 name "Prod A"}
+                                }
                                 
 $chart Add "funnelSeries" -name "Pyramid" \
                           -left "55%" \
@@ -67,13 +68,13 @@ $chart Add "funnelSeries" -name "Pyramid" \
                           -height "45%" \
                           -funnelAlign "left" \
                           -sort "ascending" \
-                          -dataFunnelItem {
-                                            {value 60 name "Prod C"}
-                                            {value 30 name "Prod D"}
-                                            {value 10 name "Prod E"}
-                                            {value 80 name "Prod B"}
-                                            {value 100 name "Prod A"}
-                                          }
+                          -dataItem {
+                                    {value 60 name "Prod C"}
+                                    {value 30 name "Prod D"}
+                                    {value 10 name "Prod E"}
+                                    {value 80 name "Prod B"}
+                                    {value 100 name "Prod A"}
+                                }
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]

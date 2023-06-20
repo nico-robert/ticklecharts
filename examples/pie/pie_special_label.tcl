@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Rename '-datapieitem' by '-dataPieItem' + 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
 
 # image dir
 set imagedir ../../images
@@ -57,7 +58,7 @@ $pie SetOptions -title  {text "Weather Statistics" subtext "Fake Data" left "cen
 
 $pie Add "pieSeries" -radius "65%" -center [list {50% 50%}] -selectedMode "single" \
                      -emphasis  {itemStyle {shadowBlur 10 shadowOffsetX 0 shadowColor "rgba(0, 0, 0, 0.5)"}} \
-                     -dataPieItem $data
+                     -dataItem $data
 
 set fbasename [file rootname [file tail [info script]]]
 set dirname   [file dirname [info script]]

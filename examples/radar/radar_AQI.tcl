@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 #        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataRadarItem' by '-dataItem' (both properties are available).
 
 proc setdata {list} {
 
@@ -155,21 +156,21 @@ $chart RadarCoordinate -indicatoritem {
 
 $chart Add "radarSeries" -name "Beijing" \
                          -lineStyle {width 1 opacity 0.5} \
-                         -dataRadarItem [setdata $dataBJ] \
+                         -dataItem [setdata $dataBJ] \
                          -symbol "none" \
                          -itemStyle {color "#F9713C"} \
                          -areaStyle {opacity 0.1}
 
 $chart Add "radarSeries" -name "Shanghai" \
                          -lineStyle {width 1 opacity 0.5} \
-                         -dataRadarItem [setdata $dataSH] \
+                         -dataItem [setdata $dataSH] \
                          -symbol "none" \
                          -itemStyle {color "#B3E4A1"} \
                          -areaStyle {opacity 0.05}
 
 $chart Add "radarSeries" -name "Guangzhou" \
                          -lineStyle {width 1 opacity 0.5} \
-                         -dataRadarItem [setdata $dataGZ] \
+                         -dataItem [setdata $dataGZ] \
                          -symbol "none" \
                          -itemStyle {color "rgb(238, 197, 102)"} \
                          -areaStyle {opacity 0.05}

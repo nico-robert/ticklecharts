@@ -30,6 +30,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Replaces '-dataLinesItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -80,13 +81,13 @@ try {
                              -lineStyle {opacity 0.2 width 1} \
                              -progressiveThreshold 500 \
                              -progressive 200 \
-                             -dataLinesItem $busLine
+                             -dataItem $busLine
 
     $chart Add "linesSeries" -coordinateSystem "gmap" \
                              -polyline "True" \
                              -silent "True" \
                              -lineStyle {width 0} \
-                             -dataLinesItem $busLine \
+                             -dataItem $busLine \
                              -effect {constantSpeed 20 show "True" trailLength 0.1 symbolSize 1.5 symbol "nothing"} \
                              -zlevel 1
 

@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : replace '-data' by '-dataGraphItem' to keep the same logic for dictionnary data (-data flag is still active)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Replaces '-dataGraphItem' by '-dataItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -29,7 +30,7 @@ $chart Add "graphSeries" -layout "none" \
                          -label {show "True"} \
                          -edgeSymbol     [list {circle arrow}] \
                          -edgeSymbolSize [list {4 10}] \
-                         -dataGraphItem $data \
+                         -dataItem $data \
                          -links $links \
                          -lineStyle {color "#2f4554"}
 
