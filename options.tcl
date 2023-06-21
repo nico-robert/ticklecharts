@@ -12,7 +12,7 @@ proc ticklecharts::levelsSankeyItem {value} {
     foreach item [dict get $value -levels] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options depth       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
@@ -43,7 +43,7 @@ proc ticklecharts::sankeyItem {value key} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -77,7 +77,7 @@ proc ticklecharts::linksItem {value key} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '$levelP' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options source      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -110,14 +110,21 @@ proc ticklecharts::linksItem {value key} {
 
 proc ticklecharts::themeriverItem {value} {
 
-    if {![dict exists $value -data]} {
-        error "key -data not present..."
+    # Both properties are supported.
+    if {[dict exists $value -data]} {
+        set key -data
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
+    } else {
+        error "Property '-data' or '-dataItem' not defined for\
+              [ticklecharts::getLevelProperties [info level]]"
     }
 
-    foreach item [dict get $value -data] {
+    foreach item [dict get $value $key] {
 
         if {[llength $item] != 3} {
-            error "item should be a list of 3 elements..."
+            error "Item list should be a list of 3 elements for\
+                  [ticklecharts::getLevelProperties [info level]]"
         }
 
         lassign $item date value name
@@ -150,7 +157,7 @@ proc ticklecharts::treeItem {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name                    -minversion 5  -validvalue {}            -type str|null        -default "nothing"
@@ -185,14 +192,10 @@ proc ticklecharts::treeItem {value} {
 
 proc ticklecharts::legendItem {value} {
 
-    if {![dict exists $value dataLegendItem]} {
-        error "key dataLegendItem not present..."
-    }
-
     foreach item [dict get $value dataLegendItem] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name         -minversion 5  -validvalue {}               -type str|null     -default "nothing"
@@ -226,7 +229,7 @@ proc ticklecharts::sunburstItem {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -257,7 +260,7 @@ proc ticklecharts::levelsItem {value} {
     foreach item [dict get $value -levels] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options radius      -minversion "5.2.0" -validvalue {}  -type list.d|null -default "nothing"
@@ -292,11 +295,11 @@ proc ticklecharts::treemapItem {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $key value
         }
 
         setdef options value                -minversion 5  -validvalue {}                  -type num|list.d|null  -default "nothing"
@@ -343,7 +346,7 @@ proc ticklecharts::levelsTreeMapItem {value} {
     foreach item [dict get $value -levels] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options visualDimension      -minversion 5  -validvalue {}                  -type num|null                -default "nothing"
@@ -373,20 +376,16 @@ proc ticklecharts::levelsTreeMapItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::barItem {value} {
+proc ticklecharts::barItem {value itemKey} {
 
-    if {![dict exists $value -dataBarItem]} {
-        error "key -dataBarItem not present..."
-    }
-
-    foreach item [dict get $value -dataBarItem] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name       -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -412,18 +411,24 @@ proc ticklecharts::barItem {value} {
 
 proc ticklecharts::pictorialBarItem {value} {
 
-    if {![dict exists $value -data]} {
-        error "key -data not present..."
+    # Both properties are supported.
+    if {[dict exists $value -data]} {
+        set key -data
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
+    } else {
+        error "Property '-data' or '-dataItem' not defined for\
+              [ticklecharts::getLevelProperties [info level]]"
     }
 
-    foreach item [dict get $value -data] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $key value
         }
 
         setdef options name                    -minversion 5  -validvalue {}                    -type str|null          -default "nothing"
@@ -467,20 +472,16 @@ proc ticklecharts::pictorialBarItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::lineItem {value} {
+proc ticklecharts::lineItem {value itemKey} {
 
-    if {![dict exists $value -dataLineItem]} {
-        error "key -dataLineItem not present..."
-    }
-
-    foreach item [dict get $value -dataLineItem] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
@@ -508,20 +509,16 @@ proc ticklecharts::lineItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::radarItem {value} {
+proc ticklecharts::radarItem {value itemKey} {
 
-    if {![dict exists $value -dataRadarItem]} {
-        error "key -dataRadarItem not present..."
-    }
-
-    foreach item [dict get $value -dataRadarItem] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
@@ -555,17 +552,18 @@ proc ticklecharts::radarItem {value} {
 proc ticklecharts::indicatorItem {value} {
 
     if {![dict exists $value -indicatoritem]} {
-        error "key -indicatoritem not present..."
+        error "Key property '-indicatoritem' not defined for\
+               [ticklecharts::getLevelProperties [info level]]"
     }
 
     foreach item [dict get $value -indicatoritem] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item name]} {
-            error "key 'name' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs -indicatoritem name
         }
 
         setdef options name   -minversion 5  -validvalue {}          -type str|null          -default "nothing"
@@ -581,20 +579,16 @@ proc ticklecharts::indicatorItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::pieItem {value} {
+proc ticklecharts::pieItem {value itemKey} {
 
-    if {![dict exists $value -dataPieItem]} {
-        error "key -dataPieItem not present..."
-    }
-
-    foreach item [dict get $value -dataPieItem] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name      -minversion 5  -validvalue {} -type str|null    -default "nothing"
@@ -619,20 +613,16 @@ proc ticklecharts::pieItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::funnelItem {value} {
+proc ticklecharts::funnelItem {value itemKey} {
 
-    if {![dict exists $value -dataFunnelItem]} {
-        error "key -dataFunnelItem not present..."
-    }
-
-    foreach item [dict get $value -dataFunnelItem] {
-
-        if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
-        }
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name      -minversion 5  -validvalue {} -type str|null  -default "nothing"
@@ -656,12 +646,12 @@ proc ticklecharts::funnelItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::parallelItem {value} {
+proc ticklecharts::parallelItem {value itemKey} {
 
-    foreach item [dict get $value -dataParallelItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name           -minversion 5  -validvalue {}                  -type str|null         -default "nothing"
@@ -692,16 +682,16 @@ proc ticklecharts::parallelItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::scatterItem {value type} {
+proc ticklecharts::scatterItem {value type itemKey} {
 
-    foreach item [dict get $value -dataScatterItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
@@ -734,16 +724,16 @@ proc ticklecharts::scatterItem {value type} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::gaugeItem {value} {
+proc ticklecharts::gaugeItem {value itemKey} {
 
-    foreach item [dict get $value -dataGaugeItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name           -minversion 5  -validvalue {}  -type str|null   -default "nothing"
@@ -763,12 +753,12 @@ proc ticklecharts::gaugeItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::dataGraphItem {value} {
+proc ticklecharts::dataGraphItem {value itemKey} {
 
-    foreach item [dict get $value -dataGraphItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null        -default "nothing"
@@ -804,20 +794,21 @@ proc ticklecharts::dataGraphItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::candlestickItem {value} {
+proc ticklecharts::candlestickItem {value itemKey} {
 
-    foreach item [dict get $value -dataCandlestickItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         if {[llength {*}[dict get $item value]] != 4} {
-            error "'value' should be a list of 4 elements '\[open, close, lowest, highest\]' for key 'value'"
+            error "'value' property should be a list of 4 elements '\[open, close, lowest, highest\]'\
+                   for [ticklecharts::getLevelProperties [info level]]."
         }
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -842,18 +833,24 @@ proc ticklecharts::candlestickItem {value} {
 
 proc ticklecharts::dataWCItem {value} {
 
-    if {![dict exists $value -dataWCItem]} {
-        error "key -dataWCItem not present..."
+    # Both properties are supported.
+    if {[dict exists $value -dataWCItem]} {
+        set key -dataWCItem
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
+    } else {
+        error "Property '-dataWCItem' or '-dataItem' not defined for\
+              [ticklecharts::getLevelProperties [info level]]"
     }
 
-    foreach item [dict get $value -dataWCItem] {
+    foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $key value
         }
 
         setdef options name        -minversion 5  -validvalue {}   -type str|null    -default "nothing"
@@ -881,7 +878,7 @@ proc ticklecharts::richItem {value} {
     foreach {key item} [dict get $value richitem] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options color         -minversion 5  -validvalue formatColor             -type e.color|str|null  -default "#fff"
@@ -937,20 +934,21 @@ proc ticklecharts::richItem {value} {
     return [new edict $opts]
 }
 
-proc ticklecharts::boxPlotitem {value} {
+proc ticklecharts::boxPlotitem {value itemKey} {
 
-    foreach item [dict get $value -dataBoxPlotitem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         if {[llength {*}[dict get $item value]] != 5} {
-            error "'value' should be a list of 5 elements : \[min,  Q1,  median (or Q2),  Q3,  max\]"
+            error "'value' property should be a list of 5 elements: \[min,  Q1,  median (or Q2),  Q3,  max\]\
+                    for [ticklecharts::getLevelProperties [info level]]"
         }
 
         setdef options name       -minversion 5  -validvalue {}   -type str|null    -default "nothing"
@@ -973,16 +971,16 @@ proc ticklecharts::boxPlotitem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::mapItem {value} {
+proc ticklecharts::mapItem {value itemKey} {
 
-    foreach item [dict get $value -dataMapItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -1016,7 +1014,7 @@ proc ticklecharts::regionsItem {value} {
     foreach item [dict get $value regions] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name        -minversion 5        -validvalue {}  -type str|null    -default "nothing"
@@ -1039,16 +1037,16 @@ proc ticklecharts::regionsItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::linesItem {value} {
+proc ticklecharts::linesItem {value itemKey} {
 
-    foreach item [dict get $value -dataLinesItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {![dict exists $item coords]} {
-            error "key 'coords' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey coords
         }
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name       -minversion 5  -validvalue {} -type str|null     -default "nothing"
@@ -1080,7 +1078,8 @@ proc ticklecharts::markAreaItem {value} {
     foreach listitem [dict get $value data] {
 
         if {[llength $listitem] != 2} {
-            error "should be a list of 2 elements..."
+            error "Item list should be a list of 2 elements for\
+                  [ticklecharts::getLevelProperties [info level]]"
         }
 
         set subopts {}
@@ -1088,7 +1087,7 @@ proc ticklecharts::markAreaItem {value} {
         foreach item $listitem {
 
             if {[llength $item] % 2} {
-                error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+                ticklecharts::errorEvenArgs
             }
 
             setdef options type       -minversion 5  -validvalue {} -type str|null     -default "nothing"
@@ -1129,7 +1128,7 @@ proc ticklecharts::piecesItem {value} {
     foreach item [dict get $value pieces] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options label -minversion 5  -validvalue {}          -type str|null         -default "nothing"
@@ -1162,38 +1161,27 @@ proc ticklecharts::markPointItem {value} {
 
         set data [dict get $d -data]
 
-        setdef options name       -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options type       -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options valueIndex -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options valueDim   -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options coord      -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
-        setdef options xAxis      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options yAxis      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options value      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options symbol     -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
-        setdef options symbolSize -minversion 5  -validvalue {}               -type num|list.n|null -default "nothing"
-        setdef options itemStyle  -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::itemStyle $data]
-        setdef options label      -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $data]
-
-        if {[dict exists $data emphasis]} {
-            dict set data emphasis scale     "nothing"
-            dict set data emphasis focus     "nothing"
-            dict set data emphasis blurScope "nothing"
-            dict set data emphasis labelLine "nothing"
-            dict set data emphasis lineStyle "nothing"
-            dict set data emphasis areaStyle "nothing"
-            dict set data emphasis endLabel  "nothing"
-        }
-
-        setdef options emphasis                -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::emphasis $data]
-        setdef options animation               -minversion 5  -validvalue {}            -type bool|null       -default "nothing"
-        setdef options animationThreshold      -minversion 5  -validvalue {}            -type num|null        -default "nothing"
-        setdef options animationDuration       -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationEasing         -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-        setdef options animationDelay          -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationDurationUpdate -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-        setdef options animationDelayUpdate    -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
+        setdef options name                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
+        setdef options type                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
+        setdef options valueIndex              -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+        setdef options valueDim                -minversion 5  -validvalue {}               -type str|null        -default "nothing"
+        setdef options coord                   -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
+        setdef options xAxis                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+        setdef options yAxis                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+        setdef options value                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+        setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
+        setdef options symbolSize              -minversion 5  -validvalue {}               -type num|list.n|null -default "nothing"
+        setdef options itemStyle               -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::itemStyle $data]
+        setdef options label                   -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $data]
+        setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $data]
+        setdef options animation               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
+        setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
+        setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
+        setdef options animationEasing         -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
+        setdef options animationDelay          -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
+        setdef options animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
+        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
+        setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
 
         # remove key(s)...
         set data [dict remove $data itemStyle label emphasis]
@@ -1214,7 +1202,7 @@ proc ticklecharts::linkAxisPointerItem {value} {
     foreach item [dict get $value link] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options xAxisIndex       -minversion 5  -validvalue {}  -type str|num|list.n|null  -default "nothing"
@@ -1402,22 +1390,165 @@ proc ticklecharts::emphasis {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
-    setdef options disabled  -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
-    setdef options scale     -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
-    setdef options focus     -minversion "5.1.0"       -validvalue formatFocus     -type str|null                -default "none"
-    setdef options blurScope -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
-    setdef options label     -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
-    setdef options labelLine -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::labelLine $d]
-    setdef options itemStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::itemStyle $d]
-    setdef options lineStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::lineStyle $d]
-    setdef options areaStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::areaStyle $d]
-    setdef options endLabel  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::endLabel  $d]
-    #...
+    if {[infoNameProc $levelP "legend.emphasis"]} {
+        setdef options selectorLabel  -minversion 5  -validvalue {}  -type dict|null  -default [ticklecharts::selectorLabel $d]
+        #...
+    } elseif {[infoNameProc $levelP "*.markPoint*"] || [infoNameProc $levelP "*.markLine*"] || [infoNameProc $levelP "*.markArea*"]} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}  -type bool|null  -default "nothing"
+        setdef options label      -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::label     $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "treemapSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion "5.1.0"       -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::labelLine $d]
+        setdef options upperLabel -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::upperLabel $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "barSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion "5.1.0"       -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::labelLine $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "pieSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options scale      -minversion 5             -validvalue {}              -type bool|null  -default "True"
+        setdef options scaleSize  -minversion 5             -validvalue {}              -type num|null   -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::labelLine $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "scatterSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
+        setdef options scale      -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null                -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::labelLine $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "radarSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options lineStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::lineStyle $d]
+        setdef options areaStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::areaStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "treeSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::lineStyle $d]
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "treeMapSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::labelLine $d]
+        setdef options upperLabel -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::upperLabel $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "sunburstSeries"} {
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::labelLine $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] in {"boxPlotSeries" "candlestickSeries"}} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "heatmapSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "mapSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}  -type bool|null  -default "nothing"
+        setdef options label      -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::label     $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "parallelSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}  -type bool|null  -default "nothing"
+        setdef options lineStyle  -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::lineStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "linesSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options lineStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::lineStyle $d]
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "graphSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
+        setdef options scale      -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null                -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::lineStyle $d]
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
+        setdef options edgeLabel  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::edgeLabel $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "sankeySeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null  -default "nothing"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null   -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null   -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::label     $d]
+        setdef options edgeLabel  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::edgeLabel $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle  -minversion 5             -validvalue {}              -type dict|null  -default [ticklecharts::lineStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] in {"funnelSeries" "pictorialBarSeries" "themeRiverSeries"}} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
+        setdef options scale      -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
+        setdef options focus      -minversion 5             -validvalue formatFocus     -type str|null                -default "none"
+        setdef options blurScope  -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
+        setdef options label      -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
+        setdef options labelLine  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::labelLine $d]
+        setdef options itemStyle  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
+        setdef options disabled   -minversion "5.3.0"       -validvalue {}  -type bool|null  -default "nothing"
+        setdef options itemStyle  -minversion 5             -validvalue {}  -type dict|null  -default [ticklecharts::itemStyle $d]
+        #...
+    } else {
+        setdef options disabled  -minversion "5.3.0"       -validvalue {}              -type bool|null               -default "nothing"
+        setdef options scale     -minversion "5.0.0:5.3.2" -validvalue {}              -type bool|null:bool|num|null -default "True"
+        setdef options focus     -minversion "5.1.0"       -validvalue formatFocus     -type str|null                -default "none"
+        setdef options blurScope -minversion 5             -validvalue formatBlurScope -type str|null                -default "coordinateSystem"
+        setdef options label     -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::label     $d]
+        setdef options labelLine -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::labelLine $d]
+        setdef options itemStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::lineStyle $d]
+        setdef options areaStyle -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::areaStyle $d]
+        setdef options endLabel  -minversion 5             -validvalue {}              -type dict|null               -default [ticklecharts::endLabel  $d]
+        #...
+    }
 
     # remove key(s)...
-    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel]
+    set d [dict remove $d label labelLine itemStyle \
+                          lineStyle areaStyle endLabel \
+                          selectorLabel upperLabel edgeLabel]
 
     set options [merge $options $d]
 
@@ -1438,29 +1569,11 @@ proc ticklecharts::markPoint {value} {
     setdef options symbolKeepAspect -minversion 5  -validvalue {}               -type bool        -default "False"
     setdef options symbolOffset     -minversion 5  -validvalue {}               -type list.d|null -default "nothing"
     setdef options silent           -minversion 5  -validvalue {}               -type bool        -default "False"
-    setdef options label            -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::label     $d]
+    setdef options label            -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::label $d]
     setdef options itemStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $d]
-
-    if {[dict exists $d emphasis]} {
-        dict set d emphasis scale     "nothing"
-        dict set d emphasis focus     "nothing"
-        dict set d emphasis blurScope "nothing"
-        dict set d emphasis labelLine "nothing"
-        dict set d emphasis lineStyle "nothing"
-        dict set d emphasis areaStyle "nothing"
-        dict set d emphasis endLabel  "nothing"
-    }
-
-    if {[dict exists $d blur]} {
-        dict set d blur labelLine "nothing"
-        dict set d blur lineStyle "nothing"
-        dict set d blur areaStyle "nothing"
-        dict set d blur endLabel  "nothing"
-    }
-
-    setdef options emphasis -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::emphasis $d]
-    setdef options blur     -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::blur $d]
-    setdef options data     -minversion 5  -validvalue {} -type list.o|null -default [ticklecharts::markPointItem $d]
+    setdef options emphasis         -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $d]
+    setdef options blur             -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::blur $d]
+    setdef options data             -minversion 5  -validvalue {}               -type list.o|null -default [ticklecharts::markPointItem $d]
     #...
 
     # remove key(s)...
@@ -1477,18 +1590,70 @@ proc ticklecharts::blur {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
-    setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label     $d]
-    setdef options labelLine -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::labelLine $d]
-    setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
-    setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
-    setdef options areaStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::areaStyle $d]
-    setdef options endLabel  -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::endLabel  $d]
-    #...
+    if {[infoNameProc $levelP "*.markPoint*"] || [infoNameProc $levelP "*.markArea*"] || [infoNameProc $levelP "geo.blur"]} {
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[infoNameProc $levelP "*.markLine*"]} {
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] in {
+        "barSeries" "pieSeries" "scatterSeries" "sunburstSeries" "funnelSeries" "pictorialBarSeries" "themeRiverSeries"
+        }} {
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options labelLine -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::labelLine $d]
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "radarSeries"} {
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        setdef options areaStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::areaStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "treeSeries"} {
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "treemapSeries"} {
+        setdef options label      -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options labelLine  -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::labelLine $d]
+        setdef options upperLabel -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::upperLabel $d]
+        setdef options itemStyle  -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] in {"boxplotSeries" "candlestickSeries"}} {
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "heatmapSeries"} {
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] eq "linesSeries"} {
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        #...
+    } elseif {[ticklecharts::whichSeries? $levelP] in {"graphSeries" "sankeySeries"}} {
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options edgeLabel -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::edgeLabel $d]
+        #...
+    } else {
+        setdef options label     -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::label $d]
+        setdef options labelLine -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::labelLine $d]
+        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::itemStyle $d]
+        setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
+        setdef options areaStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::areaStyle $d]
+        setdef options endLabel  -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::endLabel  $d]
+        #...
+    }
 
     # remove key(s)...
-    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel]
+    set d [dict remove $d label labelLine itemStyle lineStyle areaStyle endLabel upperLabel edgeLabel]
 
     set options [merge $options $d]
 
@@ -1543,19 +1708,6 @@ proc ticklecharts::decal {value} {
     return [new edict $options]
 }
 
-proc ticklecharts::setGraphic {value} {
-
-    setdef options -id       -minversion 5  -validvalue {} -type str|null    -default "nothing"
-    setdef options -elements -minversion 5  -validvalue {} -type list.o|null -default [ticklecharts::childrenElements $value "-elements"]
-
-    # remove key(s)...
-    set value [dict remove $value -elements]
-
-    set options [merge $options $value]
-
-    return $options ; # not needs to create a eDict class
-}
-
 proc ticklecharts::childrenElements {value key} {
 
     if {![dict exists $value $key]} {
@@ -1565,11 +1717,12 @@ proc ticklecharts::childrenElements {value key} {
     foreach item [dict get $value $key] {
 
         if {![dict exists $item type]} {
-            error "'type' for '$key' should be specified..."
+            error "'type' for '$key' should be specified for\
+                   [ticklecharts::getLevelProperties [info level]]"
         }
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         set typegraphic [dict get $item type]
@@ -1647,7 +1800,10 @@ proc ticklecharts::childrenElements {value key} {
                 # ...
             }
 
-            default {error "bad type or not supported..."}
+            default {
+                error "Wrong 'type' or not supported for this '$typegraphic' in\
+                      [ticklecharts::getLevelProperties [info level]]"
+            }
         }
 
 
@@ -1754,7 +1910,10 @@ proc ticklecharts::shape {value type} {
             setdef options cpy2       -minversion 5  -validvalue {} -type num|null     -default "nothing"
             setdef options percent    -minversion 5  -validvalue {} -type num          -default 1
         }
-        default {error "bad shape type or not supported for this $type..."}
+        default {
+            error "Wrong shape 'type' or not supported for this '$type' in\
+                  [ticklecharts::getLevelProperties [info level]]"
+        }
     }
 
     setdef options transition -minversion 5  -validvalue {} -type list.s|str|null -default "nothing"
@@ -1866,7 +2025,7 @@ proc ticklecharts::keyframeAnimation {value type} {
     foreach item [dict get $value keyframeAnimation] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options duration  -minversion 5  -validvalue {}            -type num|null    -default "nothing"
@@ -1895,7 +2054,7 @@ proc ticklecharts::keyframes {value type} {
     foreach item [dict get $value keyframes] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options percent -minversion 5  -validvalue {}            -type num|null  -default "nothing"
@@ -2132,7 +2291,7 @@ proc ticklecharts::axisLine {value} {
     if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
         setdef options show      -minversion 5  -validvalue {} -type bool -default "True"
         setdef options roundCap  -minversion 5  -validvalue {} -type bool -default "False"
-        # remove flag from dict options... not present in series-gauge.axisLine
+        # remove flag from dict options... not defined in series-gauge.axisLine
         set options [dict remove $options onZero onZeroAxisIndex symbol symbolSize symbolOffset]
     }
 
@@ -2194,14 +2353,16 @@ proc ticklecharts::markLineItem {value} {
     foreach {key info} [dict get $value data] {
 
         if {$info eq ""} {
-            error "Key $key must be associated with value"
+            error "Key $key should be associated with a value for\
+                   [ticklecharts::getLevelProperties [info level]]"
         }
 
         switch -exact -- $key {
             lineItem {
 
                 if {[llength $info] != 2} {
-                    error "must be a list of 2, startpoint and endpoint"
+                    error "Should be a list of 2, 'startpoint' and 'endpoint' for\
+                          [ticklecharts::getLevelProperties [info level]]"
                 }
 
                 set t {}
@@ -2238,7 +2399,10 @@ proc ticklecharts::markLineItem {value} {
                 lappend opts [merge $options $info]
 
             }
-            default {error "Key must be 'lineItem' or 'objectItem' "}
+            default {
+                error "Key must be 'lineItem' or 'objectItem' for\
+                      [ticklecharts::getLevelProperties [info level]]"
+            }
         }
 
     }
@@ -2762,7 +2926,7 @@ proc ticklecharts::lineStyle {value} {
     }
 
     if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
-        # remove flag from dict options... not present in series-gauge.axisLine
+        # remove flag from dict options... not defined in series-gauge.axisLine
         set options [dict remove $options type dashOffset cap join miterLimit opacity]
     }
 
@@ -3470,7 +3634,10 @@ proc ticklecharts::toolBoxTitle {value type} {
             setdef options keep     -minversion 5  -validvalue {} -type str   -default "Keep previous selection"
             setdef options clear    -minversion 5  -validvalue {} -type str   -default "Clear selection"
         }
-        default {error "Type should be 'dataZoom', 'magicType', 'brush'"}
+        default {
+            error "Type should be 'dataZoom', 'magicType', 'brush' for\
+                  [ticklecharts::getLevelProperties [info level]]"
+        }
     }
     #...
 
@@ -3505,7 +3672,10 @@ proc ticklecharts::icon {value type} {
             setdef options keep     -minversion 5  -validvalue {} -type str|null   -default "nothing"
             setdef options clear    -minversion 5  -validvalue {} -type str|null   -default "nothing"
         }
-        default {error "Type should be 'dataZoom', 'magicType', 'brush'"}
+        default {
+            error "Type should be 'dataZoom', 'magicType', 'brush' for\
+                   [ticklecharts::getLevelProperties [info level]]"
+        }
     }
     #...
 
@@ -3663,7 +3833,7 @@ proc ticklecharts::encode {chart value} {
         setdef options z      -minversion 5  -validvalue {}  -type str|num|list.d|null  -default "nothing"
     }
     setdef options itemName   -minversion 5  -validvalue {}  -type str|null             -default "nothing"
-    setdef options label      -minversion 5  -validvalue {}  -type str|null             -default "nothing"
+    setdef options label      -minversion 5  -validvalue {}  -type num|str|null         -default "nothing"
     setdef options value      -minversion 5  -validvalue {}  -type str|null             -default "nothing"
     setdef options radius     -minversion 5  -validvalue {}  -type num|null             -default "nothing"
     setdef options angle      -minversion 5  -validvalue {}  -type num|null             -default "nothing"
@@ -3707,18 +3877,25 @@ proc ticklecharts::config {value} {
 
     set d [dict get $value config]
 
-    setdef options dimension         -minversion 5  -validvalue {}  -type str|null        -default "nothing"
+    setdef options dimension         -minversion 5  -validvalue {}  -type str|num|null    -default "nothing"
     setdef options order             -minversion 5  -validvalue {}  -type str|null        -default "nothing"
     setdef options groupBy           -minversion 5  -validvalue {}  -type str|null        -default "nothing"
+    setdef options method            -minversion 5  -validvalue {}  -type str|null        -default "nothing"
     setdef options value             -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options gt                -minversion 5  -validvalue {}  -type num|null        -default "nothing"
     setdef options gte               -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options lt                -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options lte               -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options eq                -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options ne                -minversion 5  -validvalue {}  -type num|null        -default "nothing"
+    setdef options reg               -minversion 5  -validvalue {}  -type num|null        -default "nothing"
     setdef options itemNameFormatter -minversion 5  -validvalue {}  -type str|jsfunc|null -default "nothing"
     #...
 
     if {[dict exists $d resultDimensions]} {
         foreach item [dict get $d resultDimensions] {
             if {[llength $item] % 2} {
-                error "item list must have an even number of elements..."
+                ticklecharts::errorEvenArgs
             }
             set listobj {}
             foreach {key info} $item {
@@ -3979,7 +4156,7 @@ proc ticklecharts::progress {value} {
         setdef options width    -minversion 5  -validvalue {} -type num  -default 10
         setdef options roundCap -minversion 5  -validvalue {} -type bool -default "False"
         setdef options clip     -minversion 5  -validvalue {} -type bool -default "False"
-        # remove flag from dict options... not present in series-gauge.progress
+        # remove flag from dict options... not defined in series-gauge.progress
         set options [dict remove $options label lineStyle]
     }
 
@@ -4262,7 +4439,7 @@ proc ticklecharts::categories {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null          -default "nothing"
@@ -4359,29 +4536,6 @@ proc ticklecharts::pageTextStyle {value} {
     setdef options overflow             -minversion 5  -validvalue formatOverflow       -type str|null                -default "none"
     setdef options ellipsis             -minversion 5  -validvalue {}                   -type str                     -default "..."
     #...
-
-    set options [merge $options $d]
-
-    return [new edict $options]
-}
-
-proc ticklecharts::emphasisLegend {value} {
-
-    if {![ticklecharts::keyDictExists "emphasis" $value key]} {
-        return "nothing"
-    }
-
-    set d [dict get $value $key]
-
-    # To avoid error in merge command...
-    if {![dict exists $key selectorLabel]} {
-        return "nothing"
-    }
-
-    setdef options selectorLabel  -minversion 5  -validvalue {}  -type dict|null  -default [ticklecharts::selectorLabel $d]
-
-    # remove key(s)...
-    set d [dict remove $d selectorLabel]
 
     set options [merge $options $d]
 
@@ -4491,7 +4645,8 @@ proc ticklecharts::nameMap {value} {
     foreach {key item} [dict get $value -nameMap] {
 
         if {$item eq ""} {
-            error "'[ticklecharts::getLevelProperties [info level]]' should be a 'key + item'"
+            error "Should be a 'key + item' for\
+                   [ticklecharts::getLevelProperties [info level]]"
         }
 
         # map spaces... and others...
@@ -4794,7 +4949,7 @@ proc ticklecharts::mapGStyle {value} {
     foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options featureType  -minversion {}  -validvalue {}  -type str|null     -default "nothing"
@@ -4820,8 +4975,8 @@ proc ticklecharts::stylers {value} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] != 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must equal to 2..."
+        if {[llength $item] % 2} {
+            ticklecharts::errorEvenArgs
         }
 
         setdef options color      -minversion {}  -validvalue formatColor  -type str|null -default "nothing"
