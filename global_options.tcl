@@ -8,7 +8,7 @@ proc ticklecharts::globalOptions {value} {
     #
     # value - Options described below.
     #
-    # return dict options
+    # Returns dict options
 
     setdef options -darkMode                -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
     setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
@@ -40,6 +40,7 @@ proc ticklecharts::htmlOptions {value} {
     # Required values... set minProperties to false.
     variable minProperties
     variable escript
+    variable htmltemplate
 
     set minP $minProperties ; set minProperties 0
 
@@ -58,6 +59,7 @@ proc ticklecharts::htmlOptions {value} {
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
     setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
     setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
+    setdef options -template   -minversion {}  -validvalue {}             -type str.n              -default $htmltemplate
 
     set options [merge $options $value]
 
@@ -95,7 +97,7 @@ proc ticklecharts::title {value} {
     #
     # value - Options described in proc ticklecharts::title below.
     #
-    # return dict title options
+    # Returns dict title options
 
     set d [dict get $value -title]
 
@@ -150,7 +152,7 @@ proc ticklecharts::grid {value} {
     #
     # value - Options described in proc ticklecharts::grid below.
     #
-    # return dict grid options
+    # Returns dict grid options
 
     set d [dict get $value -grid]
 
@@ -184,7 +186,7 @@ proc ticklecharts::tooltip {value} {
     #
     # value - Options described in proc ticklecharts::tooltip below.
     #
-    # return dict tooltip options
+    # Returns dict tooltip options
 
     if {![ticklecharts::keyDictExists "tooltip" $value key]} {
         return "nothing"
@@ -231,7 +233,7 @@ proc ticklecharts::legend {value} {
     #
     # value - Options described in proc ticklecharts::legend below.
     #
-    # return dict legend options
+    # Returns dict legend options
 
     set d [dict get $value -legend]
 
@@ -262,6 +264,7 @@ proc ticklecharts::legend {value} {
     setdef options inactiveBorderWidth     -minversion 5  -validvalue formatColor           -type str              -default "auto"
     setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|null      -default "nothing"
     setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::textStyle $d textStyle]
+    setdef options tooltip                 -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::tooltip $d]
     setdef options icon                    -minversion 5  -validvalue {}                    -type str|null         -default "nothing"
     setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.color|str|null -default "transparent"
     setdef options borderWidth             -minversion 5  -validvalue {}                    -type num              -default 0
@@ -282,7 +285,12 @@ proc ticklecharts::legend {value} {
     setdef options pageTextStyle           -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::pageTextStyle $d]
     setdef options animation               -minversion 5  -validvalue {}                    -type bool|null        -default "nothing"
     setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
-    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::pageIcons $d]
+    setdef options emphasis                -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::emphasis $d]
+    setdef options selector                -minversion 5  -validvalue {}                    -type bool|list.d|null -default "nothing"
+    setdef options selectorLabel           -minversion 5  -validvalue {}                    -type dict|null        -default [ticklecharts::selectorLabel $d]
+    setdef options selectorPosition        -minversion 5  -validvalue formatSelectorPos     -type str|null         -default "nothing"
+    setdef options selectorItemGap         -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
+    setdef options selectorButtonGap       -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
 
     # not fully supported...
     setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null     -default "nothing"
@@ -293,7 +301,9 @@ proc ticklecharts::legend {value} {
     }
 
     # remove key(s)...
-    set d [dict remove $d itemStyle lineStyle textStyle dataLegendItem pageTextStyle]
+    set d [dict remove $d itemStyle lineStyle textStyle \
+                          dataLegendItem pageTextStyle \
+                          selectorLabel emphasis]
 
     set options [merge $options $d]
 
@@ -305,7 +315,7 @@ proc ticklecharts::polar {value} {
     #
     # value - Options described in proc ticklecharts::polar below.
     #
-    # return dict polar options
+    # Returns dict polar options
 
     set d [dict get $value -polar]
 
@@ -326,12 +336,12 @@ proc ticklecharts::visualMap {value} {
     #
     # value - Options described in proc ticklecharts::visualMap below.
     #
-    # return dict visualMap options
+    # Returns dict visualMap options
 
     set d [dict get $value -visualMap]
 
     if {![dict exists $d type]} {
-        error "visualMap type should be specified... 'continuous' or 'piecewise'"
+        error "visualMap 'type' should be specified... 'continuous' or 'piecewise'"
     }
 
     switch -exact -- [dict get $d type] {
@@ -443,7 +453,7 @@ proc ticklecharts::toolbox {value} {
     #
     # value - Options described in proc ticklecharts::toolbox below.
     #
-    # return dict toolbox options
+    # Returns dict toolbox options
 
     set d [dict get $value -toolbox]
 
@@ -481,7 +491,7 @@ proc ticklecharts::dataZoom {value} {
     #
     # value - Options described in proc ticklecharts::dataZoom below.
     #
-    # return dict dataZoom options
+    # Returns dict dataZoom options
 
     set d [dict get $value -dataZoom]
 
@@ -594,7 +604,7 @@ proc ticklecharts::parallel {value} {
     #
     # value - Options described in proc ticklecharts::parallel below.
     #
-    # return dict parallel options
+    # Returns dict parallel options
 
     set d [dict get $value -parallel]
 
@@ -629,7 +639,7 @@ proc ticklecharts::brush {value} {
     #
     # value - Options described in proc ticklecharts::brush below.
     #
-    # return dict brush options
+    # Returns dict brush options
 
     set d [dict get $value -brush]
 
@@ -664,7 +674,7 @@ proc ticklecharts::axisPointerGlobal {value} {
     #
     # value - Options described in proc ticklecharts::axisPointerGlobal below.
     #
-    # return dict axisPointer options
+    # Returns dict axisPointer options
 
     set d [dict get $value -axisPointer]
 
@@ -697,7 +707,7 @@ proc ticklecharts::geo {value} {
     #
     # value - Options described in proc ticklecharts::geo below.
     #
-    # return dict geo options
+    # Returns dict geo options
 
     set d [dict get $value -geo]
 
@@ -746,7 +756,7 @@ proc ticklecharts::calendar {value} {
     #
     # value - Options described in proc ticklecharts::calendar below.
     #
-    # return dict calendar options
+    # Returns dict calendar options
 
     set d [dict get $value -calendar]
 
@@ -787,7 +797,7 @@ proc ticklecharts::aria {value} {
     #
     # value - Options described in proc ticklecharts::aria below.
     #
-    # return dict aria options
+    # Returns dict aria options
 
     set d [dict get $value -aria]
 
@@ -810,7 +820,7 @@ proc ticklecharts::gmap {value} {
     #
     # value - Options described in proc ticklecharts::gmap below.
     #
-    # return dict bmap options
+    # Returns dict bmap options
 
     set d [dict get $value -gmap]
 
