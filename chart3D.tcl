@@ -6,13 +6,10 @@ namespace eval ticklecharts {}
 oo::class create ticklecharts::chart3D {
     superclass ticklecharts::chart
 
-    variable _echartshchart3D         ; # huddle
-    variable _options3D               ; # list options chart3D
-    variable _opts3D_global           ; # list global options chart
-    variable _dataset                 ; # dataset chart3D
-    variable _indexline3Dseries       ; # index line3D series
-    variable _indexbar3Dseries        ; # index bar3D series
-    variable _indexsurfaceseries      ; # index surface series
+    variable _echartshchart3D  ; # huddle
+    variable _options3D        ; # list options chart3D
+    variable _opts3D_global    ; # list global options chart
+    variable _dataset          ; # dataset chart3D
 
     constructor {args} {
         # Initializes a new chart3D Class.
@@ -87,9 +84,9 @@ oo::define ticklecharts::chart3D {
         #
         # Returns nothing
 
-        set opts $_options3D
+        set opts [my options]
 
-        # If globalOptions is not present, adds global options first...
+        # If globalOptions is not defined, adds global options first...
         if {![llength [my globalOptions]]} {
             set optsg  [ticklecharts::globalOptions3D {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
@@ -162,6 +159,7 @@ oo::define ticklecharts::chart3D {
         # -script     - list data (jsfunc), jsfunc.
         # -class      - container.
         # -style      - css style.
+        # -template   - template (file or string).
         #
         # Returns full path html file.
 
@@ -243,10 +241,10 @@ oo::define ticklecharts::chart3D {
         # or
         # from doc : https://echarts.apache.org/en/option-gl.html#series-line3D
         #
-        # Returns nothing     
-        incr _indexline3Dseries
+        # Returns nothing
+        classvar indexline3Dseries
 
-        set options [ticklecharts::line3DSeries $_indexline3Dseries [self] $args]
+        set options [ticklecharts::line3DSeries [incr indexline3Dseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options3D @D=series [list {*}$f]
@@ -263,10 +261,10 @@ oo::define ticklecharts::chart3D {
         # or
         # from doc : https://echarts.apache.org/en/option-gl.html#series-bar3D
         #
-        # Returns nothing     
-        incr _indexbar3Dseries
+        # Returns nothing
+        classvar indexbar3Dseries
 
-        set options [ticklecharts::bar3DSeries $_indexbar3Dseries [self] $args]
+        set options [ticklecharts::bar3DSeries [incr indexbar3Dseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options3D @D=series [list {*}$f]
@@ -283,10 +281,10 @@ oo::define ticklecharts::chart3D {
         # or
         # from doc : https://echarts.apache.org/en/option-gl.html#series-surface
         #
-        # Returns nothing     
-        incr _indexsurfaceseries
+        # Returns nothing
+        classvar indexsurfaceseries
 
-        set options [ticklecharts::surfaceSeries $_indexsurfaceseries $args]
+        set options [ticklecharts::surfaceSeries [incr indexsurfaceseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options3D @D=series [list {*}$f]
@@ -309,6 +307,11 @@ oo::define ticklecharts::chart3D {
         #
         # Returns nothing
 
+        if {[llength [lrange $args 1 end]] % 2} {
+            error "item list for '\[self] Add '[lindex $args 0]' method...'\
+                   must have an even number of elements."
+        }
+
         switch -exact -- [lindex $args 0] {
             "line3DSeries"  {my AddLine3DSeries   {*}[lrange $args 1 end]}
             "bar3DSeries"   {my AddBar3DSeries    {*}[lrange $args 1 end]}
@@ -318,7 +321,7 @@ oo::define ticklecharts::chart3D {
                 set series {}
                 foreach line [split $lb "\n"] {
                     set line [string trim $line]
-                    if {[regexp {\"([a-zA-Z]+)\"\s+\{my} $line -> case]} {
+                    if {[regexp {\"([a-zA-Z0-9]+)\"\s+\{my} $line -> case]} {
                         lappend series $case
                     }
                 }
@@ -326,7 +329,7 @@ oo::define ticklecharts::chart3D {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First arg should be (case sensitive):'$series'\
+                error "First argument should be (case sensitive):'$series'\
                        instead of '[lindex $args 0]'"
             }
         }
@@ -353,7 +356,7 @@ oo::define ticklecharts::chart3D {
         # Set options from chart '2D' class...
         set c [ticklecharts::chart new]
 
-        # remove options 3D even if this option is not present.
+        # remove options 3D even if this option is not defined.
         set args2D [dict remove $args "-grid3D"]
         $c SetOptions {*}$args2D
 

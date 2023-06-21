@@ -4,31 +4,10 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart           ; # huddle
-    variable _options                 ; # list options chart
-    variable _opts_global             ; # list global options chart
-    variable _dataset                 ; # dataset chart
-    variable _indexlineseries         ; # index line series
-    variable _indexbarseries          ; # index bar series
-    variable _indexpieseries          ; # index pie series
-    variable _indexfunnelseries       ; # index funnel series
-    variable _indexradarseries        ; # index radar series
-    variable _indexscatterseries      ; # index scatter series
-    variable _indexheatmapseries      ; # index heatmap series
-    variable _indexsunburstseries     ; # index sunburst series
-    variable _indextreeseries         ; # index tree series
-    variable _indexthemeriverseries   ; # index themeriver series
-    variable _indexsankeyseries       ; # index sankey series
-    variable _indexpictorialbarseries ; # index pictorialbar series
-    variable _indexcandlestickseries  ; # index candlestick series
-    variable _indexparallelseries     ; # index parallel series
-    variable _indexgaugeseries        ; # index gauge series
-    variable _indexgraphseries        ; # index graph series
-    variable _indexwordCloudseries    ; # index wordCloud series
-    variable _indexboxplotseries      ; # index boxplot series
-    variable _indextreemapseries      ; # index treemap series
-    variable _indexmapseries          ; # index map series
-    variable _indexlinesseries        ; # index lines series
+    variable _echartshchart  ; # huddle
+    variable _options        ; # list options chart
+    variable _opts_global    ; # list global options chart
+    variable _dataset        ; # dataset chart
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -45,14 +24,6 @@ oo::class create ticklecharts::chart {
         # Guess if current script has a 'Gridlayout' dataset.
         if {[ticklecharts::gridlayoutHasDataSetObj dataset]} {
             set _dataset $dataset
-        }
-
-        # shared _index* variable for chart class...
-        if {[info exists ::argv0] && ([info script] eq "$::argv0")} {
-            set ns [info object namespace [self class]]
-            foreach var [info vars _index*] {
-                my eval [list namespace upvar $ns $var $var]
-            }
         }
     }
 }
@@ -95,7 +66,7 @@ oo::define ticklecharts::chart {
         # Returns true if severals types, otherwise false.
         set ktype {}
 
-        foreach {key opts} $_options {
+        foreach {key opts} [my options] {
             if {[string match {*series} $key]} {
                 if {[dict exists $opts @S=type]} {
                     lappend ktype [dict get $opts @S=type]
@@ -201,9 +172,9 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
 
-        set opts $_options
+        set opts [my options]
 
-        # If globalOptions is not present, adds global options first...
+        # If globalOptions is not defined, adds global options first...
         if {![llength [my globalOptions]]} {
             set optsg  [ticklecharts::globalOptions {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
@@ -266,9 +237,9 @@ oo::define ticklecharts::chart {
             error "::tsb file should be sourced..."
         }
 
-        set opts_tsb [ticklecharts::tsbOptions $args]
-        set json [my toJSON]
+        set json [my toJSON] ; # jsondump
 
+        set opts_tsb [ticklecharts::tsbOptions $args]
         set height   [lindex [dict get $opts_tsb -height] 0]
         set renderer [lindex [dict get $opts_tsb -renderer] 0]
         set merge    [lindex [dict get $opts_tsb -merge] 0]
@@ -343,19 +314,23 @@ oo::define ticklecharts::chart {
         # -script     - list data (jsfunc), jsfunc.
         # -class      - container.
         # -style      - css style.
+        # -template   - template (file or string).
         #
         # Returns full path html file.
 
-        set json     [my toJSON] ; # jsondump
-        set myhuddle [my get]
-
+        set json [my toJSON] ; # jsondump
+        # arguments options
         set opts_html  [ticklecharts::htmlOptions $args]
-        set newhtml    [ticklecharts::htmlMap $myhuddle $opts_html]
         set outputFile [lindex [dict get $opts_html -outfile] 0]
         set jsvar      [lindex [dict get $opts_html -jsvar] 0]
+        set template   [lindex [dict get $opts_html -template] 0]
+
+        # Read html template
+        set htemplate [ticklecharts::readHTMLTemplate $template]
+        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts_html]
 
         # Replaces json data in html...
-        set jsonData [string map [list %json% "var $jsvar = $json"] $newhtml]
+        set jsonData [string map [list %json% $json] $newhtml]
 
         try {
             set   fp [open $outputFile w+]
@@ -487,7 +462,7 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
 
-        set options [ticklecharts::setGraphic $args]
+        set options [ticklecharts::graphic $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @L=graphic [list {*}$f]
@@ -578,9 +553,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-bar
         #
         # Returns nothing
-        incr _indexbarseries
+        classvar indexbarseries
 
-        set options [ticklecharts::barSeries $_indexbarseries [self] $args]
+        set options [ticklecharts::barSeries [incr indexbarseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -598,9 +573,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-line
         #
         # Returns nothing
-        incr _indexlineseries
+        classvar indexlineseries
 
-        set options [ticklecharts::lineSeries $_indexlineseries [self] $args]
+        set options [ticklecharts::lineSeries [incr indexlineseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -618,9 +593,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-pie
         #
         # Returns nothing
-        incr _indexpieseries
+        classvar indexpieseries
 
-        set options [ticklecharts::pieSeries $_indexpieseries [self] $args]
+        set options [ticklecharts::pieSeries [incr indexpieseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -638,9 +613,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-funnel
         #
         # Returns nothing
-        incr _indexfunnelseries
+        classvar indexfunnelseries
 
-        set options [ticklecharts::funnelSeries $_indexfunnelseries [self] $args]
+        set options [ticklecharts::funnelSeries [incr indexfunnelseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -658,9 +633,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-radar
         #
         # Returns nothing
-        incr _indexradarseries
+        classvar indexradarseries
 
-        set options [ticklecharts::radarSeries $_indexradarseries $args]
+        set options [ticklecharts::radarSeries [incr indexradarseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -678,9 +653,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-scatter
         #
         # Returns nothing
-        incr _indexscatterseries
+        classvar indexscatterseries
 
-        set options [ticklecharts::scatterSeries $_indexscatterseries [self] $args]
+        set options [ticklecharts::scatterSeries [incr indexscatterseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -698,9 +673,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-heatmap
         #
         # Returns nothing
-        incr _indexheatmapseries
+        classvar indexheatmapseries
 
-        set options [ticklecharts::heatmapSeries $_indexheatmapseries [self] $args]
+        set options [ticklecharts::heatmapSeries [incr indexheatmapseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -718,9 +693,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-sunburst
         #
         # Returns nothing
-        incr _indexsunburstseries
+        classvar indexsunburstseries
 
-        set options [ticklecharts::sunburstSeries $_indexsunburstseries $args]
+        set options [ticklecharts::sunburstSeries [incr indexsunburstseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -738,9 +713,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-tree
         #
         # Returns nothing
-        incr _indextreeseries
+        classvar indextreeseries
 
-        set options [ticklecharts::treeSeries $_indextreeseries $args]
+        set options [ticklecharts::treeSeries [incr indextreeseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -758,9 +733,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-themeriver
         #
         # Returns nothing
-        incr _indexthemeriverseries
+        classvar indexthemeriverseries
 
-        set options [ticklecharts::themeRiverSeries $_indexthemeriverseries $args]
+        set options [ticklecharts::themeRiverSeries [incr indexthemeriverseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -778,9 +753,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-sankey
         #
         # Returns nothing
-        incr _indexsankeyseries
+        classvar indexsankeyseries
 
-        set options [ticklecharts::sankeySeries $_indexsankeyseries $args]
+        set options [ticklecharts::sankeySeries [incr indexsankeyseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -798,9 +773,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-pictorialBar
         #
         # Returns nothing
-        incr _indexpictorialbarseries
+        classvar indexpictorialbarseries
 
-        set options [ticklecharts::pictorialBarSeries $_indexpictorialbarseries [self] $args]
+        set options [ticklecharts::pictorialBarSeries [incr indexpictorialbarseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -818,9 +793,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-candlesticks
         #
         # Returns nothing 
-        incr _indexcandlestickseries
+        classvar indexcandlestickseries
 
-        set options [ticklecharts::candlestickSeries $_indexcandlestickseries [self] $args]
+        set options [ticklecharts::candlestickSeries [incr indexcandlestickseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -838,9 +813,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-parallel
         #
         # Returns nothing
-        incr _indexparallelseries
+        classvar indexparallelseries
 
-        set options [ticklecharts::parallelSeries $_indexparallelseries $args]
+        set options [ticklecharts::parallelSeries [incr indexparallelseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -858,9 +833,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-gauge
         #
         # Returns nothing
-        incr _indexgaugeseries
+        classvar indexgaugeseries
 
-        set options [ticklecharts::gaugeSeries $_indexgaugeseries $args]
+        set options [ticklecharts::gaugeSeries [incr indexgaugeseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -878,9 +853,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-graph
         #
         # Returns nothing
-        incr _indexgraphseries
+        classvar indexgraphseries
 
-        set options [ticklecharts::graphSeries $_indexgraphseries $args]
+        set options [ticklecharts::graphSeries [incr indexgraphseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -898,9 +873,9 @@ oo::define ticklecharts::chart {
         # from doc : https://github.com/ecomfe/echarts-wordcloud
         #
         # Returns nothing
-        incr _indexwordCloudseries
+        classvar indexwordCloudseries
 
-        set options [ticklecharts::wordcloudSeries $_indexwordCloudseries $args]
+        set options [ticklecharts::wordcloudSeries [incr indexwordCloudseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -918,9 +893,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-boxplot
         #
         # Returns nothing
-        incr _indexboxplotseries
+        classvar indexboxplotseries
 
-        set options [ticklecharts::boxplotSeries $_indexboxplotseries [self] $args]
+        set options [ticklecharts::boxplotSeries [incr indexboxplotseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -938,9 +913,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-treemap
         #
         # Returns nothing
-        incr _indextreemapseries
+        classvar indextreemapseries
 
-        set options [ticklecharts::treemapSeries $_indextreemapseries $args]
+        set options [ticklecharts::treemapSeries [incr indextreemapseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -958,9 +933,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-map
         #
         # Returns nothing
-        incr _indexmapseries
+        classvar indexmapseries
 
-        set options [ticklecharts::mapSeries $_indexmapseries [self] $args]
+        set options [ticklecharts::mapSeries [incr indexmapseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -978,9 +953,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#series-lines
         #
         # Returns nothing
-        incr _indexlinesseries
+        classvar indexlinesseries
 
-        set options [ticklecharts::linesSeries $_indexlinesseries [self] $args]
+        set options [ticklecharts::linesSeries [incr indexlinesseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=series [list {*}$f]
@@ -1003,6 +978,11 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
 
+        if {[llength [lrange $args 1 end]] % 2} {
+            error "item list for '\[self] Add '[lindex $args 0]' method...'\
+                   must have an even number of elements."
+        }
+
         switch -exact -- [lindex $args 0] {
             "barSeries"          {my AddBarSeries           {*}[lrange $args 1 end]}
             "lineSeries"         {my AddLineSeries          {*}[lrange $args 1 end]}
@@ -1021,6 +1001,7 @@ oo::define ticklecharts::chart {
             "parallelSeries"     {my AddParallelSeries      {*}[lrange $args 1 end]}
             "gaugeSeries"        {my AddGaugeSeries         {*}[lrange $args 1 end]}
             "graphSeries"        {my AddGraphSeries         {*}[lrange $args 1 end]}
+            "wCSeries"           -
             "wordCloudSeries"    {my AddWordCloudSeries     {*}[lrange $args 1 end]}
             "boxPlotSeries"      {my AddBoxPlotSeries       {*}[lrange $args 1 end]}
             "treeMapSeries"      {my AddTreeMapSeries       {*}[lrange $args 1 end]}
@@ -1031,7 +1012,7 @@ oo::define ticklecharts::chart {
                 set series {}
                 foreach line [split $lb "\n"] {
                     set line [string trim $line]
-                    if {[regexp {\"([a-zA-Z]+)\"\s+\{my} $line -> case]} {
+                    if {[regexp {\"([a-zA-Z]+)\"\s+(\{my|-)} $line -> case]} {
                         lappend series $case
                     }
                 }
@@ -1039,7 +1020,7 @@ oo::define ticklecharts::chart {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First arg should be (case sensitive):'$series'\
+                error "First argument should be (case sensitive): '$series'\
                        instead of '[lindex $args 0]'"
             }
         }
@@ -1057,7 +1038,6 @@ oo::define ticklecharts::chart {
         # Global options :
         # -darkMode                - https://echarts.apache.org/en/option.html#darkMode
         # -backgroundColor         - https://echarts.apache.org/en/option.html#backgroundColor
-        # -backgroundColorItem     - https://echarts.apache.org/en/option.html#color
         # -color                   - https://echarts.apache.org/en/option.html#color
         # -animation               - https://echarts.apache.org/en/option.html#animation
         # -animationDuration       - https://echarts.apache.org/en/option.html#animationDuration
