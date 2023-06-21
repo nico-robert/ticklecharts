@@ -3,17 +3,14 @@
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::htmlMap {h htmloptions} {
-    # Html options.
+proc ticklecharts::htmlMap {h html htmloptions} {
+    # Set options in html string.
     #
     # h            - huddle object.
-    # htmloptions  - Options described below.
+    # html         - template html.
+    # htmloptions  - html string map options.
     #
     # Returns list map html
-    variable gapiscript ; variable keyGMAPI
-    variable wcscript
-    variable gmscript
-    variable eGLscript
 
     lappend mapoptions [format {%%width%%      %s} [set width [lindex [dict get $htmloptions -width] 0]]]
     lappend mapoptions [format {%%height%%     %s} [set height [lindex [dict get $htmloptions -height] 0]]]
@@ -26,63 +23,91 @@ proc ticklecharts::htmlMap {h htmloptions} {
     lappend mapoptions [format {%%class%%      %s} [lindex [dict get $htmloptions -class] 0]]
 
     # Add style in html template...
-    if {[lindex [dict get $htmloptions -style] 0] eq "nothing"} {
+    set style [lindex [dict get $htmloptions -style] 0]
+
+    if {$style eq "nothing"} {
         lappend mapoptions [format {%%style%% {width:%s; height:%s;}} $width $height]
     } else {
-        lappend mapoptions [format {%%style%% %s} [lindex [dict get $htmloptions -style] 0]]
+        lappend mapoptions [format {%%style%% %s} $style]
     }
 
-    set frmt {<script type="text/javascript" src="%s"></script>} ; # base format...
-    set jsScript {}
+    # Add js script(s) in html template... or not.
+    set html [ticklecharts::setJsScript $html $h htmloptions]
 
-    # Add gmap script + Google maps API... if 'gmap' option is present.
+    return [string map [join $mapoptions] $html]
+}
+
+proc ticklecharts::setJsScript {html h htmloptions} {
+    # Set js script(s) in html template file...
+    #
+    # html        - template html string.
+    # h           - huddle object.
+    # htmloptions - html string map options.
+    #
+    # Returns html
+    variable gapiscript ; variable keyGMAPI
+    variable wcscript
+    variable gmscript
+    variable eGLscript
+
+    upvar 1 $htmloptions hoptions
+
+    # Add gmap script + Google maps API... if 'gmap' option is defined.
+    # Add a comment in html template file if Google key API is not defined.
+    # Add 'wordcloud' script if defined.
+    # Add 'GL' script if 'series 3D' type is defined.
+    # Base html format.
+    set jsScript {}
+    set frmt     {<script type="text/javascript" src="%s"></script>}
+    # gmap.js
     if {"gmap" in [$h keys]} {
         lappend jsScript [jsfunc new [format $frmt $gapiscript] -header]
-        # Add comment in html template file if key API is not present...
         if {$keyGMAPI eq "??"} {
-            lappend jsScript [jsfunc new {<!-- please replace '??' with your own API key -->} -header]
+            lappend jsScript [jsfunc new {
+                <!-- please replace '??' with your own API key -->
+                } -header]
         }
-        # Add echarts-extension-gmap.js
         lappend jsScript [jsfunc new [format $frmt $gmscript] -header]
     }
-
-    # Get name series... with ehuddle class. 
-    set series [$h getTypeSeries]
-
-    # Add 'wordcloud' script if 'wordcloud' type is present.
-    if {"wordCloud" in $series} {
+    # wordCloud.js
+    if {"wordCloud" in [$h getTypeSeries]} {
         lappend jsScript [jsfunc new [format $frmt $wcscript] -header]
     }
-
-    # Add 'GL' script if 'series 3D' type is present.
-    foreach series3D {line3D scatter3D bar3D lines3D map3D surface polygons3D scatterGL graphGL flowGL} {
-        if {$series3D in $series} {
+    # GL.js
+    foreach series3D {
+        line3D scatter3D bar3D lines3D map3D 
+        surface polygons3D scatterGL graphGL flowGL
+        } {
+        if {$series3D in [$h getTypeSeries]} {
             lappend jsScript [jsfunc new [format $frmt $eGLscript] -header]
             break
         }
     }
 
+    set script [lindex [dict get $hoptions -script] 0]
+
     if {[llength $jsScript]} {
-        if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
-            set js [lindex [dict get $htmloptions -script] 0]
-            dict set htmloptions -script [format {{{%s}} list.d} [linsert {*}$js end {*}$jsScript]]
+        if {$script ne "nothing"} {
+            dict set hoptions -script [format {{{%s}} list.d} \
+                                      [linsert {*}$script end {*}$jsScript]]
         } else {
-            dict set htmloptions -script [format "{{%s}} list.d" $jsScript]
+            dict set hoptions -script [format {{{%s}} list.d} $jsScript]
         }
     }
 
-    set html [ticklecharts::readHTMLTemplate]
-
-    # add js script(s) in html template...
-    if {[lindex [dict get $htmloptions -script] 0] ne "nothing"} {
-        set html [ticklecharts::addJsScript $html [dict get $htmloptions -script]]
+    if {[lindex [dict get $hoptions -script] 0] ne "nothing"} {
+        set html [ticklecharts::addJsScript $html [dict get $hoptions -script]]
     }
 
-    return [string map [join $mapoptions] $html]
+    return $html
+
 }
 
 proc ticklecharts::addJsScript {html value} {
     # Add js script(s) in html template file...
+    #
+    # html  - template html string.
+    # value - list jsfunc class or jsfunc class.
     #
     # Returns html
 
@@ -131,15 +156,45 @@ proc ticklecharts::addJsScript {html value} {
     return [join $listH "\n"]
 }
 
-proc ticklecharts::readHTMLTemplate {} {
+proc ticklecharts::readHTMLTemplate {htmltemplate} {
     # Open and read html template.
     #
+    # htmltemplate  - template html.
+    #
     # Returns html file list
-    variable htmltemplate
 
-    set fp [open $htmltemplate r]
-    set html [read $fp]
-    close $fp
+    if {[file isfile $htmltemplate]} {
+        set fp [open $htmltemplate r]
+        set html [read $fp]
+        close $fp
+    } else {
+        # pseudo code to beautify the html string...
+        set len 0
+        set indent 0
+        foreach line [split $htmltemplate "\n"] {
+            set trimLine [string trim $line]
+            if {[string length $trimLine] > 0} {
+                set s [regexp -inline {^\s+} $line]
+                set l [expr {[string length $s] - 1}]
+
+                if {$len != 0} {
+                    if {$l > $len} {
+                        set indent [expr {$indent + ($l - $len)}]
+                    } elseif {$l < $len} {
+                        set indent [expr {($indent - ($len - $l))}]
+                    } else {
+                        set indent $indent 
+                    }
+                }
+                set len $l
+                lappend html [format "%${indent}s %s" "" $trimLine]
+            }
+        }
+        if {[lsearch $html "*%json%*"] < 0} {
+            error "'%json%' should be defined in html template string"
+        }
+        set html [join $html "\n"]
+    }
 
     return $html
 }
@@ -583,7 +638,7 @@ proc ticklecharts::merge {d other} {
             # REMINDER ME: use 'dict remove' for this...
             if {$typekey in {dict dict.o list.o}} {
                 error "type key : dict, dict.o, list.o shouldn't\
-                       not be present\ in 'other' dict... for this '$key'"
+                       not be defined in 'other' dict... for this '$key'"
             }
 
             set value [dict get $other $key]
@@ -626,12 +681,12 @@ proc ticklecharts::merge {d other} {
         }
 
         # Adds trace key.
-        set levelP [expr {
+        set property [expr {
                 $trace ? [ticklecharts::getLevelProperties [info level]] : "null"
             }
         ]
 
-        dict set _dict $key [list $value $typekey [list $trace $levelP]]
+        dict set _dict $key [list $value $typekey [list $trace $property]]
     }
 
     return $_dict
@@ -655,7 +710,7 @@ proc ticklecharts::vCompare {version1 version2} {
 
 proc ticklecharts::mapSpaceString {value} {
     # Replaces 'space' character by ascii 
-    # character '\040' if present.
+    # character '\040' if defined.
     #
     # value - string
     #
@@ -690,8 +745,9 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     set copyifnP ""
     set dataInfo {}
 
-    foreach val $body {
+    for {set i 0} {$i < [llength $body]} {incr i} {
         # find command in body...
+        set val [lindex $body $i]
         if {[string match {*infoNameProc*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
             set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
@@ -705,8 +761,21 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         if {[string match {*whichSeries*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
             set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
-            # case eq operator.
-            if {[string match {*eq*} $val]} {
+            # case operator (in & eq).
+            if {[string match {* in *} $val]} {
+                foreach index [lsearch -all $map "*whichSeries*"] {
+                    if {[lrange $map $index+3 end] eq ""} {
+                        # find next line
+                        set mapb [string map [list \{ "" \} ""] [lindex $body $i+1]]
+                        if {[string match {*Series*} $mapb]} {lappend cmd $mapb}
+                        continue
+                    }
+                    lappend cmd [lrange $map $index+3 end]
+                }
+                set ifnP "**[join {*}$cmd " || "]**"
+                set cmd {}
+            }
+            if {[string match {* eq *} $val]} {
                 foreach index [lsearch -all $map "*whichSeries*"] {
                     lappend cmd [lindex $map $index+3]
                 }
@@ -735,7 +804,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
 
         # Guess if command is over...
         if {[info complete $buffer] && $buffer ne ""} {
-            # omit if 'setdef' is not present
+            # omit if 'setdef' is not defined.
             if {[lsearch $buffer *setdef*] > -1} {
                 lappend dataInfo [format "%${indent}s \}" ""]
             }
@@ -782,8 +851,8 @@ proc ticklecharts::infoNameProc {levelP name} {
     # levelP - properties
     # name   - Name to be found in properties
     #
-    # Returns True if name match with current level properties,
-    # False otherwise.
+    # Returns True if name match with current 
+    # level properties, False otherwise.
 
     return [string match $name $levelP]
 }
@@ -883,16 +952,18 @@ proc ticklecharts::isListOfList {args} {
     # clean up the list... (spaces, \n...)
     regsub -all -line {(^\s+)|(\s+$)|\n} $args {} str
 
-    if {([string range $str 0 1] eq "\{\{") &&
-        ([string range $str end-1 end] eq "\}\}")} {
-        return 1
-    } 
+    return [expr {
+            [string range $str 0 1] eq "\{\{" &&
+            [string range $str end-1 end] eq "\}\}"
+        }
+    ]
 
-    return 0
 }
 
 proc ticklecharts::uuid {} {
-    # source : https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid
+    # source   : https://stackoverflow.com
+    # question : how-do-i-create-a-guid-uuid
+    # Ported from javascript to Tcl
     #
     # Returns a Universally Unique IDentifier.
     set d    [clock seconds]
@@ -968,8 +1039,12 @@ proc ticklecharts::checkJsFunc {opts} {
         if {$index > -1} {
             set value [lindex $map $index+1]
             switch -glob -- {*}[$value get] {
-                "*function*"     {error "'function' inside Json is not supported..."}
-                "*new echarts.*" {error "'new echarts.*' inside Json is not supported..."}
+                "*function*"     {
+                    error "'function' inside Json is not supported..."
+                }
+                "*new echarts.*" {
+                    error "'new echarts.*' inside Json is not supported..."
+                }
             }
         }
     }
@@ -1009,11 +1084,7 @@ proc ticklecharts::isURL? {url} {
     # url - string
     #
     # Returns True if url is valid, False otherwise.
-    if {[regexp {^(https:|http:|www\.)\S*} $url]} {
-        return 1
-    }
-
-    return 0
+    return [regexp {^(https:|http:|www\.)\S*} $url]
 }
 
 proc ticklecharts::urlExists? {url} {
@@ -1027,7 +1098,7 @@ proc ticklecharts::urlExists? {url} {
     # url - string
     #
     # Returns nothing if is Ok, a warning message if url 
-    # doesn't exists or 'curl' util is not present.
+    # doesn't exists or 'curl' util is not defined.
 
     # no download...
     # source : https://stackoverflow.com/
@@ -1035,6 +1106,77 @@ proc ticklecharts::urlExists? {url} {
     set cmd [list curl --silent --head --fail $url]
     if {[catch {exec {*}$cmd 2>@1} msg]} {
         puts "warning (url): $msg"
+    }
+
+    return {}
+}
+
+proc ticklecharts::errorEvenArgs {} {
+    # Error number of elements.
+    #
+    # Raise an error.
+    uplevel 1 {
+        error "wrong # args: item list for\
+              '[ticklecharts::getLevelProperties [info level]]'\
+               must have an even number of elements..."
+    }
+}
+
+proc ticklecharts::errorKeyArgs {property value} {
+    # Error key item.
+    #
+    # property - name key
+    # value    - name
+    #
+    # Raise an error.
+    set levelP [uplevel 1 {
+            ticklecharts::getLevelProperties [info level]
+        }
+    ]
+
+     error "wrong # args: key '$value' must be defined\
+            in item property '$property' for '$levelP'"
+}
+
+proc ::oo::Helpers::classvar {name} {
+    # Class variable
+    # Link the caller’s locals to the class’s variables.
+    # source : https://wiki.tcl-lang.org/page/TclOO+Tricks
+    #
+    # name - variable
+    #
+    # Returns nothing
+    if {[info exists ::argv0] && ([info script] eq "$::argv0")} {
+        set ns [info object namespace [uplevel 1 {self class}]]
+        set vs [list $name $name]
+
+        tailcall namespace upvar $ns {*}$vs
+    }
+
+    return {}
+}
+
+proc ticklecharts::itemKey {series value} {
+    # Find item key property.
+    # Both properties are supported :
+    #   -dataItem
+    #   -data(name series)Item
+    #
+    # series - name
+    # value  - dict
+    #
+    # Returns key if found otherwise nothing.
+
+    set keys [list "-dataItem" "-data${series}Item"]
+
+    if {$series eq "BoxPlot"} {
+        lappend keys "-data${series}item"
+    }
+
+    foreach key $keys {
+        if {[dict exists $value $key]} {
+            return $key
+        }
     }
 
     return {}
