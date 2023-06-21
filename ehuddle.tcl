@@ -6,18 +6,18 @@ namespace eval ticklecharts {}
 # add jsfunc huddle type
 namespace eval ::huddle::types::jsfunc {
     variable settings 
-    
+
     # type definition
     set settings {
                     publicMethods {jsfunc}
                     tag jsf
                     isContainer no
                 }
-            
+
     proc jsfunc {arg} {
         return [wrap [list jsf $arg]]
     }
-    
+
     proc jsondump {huddle_object offset newline nextoff} {
         return [join [lindex $huddle_object 1 1]]
     }
@@ -195,22 +195,15 @@ oo::define ticklecharts::ehuddle {
         # value - dict value
         #
         # append huddle to global '_huddle'. 
-    
+
         set _h [ticklecharts::ehuddle new]
         lassign [split $key "="] type valkey
 
         # special case for timeline class
-        set method [lindex [info level 2] 1]
-        set obj    [lindex [info level 1] 0]
-        set timeline [expr {
-                (($method eq "timelineToHuddle") || ($method eq "toJSON")) &&
-                [ticklecharts::istimelineClass $obj] ? 1 : 0
-            }
-        ]
-
+        lassign [self caller] _ obj method
         set listk {}
         foreach {k val} $value {
-            if {$timeline} {
+            if {$method eq "timelineToHuddle"} {
                 if {[string match {*@D=*} $k] && ($k in $listk)} {
                     $_h append $k $val
                 } else {
@@ -243,7 +236,7 @@ oo::define ticklecharts::ehuddle {
                 lappend _series [dict get $value "@S=type"]
             }
         }
-        
+
         # destroy...
         $_h destroy
 
@@ -257,7 +250,7 @@ oo::define ticklecharts::ehuddle {
         # Returns the length of huddle instance
         return [llength $_huddle]
     }
-    
+
     method get {} {
         # Returns the value of huddle instance
         return $_huddle
@@ -276,7 +269,7 @@ oo::define ticklecharts::ehuddle {
             return {}
         }
     }
-    
+
     method toJSON {} {
         # Transform huddle to JSON
         # replace special chars by space... etc.
@@ -341,6 +334,8 @@ proc ticklecharts::ehuddleListMap data {
                         list num $v
                     } elseif {$v eq "null"} {
                         list null
+                    } elseif {[iseStringClass $v]} {
+                        list s [$v get]
                     } else {
                         list s $v
                     }
@@ -363,6 +358,8 @@ proc ticklecharts::ehuddleListInsert data {
             lappend listv [list num $val]
         } elseif {$val eq "null"} {
             lappend listv [list null]
+        } elseif {[iseStringClass $val]} {
+            lappend listv [list s [$val get]]
         } else {
             lappend listv [list s $val]
         }
@@ -387,7 +384,7 @@ proc ticklecharts::eHuddleCritcl {bool} {
             proc ::huddle::types::dict::create {args} {
                 if {[llength $args] % 2} {error {wrong # args: should be "huddle create ?key value ...?"}}
                 set resultL [dict create]
-                
+
                 foreach {key value} $args {
                     if {[huddle::isHuddle $key]} {
                         foreach {tag src} [unwrap $key] break
@@ -418,6 +415,14 @@ proc ticklecharts::eHuddleCritcl {bool} {
 
             rename ::ticklecharts::ehuddleListInsert "" ; # delete proc
             rename critHuddleListInsert ::ticklecharts::ehuddleListInsert
+
+            proc eHuddleCritcl {bool} {
+                # Procedure already activated...
+                # Output a message to say that it is already running.
+                #
+                puts "'ticklecharts::eHuddleCritcl' procedure\
+                       is already activated..."
+            }
 
         } else {
             puts "warning : $infocrit"
