@@ -10,7 +10,7 @@ proc ticklecharts::barSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::barSeries below.
     #
-    # return dict barSeries options
+    # Returns dict barSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                   -type str             -default "bar"
     setdef options -id                      -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
@@ -68,9 +68,15 @@ proc ticklecharts::barSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataBarItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Bar $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataBarItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataBarItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataItem' or '-dataBarItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -81,13 +87,16 @@ proc ticklecharts::barSeries {index chart value} {
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
 
-    }
-      
-    if {[dict exists $value -dataBarItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataBarItem'... for '[ticklecharts::getLevelProperties [info level]]'"
+            error "'chart' args cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::barItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::barItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
@@ -95,8 +104,8 @@ proc ticklecharts::barSeries {index chart value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine \
                                   -labelLayout -itemStyle -backgroundStyle \
-                                  -emphasis -blur -select -tooltip -encode -dataBarItem]
-                                
+                                  -emphasis -blur -select -tooltip -encode $itemKey]
+
     set options [merge $options $value]
 
     return $options
@@ -109,7 +118,7 @@ proc ticklecharts::lineSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::lineSeries below.
     #
-    # return dict lineSeries options
+    # Returns dict lineSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str                -trace 0  -default "line"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -trace 0  -default "nothing"
@@ -169,9 +178,15 @@ proc ticklecharts::lineSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataLineItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Line $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataLineItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataLineItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataItem' or '-dataLineItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -182,13 +197,16 @@ proc ticklecharts::lineSeries {index chart value} {
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
 
-    }
-    
-    if {[dict exists $value -dataLineItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataLineItem'... for '[ticklecharts::getLevelProperties [info level]]'"
+            error "'chart' args cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lineItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lineItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
@@ -196,8 +214,8 @@ proc ticklecharts::lineSeries {index chart value} {
                                   -labelLine -lineStyle \
                                   -areaStyle -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle -universalTransition \
-                                  -emphasis -blur -select -tooltip -encode -dataLineItem]
-                                
+                                  -emphasis -blur -select -tooltip -encode $itemKey]
+
     set options [merge $options $value]
 
     return $options
@@ -210,7 +228,7 @@ proc ticklecharts::pieSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::pieSeries below.
     #
-    # return dict pieSeries options
+    # Returns dict pieSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "pie"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -270,9 +288,15 @@ proc ticklecharts::pieSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataPieItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Pie $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -dataPieItem]} {
-            error "'chart' Class cannot contain '-dataPieItem' when a class dataset is present"
+        if {[dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '$itemKey'\
+                    when a class dataset is defined."
         }
 
         # set dimensions in dataset class...
@@ -283,20 +307,23 @@ proc ticklecharts::pieSeries {index chart value} {
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
 
     } else {
-        # set data options when dataset class doesn't exist...
-        setdef options   -data          -minversion 5   -validvalue {}                 -type list.o       -default [ticklecharts::pieItem $value]
+        # set item options when dataset class doesn't exist...
+        if {![dict exists $value $itemKey]} {
+            error "'-dataPieItem' or '-dataItem' should be defined."
+        }
+        setdef options -data  -minversion 5  -validvalue {} -type list.o -default [ticklecharts::pieItem $value $itemKey]
     }
 
     # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -markPoint \
-                                  -dataPieItem \
+                                  $itemKey \
                                   -markLine -markArea \
                                   -emptyCircleStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -universalTransition -tooltip -encode]
-    
+
 
     set options [merge $options $value]
 
@@ -310,7 +337,7 @@ proc ticklecharts::funnelSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::funnelSeries below.
     #
-    # return dict funnelSeries options
+    # Returns dict funnelSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "funnel"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -341,7 +368,6 @@ proc ticklecharts::funnelSeries {index chart value} {
     setdef options -bottom                  -minversion 5       -validvalue formatBottom       -type num|str         -default 0
     setdef options -width                   -minversion 5       -validvalue {}                 -type num|str         -default "auto"
     setdef options -height                  -minversion 5       -validvalue {}                 -type num|str         -default "auto"
-    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::funnelItem $value]
     setdef options -markPoint               -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markPoint $value]
     setdef options -markLine                -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markLine $value]
     setdef options -markArea                -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::markArea $value]
@@ -362,9 +388,15 @@ proc ticklecharts::funnelSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataFunnelItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Funnel $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -dataFunnelItem]} {
-            error "'chart' Class cannot contain '-data' when a class dataset is present"
+        if {[dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '$itemKey'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -375,17 +407,22 @@ proc ticklecharts::funnelSeries {index chart value} {
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
 
+    } else {
+        if {![dict exists $value $itemKey]} {
+            error "'-dataFunnelItem' or '-dataItem' should be defined."
+        }
+        setdef options -data -minversion 5 -validvalue {} -type list.o -default [ticklecharts::funnelItem $value $itemKey]
     }
 
     # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
-                                  -dataFunnelItem \
+                                  $itemKey \
                                   -markPoint \
                                   -markLine -markArea \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -universalTransition -encode -tooltip]
-    
+
 
     set options [merge $options $value]
 
@@ -398,7 +435,7 @@ proc ticklecharts::radarSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::radarSeries below.
     #
-    # return dict radarSeries options
+    # Returns dict radarSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "radar"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -419,7 +456,6 @@ proc ticklecharts::radarSeries {index value} {
     setdef options -blur                    -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::blur $value]
     setdef options -select                  -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode -type bool|str|null   -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                 -type list.o          -default [ticklecharts::radarItem $value]
     setdef options -zlevel                  -minversion 5       -validvalue {}                 -type num             -default 0
     setdef options -z                       -minversion 5       -validvalue {}                 -type num             -default 2
     setdef options -silent                  -minversion 5       -validvalue {}                 -type bool            -default "False"
@@ -434,14 +470,25 @@ proc ticklecharts::radarSeries {index value} {
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null       -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null       -default [ticklecharts::tooltip $value]
 
+    # Both properties item are accepted.
+    #   -dataRadarItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Radar $value]
+
+    if {![dict exists $value $itemKey]} {
+        error "'-dataRadarItem' or '-dataItem' should be defined."
+    }
+
+    setdef options -data -minversion 5 -validvalue {} -type list.o  -default [ticklecharts::radarItem $value $itemKey]
+
     # remove key(s)...
     set value [dict remove $value -label \
                                   -lineStyle \
-                                  -dataRadarItem \
+                                  $itemKey \
                                   -areaStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -universalTransition -tooltip]
-                                
+
     set options [merge $options $value]
 
     return $options
@@ -456,7 +503,7 @@ proc ticklecharts::scatterSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::scatterSeries below.
     #
-    # return dict scatterSeries or effectScatterSeries options
+    # Returns dict scatterSeries or effectScatterSeries options
 
     setdef options -type                    -minversion 5       -validvalue formatTypeScatter  -type str               -default "scatter"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -505,7 +552,7 @@ proc ticklecharts::scatterSeries {index chart value} {
     setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                 -type num|jsfunc|null   -default "nothing"
     setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                 -type dict|null         -default [ticklecharts::universalTransition $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null         -default [ticklecharts::tooltip $value]
-        
+
     if {[dict exists $value -type]} {
         switch -exact -- [dict get $value -type] {
             effectScatter {
@@ -520,9 +567,15 @@ proc ticklecharts::scatterSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataScatterItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Scatter $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataScatterItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataScatterItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataScatterItem' or '-dataItem'
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -534,25 +587,27 @@ proc ticklecharts::scatterSeries {index chart value} {
         setdef options   -encode         -minversion 5  -validvalue {}                   -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                   -type num|null     -default "nothing"
 
-    }
-
-    if {[dict exists $value -dataScatterItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataScatterItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'"
         }
         if {![dict exists $value -type]} {
             dict set value -type "scatter"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::scatterItem $value [dict get $value -type]]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::scatterItem $value [dict get $value -type] $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
-    
-    set lflag {
-               -label -labelLine -lineStyle
-               -markPoint -markLine -universalTransition
-               -labelLayout -itemStyle -markArea -dataScatterItem
-               -emphasis -blur -select -tooltip -rippleEffect -encode
-    }
-    
+
+    set lflag [list \
+               -label -labelLine -lineStyle \
+               -markPoint -markLine -universalTransition \
+               -labelLayout -itemStyle -markArea $itemKey \
+               -emphasis -blur -select -tooltip -rippleEffect -encode \
+            ]
+
     # does not remove '-labelLayout' for js function.
     if {[dict exists $value -labelLayout] && [ticklecharts::typeOf [dict get $value -labelLayout]] eq "jsfunc"} {
         set lflag [lsearch -inline -all -not -exact $lflag "-labelLayout"]
@@ -560,7 +615,7 @@ proc ticklecharts::scatterSeries {index chart value} {
     } else {
         set value [dict remove $value {*}$lflag]
     }
-        
+
     set options [merge $options $value]
 
     return $options
@@ -573,7 +628,7 @@ proc ticklecharts::heatmapSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::heatmapSeries below.
     #
-    # return dict heatmapSeries options
+    # Returns dict heatmapSeries options
 
     setdef options -type                 -minversion 5  -validvalue {}                 -type str              -default "heatmap"
     setdef options -id                   -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
@@ -612,7 +667,7 @@ proc ticklecharts::heatmapSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain '-data' when a class dataset is present"
+            error "'chart' Class cannot contains '-data' when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -623,14 +678,18 @@ proc ticklecharts::heatmapSeries {index chart value} {
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null     -default "nothing"
 
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
-    
+
     # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -labelLayout -itemStyle -markLine -markPoint -markArea \
                                   -emphasis -blur -select -universalTransition -encode -tooltip]
-        
+
     set options [merge $options $value]
 
     return $options
@@ -642,7 +701,7 @@ proc ticklecharts::sunburstSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::sunburstSeries below.
     #
-    # return dict sunburstSeries options
+    # Returns dict sunburstSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                 -type str             -default "sunburst"
     setdef options -id                      -minversion 5  -validvalue {}                 -type str|null        -default "nothing"
@@ -675,7 +734,7 @@ proc ticklecharts::sunburstSeries {index value} {
 
 
     if {![dict exists $value -data]} {
-        error "key -data not present... for '[ticklecharts::getLevelProperties [info level]]'"
+        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
@@ -685,7 +744,7 @@ proc ticklecharts::sunburstSeries {index value} {
                                   -labelLine \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select]
-    
+
 
     set options [merge $options $value]
 
@@ -698,7 +757,7 @@ proc ticklecharts::treeSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::treeSeries below.
     #
-    # return dict treeSeries options
+    # Returns dict treeSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str                  -default "tree"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null             -default "nothing"
@@ -744,7 +803,7 @@ proc ticklecharts::treeSeries {index value} {
     setdef options -tooltip                 -minversion 5  -validvalue {}                  -type dict|null            -default [ticklecharts::tooltip $value]
 
     if {![dict exists $value -data]} {
-        error "key -data not present... for '[ticklecharts::getLevelProperties [info level]]'"
+        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
@@ -753,7 +812,7 @@ proc ticklecharts::treeSeries {index value} {
                                   -lineStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -leaves]
-    
+
 
     set options [merge $options $value]
 
@@ -766,7 +825,7 @@ proc ticklecharts::themeRiverSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::themeRiverSeries below.
     #
-    # return dict themeRiverSeries options
+    # Returns dict themeRiverSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "themeRiver"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -800,7 +859,7 @@ proc ticklecharts::themeRiverSeries {index value} {
                                   -labelLine \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select]
-    
+
 
     set options [merge $options $value]
 
@@ -813,7 +872,7 @@ proc ticklecharts::sankeySeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::sankeySeries below.
     #
-    # return dict sankeySeries options
+    # Returns dict sankeySeries options
 
     setdef options -type                    -minversion 5        -validvalue {}                  -type str               -default "sankey"
     setdef options -id                      -minversion 5        -validvalue {}                  -type str|null          -default "nothing"
@@ -858,7 +917,7 @@ proc ticklecharts::sankeySeries {index value} {
     setdef options -tooltip                 -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
 
     if {![dict exists $value -data] && ![dict exists $value -nodes]} {
-        error "key -data or -nodes not present... for '[ticklecharts::getLevelProperties [info level]]'"
+        error "Property '-data' or '-nodes' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
@@ -867,7 +926,7 @@ proc ticklecharts::sankeySeries {index value} {
                                   -lineStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -data -nodes -links -edges]
-    
+
 
     set options [merge $options $value]
 
@@ -881,7 +940,7 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::pictorialBarSeries below.
     #
-    # return dict pictorialBarSeries options
+    # Returns dict pictorialBarSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "pictorialBar"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -943,7 +1002,7 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain '-data' when a class dataset is present"
+            error "'chart' Class cannot contains '-data' when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -960,8 +1019,8 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
                                   -labelLine -lineStyle \
                                   -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle -universalTransition \
-                                  -emphasis -blur -select -tooltip -encode -data]
-                                
+                                  -emphasis -blur -select -tooltip -encode -data -dataItem]
+
     set options [merge $options $value]
 
     return $options
@@ -974,7 +1033,7 @@ proc ticklecharts::candlestickSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::candlestickSeries below.
     #
-    # return dict candlestickSeries options
+    # Returns dict candlestickSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "candlestick"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1016,9 +1075,15 @@ proc ticklecharts::candlestickSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataCandlestickItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Candlestick $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataCandlestickItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataCandlestickItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataCandlestickItem' or '-dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1027,20 +1092,22 @@ proc ticklecharts::candlestickSeries {index chart value} {
         setdef options  -dataGroupId    -minversion 5  -validvalue {} -type str|null     -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::encode $chart $value]
 
-    }
-
-    if {[dict exists $value -dataCandlestickItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataCandlestickItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle -universalTransition \
-                                  -emphasis -blur -select -tooltip -encode -dataCandlestickItem]
-                                
+                                  -emphasis -blur -select -tooltip -encode $itemKey]
+
     set options [merge $options $value]
 
     return $options
@@ -1052,7 +1119,7 @@ proc ticklecharts::parallelSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::parallelSeries below.
     #
-    # return dict parallelSeries options
+    # Returns dict parallelSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "parallel"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1082,16 +1149,25 @@ proc ticklecharts::parallelSeries {index value} {
     setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing       -type str|null          -default "nothing"
     setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
 
-    if {[dict exists $value -dataParallelItem]} {
+    # Both properties item are accepted.
+    #   -dataParallelItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Parallel $value]
+
+    if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataParallelItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::parallelItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::parallelItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -lineStyle -emphasis]
-    
+
     set options [merge $options $value]
 
     return $options
@@ -1103,7 +1179,7 @@ proc ticklecharts::gaugeSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::gaugeSeries below.
     #
-    # return dict gaugeSeries options
+    # Returns dict gaugeSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "gauge"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1145,18 +1221,27 @@ proc ticklecharts::gaugeSeries {index value} {
     setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing       -type str|null          -default "nothing"
     setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
 
-    if {[dict exists $value -dataGaugeItem]} {
+    # Both properties item are accepted.
+    #   -dataGaugeItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Gauge $value]
+
+    if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataGaugeItem'..."
+            error "'chart' args cannot contains '-data', '-dataGaugeItem' or '-dataItem'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -axisLine -progress -splitLine -axisTick \
                                   -axisLabel -pointer -anchor -itemStyle \
                                   -emphasis -title -detail -markPoint -markLine -markArea]
-    
+
     set options [merge $options $value]
 
     return $options
@@ -1168,7 +1253,7 @@ proc ticklecharts::graphSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::graphSeries below.
     #
-    # return dict graphSeries options
+    # Returns dict graphSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str               -default "graph"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -1233,22 +1318,26 @@ proc ticklecharts::graphSeries {index value} {
     setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                 -type num|jsfunc|null   -default "nothing"
     setdef options -tooltip                 -minversion 5       -validvalue {}                 -type dict|null         -default [ticklecharts::tooltip $value]
 
+    # Both properties item are accepted.
+    #   -dataGraphItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Graph $value]
 
-    if {[dict exists $value -dataGraphItem]} {
+    if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'graph' args cannot contain '-data' and '-dataGraphItem'..."
+            error "'graph' args cannot contains '-data', '-dataGraphItem' or '-dataItem'"
         }
-        setdef options -data  -minversion 5  -validvalue {}  -type list.o  -default [ticklecharts::dataGraphItem $value]
-    }
-
-    if {![dict exists $value -data] && ![dict exists $value -dataGraphItem]} {
-        error "key '-data' or '-dataGraphItem' not present... for '[ticklecharts::getLevelProperties [info level]]'"
+        setdef options -data  -minversion 5  -validvalue {}  -type list.o  -default [ticklecharts::dataGraphItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -circular -force -scaleLimit -itemStyle -lineStyle -label -edgeLabel -labelLayout -emphasis \
-                                  -blur -select -categories -links -edges -markPoint -markLine -markArea -dataGraphItem]
-                                
+                                  -blur -select -categories -links -edges -markPoint -markLine -markArea $itemKey]
+
     set options [merge $options $value]
 
     return $options
@@ -1260,7 +1349,7 @@ proc ticklecharts::wordcloudSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::wordcloudSeries below.
     #
-    # return dict wordcloudSeries options
+    # Returns dict wordcloudSeries options
 
     setdef options -type              -minWCversion 2        -validvalue {}               -type str            -default "wordCloud"
     setdef options -shape             -minWCversion 2        -validvalue formatWCshape    -type str            -default "circle"
@@ -1284,7 +1373,7 @@ proc ticklecharts::wordcloudSeries {index value} {
     setdef options -data              -minWCversion 2        -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
 
     # remove key(s)...
-    set value [dict remove $value -textStyle -emphasis -dataWCItem]
+    set value [dict remove $value -textStyle -emphasis -dataWCItem -dataItem]
 
     set options [merge $options $value]
 
@@ -1298,7 +1387,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::boxplotSeries below.
     #
-    # return dict boxplotSeries options
+    # Returns dict boxplotSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "boxplot"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1332,9 +1421,16 @@ proc ticklecharts::boxplotSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataBoxPlotitem
+    #   -dataBoxPlotItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey BoxPlot $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataBoxPlotitem]} {
-            error "'chart' Class cannot contain '-data' or 'dataBoxPlotitem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', 'dataBoxPlotItem' or '-dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1345,20 +1441,22 @@ proc ticklecharts::boxplotSeries {index chart value} {
         setdef options  -encode         -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -minversion 5  -validvalue {} -type num|null     -default "nothing"
 
-    }
-
-    if {[dict exists $value -dataBoxPlotitem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataBoxPlotitem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -markPoint -markLine -markArea \
-                                  -itemStyle -dataBoxPlotitem \
+                                  -itemStyle $itemKey \
                                   -emphasis -blur -select -tooltip -encode]
-                                
+
     set options [merge $options $value]
 
     return $options
@@ -1370,7 +1468,7 @@ proc ticklecharts::treemapSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::treemapSeries below.
     #
-    # return dict treemapSeries options
+    # Returns dict treemapSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str               -default "treemap"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
@@ -1413,14 +1511,13 @@ proc ticklecharts::treemapSeries {index value} {
     setdef options -animationDuration       -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
     setdef options -animationEasing         -minversion 5  -validvalue formatAEasing       -type str|null          -default "nothing"
     setdef options -animationDelay          -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -emphasis                -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::emphasisLegend $value]
     setdef options -selector                -minversion 5  -validvalue {}                  -type bool|null         -default "nothing"
     setdef options -selectorPosition        -minversion 5  -validvalue formatSelectorPos   -type str|null          -default "nothing"
     setdef options -selectorItemGap         -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
     setdef options -selectorButtonGap       -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
 
     if {![dict exists $value -data]} {
-        error "key -data not present... for '[ticklecharts::getLevelProperties [info level]]'"
+        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
@@ -1428,7 +1525,7 @@ proc ticklecharts::treemapSeries {index value} {
                                   -data -breadcrumb -tooltip \
                                   -labelLine -labelLayout -itemStyle \
                                   -emphasis -blur -select -levels]
-    
+
 
     set options [merge $options $value]
 
@@ -1442,7 +1539,7 @@ proc ticklecharts::mapSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::mapSeries below.
     #
-    # return dict mapSeries options
+    # Returns dict mapSeries options
 
     setdef options -type                 -minversion 5              -validvalue {}                  -type str                     -default "map"
     setdef options -id                   -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
@@ -1486,9 +1583,15 @@ proc ticklecharts::mapSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataMapItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Map $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataMapItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataMapItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataMapItem' or '-dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1499,21 +1602,23 @@ proc ticklecharts::mapSeries {index chart value} {
         setdef options  -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
         setdef options  -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
 
-    }
-    
-    if {[dict exists $value -dataMapItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataMapItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -projection -scaleLimit \
-                                  -nameMap -label -itemStyle -dataMapItem \
+                                  -nameMap -label -itemStyle $itemKey \
                                   -emphasis -labelLayout -labelLine -tooltip \
                                   -markPoint -markLine -markArea -universalTransition]
-    
+
 
     set options [merge $options $value]
 
@@ -1527,7 +1632,7 @@ proc ticklecharts::linesSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::linesSeries below.
     #
-    # return dict linesSeries options
+    # Returns dict linesSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str                -default "lines"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -default "nothing"
@@ -1572,9 +1677,15 @@ proc ticklecharts::linesSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataLinesItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Lines $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -dataLinesItem]} {
-            error "'chart' Class cannot contain '-dataLinesItem' when a class dataset is present"
+        if {[dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-dataLinesItem' or '-dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1586,10 +1697,10 @@ proc ticklecharts::linesSeries {index chart value} {
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
 
     } else {
-        if {![dict exists $value -dataLinesItem]} {
-            error "'chart' args should contain -dataLinesItem'..."
+        if {![dict exists $value $itemKey]} {
+            error "'chart' args should contain '-dataLinesItem' or '-dataItem'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::linesItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::linesItem $value $itemKey]
     }
 
     # remove key(s)...
@@ -1597,8 +1708,26 @@ proc ticklecharts::linesSeries {index chart value} {
                                   -lineStyle \
                                   -markPoint -markLine -markArea \
                                   -labelLayout -universalTransition \
-                                  -emphasis -blur -select -encode -dataLinesItem]
-                                
+                                  -emphasis -blur -select -encode $itemKey]
+
+    set options [merge $options $value]
+
+    return $options
+}
+
+proc ticklecharts::graphic {value} {
+    # options : https://echarts.apache.org/en/option.html#graphic
+    #
+    # value - Options described in proc ticklecharts::graphic below.
+    #
+    # Returns dict graphic options
+
+    setdef options -id       -minversion 5  -validvalue {} -type str|null    -default "nothing"
+    setdef options -elements -minversion 5  -validvalue {} -type list.o|null -default [ticklecharts::childrenElements $value "-elements"]
+
+    # remove key(s)...
+    set value [dict remove $value -elements]
+
     set options [merge $options $value]
 
     return $options

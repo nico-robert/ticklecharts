@@ -10,7 +10,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::bar3DSeries below.
     #
-    # return dict bar3DSeries options
+    # Returns dict bar3DSeries options
 
     setdef options -type                    -minversion 5       -validvalue {}                   -type str             -default "bar3D"
     setdef options -name                    -minversion 5       -validvalue {}                   -type str             -default "bar3DSeries_${index}"
@@ -41,9 +41,15 @@ proc ticklecharts::bar3DSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataBar3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Bar3D $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataBar3DItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataBar3DItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataBar3DItem' or '-dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -54,19 +60,21 @@ proc ticklecharts::bar3DSeries {index chart value} {
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options  -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
 
-    }
-      
-    if {[dict exists $value -dataBar3DItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataBar3DItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::bar3DItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::bar3DItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
     set value [dict remove $value -itemStyle -label -emphasis \
                                   -realisticMaterial -lambertMaterial \
-                                  -lambertMaterial -dataBar3DItem -encode]
+                                  -lambertMaterial $itemKey -encode]
                                 
     set options [merge $options $value]
 
@@ -80,7 +88,7 @@ proc ticklecharts::line3DSeries {index chart value} {
     # chart - self.
     # value - Options described in proc ticklecharts::line3DSeries below.
     #
-    # return dict line3DSeries options
+    # Returns dict line3DSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}             -type str             -default "line3D"
     setdef options -name                    -minversion 5  -validvalue {}             -type str             -default "line3Dseries_${index}"
@@ -97,9 +105,15 @@ proc ticklecharts::line3DSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataLine3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Line3D $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataLine3DItem]} {
-            error "'chart' Class cannot contain '-data' or '-dataLine3DItem' when a class dataset is present"
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataLine3DItem' or 'dataItem'\
+                    when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -110,17 +124,19 @@ proc ticklecharts::line3DSeries {index chart value} {
         setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
         setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
 
-    }
-    
-    if {[dict exists $value -dataLine3DItem]} {
+    } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contain '-data' and '-dataLine3DItem'..."
+            error "'chart' args cannot contains '-data' and '$itemKey'..."
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::line3DItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::line3DItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
     }
 
     # remove key(s)...
-    set value [dict remove $value -lineStyle -encode -dataLine3DItem]
+    set value [dict remove $value -lineStyle -encode $itemKey]
                                 
     set options [merge $options $value]
 
@@ -133,7 +149,7 @@ proc ticklecharts::surfaceSeries {index value} {
     # index - index series.
     # value - Options described in proc ticklecharts::surfaceSeries below.
     #
-    # return dict surfaceSeries options
+    # Returns dict surfaceSeries options
 
     setdef options -type                    -minversion 5  -validvalue {}               -type str             -default "surface"
     setdef options -name                    -minversion 5  -validvalue {}               -type str             -default "surfaceseries_${index}"
@@ -155,35 +171,39 @@ proc ticklecharts::surfaceSeries {index value} {
     setdef options -animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
     setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
 
+    # Both properties item are accepted.
+    #   -dataSurfaceItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey Surface $value]
 
-    if {[dict exists $value -dataSurfaceItem]} {
+    if {[dict exists $value $itemKey]} {
         foreach k {-data -equation -parametricEquation} {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contain '$k' and '-dataSurfaceItem'..."
+                error "'chart' args cannot contains '$k' and '$itemKey'..."
             }
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::surfaceItem $value]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::surfaceItem $value $itemKey]
     }
 
     if {[dict exists $value -equation]} {
-        foreach k {-data -dataSurfaceItem -parametricEquation} {
+        foreach k [list -data $itemKey -parametricEquation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contain '$k' and '-equation'..."
+                error "'chart' args cannot contains '$k' and '-equation'..."
             }
         }
     }
 
     if {[dict exists $value -parametricEquation]} {
-        foreach k {-data -dataSurfaceItem -equation} {
+        foreach k [list -data $itemKey -equation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contain '$k' and '-parametricEquation'..."
+                error "'chart' args cannot contains '$k' and '-parametricEquation'..."
             }
         }
     }
 
     # remove key(s)...
     set value [dict remove $value -wireframe -equation -parametricEquation -itemStyle \
-                                  -realisticMaterial -lambertMaterial -colorMaterial -dataSurfaceItem]
+                                  -realisticMaterial -lambertMaterial -colorMaterial $itemKey]
                                 
     set options [merge $options $value]
 
