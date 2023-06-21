@@ -8,7 +8,7 @@ proc ticklecharts::globalOptions3D {value} {
     #
     # value - Options described below.
     #
-    # return dict options
+    # Returns dict options
 
     setdef options -darkMode         -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
     setdef options -backgroundColor  -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
@@ -24,7 +24,7 @@ proc ticklecharts::grid3D {value} {
     #
     # value - Options described in proc ticklecharts::grid3D below.
     #
-    # return dict grid3D options
+    # Returns dict grid3D options
 
     set d [dict get $value -grid3D]
 

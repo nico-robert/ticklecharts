@@ -64,7 +64,7 @@ oo::define ticklecharts::timeline {
         # Returns nothing
 
         if {[llength $args] == 0} {
-            error "data should be present... for timeline option"
+            error "'data' should be defined for timeline option"
         }
 
         if {![expr {[$chart getType] eq "chart" || [$chart getType] eq "chart3D" ||
@@ -195,6 +195,7 @@ oo::define ticklecharts::timeline {
         # -script     - list data (jsfunc), jsfunc.
         # -class      - container.
         # -style      - css style.
+        # -template   - template (file or string).
         #
         # Returns full path html file.
 
@@ -267,17 +268,17 @@ proc ticklecharts::timelineItem {value} {
     # Returns dict options
 
     if {![dict exists $value -data]} {
-        error "key data not present..."
+        error "key 'data' not defined."
     }
 
     if {[llength $value] % 2} {
-        error "value list must have an even number of elements..."
+        ticklecharts::errorEvenArgs
     }
 
     set d [dict get $value -data]
 
     if {![dict exists $d value]} {
-        error "key 'value' must be present in -data '[ticklecharts::getLevelProperties [info level]]'"
+        ticklecharts::errorKeyArgs -data value
     }
 
     # force string value for this key below

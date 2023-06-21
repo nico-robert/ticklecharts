@@ -166,7 +166,7 @@ proc ticklecharts::xAxis {chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain Xaxis 'data' when a class dataset is present"
+            error "'chart' Class cannot contains Xaxis 'data' when a class dataset is defined."
         }
     }
 
@@ -226,7 +226,7 @@ proc ticklecharts::yAxis {chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contain YAxis 'data' when a class dataset is present"
+            error "'chart' Class cannot contains YAxis 'data' when a class dataset is defined."
         }
     }
 
@@ -289,7 +289,7 @@ proc ticklecharts::parallelAxis {value} {
     foreach item {*}$value {
 
         if {[llength $item] % 2} {
-            error "item list for '[lindex [info level 0] 0]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         setdef options -id              -minversion 5  -validvalue {}                  -type str|null            -default "nothing"

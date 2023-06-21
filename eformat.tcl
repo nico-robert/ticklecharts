@@ -693,7 +693,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                         for this key: '$key' in $nameproc"
             }
         }
-    
+
         formatFocus {
             # possible values...
             set validvalue {none self series ancestor descendant adjacency}
@@ -928,7 +928,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatTransform {
             # possible values...
-            set validvalue {filter sort ecSimpleTransform:aggregate boxplot}
+            set validvalue {filter sort ecSimpleTransform:aggregate ecStat:regression boxplot}
             if {$value ni $validvalue} {
                 error "'$value' should be '[formatMsgError $validvalue]'\
                         for this key: '$key' in $nameproc"

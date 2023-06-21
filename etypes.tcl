@@ -142,7 +142,7 @@ proc ticklecharts::estr {str} {
     # 
     # str - string
     #
-    # Returns a eList object
+    # Returns a eString object
     return [ticklecharts::eString new $str]
 }
 

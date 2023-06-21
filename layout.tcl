@@ -287,7 +287,7 @@ oo::define ticklecharts::Gridlayout {
             lappend _options $key $opts
         }
 
-        # Check if grid is present
+        # Check if grid is defined.
         # add grid option if no...
         if {!$g} {
             set f {}
@@ -446,10 +446,11 @@ oo::define ticklecharts::Gridlayout {
         # -script     - list data (jsfunc), jsfunc.
         # -class      - container.
         # -style      - css style.
+        # -template   - template (file or string).
         #
         # Returns full path html file.
 
-         # superclass ticklecharts::chart
+        # superclass ticklecharts::chart
         next {*}$args
     }
 
@@ -503,7 +504,7 @@ proc ticklecharts::gridlayoutHasDataSetObj {dts} {
     #
     # dts - upvar
     #
-    # Returns True if 'dataset' class is present, False otherwise.
+    # Returns True if 'dataset' class is defined, False otherwise.
     upvar 1 $dts dataset
 
     foreach obj [concat [ticklecharts::listNs] "::"] {
