@@ -3,16 +3,16 @@
 #
 namespace eval ticklecharts {}
 
-proc ticklecharts::bar3DItem {value} {
+proc ticklecharts::bar3DItem {value itemKey} {
 
-    foreach item [dict get $value -dataBar3DItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name       -minversion 5  -validvalue {}  -type str|null     -default "nothing"
@@ -32,16 +32,16 @@ proc ticklecharts::bar3DItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::surfaceItem {value} {
+proc ticklecharts::surfaceItem {value itemKey} {
 
-    foreach item [dict get $value -dataSurfaceItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name       -minversion 5  -validvalue {}  -type str|null     -default "nothing"
@@ -59,16 +59,16 @@ proc ticklecharts::surfaceItem {value} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::line3DItem {value} {
+proc ticklecharts::line3DItem {value itemKey} {
 
-    foreach item [dict get $value -dataLine3DItem] {
+    foreach item [dict get $value $itemKey] {
 
         if {[llength $item] % 2} {
-            error "item list for '[ticklecharts::getLevelProperties [info level]]' must have an even number of elements..."
+            ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item value]} {
-            error "key 'value' must be present in item '[ticklecharts::getLevelProperties [info level]]'"
+            ticklecharts::errorKeyArgs $itemKey value
         }
 
         setdef options name       -minversion 5  -validvalue {}  -type str|null     -default "nothing"
