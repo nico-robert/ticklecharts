@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
 # v4.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
+#        Replaces 'richitem' by 'richItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -29,7 +30,7 @@ $pie Add "pieSeries" -name "Access From" -selectedMode "single" -radius [list {4
                      -labelLine {show "True" length 30} \
                      -label [list lineHeight "null" formatter $formatterjs backgroundColor "#F6F8FC" borderColor "#8C8D8E" \
                                borderWidth 1 borderRadius 4 \
-                               richitem [list \
+                               richItem [list \
                                    a   {color "#6E7079" lineHeight 22 align "center"} \
                                    hr  {borderColor "#8C8D8E" width "100%" borderWidth 1 height 0} \
                                    b   {color "#4C5058" fontSize 14 fontWeight "bold" lineHeight 30} \

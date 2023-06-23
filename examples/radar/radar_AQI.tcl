@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Move '-backgroundColor' from constructor to 'SetOptions' method with v3.0.1
 # v3.0 : Update example with the new 'Add' method for chart series.
 # v4.0 : Replaces '-dataRadarItem' by '-dataItem' (both properties are available).
+#        Replaces '-indicatoritem' by '-indicatorItem' (both properties are available).
 
 proc setdata {list} {
 
@@ -132,7 +133,7 @@ $chart SetOptions -backgroundColor "#161627" \
                                 data [list {Beijing Shanghai Guangzhou}] \
                                 ]
 
-$chart RadarCoordinate -indicatoritem {
+$chart RadarCoordinate -indicatorItem {
                                         {name "AQI" max 300}
                                         {name "PM2.5" max 250}
                                         {name "PM10" max 300}

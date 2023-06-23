@@ -9,6 +9,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Note : map list formatter + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
 # v5.0 : Replaces '-dataRadarItem' by '-dataItem' (both properties are available).
+#        Replaces '-indicatoritem' by '-indicatorItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -36,7 +37,7 @@ $chart SetOptions -color [list {#67F9D8 #FFE434 #56A3F1 #FF917C}] \
                   -title {text "Customized Radar Chart"} \
                   -legend {}
 
-$chart RadarCoordinate -indicatoritem {
+$chart RadarCoordinate -indicatorItem {
                                         {name "Indicator1"}
                                         {name "Indicator2"}
                                         {name "Indicator3"}
@@ -55,7 +56,7 @@ $chart RadarCoordinate -indicatoritem {
                                                                    shadowBlur 10 opacity 1]] \
                         -axisLine {show true lineStyle {color "rgba(211, 253, 250, 0.8)"}}
 
-$chart RadarCoordinate -indicatoritem {
+$chart RadarCoordinate -indicatorItem {
                                         {name "Indicator1" max 150}
                                         {name "Indicator2" max 150}
                                         {name "Indicator3" max 150}

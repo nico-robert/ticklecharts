@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Replaces 'richitem' by 'richItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -133,7 +134,7 @@ try {
         $chart Add "treeMapSeries" -label [list \
                                         position "insideTopLeft" \
                                         formatter $js \
-                                        richitem [list \
+                                        richItem [list \
                                                 budget {fontSize 22 lineHeight 30 color "rgb(255,255,0)"} \
                                                 household {fontSize 14 color "#fff"} \
                                                 label [list fontSize 9 backgroundColor rgba(0,0,0,0.3) color "#fff" borderRadius 2 padding [list {2 4}] lineHeight 25 align right] \

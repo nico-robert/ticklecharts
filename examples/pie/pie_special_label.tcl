@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v4.0 : Update example with the new 'Add' method for chart series.
 # v5.0 : Replaces '-dataPieItem' by '-dataItem' (both properties are available).
+#        Replaces 'richitem' by 'richItem' (both properties are available).
 
 # image dir
 set imagedir ../../images
@@ -32,7 +33,7 @@ set js [ticklecharts::jsfunc new {
 set data [list \
           [list value 1548 name "CityE" label \
           [list lineHeight 20 formatter $js backgroundColor "#eee" borderColor "#777" borderWidth 1 borderRadius 4 \
-                richitem [list \
+                richItem [list \
                     title       [list color "#eee" align "center"] \
                     abg         [list backgroundColor "#333" width "100%" align "right" height 25 borderRadius [list {4 4 0 0}]] \
                     Sunny       [list height 30 align "left" backgroundColor [list image [file join $imagedir sunny.png]]] \

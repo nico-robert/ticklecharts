@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
 # v4.0 : Replaces '-dataRadarItem' by '-dataItem' (both properties are available).
+#        Replaces '-indicatoritem' by '-indicatorItem' (both properties are available).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -23,7 +24,7 @@ $radar SetOptions -title {text "Bar / Radar Chart Layout..."} \
                   -legend {left 48%}
 
 $radar RadarCoordinate -radius 190 \
-                       -indicatoritem {
+                       -indicatorItem {
                                         {name "Sales" max 6500}
                                         {name "Administration" max 16000}
                                         {name "Information Technology" max 30000}
