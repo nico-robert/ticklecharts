@@ -24,7 +24,7 @@ proc ticklecharts::critJsonDump {huddle {offset "  "} {newline "\n"} {begin ""}}
 # additional changes are expected
 #
 foreach {key value} [array get ::huddle::types tagOfType*] {
-    lappend ht [format {"%s"} $value]
+    lappend ht  [format {"%s"} $value]
     lappend cht [format {{"%s","%s"}} $value $::huddle::types(isContainer:$value)]
 }
 
@@ -48,11 +48,21 @@ eval [string map [list \
             #include <stdio.h>
             #include <string.h>
             #include <stdlib.h>
+            #include <ctype.h>
 
             const char *huddletype[%LENHTYPE%]    = %HTYPE%;
             const char *hcontainer[%LENHTYPE%][2] = %CONTAINERH%;
-            const char *hmap[8][2]                = {{"\n","\\n"}, {"\t","\\t"}, {"\r","\\r"}, {"\b","\\b"}, {"\f","\\f"}, {"\\","\\\\"}, {"\"","\\\""}, {"/","\\/"}};
-            int        huddleTLen = %LENHTYPE%;
+            int huddleTLen                        = %LENHTYPE%;
+            const char *hmap[8][2] = {
+                {"\n","\\n"},
+                {"\t","\\t"},
+                {"\r","\\r"}, 
+                {"\b","\\b"}, 
+                {"\f","\\f"}, 
+                {"\\","\\\\"}, 
+                {"\"","\\\""}, 
+                {"/","\\/"}
+            };
 
             Tcl_Obj* huddleTypeCallbackStripC      (Tcl_Interp* interp, Tcl_Obj* headobj, Tcl_Obj* srcobj);
             Tcl_Obj* huddleTypeCallbackGetSubNodeC (Tcl_Interp* interp, Tcl_Obj* headobj, Tcl_Obj* srcobj, Tcl_Obj* pathobj);
@@ -122,6 +132,126 @@ eval [string map [list \
             }
             /*
             *----------------------------------------------------------------------
+            * ERROR_INTERP_EHUDDLECRIT --
+            *----------------------------------------------------------------------
+            */
+            void ERROR_INTERP_EHUDDLECRIT (Tcl_Interp* interp, const char *message, int out) {
+
+                const char *format = NULL;
+
+                if (!out) {
+                    format = ": '%s'";
+                } else {
+                    format = ": '%s'\n";
+                }
+    
+                // source : https://stackoverflow.com
+                // question : how-do-i-concatenate-two-strings-in-c
+                char *result = malloc(strlen(message) + strlen(format) + 1);
+
+                strcpy(result, message);
+                strcat(result, format);
+
+                const char* interpResult = Tcl_GetString(Tcl_GetObjResult(interp));
+
+                if (!out) {
+                    Tcl_SetObjResult(interp, Tcl_ObjPrintf(result, interpResult));
+                } else {
+                    fprintf(stderr, result, interpResult);
+                }
+
+                return;
+            }
+            /*
+            *----------------------------------------------------------------------
+            * getObj --
+            *----------------------------------------------------------------------
+            */
+            void getObj (Tcl_Interp* interp, Tcl_Obj* obj) {
+
+                Tcl_Obj* cmd[2];
+                Tcl_Obj* class[2];
+                const char* str;
+
+                // Find type.
+                class[0] = Tcl_NewStringObj("ticklecharts::typeOfClass", -1);
+	            class[1] = obj;
+
+                Tcl_IncrRefCount(class[0]);
+                Tcl_IncrRefCount(class[1]);
+
+                if (Tcl_EvalObjv(interp, 2, class, 0) != TCL_OK) {
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(getObj)", 1);
+                    exit(EXIT_FAILURE);
+                }
+
+                Tcl_DecrRefCount(class[0]);
+	            Tcl_DecrRefCount(class[1]);
+
+                str = Tcl_GetString(Tcl_GetObjResult(interp));
+
+                if (strcmp(str, "::ticklecharts::eString")) {
+                    fprintf(stderr, "error(getObj) : object should be 'eString' class.\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                // Get object value.
+                cmd[0] = obj;
+	            cmd[1] = Tcl_NewStringObj("get", -1);
+
+                Tcl_IncrRefCount(cmd[0]);
+                Tcl_IncrRefCount(cmd[1]);
+
+                if (Tcl_EvalObjv(interp, 2, cmd, 0) != TCL_OK) {
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(getObj)", 1);
+                    exit(EXIT_FAILURE);
+                }
+
+                Tcl_DecrRefCount(cmd[0]);
+	            Tcl_DecrRefCount(cmd[1]);
+
+                return;
+            }
+            /*
+            *----------------------------------------------------------------------
+            * isNumber --
+            *----------------------------------------------------------------------
+            */
+            int isNumber(const char* s) {
+
+                int len = strlen(s);
+
+                if (len == 0) {
+                    return 0;
+                }
+
+                int decimal = 0;
+
+                for (int i = 0; i < len; i++) {
+                    if (s[i] == '.') {
+                        decimal++;
+                    } else if ((i == 0) && (s[i] == '-') && (len > 1)) {
+                        // case negative value
+                        continue;
+                    } else if (isdigit(s[i-1]) && (s[i] == tolower('e'))) {
+                        // case Xe1
+                        continue;
+                    } else if (isdigit(s[i-2]) && (s[i] == '-') &&
+                               (s[i-1] == tolower('e'))) {
+                        // case Xe-1
+                        continue;
+                    } else if (!isdigit(s[i])) {
+                        return 0;
+                    }
+                }
+                if (decimal <= 1) {
+                    return 1;
+                }
+
+                return 0;
+            }
+            /*
+            *----------------------------------------------------------------------
             * huddleTypeCallbackStripC --
             *----------------------------------------------------------------------
             */
@@ -135,13 +265,14 @@ eval [string map [list \
 
                 if (!strcmp(head, "D")) {
 
-                    fprintf(stderr, "error dict Callback strip not supported...\n");
+                    fprintf(stderr, 
+                            "error(huddleTypeCallbackStripC): error dict Callback strip not supported...\n");
                     exit(EXIT_FAILURE);
 
                 } else if (!strcmp(head, "L")) {
 
                     if (Tcl_ListObjGetElements(interp, srcobj, &count, &elements) != TCL_OK) {
-                        fprintf(stderr, "error(huddleTypeCallbackStripC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                        ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleTypeCallbackStripC)", 1);
                         exit(EXIT_FAILURE);
                     }
 
@@ -150,7 +281,8 @@ eval [string map [list \
                     }
 
                 } else {
-                    fprintf(stderr, "Callback Strip not supported...\n");
+                    fprintf(stderr, 
+                            "error(huddleTypeCallbackStripC): Callback Strip not supported...\n");
                     exit(EXIT_FAILURE);
                 }
 
@@ -173,31 +305,34 @@ eval [string map [list \
                 if (!strcmp(head, "D")) {
 
                     if (Tcl_DictObjGet(interp, srcobj, pathobj, &index_obj) != TCL_OK) {
-                        fprintf(stderr, "error get value from dict...\n");
+                        fprintf(stderr, 
+                                "error(huddleTypeCallbackGetSubNodeC): Not possible to get value from dict...\n");
                         exit(EXIT_FAILURE);
                     }
 
                 } else if (!strcmp(head, "L")) {
 
                     if (Tcl_ListObjGetElements(interp, srcobj, &count, &elements) != TCL_OK) {
-                        fprintf(stderr, "error(huddleTypeCallbackGetSubNodeC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                        ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleTypeCallbackGetSubNodeC)", 1);
                         exit(EXIT_FAILURE);
                     }
 
                     if (Tcl_GetIntFromObj(interp, pathobj, &rc) != TCL_OK) {
-                        fprintf(stderr, "error(huddleTypeCallbackGetSubNodeC): Not possible to get integer from pathobj...\n");
+                        fprintf(stderr, 
+                                "error(huddleTypeCallbackGetSubNodeC): Not possible to get integer from pathobj...\n"
+                        );
                         exit(EXIT_FAILURE);
                     }
 
                     Tcl_ListObjIndex(interp, srcobj, rc, &index_obj);
 
                 } else {
-                    fprintf(stderr, "Callback SubNode not supported...\n");
+                    fprintf(stderr, 
+                            "error(huddleTypeCallbackGetSubNodeC): Callback SubNode not supported...\n");
                     exit(EXIT_FAILURE);
                 }
 
                 return index_obj;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -248,7 +383,7 @@ eval [string map [list \
                 Tcl_Obj **elements;
 
                 if (Tcl_ListObjGetElements(interp, huddle_object, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(isHuddleC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(isHuddleC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -265,7 +400,7 @@ eval [string map [list \
                 Tcl_Obj* index_obj = Tcl_NewObj();
 
                 if (Tcl_ListObjIndex(interp, elements[1], 0, &index_obj) != TCL_OK) {
-                    fprintf(stderr, "error(isHuddleC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(isHuddleC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -282,7 +417,7 @@ eval [string map [list \
                 Tcl_Obj **elements;
 
                 if (Tcl_ListObjGetElements(interp, huddle_object, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleUnwrapC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleUnwrapC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -300,7 +435,7 @@ eval [string map [list \
                 Tcl_Obj* obj;
 
                 if (Tcl_ListObjGetElements(interp, node, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleStripNodeC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleStripNodeC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -308,7 +443,7 @@ eval [string map [list \
                 // src  = elements[1]
 
                 if (!infoTypeExistsC(elements[0])) {
-                    fprintf(stderr, "Type doesn't exists...\n");
+                    fprintf(stderr, "error(huddleStripNodeC): Type doesn't exists...\n");
                     exit(EXIT_FAILURE);
                 }
 
@@ -320,7 +455,6 @@ eval [string map [list \
                 }
 
                 return obj;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -335,7 +469,6 @@ eval [string map [list \
                 Tcl_ListObjAppendElement (interp, resObj, node);
 
                 return resObj;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -349,7 +482,7 @@ eval [string map [list \
                 Tcl_Obj* obj;
 
                 if (!isHuddleC(interp, huddle_object)) {
-                    fprintf(stderr, "huddle_object is not Huddle...\n");
+                    fprintf(stderr, "error(huddleRetrieveHuddleC): huddle_object is not Huddle...\n");
                     exit(EXIT_FAILURE);
                 }
 
@@ -364,7 +497,6 @@ eval [string map [list \
                 }
 
                 return obj;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -389,7 +521,6 @@ eval [string map [list \
                 }
 
                 return obj;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -423,14 +554,15 @@ eval [string map [list \
                 Tcl_Obj **elements;
 
                 if (!isHuddleC(interp, huddle_object)) {
-                    fprintf(stderr, "huddle_object is not Huddle...\n");
+                    fprintf(stderr, 
+                            "error(huddleTypeC): huddle_object is not Huddle...\n");
                     exit(EXIT_FAILURE);
                 }
 
                 node = huddleUnwrapC(interp, huddle_object);
 
                 if (Tcl_ListObjGetElements(interp, node, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleTypeC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleTypeC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -451,17 +583,16 @@ eval [string map [list \
                 node = huddleUnwrapC(interp, huddle_object);
 
                 if (Tcl_ListObjGetElements(interp, node, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleLlengthC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleLlengthC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
                 if (Tcl_ListObjGetElements(interp, elements[1], &count, &elementsrc) != TCL_OK) {
-                    fprintf(stderr, "error(huddleLlengthC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleLlengthC)", 1);
                     exit(EXIT_FAILURE);
-                }        
+                }
 
                 return count;
-
             }
             /*
             *----------------------------------------------------------------------
@@ -477,7 +608,7 @@ eval [string map [list \
                 node = huddleUnwrapC(interp, huddle_object);
 
                 if (Tcl_ListObjGetElements(interp, node, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleGetSrcC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleGetSrcC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -498,7 +629,7 @@ eval [string map [list \
                 node = huddleGetSrcC(interp, huddle_object);
 
                 if (Tcl_ListObjGetElements(interp, node, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleDictKeysC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleDictKeysC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -524,7 +655,7 @@ eval [string map [list \
                 Tcl_Obj *resObjPtr;
 
                 if (Tcl_ListObjGetElements(interp, huddle_object, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleJoinListC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleJoinListC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
@@ -563,7 +694,7 @@ eval [string map [list \
                     Tcl_ListObjAppendElement(interp, defaultTag, srcObj);
                 }
 
-                return defaultTag;    
+                return defaultTag;
             }
             /*
             *----------------------------------------------------------------------
@@ -580,12 +711,14 @@ eval [string map [list \
 
                 // huddle format...
                 if (Tcl_ListObjGetElements(interp, huddle_format, &count, &elements) != TCL_OK) {
-                    fprintf(stderr, "error(huddleJsonDumpC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                    ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleJsonDumpC)", 1);
                     exit(EXIT_FAILURE);
                 }
 
                 if (count != 3) {
-                    fprintf(stderr, "error(huddleJsonDumpC): 'format should be a list of 3 elments'\n");
+                    fprintf(stderr, 
+                            "error(huddleJsonDumpC): 'format should be a list of 3 elements'\n"
+                    );
                     exit(EXIT_FAILURE);
                 }
 
@@ -601,12 +734,10 @@ eval [string map [list \
                 const char *type = Tcl_GetString(huddleTypeC(interp, huddle_object));
 
                 if (!strcmp(type, "b")) {
-
                     // boolean
                     return huddleGetStrippedC(interp, huddle_object);
 
                 } else if (!strcmp(type, "num")) {
-
                     // number
                     return huddleGetStrippedC(interp, huddle_object);
 
@@ -623,12 +754,10 @@ eval [string map [list \
                     return dataobj;
 
                 } else if (!strcmp(type, "null")) {
-
                     // null
                     return Tcl_ObjPrintf("null");
 
                 } else if (!strcmp(type, "L")) {
-
                     // list
                     int len = huddleLlengthC(interp, huddle_object);
                     Tcl_Obj *innerObj  = Tcl_NewListObj (0,NULL);
@@ -649,7 +778,7 @@ eval [string map [list \
                     int llen;
 
                     if (Tcl_ListObjLength(interp, innerObj, &llen) != TCL_OK) {
-                        fprintf(stderr, "error(huddleJsonDumpC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                        ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleJsonDumpC)", 1);
                         exit(EXIT_FAILURE);
                     }
 
@@ -686,7 +815,6 @@ eval [string map [list \
                     return newlist;
 
                 } else if (!strcmp(type, "D")) {
-
                     // dict
                     Tcl_Obj *dictObj = huddleDictKeysC(interp, huddle_object);
                     Tcl_DictSearch search;
@@ -731,7 +859,7 @@ eval [string map [list \
                     int llen;
 
                     if (Tcl_ListObjLength(interp, innerObj, &llen) != TCL_OK) {
-                        fprintf(stderr, "error(huddleJsonDumpC): '%s'\n", Tcl_GetString(Tcl_GetObjResult(interp)));
+                        ERROR_INTERP_EHUDDLECRIT(interp, "error(huddleJsonDumpC)", 1);
                         exit(EXIT_FAILURE);
                     }
 
@@ -782,7 +910,8 @@ eval [string map [list \
                 }
             }
         }
-}]
+    }
+]
 
 critcl::cproc critHuddleDump {Tcl_Interp* interp Tcl_Obj* huddle Tcl_Obj* format} ok {
     Tcl_Obj* json;
@@ -809,22 +938,21 @@ critcl::cproc critRetrieveHuddle {Tcl_Interp* interp Tcl_Obj* huddle_object Tcl_
     Tcl_SetObjResult(interp, result);
 
     return TCL_OK;
-
 }
 
 critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
 
     Tcl_Obj **elements, **sub_elements, **sub_list;
     int count, subcount;
-    double d;
+    const char *str;
 
     if (Tcl_ListObjGetElements(interp, data, &count, &elements) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleListMap): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleListMap)", 0);
         return TCL_ERROR;
     }
 
     if (Tcl_ListObjGetElements(interp, elements[0], &count, &sub_elements) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleListMap): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleListMap)", 0);
         return TCL_ERROR;
     }
 
@@ -833,6 +961,7 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_Obj* l       = Tcl_NewStringObj("L", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
     Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
+    Tcl_Obj* type;
 
     for (int i = 0; i < count; ++i) {
         Tcl_Obj *innerObj = Tcl_NewListObj (0,NULL);
@@ -843,15 +972,22 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
         for (int j = 0; j < subcount; j++) {
             Tcl_Obj* dataTag = Tcl_NewObj();
 
-            if (Tcl_GetDoubleFromObj(interp, sub_list[j], &d) == TCL_OK) {
-                Tcl_ListObjAppendElement(interp, dataTag, n);
-                Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]); 
-            } else if (!strcmp(Tcl_GetString(sub_list[j]), "null")) {
-                Tcl_ListObjAppendElement(interp, dataTag, null);
+            str = Tcl_GetString(sub_list[j]);
+
+            if (isNumber(str)) {
+                type = n;
+            } else if (!strcmp(str, "null")) {
+                type = null;
+            } else if (!strncmp(str, "::oo::Obj", 9)) {
+                type = s;
+                getObj(interp, sub_list[j]);
+                sub_list[j] = Tcl_GetObjResult(interp);
             } else {
-                Tcl_ListObjAppendElement(interp, dataTag, s);
-                Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]); 
+                type = s;
             }
+
+            Tcl_ListObjAppendElement(interp, dataTag, type);
+            Tcl_ListObjAppendElement(interp, dataTag, sub_list[j]);
 
             Tcl_ListObjAppendElement(interp, innerObj, dataTag);
         }
@@ -870,20 +1006,20 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
 
     Tcl_Obj **elements, **sub_elements, **sub_list;
     int count;
-    double d;
+    const char *str;
 
     if (Tcl_ListObjGetElements(interp, data, &count, &elements) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleListInsert): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleListInsert)", 0);
         return TCL_ERROR;
     }
 
     if (Tcl_ListObjGetElements(interp, elements[0], &count, &sub_list) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleListInsert): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleListInsert)", 0);
         return TCL_ERROR;
     }
 
     if (Tcl_ListObjGetElements(interp, sub_list[0], &count, &sub_elements) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleListInsert): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleListInsert)", 0);
         return TCL_ERROR;
     }
 
@@ -891,19 +1027,27 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
     Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
+    Tcl_Obj* type;
 
     for (int i = 0; i < count; ++i) {
-        Tcl_Obj* dataTag = Tcl_NewObj(); 
+        Tcl_Obj* dataTag = Tcl_NewObj();
 
-        if (Tcl_GetDoubleFromObj(interp, sub_elements[i], &d) == TCL_OK) {
-            Tcl_ListObjAppendElement(interp, dataTag, n);
-            Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]);
-        } else if (!strcmp(Tcl_GetString(sub_elements[i]), "null")) {
-            Tcl_ListObjAppendElement(interp, dataTag, null);
+        str = Tcl_GetString(sub_elements[i]);
+
+        if (isNumber(str)) {
+            type = n;
+        } else if (!strcmp(str, "null")) {
+            type = null;
+        } else if (!strncmp(str, "::oo::Obj", 9)) {
+            type = s;
+            getObj(interp, sub_elements[i]);
+            sub_elements[i] = Tcl_GetObjResult(interp);
         } else {
-            Tcl_ListObjAppendElement(interp, dataTag, s);
-            Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]); 
+            type = s;
         }
+
+        Tcl_ListObjAppendElement(interp, dataTag, type);
+        Tcl_ListObjAppendElement(interp, dataTag, sub_elements[i]);
 
         Tcl_ListObjAppendElement(interp, dataObj, dataTag);
     }
@@ -919,7 +1063,7 @@ critcl::cproc critHuddleTypeList {Tcl_Interp* interp Tcl_Obj* data} ok {
     int count;
 
     if (Tcl_ListObjGetElements(interp, data, &count, &elements) != TCL_OK) {
-        Tcl_SetObjResult(interp, Tcl_ObjPrintf("error(critHuddleTypeList): '%s'", Tcl_GetString(Tcl_GetObjResult(interp))));
+        ERROR_INTERP_EHUDDLECRIT(interp, "error(critHuddleTypeList)", 0);
         return TCL_ERROR;
     }
 
@@ -940,7 +1084,6 @@ critcl::cproc critHuddleTypeList {Tcl_Interp* interp Tcl_Obj* data} ok {
     Tcl_SetObjResult(interp, wrap);
 
     return TCL_OK;
-
 }
 
 critcl::load ; # force compilation...
