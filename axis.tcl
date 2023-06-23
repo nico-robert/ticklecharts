@@ -74,7 +74,7 @@ proc ticklecharts::radarCoordinate {value} {
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick \
                                   -axisName -axisLabel -splitLine \
-                                  -splitArea -indicatoritem]
+                                  -splitArea -indicatoritem -indicatorItem]
 
     set options [merge $options $value]
 
