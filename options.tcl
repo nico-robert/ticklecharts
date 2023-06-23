@@ -116,8 +116,12 @@ proc ticklecharts::themeriverItem {value} {
     } elseif {[dict exists $value -dataItem]} {
         set key -dataItem
     } else {
-        error "Property '-data' or '-dataItem' not defined for\
-              [ticklecharts::getLevelProperties [info level]]"
+        set levelP [uplevel 1 {
+                ticklecharts::getLevelProperties [info level]
+            }
+        ]
+        error "Property '-data' or '-dataItem'\
+               not defined for $levelP"
     }
 
     foreach item [dict get $value $key] {
@@ -417,8 +421,12 @@ proc ticklecharts::pictorialBarItem {value} {
     } elseif {[dict exists $value -dataItem]} {
         set key -dataItem
     } else {
-        error "Property '-data' or '-dataItem' not defined for\
-              [ticklecharts::getLevelProperties [info level]]"
+        set levelP [uplevel 1 {
+                ticklecharts::getLevelProperties [info level]
+            }
+        ]
+        error "Property '-data' or '-dataItem'\
+               not defined for $levelP"
     }
 
     foreach item [dict get $value $key] {
@@ -551,19 +559,28 @@ proc ticklecharts::radarItem {value itemKey} {
 
 proc ticklecharts::indicatorItem {value} {
 
-    if {![dict exists $value -indicatoritem]} {
-        error "Key property '-indicatoritem' not defined for\
-               [ticklecharts::getLevelProperties [info level]]"
+    # Both properties are supported.
+    if {[dict exists $value -indicatoritem]} {
+        set key -indicatoritem
+    } elseif {[dict exists $value -indicatorItem]} {
+        set key -indicatorItem
+    } else {
+        set levelP [uplevel 1 {
+                ticklecharts::getLevelProperties [info level]
+            }
+        ]
+        error "Key property '-indicatoritem' or '-indicatorItem'\
+               not defined for $levelP"
     }
 
-    foreach item [dict get $value -indicatoritem] {
+    foreach item [dict get $value $key] {
 
         if {[llength $item] % 2} {
             ticklecharts::errorEvenArgs
         }
 
         if {![dict exists $item name]} {
-            ticklecharts::errorKeyArgs -indicatoritem name
+            ticklecharts::errorKeyArgs $key name
         }
 
         setdef options name   -minversion 5  -validvalue {}          -type str|null          -default "nothing"
@@ -839,8 +856,12 @@ proc ticklecharts::dataWCItem {value} {
     } elseif {[dict exists $value -dataItem]} {
         set key -dataItem
     } else {
-        error "Property '-dataWCItem' or '-dataItem' not defined for\
-              [ticklecharts::getLevelProperties [info level]]"
+        set levelP [uplevel 1 {
+                ticklecharts::getLevelProperties [info level]
+            }
+        ]
+        error "Property '-dataWCItem' or '-dataItem'\
+               not defined for $levelP"
     }
 
     foreach item [dict get $value $key] {
@@ -871,11 +892,16 @@ proc ticklecharts::dataWCItem {value} {
 
 proc ticklecharts::richItem {value} {
 
-    if {![dict exists $value richitem]} {
+    # Both properties are supported.
+    if {[dict exists $value richitem]} {
+        set rkey richitem
+    } elseif {[dict exists $value richItem]} {
+        set rkey richItem
+    } else {
         return "nothing"
     }
 
-    foreach {key item} [dict get $value richitem] {
+    foreach {key item} [dict get $value $rkey] {
 
         if {[llength $item] % 2} {
             ticklecharts::errorEvenArgs
@@ -2672,7 +2698,7 @@ proc ticklecharts::upperLabel {value} {
     #...
 
     # remove key(s) from dict value rich...
-    set d [dict remove $d richitem]
+    set d [dict remove $d richitem richItem]
 
     set options [merge $options $d]
 
@@ -2767,7 +2793,7 @@ proc ticklecharts::label {value} {
     }
 
     # remove key(s) from dict value rich...
-    set d [dict remove $d richitem]
+    set d [dict remove $d richitem richItem]
 
     set options [merge $options $d]
 
@@ -4710,7 +4736,7 @@ proc ticklecharts::calendarLabel {value time} {
     #...
 
     # remove key(s) from dict value rich...
-    set d [dict remove $d richitem]
+    set d [dict remove $d richitem richItem]
 
     set options [merge $options $d]
 
