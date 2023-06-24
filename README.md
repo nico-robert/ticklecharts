@@ -55,17 +55,18 @@ $chart Render
 | args | Description
 | ------ | ------
 | _-title_ | header title html (default value : `"ticklEcharts !!!"`)
-| _-width_ | width of the chart  (default value : `900px`)
-| _-height_ | height of the chart (default value : `500px`)
+| _-width_ | container's width (default value : `900px`)
+| _-height_ | container's height (default value : `500px`)
 | _-renderer_ | `canvas` or `svg` (default value : `canvas`)
 | _-jschartvar_ | variable name chart (default value : `chart_[ticklecharts::uuid]`) 
 | _-divid_ | name container's ID (default value : `id_[ticklecharts::uuid]`) 
 | _-outfile_ | full path html file (output by default in `[info script]/render.html`)
-| _-jsecharts_ | full path `echarts.min.js` file (by default `cdn` script)
+| _-jsecharts_ | full path `echarts.min.js` file (by default `https://cdn.jsdelivr.net/...` script)
 | _-jsvar_ | variable name js (default value : `option_[ticklecharts::uuid]`)
-| _-script_ | jsfunc (default value : `"null"`)
+| _-script_ | jsfunc (default value : `'null'`)
 | _-class_ | specify container's CSS (default value : `"chart-container"`)
 | _-style_ | add inline style (default value : `width:'-width'; height:'-height';`)
+| _-template_ | `file` or `string` (default value `'file'`: _html/template.html_))
 
 ```tcl
 # Demo
@@ -89,11 +90,11 @@ $chart Add "lineSeries" -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 $chart Xaxis
 $chart Yaxis
 ```
-`-dataXXXItem` :
+`-dataItem` :
 ```tcl
 # Example for lineseries
 # Additional options are valid... see ticklecharts::lineItem in options.tcl
-$chart Add "lineSeries" -dataLineItem {
+$chart Add "lineSeries" -dataItem {
                                 {name "Mon" value 150}
                                 {name "Tue" value 230}
                                 {name "Wed" value 224}
@@ -327,7 +328,7 @@ set ::ticklecharts::htmlstdout "False" ; # default "True"
 set ::ticklecharts::keyGMAPI "??" ; # Please replace '??' with your own API key.
 
 # Set versions for js script.
-# Note : Num version (@X.X.X) should be present in js path .If no pattern matches, the script path is left unchanged.
+# Note : Num version (@X.X.X) should be defined in js path. If no pattern matches, the script path is left unchanged.
 set ::ticklecharts::echarts_version "X.X.X" ; # Echarts version
 set ::ticklecharts::gl_version      "X.X.X" ; # Echarts GL version
 set ::ticklecharts::gmap_version    "X.X.X" ; # gmap version
@@ -422,7 +423,7 @@ $pie SetOptions -legend {top "6%" left "65%"}
 
 $pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
                      -labelLine {show "True"} \
-                     -dataPieItem {
+                     -dataItem {
                       {value 1048 name "C++"}
                       {value 300 name "Tcl"}
                       {value 580 name "Javascript"}
@@ -578,4 +579,14 @@ Release :
     - Fixed a bug when the keys have a space `critcl::cproc critHuddleDump`.
     - dataset class support `ticklecharts::eDict` class for `-dimensions` property.
     - Keeps updating some examples to set new `Add` method for chart series.
+    - Cosmetic changes.
+*  **24-Jun-2023** : 3.1.4
+    - Update all examples with new `Add` method for chart series (The main method `AddXXXSeries` is still active).
+    - A new argument `-template` for `Render` method has been added. This new argument can be used to   
+    replace the html template file `template.html` with a string. See [this file](examples/scatter/scatter_logarithmic_regression.tcl) for detail.
+    - A new property `-dataItem` has been added for item data, to replace this writing   
+    `-dataXXXItem` (`XXX` refers to name series). All examples have been updated (The main method `-dataXXXItem` is still active).
+    - list.data (`list.d`) accepts now this class `ticklecharts::eString`
+    - Fixed a bug with the `superclass` method for timeline class.
+    - `template.html` has been updated.
     - Cosmetic changes.

@@ -194,12 +194,22 @@
                 # dataset class support `ticklecharts::eDict` class for `-dimensions` property.
                 # Keeps updating some examples to set new `Add` method for chart series.
                 # Cosmetic changes.
+# 24-Jun-2023 : v3.1.4
+                # Update all examples with new `Add` method for chart series (The main method `AddXXXSeries` is still active).
+                # A new argument `-template` for `Render` method has been added. This new argument can be used to   
+                #   replace the html template file `template.html` with a string. See [this file](examples/scatter/scatter_logarithmic_regression.tcl) for detail.
+                # A new property `-dataItem` has been added for item data, to replace this writing   
+                #  `-dataXXXItem` (`XXX` refers to name series). All examples have been updated (The main method `-dataXXXItem` is still active).
+                # list.data (`list.d`) accepts now this class `ticklecharts::eString`
+                # Fixed a bug with the `superclass` method for timeline class.
+                # `template.html` has been updated.
+                # Cosmetic changes.
 
 package require Tcl 8.6
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.1.3 ; # ticklEcharts version
+    variable version         3.1.4 ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-4-1)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
@@ -210,7 +220,7 @@ namespace eval ticklecharts {
     variable htmlstdout      "True"
     variable minProperties   "False"
     variable tsbIsReady      "False" ; # Tsb package.
-    variable checkURL        "False" ; # Verify if a URL exists.
+    variable checkURL        "False" ; # Checks if a URL exists.
     variable htmltemplate    [file join $edir html template.html]
     variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"
     variable eGLscript       "https://cdn.jsdelivr.net/npm/echarts-gl@${gl_version}/dist/echarts-gl.min.js"
