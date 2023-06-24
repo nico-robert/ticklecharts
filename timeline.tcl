@@ -268,7 +268,8 @@ proc ticklecharts::timelineItem {value} {
     # Returns dict options
 
     if {![dict exists $value -data]} {
-        error "key 'data' not defined."
+        error "Property '-data' not defined for\
+              '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     if {[llength $value] % 2} {

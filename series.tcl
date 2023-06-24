@@ -75,7 +75,7 @@ proc ticklecharts::barSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataItem' or '-dataBarItem'\
+            error "'chart' object cannot contains '-data', '-dataItem' or '-dataBarItem'\
                     when a class dataset is defined."
         }
 
@@ -89,7 +89,7 @@ proc ticklecharts::barSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'... for\
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::barItem $value $itemKey]
@@ -185,7 +185,7 @@ proc ticklecharts::lineSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataItem' or '-dataLineItem'\
+            error "'chart' object cannot contains '-data', '-dataItem' or '-dataLineItem'\
                     when a class dataset is defined."
         }
 
@@ -199,7 +199,7 @@ proc ticklecharts::lineSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'... for\
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lineItem $value $itemKey]
@@ -295,7 +295,7 @@ proc ticklecharts::pieSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '$itemKey'\
+            error "'chart' object cannot contains '$itemKey'\
                     when a class dataset is defined."
         }
 
@@ -309,7 +309,8 @@ proc ticklecharts::pieSeries {index chart value} {
     } else {
         # set item options when dataset class doesn't exist...
         if {![dict exists $value $itemKey]} {
-            error "'-dataPieItem' or '-dataItem' should be defined."
+            error "'-dataPieItem' or '-dataItem' properties should be defined\
+                    for '[ticklecharts::getLevelProperties [info level]]'."
         }
         setdef options -data  -minversion 5  -validvalue {} -type list.o -default [ticklecharts::pieItem $value $itemKey]
     }
@@ -395,7 +396,7 @@ proc ticklecharts::funnelSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '$itemKey'\
+            error "'chart' object cannot contains '$itemKey'\
                     when a class dataset is defined."
         }
 
@@ -409,7 +410,8 @@ proc ticklecharts::funnelSeries {index chart value} {
 
     } else {
         if {![dict exists $value $itemKey]} {
-            error "'-dataFunnelItem' or '-dataItem' should be defined."
+            error "'-dataFunnelItem' or '-dataItem' properties should be defined\
+                    for '[ticklecharts::getLevelProperties [info level]]'."
         }
         setdef options -data -minversion 5 -validvalue {} -type list.o -default [ticklecharts::funnelItem $value $itemKey]
     }
@@ -476,7 +478,8 @@ proc ticklecharts::radarSeries {index value} {
     set itemKey [ticklecharts::itemKey Radar $value]
 
     if {![dict exists $value $itemKey]} {
-        error "'-dataRadarItem' or '-dataItem' should be defined."
+        error "'-dataRadarItem' or '-dataItem' properties should be defined\ 
+               for '[ticklecharts::getLevelProperties [info level]]'."
     }
 
     setdef options -data -minversion 5 -validvalue {} -type list.o  -default [ticklecharts::radarItem $value $itemKey]
@@ -574,7 +577,7 @@ proc ticklecharts::scatterSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataScatterItem' or '-dataItem'
+            error "'chart' object cannot contains '-data', '-dataScatterItem' or '-dataItem'
                     when a class dataset is defined."
         }
 
@@ -589,7 +592,7 @@ proc ticklecharts::scatterSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'"
         }
         if {![dict exists $value -type]} {
             dict set value -type "scatter"
@@ -667,7 +670,7 @@ proc ticklecharts::heatmapSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contains '-data' when a class dataset is defined."
+            error "'chart' object cannot contains '-data' when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1002,7 +1005,7 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' Class cannot contains '-data' when a class dataset is defined."
+            error "'chart' object cannot contains '-data' when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1082,7 +1085,7 @@ proc ticklecharts::candlestickSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataCandlestickItem' or '-dataItem'\
+            error "'chart' object cannot contains '-data', '-dataCandlestickItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -1094,7 +1097,7 @@ proc ticklecharts::candlestickSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value $itemKey]
     } else {
@@ -1156,7 +1159,7 @@ proc ticklecharts::parallelSeries {index value} {
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::parallelItem $value $itemKey]
     } else {
@@ -1228,7 +1231,7 @@ proc ticklecharts::gaugeSeries {index value} {
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data', '-dataGaugeItem' or '-dataItem'"
+            error "'chart' object cannot contains '-data', '-dataGaugeItem' or '-dataItem'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value $itemKey]
     } else {
@@ -1335,8 +1338,12 @@ proc ticklecharts::graphSeries {index value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -circular -force -scaleLimit -itemStyle -lineStyle -label -edgeLabel -labelLayout -emphasis \
-                                  -blur -select -categories -links -edges -markPoint -markLine -markArea $itemKey]
+    set value [dict remove $value -circular -force -scaleLimit \
+                                  -itemStyle -lineStyle -label \
+                                  -edgeLabel -labelLayout -emphasis \
+                                  -blur -select -categories -links \
+                                  -edges -markPoint -markLine \
+                                  -markArea $itemKey]
 
     set options [merge $options $value]
 
@@ -1429,7 +1436,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', 'dataBoxPlotItem' or '-dataItem'\
+            error "'chart' object cannot contains '-data', 'dataBoxPlotItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -1443,7 +1450,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value $itemKey]
     } else {
@@ -1590,7 +1597,7 @@ proc ticklecharts::mapSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataMapItem' or '-dataItem'\
+            error "'chart' object cannot contains '-data', '-dataMapItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -1604,7 +1611,7 @@ proc ticklecharts::mapSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value $itemKey]
     } else {
@@ -1684,7 +1691,7 @@ proc ticklecharts::linesSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-dataLinesItem' or '-dataItem'\
+            error "'chart' object cannot contains '-dataLinesItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -1698,7 +1705,7 @@ proc ticklecharts::linesSeries {index chart value} {
 
     } else {
         if {![dict exists $value $itemKey]} {
-            error "'chart' args should contain '-dataLinesItem' or '-dataItem'"
+            error "'chart' object should contain '-dataLinesItem' or '-dataItem'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::linesItem $value $itemKey]
     }
