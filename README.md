@@ -341,7 +341,7 @@ set ::ticklecharts::checkURL "True" ; # default "False"
 
 Examples :
 -------------------------
-See **[examples](/examples)** for all demos (from [Apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
+See the **[examples](/examples)** folder for all demos (from [Apache Echarts examples](https://echarts.apache.org/examples/en/index.html))
 
 ![line and bar mixed](images/line_and_bar_mixed.png)
 ```tcl
@@ -378,11 +378,7 @@ $chart Add "lineSeries" -name "Temperature" \
                         -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
 
 
-set fbasename [file rootname [file tail [info script]]]
-set dirname   [file dirname [info script]]
-
-# Save to html...
-$chart Render -outfile [file join $dirname $fbasename.html] -title $fbasename
+$chart Render
 ```
 ![line, bar and pie layout](images/line_bar_pie_layout.png)
 ```tcl
@@ -437,13 +433,7 @@ $layout Add $bar  -bottom "60%" -width "40%" -left "5%"
 $layout Add $line -top    "60%" -width "40%" -left "5%"
 $layout Add $pie  -center [list {75% 50%}]
 
-set fbasename [file rootname [file tail [info script]]]
-set dirname [file dirname [info script]]
-
-$layout Render -outfile [file join $dirname $fbasename.html] \
-               -title $fbasename \
-               -width 1700px \
-               -height 1000px
+$layout Render
 ```
 #### Currently chart and options supported are :
 - **Global options :**
