@@ -62,7 +62,8 @@ proc ticklecharts::bar3DSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'..."
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::bar3DItem $value $itemKey]
     } else {
@@ -112,7 +113,7 @@ proc ticklecharts::line3DSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataLine3DItem' or 'dataItem'\
+            error "'chart' Class cannot contains '-data', '-dataLine3DItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -126,7 +127,8 @@ proc ticklecharts::line3DSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' args cannot contains '-data' and '$itemKey'..."
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::line3DItem $value $itemKey]
     } else {
@@ -179,7 +181,8 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value $itemKey]} {
         foreach k {-data -equation -parametricEquation} {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '$itemKey'..."
+                error "'chart' args cannot contains '$k' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::surfaceItem $value $itemKey]
@@ -188,7 +191,8 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value -equation]} {
         foreach k [list -data $itemKey -parametricEquation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '-equation'..."
+                error "'chart' args cannot contains '$k' and '-equation'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
     }
@@ -196,7 +200,8 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value -parametricEquation]} {
         foreach k [list -data $itemKey -equation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '-parametricEquation'..."
+                error "'chart' args cannot contains '$k' and '-parametricEquation'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
     }
