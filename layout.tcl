@@ -435,8 +435,8 @@ oo::define ticklecharts::Gridlayout {
         # args - Options described below.
         #
         # -title      - header title html
-        # -width      - size html canvas
-        # -height     - size html canvas
+        # -width      - container's width
+        # -height     - container's height
         # -renderer   - 'canvas' or 'svg'
         # -jschartvar - name chart var
         # -divid      - name id var
