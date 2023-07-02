@@ -592,7 +592,8 @@ proc ticklecharts::scatterSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         if {![dict exists $value -type]} {
             dict set value -type "scatter"
@@ -1097,7 +1098,8 @@ proc ticklecharts::candlestickSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::candlestickItem $value $itemKey]
     } else {
@@ -1159,7 +1161,8 @@ proc ticklecharts::parallelSeries {index value} {
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::parallelItem $value $itemKey]
     } else {
@@ -1231,7 +1234,8 @@ proc ticklecharts::gaugeSeries {index value} {
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data', '-dataGaugeItem' or '-dataItem'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::gaugeItem $value $itemKey]
     } else {
@@ -1328,7 +1332,8 @@ proc ticklecharts::graphSeries {index value} {
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'graph' args cannot contains '-data', '-dataGraphItem' or '-dataItem'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data  -minversion 5  -validvalue {}  -type list.o  -default [ticklecharts::dataGraphItem $value $itemKey]
     } else {
@@ -1436,7 +1441,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' object cannot contains '-data', 'dataBoxPlotItem' or '-dataItem'\
+            error "'chart' object cannot contains '-data', '-dataBoxPlotItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -1450,7 +1455,8 @@ proc ticklecharts::boxplotSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value $itemKey]
     } else {
@@ -1611,7 +1617,8 @@ proc ticklecharts::mapSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'"
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::mapItem $value $itemKey]
     } else {
