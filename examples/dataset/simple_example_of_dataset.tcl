@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : re-working 'dataset' class should be a list of list...
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Removes unnecessary 'list of list' for dataset class.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -16,7 +17,7 @@ set source {
       }
 
 # dataset class
-set dset [ticklecharts::dataset new [list [list -source $source -sourceHeader "true"]]]
+set dset [ticklecharts::dataset new [list -source $source -sourceHeader "true"]]
 
 # These series are in the first grid.
 set bar [ticklecharts::chart new]
