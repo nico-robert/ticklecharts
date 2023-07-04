@@ -237,6 +237,11 @@ oo::define ticklecharts::chart {
             error "::tsb file should be sourced..."
         }
 
+        if {[llength $args] % 2} {
+            error "wrong # args: should be '[self] RenderTsb'\
+                   ?-renderer renderer? ..."
+        }
+
         set json [my toJSON] ; # jsondump
 
         set opts_tsb [ticklecharts::tsbOptions $args]
@@ -317,6 +322,11 @@ oo::define ticklecharts::chart {
         # -template   - template (file or string).
         #
         # Returns full path html file.
+
+        if {[llength $args] % 2} {
+            error "wrong # args: should be '[self] Render'\
+                   ?-title title? ..."
+        }
 
         set json [my toJSON] ; # jsondump
         # arguments options
