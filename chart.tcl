@@ -238,8 +238,8 @@ oo::define ticklecharts::chart {
         }
 
         if {[llength $args] % 2} {
-            error "wrong # args: should be '[self] RenderTsb'\
-                   ?-renderer renderer? ..."
+            error "wrong # args: should be \"[self] RenderTsb\
+                   ?-renderer renderer? ...\""
         }
 
         set json [my toJSON] ; # jsondump
@@ -324,8 +324,8 @@ oo::define ticklecharts::chart {
         # Returns full path html file.
 
         if {[llength $args] % 2} {
-            error "wrong # args: should be '[self] Render'\
-                   ?-title title? ..."
+            error "wrong # args: should be \"[self] Render\
+                   ?-title title? ...\""
         }
 
         set json [my toJSON] ; # jsondump
@@ -378,7 +378,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
-            error "radiusAxis or angleAxis not supported with 'Xaxis'"
+            error "radiusAxis or angleAxis not suitable with 'Xaxis'"
         }
 
         set options [ticklecharts::xAxis [self] $args]
@@ -402,7 +402,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
-            error "radiusAxis or angleAxis not supported with 'Yaxis'"
+            error "radiusAxis or angleAxis not suitable with 'Yaxis'"
         }
 
         set options [ticklecharts::yAxis [self] $args]
@@ -426,7 +426,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not supported with 'radiusAxis'"
+            error "xAxis or yAxis not suitable with 'radiusAxis'"
         }
 
         set options [ticklecharts::radiusAxis $args]
@@ -450,7 +450,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not supported with 'angleAxis'"
+            error "xAxis or yAxis not suitable with 'angleAxis'"
         }
 
         set options [ticklecharts::angleAxis $args]
@@ -493,7 +493,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not supported with 'Radar coordinate'"
+            error "xAxis or yAxis not suitable with 'Radar coordinate'"
         }
 
         set options [ticklecharts::radarCoordinate $args]
@@ -517,7 +517,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not supported with 'SingleAxis'"
+            error "xAxis or yAxis not suitable with 'SingleAxis'"
         }
 
         set options [ticklecharts::singleAxis $args]
@@ -541,7 +541,7 @@ oo::define ticklecharts::chart {
         set mykeys [my keys]
 
         if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not supported with 'parallelAxis'"
+            error "xAxis or yAxis not suitable with 'parallelAxis'"
         }
 
         set options [ticklecharts::parallelAxis $args]
