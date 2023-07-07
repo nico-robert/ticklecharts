@@ -14,14 +14,14 @@ trace add variable ticklecharts::gmap_version    write [list ticklecharts::trace
 trace add variable ticklecharts::wc_version      write [list ticklecharts::traceWCVersion        "2.0.0" $::ticklecharts::wc_version]
 trace add variable ticklecharts::keyGMAPI        write [list ticklecharts::traceKeyGMAPI]
 
-trace add execution ticklecharts::xAxis      leave ticklecharts::trackEnd
-trace add execution ticklecharts::yAxis      leave ticklecharts::trackEnd
-trace add execution ticklecharts::lineSeries leave ticklecharts::trackEnd
-trace add execution ticklecharts::label      leave ticklecharts::trackEnd
-trace add execution ticklecharts::endLabel   leave ticklecharts::trackEnd
-trace add execution ticklecharts::lineStyle  leave ticklecharts::trackEnd
-trace add execution ticklecharts::itemStyle  leave ticklecharts::trackEnd
-trace add execution ticklecharts::textStyle  leave ticklecharts::trackEnd
+trace add execution ticklecharts::xAxis      leave ticklecharts::track
+trace add execution ticklecharts::yAxis      leave ticklecharts::track
+trace add execution ticklecharts::lineSeries leave ticklecharts::track
+trace add execution ticklecharts::label      leave ticklecharts::track
+trace add execution ticklecharts::endLabel   leave ticklecharts::track
+trace add execution ticklecharts::lineStyle  leave ticklecharts::track
+trace add execution ticklecharts::itemStyle  leave ticklecharts::track
+trace add execution ticklecharts::textStyle  leave ticklecharts::track
 
 proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
     # Changes the script Echarts version variable.
@@ -182,7 +182,7 @@ proc ticklecharts::traceKeyGMAPI {args} {
     return {}
 }
 
-proc ticklecharts::trackEnd {call args} {
+proc ticklecharts::track {call args} {
     # The goal here is to find if certain values
     # match each other (experimental procedure)
     # Maybe will be deleted... or reworked
@@ -207,6 +207,14 @@ proc ticklecharts::trackEnd {call args} {
         set name [lindex [info level $i] 0]
         if {[string match {ticklecharts::*} $name] ||
             [ticklecharts::isAObject $name]} {
+            # Adds an index if the trace command is related to a series.
+            if {[string match {ticklecharts::*Series} $name]} {
+                set index [lindex [info level $i] 1]
+                if {[ticklecharts::typeOf $index] ne "num"} {
+                    error "'$index' should be an integer." 
+                }
+                set name $name\($index)
+            }
             lappend cmds $name
         }
     }
@@ -214,11 +222,21 @@ proc ticklecharts::trackEnd {call args} {
     set obj [lindex $cmds 0]
 
     if {![ticklecharts::isAObject $obj]} {
-        error "First index of list for 'trackEnd' command\
+        error "First index of list for 'track' command\
                should be an object"
     }
+    
+    set cmd [lindex $call 0]
+    # Adds an index if the trace command is related to a series.
+    if {[string match {ticklecharts::*Series} $cmd]} {
+        set index [lindex $call 1]
+        if {[ticklecharts::typeOf $index] ne "num"} {
+            error "'$index' should be an integer." 
+        }
+        set cmd $cmd\($index)
+    }
 
-    lappend cmds [lindex $call 0]
+    lappend cmds $cmd
     set cmds [string map {ticklecharts:: ""} [join $cmds "."]]
 
     # 'data' variable may be a class.
@@ -245,7 +263,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d -type] 0]
                                     if {$v ne "category"} {
                                         puts "warning (trace): xAxis.type should be set to 'category'\
-                                            if lineSeries.showAllSymbol is set to '$value'"
+                                            if '[lindex $trace 1].showAllSymbol' is set to '$value'"
                                     }
                                 }
                             }
@@ -258,20 +276,20 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d -type] 0]
                                     if {$v in {time category}} {
                                         puts "warning (trace): yAxis.type should be set to 'value' or 'log'\
-                                            if lineSeries.stack is set to '$value'"
+                                            if '[lindex $trace 1].stack' is set to '$value'"
                                     }
                                 }
                             }
                         }
                         "distance" {
                             # https://echarts.apache.org/en/option.html#series-line.label.distance
-                            if {[dict exists $etrace $obj.lineSeries.label]} {
-                                set _d [dict get $etrace $obj.lineSeries.label]
+                            if {[dict exists $etrace $obj.[lindex $trace 1]]} {
+                                set _d [dict get $etrace $obj.[lindex $trace 1]]
                                 if {($value ne "nothing") && [dict exists $_d position]} {
                                     set v [lindex [dict get $_d position] 0]
-                                    if {$v ni {top insideRight}} {
-                                        puts "warning (trace): lineSeries.label.position is valid only\
-                                            when position is string value (like 'top', 'insideRight')."
+                                    if {$v ne "nothing" && $v ni {top insideRight}} {
+                                        puts "warning (trace): [lindex $trace 1].distance is valid only\
+                                            when '[lindex $trace 1].position' is a 'string' (like 'top', 'insideRight')."
                                     }
                                 }
                             }
@@ -285,7 +303,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d join] 0]
                                     if {$v ne "miter"} {
                                         puts "warning (trace): [lindex $trace 1].miterLimit is valid only\
-                                            when 'join' is set as 'miter'"
+                                            when '[lindex $trace 1].join' is set as 'miter'"
                                     }
                                 }
                             }
@@ -299,7 +317,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d miterLimit] 0]
                                     if {$v eq "nothing"} {
                                         puts "warning (trace): [lindex $trace 1].join is valid only\
-                                            when 'miterLimit' is set, now it set to '$v'"
+                                            when '[lindex $trace 1].miterLimit' is set, now it set to '$v'"
                                     }
                                 }
                             }
@@ -313,7 +331,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d borderJoin] 0]
                                     if {$v ne "miter"} {
                                         puts "warning (trace): [lindex $trace 1].borderMiterLimit is valid only\
-                                            when 'borderJoin' is set as 'miter'"
+                                            when '[lindex $trace 1].borderJoin' is set as 'miter'"
                                     }
                                 }
                             }
@@ -327,7 +345,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d borderMiterLimit] 0]
                                     if {$v eq "nothing"} {
                                         puts "warning (trace): [lindex $trace 1].borderJoin is valid only\
-                                            when 'borderMiterLimit' is set, now it set to '$v'"
+                                            when '[lindex $trace 1].borderMiterLimit' is set, now it set to '$v'"
                                     }
                                 }
                             }
@@ -341,7 +359,7 @@ proc ticklecharts::trackEnd {call args} {
                                     set v [lindex [dict get $_d overflow] 0]
                                     if {$v ne "truncate"} {
                                         puts "warning (trace): [lindex $trace 1].ellipsis to be displayed when\
-                                             'overflow' is set to 'truncate'."
+                                             '[lindex $trace 1].overflow' is set to 'truncate'."
                                     }
                                 }
                             }
