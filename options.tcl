@@ -960,7 +960,7 @@ proc ticklecharts::richItem {value} {
     return [new edict $opts]
 }
 
-proc ticklecharts::boxPlotitem {value itemKey} {
+proc ticklecharts::boxPlotItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 

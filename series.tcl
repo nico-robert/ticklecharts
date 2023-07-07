@@ -1458,7 +1458,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
             error "'chart' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotitem $value $itemKey]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::boxPlotItem $value $itemKey]
     } else {
         if {![dict exists $value -data]} {
             error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
