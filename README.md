@@ -580,3 +580,6 @@ Release :
     - Fixed a bug with the `superclass` method for timeline class.
     - `template.html` has been updated.
     - Cosmetic changes.
+*  **08-Jul-2023** : 3.1.5
+    - Fixed a bug introduced with version 3.1.2, when Render method's argument have spaces in options.
+    - Cosmetic changes.
