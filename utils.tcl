@@ -12,23 +12,23 @@ proc ticklecharts::htmlMap {h html htmloptions} {
     #
     # Returns list map html
 
-    lappend mapoptions [format {%%width%%      %s} [set width [lindex [dict get $htmloptions -width] 0]]]
-    lappend mapoptions [format {%%height%%     %s} [set height [lindex [dict get $htmloptions -height] 0]]]
-    lappend mapoptions [format {%%renderer%%   %s} [lindex [dict get $htmloptions -renderer] 0]]
-    lappend mapoptions [format {%%jsecharts%%  %s} [lindex [dict get $htmloptions -jsecharts] 0]]
-    lappend mapoptions [format {%%jschartvar%% %s} [lindex [dict get $htmloptions -jschartvar] 0]]
-    lappend mapoptions [format {%%divid%%      %s} [lindex [dict get $htmloptions -divid] 0]]
-    lappend mapoptions [format {%%title%%      %s} [lindex [dict get $htmloptions -title] 0]]
-    lappend mapoptions [format {%%jsvar%%      %s} [lindex [dict get $htmloptions -jsvar] 0]]
-    lappend mapoptions [format {%%class%%      %s} [lindex [dict get $htmloptions -class] 0]]
+    lappend mapoptions [list %width%      [set width  [lindex [dict get $htmloptions -width]  0]]]
+    lappend mapoptions [list %height%     [set height [lindex [dict get $htmloptions -height] 0]]]
+    lappend mapoptions [list %renderer%   [lindex [dict get $htmloptions -renderer]   0]]
+    lappend mapoptions [list %jsecharts%  [lindex [dict get $htmloptions -jsecharts]  0]]
+    lappend mapoptions [list %jschartvar% [lindex [dict get $htmloptions -jschartvar] 0]]
+    lappend mapoptions [list %divid%      [lindex [dict get $htmloptions -divid] 0]]
+    lappend mapoptions [list %title%      [lindex [dict get $htmloptions -title] 0]]
+    lappend mapoptions [list %jsvar%      [lindex [dict get $htmloptions -jsvar] 0]]
+    lappend mapoptions [list %class%      [lindex [dict get $htmloptions -class] 0]]
 
     # Add style in html template...
     set style [lindex [dict get $htmloptions -style] 0]
 
     if {$style eq "nothing"} {
-        lappend mapoptions [format {%%style%% {width:%s; height:%s;}} $width $height]
+        lappend mapoptions [list %style% [format {width:%s; height:%s;} $width $height]]
     } else {
-        lappend mapoptions [format {%%style%% %s} $style]
+        lappend mapoptions [list %style% $style]
     }
 
     # Add js script(s) in html template... or not.
@@ -682,7 +682,7 @@ proc ticklecharts::merge {d other} {
 
         # Adds trace key.
         set property [expr {
-                $trace ? [ticklecharts::getLevelProperties [info level]] : "null"
+                $trace ? [ticklecharts::getLevelProperties [info level] True] : "null"
             }
         ]
 
@@ -815,13 +815,16 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         if {[string match {*setdef*} $val]} {
             if {[string first "#" [string trim $val]] == -1 && [string match {*\[ticklecharts::*} $val]} {
                 set str [string range $val 0 [expr {[string first "-default" $val] - 1}]]
+                set map [string trim [string map $listmap $str]]
 
                 if {$ifnP ne ""} {
-                    if {$ifnP ne $copyifnP} {lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]}
+                    if {$ifnP ne $copyifnP} {
+                        lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]
+                    }
                     set newIndent [expr {$indent - 4}]
-                    lappend dataInfo [format "%${newIndent}s %s" "" [string trim [string map $listmap $str]]]
+                    lappend dataInfo [format "%${newIndent}s %s" "" $map]
                 } else {
-                    lappend dataInfo [format "%${indent}s %s" "" [string trim [string map $listmap $str]]]
+                    lappend dataInfo [format "%${indent}s %s" "" $map]
                 }
 
                 # bug 'infinite loop?'. Add test to get if $match is not equal to current $key (name proc)
@@ -829,12 +832,15 @@ proc ticklecharts::infoOptions {key {indent 0}} {
                     lappend dataInfo [ticklecharts::infoOptions $match [expr {$indent - 2}]]
                 }
             } else {
+                set map [string trim [string map $listmap $val]]
                 if {$ifnP ne ""} {
-                    if {$ifnP ne $copyifnP} {lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]}
+                    if {$ifnP ne $copyifnP} {
+                        lappend dataInfo [format "%${indent}s %s \{" "" $ifnP]
+                    }
                     set newIndent [expr {$indent - 4}]
-                    lappend dataInfo [format "%${newIndent}s %s" "" [string trim [string map $listmap $val]]]
+                    lappend dataInfo [format "%${newIndent}s %s" "" $map]
                 } else {
-                    lappend dataInfo [format "%${indent}s %s" "" [string trim [string map $listmap $val]]]
+                    lappend dataInfo [format "%${indent}s %s" "" $map]
                 }
             }
 
@@ -1002,10 +1008,11 @@ proc ticklecharts::random {val} {
     return [expr {int(rand() * $val)}]
 }
 
-proc ticklecharts::getLevelProperties {level} {
+proc ticklecharts::getLevelProperties {level {trace False}} {
     # Gets name level procedure
     #
-    # level - num
+    # level - num level procedure
+    # trace - bool
     #
     # Returns list name of procs...
 
@@ -1016,6 +1023,17 @@ proc ticklecharts::getLevelProperties {level} {
         if {[string match {ticklecharts::*} $name] && 
             $name ne "ticklecharts::formatEcharts"} {
             set property [string map {ticklecharts:: ""} $name]
+
+            # If $trace is true, adds an index if the level properties
+            # is related to a series.
+            if {$trace && [string match {ticklecharts::*Series} $name]} {
+                set index [lindex [info level $i] 1]
+                if {[ticklecharts::typeOf $index] ne "num"} {
+                    error "'$index' should be an integer value." 
+                }
+                set property $property\($index)
+            }
+
             if {$property ni $properties} {
                 lappend properties $property
             }
