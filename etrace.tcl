@@ -368,13 +368,13 @@ proc ticklecharts::track {call args} {
                 }
                 "xAxis" {
                     if {$key eq "type"} {
-                        if {[dict exists $etrace $obj.lineSeries]} {
-                            set _d [dict get $etrace $obj.lineSeries]
+                        foreach objSeries [dict keys $etrace $obj.lineSeries(*)] {
+                            set _d [dict get $etrace $objSeries]
                             if {($value ne "category") && [dict exists $_d -showAllSymbol]} {
                                 set v [lindex [dict get $_d -showAllSymbol] 0]
                                 if {$v ne "nothing"} {
                                     puts "warning (trace): xAxis.type should be set to 'category'\
-                                        if lineSeries.showAllSymbol is set to '$v'"
+                                        if '$objSeries.showAllSymbol' is set to '$v'"
                                 }
                             }
                         }
@@ -382,13 +382,13 @@ proc ticklecharts::track {call args} {
                 }
                 "yAxis" {
                     if {$key eq "type"} {
-                        if {[dict exists $etrace $obj.lineSeries]} {
-                            set _d [dict get $etrace $obj.lineSeries]
+                        foreach objSeries [dict keys $etrace $obj.lineSeries(*)] {
+                            set _d [dict get $etrace $objSeries]
                             if {($value in {time category}) && [dict exists $_d -stack]} {
                                 set v [lindex [dict get $_d -stack] 0]
                                 if {$v ne "nothing"} {
                                     puts "warning (trace): yAxis.type should be set to 'value' or 'log'\
-                                        if lineSeries.stack is set to '$v'"
+                                        if '$objSeries.stack' is set to '$v'"
                                 }
                             }
                         }
