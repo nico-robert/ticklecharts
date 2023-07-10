@@ -1,6 +1,6 @@
 # Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
-# ticklEcharts - Tcl wrapper for Apache ECharts. (https://echarts.apache.org/en/index.html)
+# ticklEcharts - Tcl wrapper around Apache ECharts. (https://echarts.apache.org/en/index.html)
 
 # 08-Feb-2022 : v1.0 Initial release
 # 16-Feb-2022 : v1.1

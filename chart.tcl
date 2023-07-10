@@ -73,7 +73,7 @@ oo::define ticklecharts::chart {
                 }
             }
         }
-        return [expr {([llength $ktype] > 1) ? 1 : 0}]
+        return [expr {[llength $ktype] > 1}]
     }
 
     method getOptions {args} {
