@@ -196,37 +196,37 @@ oo::define ticklecharts::ehuddle {
         #
         # append huddle to global '_huddle'. 
 
-        set _h [ticklecharts::ehuddle new]
+        set eh [ticklecharts::ehuddle new]
         lassign [split $key "="] type valkey
 
         # special case for timeline class
         lassign [self caller] _ obj method
-        set listk {}
-        foreach {k val} $value {
-            if {$method eq "timelineToHuddle"} {
+        if {$method eq "timelineToHuddle"} {
+            set listk {}
+            foreach {k val} $value {
                 if {[string match {*@D=*} $k] && ($k in $listk)} {
-                    $_h append $k $val
+                    $eh append $k $val
                 } else {
-                    $_h set $k $val
+                    $eh set $k $val
                 }
                 lappend listk $k
-            } else {
-                $_h set $k $val
             }
+        } else {
+            $eh set {*}$value
         }
 
         if {$valkey in [my keys]} {
             set h [my extract]
             set index [huddle llength [huddle get $h $valkey]]
-            huddle set h $valkey $index [$_h extract]
+            huddle set h $valkey $index [$eh extract]
         } else {
             [self] set $key {}
             set h [my extract]
 
             if {$type eq "@L"} {
-                huddle set h $valkey [$_h extract]
+                huddle set h $valkey [$eh extract]
             } else {
-                huddle set h $valkey 0 [$_h extract]
+                huddle set h $valkey 0 [$eh extract]
             }
         }
 
@@ -238,7 +238,7 @@ oo::define ticklecharts::ehuddle {
         }
 
         # destroy...
-        $_h destroy
+        $eh destroy
 
         # set new huddle list
         set _huddle [list $h]
@@ -296,7 +296,6 @@ proc ticklecharts::ehuddle_num val {
     }
 
     return [list num $val]
-
 }
 
 proc ticklecharts::ehuddleListNum data {
