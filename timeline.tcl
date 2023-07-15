@@ -64,12 +64,13 @@ oo::define ticklecharts::timeline {
         # Returns nothing
 
         if {[llength $args] == 0} {
-            error "'data' should be defined for timeline option"
+             error "wrong # args: timeline arguments should not be equal\
+                                  to 0 for the 'Add' method."
         }
 
         if {![expr {[$chart getType] eq "chart" || [$chart getType] eq "chart3D" ||
                     [$chart getType] eq "gridlayout"}]} {
-            error "first argument for 'Add' method should be a 'chart',\
+            error "First argument for 'Add' method should be a 'chart',\
                   'chart3D' or 'gridlayout' class."
         }
 
@@ -267,13 +268,13 @@ proc ticklecharts::timelineItem {value} {
     #
     # Returns dict options
 
+    if {[llength $value] % 2} {
+        ticklecharts::errorEvenArgs
+    }
+
     if {![dict exists $value -data]} {
         error "Property '-data' not defined for\
               '[ticklecharts::getLevelProperties [info level]]'"
-    }
-
-    if {[llength $value] % 2} {
-        ticklecharts::errorEvenArgs
     }
 
     set d [dict get $value -data]
@@ -284,7 +285,10 @@ proc ticklecharts::timelineItem {value} {
 
     # force string value for this key below
     # with 'eString' class.
-    dict set d value [new estr [dict get $d value]]
+    set typeOf [ticklecharts::typeOf [dict get $d value]]
+    if {$typeOf ne "str"} {
+        dict set d value [new estr [dict get $d value]]
+    }
 
     setdef options value       -minversion 5  -validvalue {}               -type str|null    -default "nothing"
     setdef options symbol      -minversion 5  -validvalue formatItemSymbol -type str|null    -default "nothing"
