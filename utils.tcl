@@ -885,22 +885,6 @@ proc ticklecharts::keysOptsThemeExists {name} {
     return [dict exists $opts_theme $name]
 }
 
-proc ticklecharts::dictIsNotNothing {d} {
-    # Check if the dictionary contains only 'null' values.
-    #
-    # d   - dict
-    #
-    # Returns True if all values are null, False otherwise.
-
-    dict for {key info} $d {
-        if {$info ne "null"} {
-            return 0
-        }
-    }
-
-    return 1
-}
-
 proc ticklecharts::keyDictExists {basekey d key} {
     # Check if keyname exists in dict.
     #
@@ -1106,7 +1090,7 @@ proc ticklecharts::isURL? {url} {
 }
 
 proc ticklecharts::urlExists? {url} {
-    # Check if 'url' exists... If 'checkURL' variable
+    # Check if 'url' exists, if 'checkURL' variable
     # is set to True. 'curl' util for testing.
     # I suppose if available for all platforms.
     # Platform tested :
