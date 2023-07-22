@@ -3212,29 +3212,44 @@ proc ticklecharts::axisPointer {value} {
         return "nothing"
     }
 
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set d [dict get $value $key]
 
-    setdef options type                    -minversion 5  -validvalue formatAxisPointerType -type str             -default "line"
-    setdef options axis                    -minversion 5  -validvalue formatAxisPointerAxis -type str             -default "auto"
-    setdef options snap                    -minversion 5  -validvalue {}                    -type bool|null       -default "nothing"
-    setdef options z                       -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options label                   -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::label $d]
-    setdef options lineStyle               -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::lineStyle $d]
-    setdef options shadowStyle             -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::shadowStyle $d]
-    setdef options crossStyle              -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::crossStyle $d]
-    setdef options animation               -minversion 5  -validvalue {}                    -type bool            -default "True"
-    setdef options animationThreshold      -minversion 5  -validvalue {}                    -type num             -default 2000
-    setdef options animationDuration       -minversion 5  -validvalue {}                    -type num|jsfunc      -default 1000
-    setdef options animationEasing         -minversion 5  -validvalue formatAEasing         -type str             -default "cubicOut"
-    setdef options animationDelay          -minversion 5  -validvalue {}                    -type num|jsfunc|null -default "nothing"
-    setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|jsfunc      -default 200
-    setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing         -type str             -default "exponentialOut"
-    setdef options animationDelayUpdate    -minversion 5  -validvalue {}                    -type num|jsfunc|null -default "nothing"
-    #...
+    if {[infoNameProc $levelP "xAxis.axisPointer"] || [infoNameProc $levelP "yAxis.axisPointer"] || [infoNameProc $levelP "singleAxis.axisPointer"]} {
+        setdef options show                    -minversion 5       -validvalue {}                      -type bool|null       -default "nothing"
+        setdef options type                    -minversion 5       -validvalue formatAxisPointerType   -type str             -default "line"
+        setdef options snap                    -minversion 5       -validvalue {}                      -type bool|null       -default "nothing"
+        setdef options z                       -minversion 5       -validvalue {}                      -type num|null        -default "nothing"
+        setdef options label                   -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::label $d]
+        setdef options lineStyle               -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::lineStyle $d]
+        setdef options shadowStyle             -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::shadowStyle $d]
+        setdef options triggerEmphasis         -minversion "5.4.3" -validvalue {}                      -type bool|null       -default "nothing"
+        setdef options triggerTooltip          -minversion 5       -validvalue {}                      -type bool|null       -default "nothing"
+        setdef options value                   -minversion 5       -validvalue {}                      -type num|null        -default "nothing"
+        setdef options status                  -minversion 5       -validvalue formatAxisPointerStatus -type str|null        -default "nothing"
+        setdef options handle                  -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::handle $d]
+    } else {
+        setdef options type                    -minversion 5       -validvalue formatAxisPointerType   -type str             -default "line"
+        setdef options axis                    -minversion 5       -validvalue formatAxisPointerAxis   -type str             -default "auto"
+        setdef options snap                    -minversion 5       -validvalue {}                      -type bool|null       -default "nothing"
+        setdef options z                       -minversion 5       -validvalue {}                      -type num|null        -default "nothing"
+        setdef options label                   -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::label $d]
+        setdef options lineStyle               -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::lineStyle $d]
+        setdef options shadowStyle             -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::shadowStyle $d]
+        setdef options crossStyle              -minversion 5       -validvalue {}                      -type dict|null       -default [ticklecharts::crossStyle $d]
+        setdef options animation               -minversion 5       -validvalue {}                      -type bool            -default "True"
+        setdef options animationThreshold      -minversion 5       -validvalue {}                      -type num             -default 2000
+        setdef options animationDuration       -minversion 5       -validvalue {}                      -type num|jsfunc      -default 1000
+        setdef options animationEasing         -minversion 5       -validvalue formatAEasing           -type str             -default "cubicOut"
+        setdef options animationDelay          -minversion 5       -validvalue {}                      -type num|jsfunc|null -default "nothing"
+        setdef options animationDurationUpdate -minversion 5       -validvalue {}                      -type num|jsfunc      -default 200
+        setdef options animationEasingUpdate   -minversion 5       -validvalue formatAEasing           -type str             -default "exponentialOut"
+        setdef options animationDelayUpdate    -minversion 5       -validvalue {}                      -type num|jsfunc|null -default "nothing"
+        #...
+    }
 
     # remove key(s)...
-    set d [dict remove $d label lineStyle \
-                          shadowStyle crossStyle]
+    set d [dict remove $d label lineStyle shadowStyle crossStyle handle]
 
     set options [merge $options $d]
 

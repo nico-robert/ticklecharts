@@ -174,7 +174,11 @@ proc ticklecharts::grid {value} {
     setdef options shadowColor     -minversion 5  -validvalue formatColor  -type str|null         -default "nothing"
     setdef options shadowOffsetX   -minversion 5  -validvalue {}           -type num|null         -default "nothing"
     setdef options shadowOffsetY   -minversion 5  -validvalue {}           -type num|null         -default "nothing"
+    setdef options tooltip         -minversion 5  -validvalue {}           -type dict|null        -default [ticklecharts::tooltip $d]
     #...
+
+    # remove key(s)...
+    set d [dict remove $d tooltip]
 
     set options [merge $options $d]
 
@@ -678,20 +682,21 @@ proc ticklecharts::axisPointerGlobal {value} {
 
     set d [dict get $value -axisPointer]
 
-    setdef options id              -minversion 5  -validvalue {}                    -type str|null        -default "nothing"
-    setdef options show            -minversion 5  -validvalue {}                    -type bool            -default "True"
-    setdef options type            -minversion 5  -validvalue formatAxisPointerType -type str             -default "line"
-    setdef options snap            -minversion 5  -validvalue {}                    -type bool|null       -default "nothing"
-    setdef options z               -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options label           -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::label $d]
-    setdef options lineStyle       -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::lineStyle $d]
-    setdef options shadowStyle     -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::shadowStyle $d]
-    setdef options triggerTooltip  -minversion 5  -validvalue {}                    -type bool            -default "True"
-    setdef options value           -minversion 5  -validvalue {}                    -type num|null        -default "nothing"
-    setdef options status          -minversion 5  -validvalue formatAPStatus        -type str|null        -default "nothing"
-    setdef options handle          -minversion 5  -validvalue {}                    -type dict|null       -default [ticklecharts::handle $d]
-    setdef options link            -minversion 5  -validvalue {}                    -type list.o|null     -default [ticklecharts::linkAxisPointerItem $d]
-    setdef options triggerOn       -minversion 5  -validvalue formatTriggerOn       -type str             -default "mousemove|click"
+    setdef options id               -minversion 5       -validvalue {}                    -type str|null        -default "nothing"
+    setdef options show             -minversion 5       -validvalue {}                    -type bool            -default "True"
+    setdef options type             -minversion 5       -validvalue formatAxisPointerType -type str             -default "line"
+    setdef options snap             -minversion 5       -validvalue {}                    -type bool|null       -default "nothing"
+    setdef options z                -minversion 5       -validvalue {}                    -type num|null        -default "nothing"
+    setdef options label            -minversion 5       -validvalue {}                    -type dict|null       -default [ticklecharts::label $d]
+    setdef options lineStyle        -minversion 5       -validvalue {}                    -type dict|null       -default [ticklecharts::lineStyle $d]
+    setdef options shadowStyle      -minversion 5       -validvalue {}                    -type dict|null       -default [ticklecharts::shadowStyle $d]
+    setdef options triggerTooltip   -minversion 5       -validvalue {}                    -type bool            -default "True"
+    setdef options triggerEmphasis  -minversion "5.4.3" -validvalue {}                    -type bool|null       -default "nothing"
+    setdef options value            -minversion 5       -validvalue {}                    -type num|null        -default "nothing"
+    setdef options status           -minversion 5       -validvalue formatAPStatus        -type str|null        -default "nothing"
+    setdef options handle           -minversion 5       -validvalue {}                    -type dict|null       -default [ticklecharts::handle $d]
+    setdef options link             -minversion 5       -validvalue {}                    -type list.o|null     -default [ticklecharts::linkAxisPointerItem $d]
+    setdef options triggerOn        -minversion 5       -validvalue formatTriggerOn       -type str             -default "mousemove|click"
     #...
 
     # remove key(s)...
