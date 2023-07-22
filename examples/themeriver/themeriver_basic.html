@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>themeriver_basic</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
   </head>
   <body>
-    <div id="id_77795207326133" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="id_8cd6e65d8c0a477eacf48c840ab20a05" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_77795207324819 = echarts.init(document.getElementById('id_77795207326133'), null, {renderer: 'canvas'});
-        var option = {
+      var chart_8cd6e65d8c0a477eacf48c840ab20a05 = echarts.init(document.getElementById("id_8cd6e65d8c0a477eacf48c840ab20a05"), null, {renderer: "canvas"});
+      var option_8cd6e65d8c0a477eacf48c840ab20a05 = {
   "backgroundColor": "rgba(0,0,0,0)",
   "color": [
     "#5470c6",
@@ -79,7 +79,6 @@
           "dashOffset": 0,
           "cap": "butt",
           "join": "bevel",
-          "miterLimit": 10,
           "shadowBlur": 0,
           "shadowColor": null,
           "shadowOffsetX": 0,
@@ -122,7 +121,6 @@
       "triggerEvent": false,
       "axisPointer": {
         "type": "line",
-        "axis": "auto",
         "label": {
           "show": true,
           "fontStyle": "normal",
@@ -147,16 +145,10 @@
           "ellipsis": "...",
           "precision": "auto",
           "margin": 3
-        },
-        "animation": true,
-        "animationThreshold": 2000,
-        "animationDuration": 1000,
-        "animationEasing": "cubicOut",
-        "animationDurationUpdate": 200,
-        "animationEasingUpdate": "exponentialOut"
+        }
       },
       "axisTick": {
-        "show": false,
+        "show": true,
         "interval": "auto",
         "length": 5
       },
@@ -198,7 +190,7 @@
     }],
   "series": [{
       "type": "themeRiver",
-      "name": "themeriverseries_1",
+      "name": "themeRiverseries_1",
       "colorBy": "data",
       "zlevel": 0,
       "z": 2,
@@ -217,7 +209,6 @@
           "borderDashOffset": 0,
           "borderCap": "butt",
           "borderJoin": "bevel",
-          "borderMiterLimit": 10,
           "shadowBlur": 20,
           "shadowColor": "rgba(0, 0, 0, 0.8)",
           "opacity": 1
@@ -857,8 +848,8 @@
         ]
       ]
     }]
-}
-        chart_77795207324819.setOption(option);
+};
+      chart_8cd6e65d8c0a477eacf48c840ab20a05.setOption(option_8cd6e65d8c0a477eacf48c840ab20a05);
     </script>
   </body>
 </html>

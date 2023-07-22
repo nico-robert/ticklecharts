@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : delete borderColor in SingleAxis(-splitLine) it's not a key option.
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Removes animation property in axisPointer.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -12,7 +13,7 @@ set chart [ticklecharts::chart new]
 $chart SetOptions -tooltip {trigger "axis" axisPointer {type line lineStyle {color "rgba(0,0,0,0.2)" width 1 type solid}}} \
                   -legend [list data [list {"DQ" "TY" "SS" "QG" "SY" "DD"}]]
                 
-$chart SingleAxis -top 50 -bottom 50 -axisTick {} -axisLabel {} -type "time" -axisPointer {animation true label {show true}}
+$chart SingleAxis -top 50 -bottom 50 -axisTick {} -axisLabel {} -type "time" -axisPointer {label {show true}}
 
 $chart Add "themeRiverSeries" -emphasis {itemStyle {shadowBlur 20 shadowColor "rgba(0, 0, 0, 0.8)"}} \
                               -data {
