@@ -705,6 +705,13 @@ proc ticklecharts::formatEcharts {formattype value key} {
                     set validvalue {none ancestor descendant}
                 }
             }
+            if {[ticklecharts::whichSeries? $nameproc] eq "sankeySeries"} {
+                if {[ticklecharts::vCompare $echarts_version "5.4.3"] >= 0} {
+                    set validvalue {none self series adjacency trajectory}
+                } else {
+                    set validvalue {none self series adjacency}
+                }
+            }
             if {$value ni $validvalue} {
                 error "'$value' should be '[formatMsgError $validvalue]'\
                         for this key: '$key' in $nameproc"
@@ -1221,6 +1228,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatAxisPointerStatus -
         formatAPStatus {
             # possible values...
             set validvalue {show hide}
