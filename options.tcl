@@ -152,6 +152,8 @@ proc ticklecharts::treeItem {value} {
 
     if {[dict exists $value -data]} {
         set key -data
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
     } elseif {[dict exists $value children]} {
         set key children
     } else {
@@ -224,6 +226,8 @@ proc ticklecharts::sunburstItem {value} {
 
     if {[dict exists $value -data]} {
         set key -data
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
     } elseif {[dict exists $value children]} {
         set key children
     } else {
@@ -290,6 +294,8 @@ proc ticklecharts::treemapItem {value} {
 
     if {[dict exists $value -data]} {
         set key -data
+    } elseif {[dict exists $value -dataItem]} {
+        set key -dataItem
     } elseif {[dict exists $value children]} {
         set key children
     } else {

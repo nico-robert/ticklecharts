@@ -737,13 +737,13 @@ proc ticklecharts::sunburstSeries {index value} {
     setdef options -animationDelayUpdate    -minversion 5  -validvalue {}                 -type num|jsfunc|null -default "nothing"
 
 
-    if {![dict exists $value -data]} {
-        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+    if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
+        error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
     set value [dict remove $value -label \
-                                  -data \
+                                  -data -dataItem \
                                   -levels \
                                   -labelLine \
                                   -labelLayout -itemStyle \
@@ -806,13 +806,13 @@ proc ticklecharts::treeSeries {index value} {
     setdef options -animationDelayUpdate    -minversion 5  -validvalue {}                  -type num|jsfunc|null      -default "nothing"
     setdef options -tooltip                 -minversion 5  -validvalue {}                  -type dict|null            -default [ticklecharts::tooltip $value]
 
-    if {![dict exists $value -data]} {
-        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+    if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
+        error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
     set value [dict remove $value -label \
-                                  -data \
+                                  -data -dataItem \
                                   -lineStyle \
                                   -labelLayout -itemStyle \
                                   -emphasis -blur -select -leaves]
@@ -1529,13 +1529,13 @@ proc ticklecharts::treemapSeries {index value} {
     setdef options -selectorItemGap         -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
     setdef options -selectorButtonGap       -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
 
-    if {![dict exists $value -data]} {
-        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+    if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
+        error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
     }
 
     # remove key(s)...
     set value [dict remove $value -label -upperLabel \
-                                  -data -breadcrumb -tooltip \
+                                  -data -dataItem -breadcrumb -tooltip \
                                   -labelLine -labelLayout -itemStyle \
                                   -emphasis -blur -select -levels]
 
