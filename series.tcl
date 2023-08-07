@@ -983,7 +983,6 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
     setdef options -symbolBoundingData      -minversion 5       -validvalue {}                    -type num|null          -default "nothing"
     setdef options -symbolPatternSize       -minversion 5       -validvalue {}                    -type num|null          -default "nothing"
     setdef options -hoverAnimation          -minversion 5       -validvalue {}                    -type bool|null         -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                    -type list.o            -default [ticklecharts::pictorialBarItem $value]
     setdef options -markPoint               -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::markPoint $value]
     setdef options -markLine                -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::markLine $value]
     setdef options -markArea                -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::markArea $value]
@@ -1005,8 +1004,8 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
     set dataset [$chart dataset]
 
     if {$dataset ne ""} {
-        if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' when a class dataset is defined."
+        if {[dict exists $value -data] || [dict exists $value -dataItem]} {
+            error "'chart' object cannot contains '-data' or '-dataItem' when a class dataset is defined."
         }
 
         set options [dict remove $options -data]
@@ -1016,6 +1015,17 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
         setdef options  -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null     -default "nothing"
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
 
+    } else {
+        if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
+            error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
+
+        # Both properties are supported.
+        foreach key {-data -dataItem} {
+            if {[dict exists $value $key]} break
+        }
+
+        setdef options -data  -minversion 5 -validvalue {} -type list.o -default [ticklecharts::pictorialBarItem $value $key]
     }
 
     # remove key(s)... 

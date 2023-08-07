@@ -419,21 +419,7 @@ proc ticklecharts::barItem {value itemKey} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::pictorialBarItem {value} {
-
-    # Both properties are supported.
-    if {[dict exists $value -data]} {
-        set key -data
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } else {
-        set levelP [uplevel 1 {
-                ticklecharts::getLevelProperties [info level]
-            }
-        ]
-        error "Property '-data' or '-dataItem'\
-               not defined for $levelP"
-    }
+proc ticklecharts::pictorialBarItem {value key} {
 
     foreach item [dict get $value $key] {
 
