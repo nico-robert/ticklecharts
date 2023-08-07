@@ -671,7 +671,8 @@ proc ticklecharts::heatmapSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' when a class dataset is defined."
+            error "'chart' object cannot contains '-data' when a class dataset is defined for\
+                    '[ticklecharts::getLevelProperties [info level]]'."
         }
 
         set options [dict remove $options -data]
@@ -1005,7 +1006,8 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value -dataItem]} {
-            error "'chart' object cannot contains '-data' or '-dataItem' when a class dataset is defined."
+            error "'chart' object cannot contains '-data' or '-dataItem' when a class dataset is defined for\
+                   '[ticklecharts::getLevelProperties [info level]]'."
         }
 
         set options [dict remove $options -data]
