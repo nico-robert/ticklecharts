@@ -111,11 +111,9 @@ proc ticklecharts::linksItem {value key} {
 proc ticklecharts::themeriverItem {value} {
 
     # Both properties are supported.
-    if {[dict exists $value -data]} {
-        set key -data
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } else {
+    set key [ticklecharts::itemKey {-data -dataItem} $value]
+
+    if {$key eq ""} {
         set levelP [uplevel 1 {
                 ticklecharts::getLevelProperties [info level]
             }
@@ -150,13 +148,9 @@ proc ticklecharts::themeriverItem {value} {
 
 proc ticklecharts::treeItem {value} {
 
-    if {[dict exists $value -data]} {
-        set key -data
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } elseif {[dict exists $value children]} {
-        set key children
-    } else {
+    set key [ticklecharts::itemKey {-data -dataItem children} $value]
+
+    if {$key eq ""} {
         return "nothing"
     }
 
@@ -224,13 +218,9 @@ proc ticklecharts::legendItem {value} {
 
 proc ticklecharts::sunburstItem {value} {
 
-    if {[dict exists $value -data]} {
-        set key -data
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } elseif {[dict exists $value children]} {
-        set key children
-    } else {
+    set key [ticklecharts::itemKey {-data -dataItem children} $value]
+
+    if {$key eq ""} {
         return "nothing"
     }
 
@@ -292,13 +282,9 @@ proc ticklecharts::levelsItem {value} {
 
 proc ticklecharts::treemapItem {value} {
 
-    if {[dict exists $value -data]} {
-        set key -data
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } elseif {[dict exists $value children]} {
-        set key children
-    } else {
+    set key [ticklecharts::itemKey {-data -dataItem children} $value]
+
+    if {$key eq ""} {
         return "nothing"
     }
 
@@ -552,11 +538,9 @@ proc ticklecharts::radarItem {value itemKey} {
 proc ticklecharts::indicatorItem {value} {
 
     # Both properties are supported.
-    if {[dict exists $value -indicatoritem]} {
-        set key -indicatoritem
-    } elseif {[dict exists $value -indicatorItem]} {
-        set key -indicatorItem
-    } else {
+    set key [ticklecharts::itemKey {-indicatoritem -indicatorItem} $value]
+
+    if {$key eq ""} {
         set levelP [uplevel 1 {
                 ticklecharts::getLevelProperties [info level]
             }
@@ -843,11 +827,9 @@ proc ticklecharts::candlestickItem {value itemKey} {
 proc ticklecharts::dataWCItem {value} {
 
     # Both properties are supported.
-    if {[dict exists $value -dataWCItem]} {
-        set key -dataWCItem
-    } elseif {[dict exists $value -dataItem]} {
-        set key -dataItem
-    } else {
+    set key [ticklecharts::itemKey {-dataWCItem -dataItem} $value]
+
+    if {$key eq ""} {
         set levelP [uplevel 1 {
                 ticklecharts::getLevelProperties [info level]
             }
@@ -885,11 +867,9 @@ proc ticklecharts::dataWCItem {value} {
 proc ticklecharts::richItem {value} {
 
     # Both properties are supported.
-    if {[dict exists $value richitem]} {
-        set rkey richitem
-    } elseif {[dict exists $value richItem]} {
-        set rkey richItem
-    } else {
+    set rkey [ticklecharts::itemKey {richitem richItem} $value]
+
+    if {$rkey eq ""} {
         return "nothing"
     }
 

@@ -71,7 +71,7 @@ proc ticklecharts::barSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataBarItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Bar $value]
+    set itemKey [ticklecharts::itemKey {-dataBarItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -181,7 +181,7 @@ proc ticklecharts::lineSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataLineItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Line $value]
+    set itemKey [ticklecharts::itemKey {-dataLineItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -291,7 +291,7 @@ proc ticklecharts::pieSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataPieItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Pie $value]
+    set itemKey [ticklecharts::itemKey {-dataPieItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {
@@ -392,7 +392,7 @@ proc ticklecharts::funnelSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataFunnelItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Funnel $value]
+    set itemKey [ticklecharts::itemKey {-dataFunnelItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {
@@ -475,7 +475,7 @@ proc ticklecharts::radarSeries {index value} {
     # Both properties item are accepted.
     #   -dataRadarItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Radar $value]
+    set itemKey [ticklecharts::itemKey {-dataRadarItem -dataItem} $value]
 
     if {![dict exists $value $itemKey]} {
         error "'-dataRadarItem' or '-dataItem' properties should be defined\ 
@@ -573,7 +573,7 @@ proc ticklecharts::scatterSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataScatterItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Scatter $value]
+    set itemKey [ticklecharts::itemKey {-dataScatterItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -1094,7 +1094,7 @@ proc ticklecharts::candlestickSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataCandlestickItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Candlestick $value]
+    set itemKey [ticklecharts::itemKey {-dataCandlestickItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -1169,7 +1169,7 @@ proc ticklecharts::parallelSeries {index value} {
     # Both properties item are accepted.
     #   -dataParallelItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Parallel $value]
+    set itemKey [ticklecharts::itemKey {-dataParallelItem -dataItem} $value]
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
@@ -1242,7 +1242,7 @@ proc ticklecharts::gaugeSeries {index value} {
     # Both properties item are accepted.
     #   -dataGaugeItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Gauge $value]
+    set itemKey [ticklecharts::itemKey {-dataGaugeItem -dataItem} $value]
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
@@ -1340,7 +1340,7 @@ proc ticklecharts::graphSeries {index value} {
     # Both properties item are accepted.
     #   -dataGraphItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Graph $value]
+    set itemKey [ticklecharts::itemKey {-dataGraphItem -dataItem} $value]
 
     if {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
@@ -1449,7 +1449,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
     #   -dataBoxPlotitem
     #   -dataBoxPlotItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey BoxPlot $value]
+    set itemKey [ticklecharts::itemKey {-dataBoxPlotitem -dataBoxPlotItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -1611,7 +1611,7 @@ proc ticklecharts::mapSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataMapItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Map $value]
+    set itemKey [ticklecharts::itemKey {-dataMapItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -1706,7 +1706,7 @@ proc ticklecharts::linesSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataLinesItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Lines $value]
+    set itemKey [ticklecharts::itemKey {-dataLinesItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value $itemKey]} {

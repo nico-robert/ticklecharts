@@ -1158,24 +1158,14 @@ proc ::oo::Helpers::classvar {name} {
     return {}
 }
 
-proc ticklecharts::itemKey {series value} {
+proc ticklecharts::itemKey {keySeries value} {
     # Find item key property.
-    # Both properties are supported :
-    #   -dataItem
-    #   -data(name series)Item
     #
-    # series - name
-    # value  - dict
+    # keySeries - list item keys
+    # value     - dict
     #
-    # Returns key if found otherwise nothing.
-
-    set keys [list "-dataItem" "-data${series}Item"]
-
-    if {$series eq "BoxPlot"} {
-        lappend keys "-data${series}item"
-    }
-
-    foreach key $keys {
+    # Returns the name of key if found, otherwise nothing.
+    foreach key $keySeries {
         if {[dict exists $value $key]} {
             return $key
         }

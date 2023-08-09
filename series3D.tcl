@@ -44,7 +44,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataBar3DItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Bar3D $value]
+    set itemKey [ticklecharts::itemKey {-dataBar3DItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -109,7 +109,7 @@ proc ticklecharts::line3DSeries {index chart value} {
     # Both properties item are accepted.
     #   -dataLine3DItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Line3D $value]
+    set itemKey [ticklecharts::itemKey {-dataLine3DItem -dataItem} $value]
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
@@ -176,7 +176,7 @@ proc ticklecharts::surfaceSeries {index value} {
     # Both properties item are accepted.
     #   -dataSurfaceItem
     #   -dataItem
-    set itemKey [ticklecharts::itemKey Surface $value]
+    set itemKey [ticklecharts::itemKey {-dataSurfaceItem -dataItem} $value]
 
     if {[dict exists $value $itemKey]} {
         foreach k {-data -equation -parametricEquation} {
