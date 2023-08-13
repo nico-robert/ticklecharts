@@ -292,6 +292,26 @@ oo::define ticklecharts::chart3D {
         return {}
     }
 
+    method AddScatter3DSeries {args} {
+        # Add data series chart (use only for scatter3D chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getOptions -series scatter
+        # or
+        # from doc : https://echarts.apache.org/en/option-gl.html#series-scatter3D
+        #
+        # Returns nothing
+        classvar indexscatter3Dseries
+
+        set options [ticklecharts::scatter3DSeries [incr indexscatter3Dseries] [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options3D @D=series [list {*}$f]
+
+        return {}
+    }
+
     method Add {args} {
         # This method is identical to methods for adding series, it is a 
         # different way of writing it.
@@ -313,9 +333,10 @@ oo::define ticklecharts::chart3D {
         }
 
         switch -exact -- [lindex $args 0] {
-            "line3DSeries"  {my AddLine3DSeries   {*}[lrange $args 1 end]}
-            "bar3DSeries"   {my AddBar3DSeries    {*}[lrange $args 1 end]}
-            "surfaceSeries" {my AddSurfaceSeries  {*}[lrange $args 1 end]}
+            "line3DSeries"    {my AddLine3DSeries     {*}[lrange $args 1 end]}
+            "bar3DSeries"     {my AddBar3DSeries      {*}[lrange $args 1 end]}
+            "surfaceSeries"   {my AddSurfaceSeries    {*}[lrange $args 1 end]}
+            "scatter3DSeries" {my AddScatter3DSeries  {*}[lrange $args 1 end]}
             default         {
                 set lb [info class definition [self class] [self method]]
                 set series {}
@@ -345,6 +366,7 @@ oo::define ticklecharts::chart3D {
         # args - Options described below.
         #
         # -grid3D   - grid3D options  https://echarts.apache.org/en/option-gl.html#grid3D
+        # -globe    - globe  options  https://echarts.apache.org/en/option-gl.html#globe
         #
         # Returns nothing
         if {[llength $args] % 2} {
@@ -357,7 +379,7 @@ oo::define ticklecharts::chart3D {
         set c [ticklecharts::chart new]
 
         # remove options 3D even if this option is not defined.
-        set args2D [dict remove $args "-grid3D"]
+        set args2D [dict remove $args "-grid3D" "-globe"]
         $c SetOptions {*}$args2D
 
         # get base keys
@@ -380,6 +402,10 @@ oo::define ticklecharts::chart3D {
 
         if {[dict exists $args -grid3D]} {
             lappend opts "@D=grid3D" [ticklecharts::grid3D $args]
+        }
+
+        if {[dict exists $args -globe]} {
+            lappend opts "@L=globe" [ticklecharts::globe $args]
         }
 
         # delete keys from args to avoid warning for global options
@@ -407,7 +433,7 @@ oo::define ticklecharts::chart3D {
     }
 
     # export of methods
-    export AddLine3DSeries AddBar3DSeries AddSurfaceSeries \
+    export AddLine3DSeries AddBar3DSeries AddSurfaceSeries AddScatter3DSeries \
            Xaxis3D Yaxis3D Zaxis3D SetOptions Render RenderTsb Add
 
 }
