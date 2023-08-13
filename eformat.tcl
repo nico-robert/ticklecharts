@@ -463,6 +463,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 "scatterSeries"    {append validvalue " calendar gmap"}
                 "linesSeries"      {lappend validvalue gmap}
                 "line3DSeries"     {set validvalue "cartesian3D"}
+                "scatter3DSeries"  -
                 "bar3DSeries"      {set validvalue {cartesian3D geo3D globe}}
             }
 
@@ -1319,6 +1320,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
             }
         }
 
+        formatDQuality    -
         formatSSAOQuality -
         formatShadowQuality {
             # possible values...
@@ -1364,6 +1366,26 @@ proc ticklecharts::formatEcharts {formattype value key} {
                         for this key: '$key' in $nameproc"
             }
         }
+
+        formatTypeLayers {
+            # possible values...
+            set validvalue {overlay blend}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[formatMsgError $validvalue]'\
+                        for this key: '$key' in $nameproc"
+            }
+        }
+
+        formatBlendTo {
+            # possible values...
+            set validvalue {albedo emission}
+            if {$value ni $validvalue} {
+                error "'$value' should be '[formatMsgError $validvalue]'\
+                        for this key: '$key' in $nameproc"
+            }
+        }
+
+
     }
 
     return {}
