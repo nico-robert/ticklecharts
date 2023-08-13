@@ -623,6 +623,12 @@ proc ticklecharts::merge {d other} {
 
             set mytype [ticklecharts::typeOf [dict get $other $key]]
 
+            # REMINDER ME: use 'dict remove' for this...
+            if {$mytype eq "dict" || $type in {dict|null dict dict.o|null} || [string match {*list.o*} $type]} {
+                error "type key : dict, dict.o, list.o shouldn't\
+                       not be defined in 'other' dict... for '$key' property."
+            }
+
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
@@ -633,12 +639,6 @@ proc ticklecharts::merge {d other} {
                     error "bad type(set) for this key '$key'= $mytype\
                            should be :$type"
                 }
-            }
-
-            # REMINDER ME: use 'dict remove' for this...
-            if {$typekey in {dict dict.o list.o}} {
-                error "type key : dict, dict.o, list.o shouldn't\
-                       not be defined in 'other' dict... for this '$key'"
             }
 
             set value [dict get $other $key]
