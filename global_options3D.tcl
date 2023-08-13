@@ -53,9 +53,55 @@ proc ticklecharts::grid3D {value} {
     #...
 
     # remove key(s)...
-    set d [dict remove $d -axisLine axisTick light postEffect temporalSuperSampling \
-                                  axisLabel splitLine axisPointer viewControl \
-                                  splitArea nameTextStyle]
+    set d [dict remove $d axisLine axisTick light postEffect temporalSuperSampling \
+                          axisLabel splitLine axisPointer viewControl \
+                          splitArea nameTextStyle]
+
+    set options [merge $options $d]
+
+    return [new edict $options]
+}
+
+proc ticklecharts::globe {value} {
+    # options : https://echarts.apache.org/en/option-gl.html#globe
+    #
+    # value - Options described in proc ticklecharts::globe below.
+    #
+    # Returns dict globe options
+
+    set d [dict get $value -globe]
+
+    setdef options show                   -minversion 5  -validvalue {}               -type bool             -default "True"
+    setdef options zlevel                 -minversion 5  -validvalue {}               -type num|null         -default -10
+    setdef options left                   -minversion 5  -validvalue formatLeft       -type str|num|null     -default "nothing"
+    setdef options top                    -minversion 5  -validvalue formatTop        -type str|num|null     -default "nothing"
+    setdef options right                  -minversion 5  -validvalue formatRight      -type str|num|null     -default "nothing"
+    setdef options bottom                 -minversion 5  -validvalue formatBottom     -type str|num|null     -default "nothing"
+    setdef options width                  -minversion 5  -validvalue {}               -type str|num|null     -default "nothing"
+    setdef options height                 -minversion 5  -validvalue {}               -type str|num|null     -default "nothing"
+    setdef options globeRadius            -minversion 5  -validvalue {}               -type num|null         -default 100
+    setdef options globeOuterRadius       -minversion 5  -validvalue {}               -type num|null         -default 150
+    setdef options environment            -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "auto"
+    setdef options environment            -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "auto"
+    setdef options heightTexture          -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "nothing"
+    setdef options displacementTexture    -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "nothing"
+    setdef options displacementScale      -minversion 5  -validvalue {}               -type num|null         -default 0
+    setdef options displacementQuality    -minversion 5  -validvalue formatDQuality   -type str              -default "medium"
+    setdef options shading                -minversion 5  -validvalue formatShading3D  -type str|null         -default "nothing"
+    setdef options realisticMaterial      -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::realisticMaterial3D $value]
+    setdef options lambertMaterial        -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::lambertMaterial3D $value]
+    setdef options colorMaterial          -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::colorMaterial3D $value]
+    setdef options light                  -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::light3D $d]
+    setdef options atmosphere             -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::atmosphere3D $d]
+    setdef options postEffect             -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::postEffect3D $d]
+    setdef options temporalSuperSampling  -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::temporalSuperSampling3D $d]
+    setdef options viewControl            -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::viewControl3D $d]
+    setdef options layers                 -minversion 5  -validvalue {}               -type list.o|null      -default [ticklecharts::layers3D $d]
+    #...
+
+    # remove key(s)...
+    set d [dict remove $d realisticMaterial lambertMaterial colorMaterial light \
+                          atmosphere postEffect temporalSuperSampling viewControl layers]
 
     set options [merge $options $d]
 
