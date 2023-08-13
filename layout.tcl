@@ -181,7 +181,7 @@ oo::define ticklecharts::Gridlayout {
                     }
 
                     # 3D
-                    if {[dict get $opts @S=type] in {bar3D line3D surface}} {
+                    if {[dict get $opts @S=type] in {bar3D line3D surface scatter3D}} {
 
                         set gridindex [lsearch -inline [dict keys $opts] *grid3DIndex]
 
