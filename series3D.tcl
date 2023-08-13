@@ -214,3 +214,73 @@ proc ticklecharts::surfaceSeries {index value} {
 
     return $options
 }
+
+proc ticklecharts::scatter3DSeries {index chart value} {
+    # options : https://echarts.apache.org/en/option-gl.html#series-scatter3D
+    #
+    # index - index series.
+    # chart - self.
+    # value - Options described in proc ticklecharts::scatter3DSeries below.
+    #
+    # Returns dict scatter3DSeries options
+
+    setdef options -type                    -minversion 5  -validvalue {}                -type str               -default "scatter3D"
+    setdef options -name                    -minversion 5  -validvalue {}                -type str               -default "scatter3Dseries_${index}"
+    setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS        -type str               -default "cartesian3D"
+    setdef options -grid3DIndex             -minversion 5  -validvalue {}                -type num|null          -default "nothing"
+    setdef options -geo3DIndex              -minversion 5  -validvalue {}                -type num|null          -default "nothing"
+    setdef options -globeIndex              -minversion 5  -validvalue {}                -type num|null          -default "nothing"
+    setdef options -symbol                  -minversion 5  -validvalue formatItemSymbol  -type str|jsfunc        -default "circle"
+    setdef options -symbolSize              -minversion 5  -validvalue {}                -type num|jsfunc|list.n -default 10
+    setdef options -itemStyle               -minversion 5  -validvalue {}                -type dict|null         -default [ticklecharts::itemStyle3D $value]
+    setdef options -label                   -minversion 5  -validvalue {}                -type dict|null         -default [ticklecharts::label3D $value]
+    setdef options -emphasis                -minversion 5  -validvalue {}                -type dict|null         -default [ticklecharts::emphasis3D $value]
+    setdef options -data                    -minversion 5  -validvalue {}                -type list.n            -default {}
+    setdef options -blendMode               -minversion 5  -validvalue formatBlendM      -type str|null          -default "nothing"
+    setdef options -zlevel                  -minversion 5  -validvalue {}                -type num               -default -10
+    setdef options -silent                  -minversion 5  -validvalue {}                -type bool              -default "False"
+    setdef options -animation               -minversion 5  -validvalue {}                -type bool|null         -default "nothing"
+    setdef options -animationDurationUpdate -minversion 5  -validvalue {}                -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasingUpdate   -minversion 5  -validvalue formatAEasing     -type str|null          -default "nothing"
+
+    # check if chart includes a dataset class
+    set dataset [$chart dataset]
+
+    # Both properties item are accepted.
+    #   -dataScatter3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataScatter3DItem -dataItem} $value]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' Class cannot contains '-data', '-dataScatter3DItem' or '-dataItem'\
+                    when a class dataset is defined."
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
+        setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
+        setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
+
+    } elseif {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::scatter3DItem $value $itemKey]
+    } else {
+        if {![dict exists $value -data]} {
+            error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+        }
+    }
+
+    # remove key(s)...
+    set value [dict remove $value -encode -itemStyle -label -emphasis $itemKey]
+                                
+    set options [merge $options $value]
+
+    return $options
+}
