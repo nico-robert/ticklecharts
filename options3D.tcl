@@ -86,6 +86,34 @@ proc ticklecharts::line3DItem {value itemKey} {
     return [list {*}$opts]
 }
 
+proc ticklecharts::scatter3DItem {value itemKey} {
+
+    foreach item [dict get $value $itemKey] {
+
+        if {[llength $item] % 2} {
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
+        }
+
+        setdef options name       -minversion 5  -validvalue {}  -type str|null         -default "nothing"
+        setdef options value      -minversion 5  -validvalue {}  -type num|list.n|null  -default "nothing"
+        setdef options lineStyle  -minversion 5  -validvalue {}  -type dict|null        -default [ticklecharts::lineStyle3D $item]
+
+        # remove key(s)...
+        set item [dict remove $item lineStyle]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+}
+
+
 proc ticklecharts::nameTextStyle3D {value} {
 
     if {![ticklecharts::keyDictExists "nameTextStyle" $value key]} {
@@ -400,6 +428,12 @@ proc ticklecharts::itemStyle3D {value} {
     setdef options color      -minversion 5  -validvalue {}  -type str.t|jsfunc|null  -default $color
     setdef options opacity    -minversion 5  -validvalue {}  -type num|null           -default 1
 
+    if {[ticklecharts::whichSeries? $levelP] eq "scatter3DSeries"} {
+        setdef options opacity      -minversion 5  -validvalue {}  -type num|null -default 0.8
+        setdef options borderWidth  -minversion 5  -validvalue {}  -type num|null -default "nothing"
+        setdef options borderColor  -minversion 5  -validvalue {}  -type str|null -default "nothing"
+    }
+
     set options [merge $options $d]
 
     # reset minProperties...
@@ -471,6 +505,12 @@ proc ticklecharts::label3D {value} {
     if {[ticklecharts::whichSeries? $levelP] eq "bar3DSeries" || [infoNameProc $levelP "bar3DSeries.emphasis3D*"]} {
         setdef options distance   -minversion 5  -validvalue {}  -type num|null  -default "nothing"
         setdef options textStyle  -minversion 5  -validvalue {}  -type dict|null -default [ticklecharts::textStyle3D $d textStyle]
+    }
+
+    if {[ticklecharts::whichSeries? $levelP] eq "scatter3DSeries"} {
+        setdef options distance   -minversion 5  -validvalue {}              -type num|null  -default "nothing"
+        setdef options position   -minversion 5  -validvalue formatPosition  -type str|null  -default "right"
+        setdef options textStyle  -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::textStyle3D $d textStyle]
     }
     #...
 
@@ -896,4 +936,51 @@ proc ticklecharts::coordinate3D {value coordinate} {
     set options [merge $options $d]
 
     return [new edict $options]
+}
+
+proc ticklecharts::atmosphere3D {value} {
+
+    if {![ticklecharts::keyDictExists "atmosphere" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+    
+    setdef options show            -minversion 5  -validvalue {}  -type bool       -default "True"
+    setdef options offset          -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    setdef options color           -minversion 5  -validvalue {}  -type str|null   -default "nothing"
+    setdef options glowPower       -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    setdef options innerGlowPower  -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return [new edict $options]
+}
+
+proc ticklecharts::layers3D {value} {
+
+    if {![ticklecharts::keyDictExists "layers" $value key]} {
+        return "nothing"
+    }
+
+    foreach item [dict get $value $key] {
+
+        if {[llength $item] % 2} {
+            ticklecharts::errorEvenArgs
+        }
+
+        setdef options show     -minversion 5  -validvalue {}                -type bool|null         -default "nothing"
+        setdef options type     -minversion 5  -validvalue formatTypeLayers  -type str|null          -default "nothing"
+        setdef options blendTo  -minversion 5  -validvalue formatBlendTo     -type str|null          -default "nothing"
+        setdef options shading  -minversion 5  -validvalue formatShading3D   -type str|null          -default "nothing"
+        setdef options distance -minversion 5  -validvalue {}                -type num|null          -default "nothing"
+        setdef options texture  -minversion 5  -validvalue {}                -type str|jsfunc|null   -default "nothing"
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
 }
