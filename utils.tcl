@@ -624,7 +624,8 @@ proc ticklecharts::merge {d other} {
             set mytype [ticklecharts::typeOf [dict get $other $key]]
 
             # REMINDER ME: use 'dict remove' for this...
-            if {$mytype eq "dict" || $type in {dict|null dict dict.o|null} || [string match {*list.o*} $type]} {
+            if {$mytype eq "dict" || $type in {dict|null dict dict.o|null} || 
+                [string match {*list.o*} $type]} {
                 error "type key : dict, dict.o, list.o shouldn't\
                        not be defined in 'other' dict... for '$key' property."
             }
