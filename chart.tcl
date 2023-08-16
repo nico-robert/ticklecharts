@@ -439,11 +439,12 @@ oo::define ticklecharts::chart {
 	
         try {
             set   fp [open $outputFile w+]
-            puts  $fp $jsonData
-            close $fp
+            puts  $fp $htmlData
         } on error {result options} {
             error [dict get $options -errorinfo]
-        }
+        } finally {
+	    close $fp
+	}
 
         if {$::ticklecharts::htmlstdout} {
             puts [format {html:%s} [file nativename $outputFile]]
