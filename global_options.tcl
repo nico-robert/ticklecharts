@@ -30,6 +30,39 @@ proc ticklecharts::globalOptions {value} {
     return [new edict $options]
 }
 
+proc ticklecharts::renderOptions {value} {
+    variable minProperties
+    variable escript
+    variable htmltemplate
+    
+    set minP $minProperties ; set minProperties 0
+
+    # Add '[ticklecharts::uuid]' command to generate random number generator.
+    set uuid [ticklecharts::uuid]
+
+    setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
+
+    setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
+    setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
+    setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
+    setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
+    setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
+    setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    $uuid]
+    setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
+    setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
+    setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
+    setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
+    setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
+    setdef options -template   -minversion {}  -validvalue {}             -type str.n              -default $htmltemplate
+    
+    set options [merge $options $value]
+
+    set minProperties $minP
+
+    return $options
+
+}
+
 proc ticklecharts::htmlOptions {value} { 
     # Global options chart
     #
@@ -53,7 +86,6 @@ proc ticklecharts::htmlOptions {value} {
     setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
     setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
     setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    $uuid]
-    setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
     setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
     setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
@@ -67,6 +99,8 @@ proc ticklecharts::htmlOptions {value} {
 
     return $options
 }
+
+
 
 proc ticklecharts::tsbOptions {value} { 
     # Global options chart for Taygete Scrap Book

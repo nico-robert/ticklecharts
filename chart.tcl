@@ -302,6 +302,108 @@ oo::define ticklecharts::chart {
         return {}
     }
 
+    method toIframe {args} {
+        # Chart as iframe fragment
+        #
+        # args - Options described below.
+        #
+        # -renderer - 'canvas' or 'svg'
+        # -height   - height of iframe plus inner container
+        # -width    - width of iframe plus inner container
+	#
+	# ... see also other options of toHtml
+	#
+	# Returns <iframe/> container as markup string
+	
+        if {[llength $args] % 2} {
+            error "wrong # args: should be \"[self] toIframe\
+            	         ?-renderer renderer? ...\""
+        }
+	
+        set json [my toJSON] ; # jsondump
+	
+        set opts  [ticklecharts::htmlOptions $args]
+        set height   [lindex [dict get $opts -height] 0]
+        set width   [lindex [dict get $opts -width] 0]
+
+	set srcDoc [my toHtml {*}$args]
+
+	# TODO: Provide for different ways of embedding <iframe/> content (srcdoc vs. data-url)?
+	set iframe {<iframe style="height: %s; width: %s;" frameborder="0" scrolling="no" srcdoc='%s'></iframe>}
+	
+	return [format $iframe $height $width $srcDoc]
+    }
+
+    method RenderJupyter {args} {
+        # Export chart to Jupyter display
+        #
+        # args - Options described below.
+        #
+        # -renderer - 'canvas' or 'svg'
+        # -height   - height of iframe plus inner container
+        # -width    - width of iframe plus inner container
+	#
+	# ... see also options of toIframe
+	#
+	# Returns display id valid for the surrounding Jupyter notebook
+
+        if {[info commands ::jupyter::html] eq ""} {
+            error "Not executed within the tcljupyter environment ..."
+        }
+	
+        if {[llength $args] % 2} {
+            error "wrong # args: should be \"[self] RenderJupyter\
+            	         ?-renderer renderer? ...\""
+        }
+
+	set displayId [::jupyter::html [my toIframe {*}$args]]
+
+	if {$::ticklecharts::htmlstdout} {
+            puts [format {Jupyter:%s} $displayId]
+        }
+	
+	return $displayId
+  }
+
+    method toHtml {args} {
+	# Export chart as HTML fragment.
+        #
+        # args - Options described below.
+        #
+        # -title      - header title html
+        # -width      - container's width
+        # -height     - container's height
+        # -renderer   - 'canvas' or 'svg'
+        # -jschartvar - name chart var
+        # -divid      - name id var
+        # -jsecharts  - full path echarts.min.js (by default cdn script)
+        # -jsvar      - name js var
+        # -script     - list data (jsfunc), jsfunc.
+        # -class      - container.
+        # -style      - css style.
+        # -template   - template (file or string).
+        #
+        # Returns HTML as a string
+
+	if {[llength $args] % 2} {
+            error "wrong # args: should be \"[self] toHtml\
+            	         ?-title title? ...\""
+        }
+
+        set json [my toJSON] ; # jsondump
+        # arguments options
+        set opts_html  [ticklecharts::htmlOptions $args]
+        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
+        set template   [lindex [dict get $opts_html -template] 0]
+
+        # Read html template
+        set htemplate [ticklecharts::readHTMLTemplate $template]
+        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts_html]
+
+        # Replaces json data in and return HTML ...
+        return [string map [list %json% $json] $newhtml]
+    }
+    
     method Render {args} {
         # Export chart to html.
         #
@@ -330,18 +432,11 @@ oo::define ticklecharts::chart {
 
         set json [my toJSON] ; # jsondump
         # arguments options
-        set opts_html  [ticklecharts::htmlOptions $args]
-        set outputFile [lindex [dict get $opts_html -outfile] 0]
-        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
-        set template   [lindex [dict get $opts_html -template] 0]
+        set opts_render  [ticklecharts::renderOptions $args]
+        set outputFile [lindex [dict get $opts_render -outfile] 0]
 
-        # Read html template
-        set htemplate [ticklecharts::readHTMLTemplate $template]
-        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts_html]
-
-        # Replaces json data in html...
-        set jsonData [string map [list %json% $json] $newhtml]
-
+	set htmlData [my toHtml {*}$args]
+	
         try {
             set   fp [open $outputFile w+]
             puts  $fp $jsonData
@@ -1211,5 +1306,5 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries RenderTsb Add
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries RenderTsb Add RenderJupyter
 }
