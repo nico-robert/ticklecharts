@@ -86,6 +86,7 @@ proc ticklecharts::htmlOptions {value} {
     setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
     setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
     setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s"    $uuid]
+    setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default [file join [file dirname [info script]] render.html]
     setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
     setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
     setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
