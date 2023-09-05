@@ -12,31 +12,31 @@ proc ticklecharts::bar3DSeries {index chart value} {
     #
     # Returns dict bar3DSeries options
 
-    setdef options -type                    -minversion 5       -validvalue {}                   -type str             -default "bar3D"
-    setdef options -name                    -minversion 5       -validvalue {}                   -type str             -default "bar3DSeries_${index}"
-    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS           -type str             -default "cartesian3D"    
-    setdef options -grid3DIndex             -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -geo3DIndex              -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -globeIndex              -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -barSize                 -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -bevelSize               -minversion 5       -validvalue formatBevelSize      -type num|null        -default "nothing"
-    setdef options -bevelSmoothness         -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -stack                   -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
-    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy  -type str|null        -default "nothing"
-    setdef options -minHeight               -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -itemStyle               -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::itemStyle3D $value]
-    setdef options -label                   -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::label3D $value]
-    setdef options -emphasis                -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::emphasis3D $value]
-    setdef options -data                    -minversion 5       -validvalue {}                   -type list.n          -default {}
-    setdef options -shading                 -minversion 5       -validvalue formatShading3D      -type str|null        -default "nothing"
-    setdef options -realisticMaterial       -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::realisticMaterial3D $value]
-    setdef options -lambertMaterial         -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::lambertMaterial3D $value]
-    setdef options -colorMaterial           -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::colorMaterial3D $value]
-    setdef options -zlevel                  -minversion 5       -validvalue {}                   -type num             -default -10
-    setdef options -silent                  -minversion 5       -validvalue {}                   -type bool            -default "False"
-    setdef options -animation               -minversion 5       -validvalue {}                   -type bool|null       -default "True"
-    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                   -type num|jsfunc|null -default 500
-    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing        -type str|null        -default "cubicOut"
+    setdef options -type                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3D"
+    setdef options -name                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3DSeries_${index}"
+    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS           -type str             -trace no   -default "cartesian3D"    
+    setdef options -grid3DIndex             -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -geo3DIndex              -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -globeIndex              -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -barSize                 -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -bevelSize               -minversion 5       -validvalue formatBevelSize      -type num|null        -trace no   -default "nothing"
+    setdef options -bevelSmoothness         -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -stack                   -minversion 5       -validvalue {}                   -type str|null        -trace yes  -default "nothing"
+    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy  -type str|null        -trace yes  -default "nothing"
+    setdef options -minHeight               -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -itemStyle               -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::itemStyle3D $value]
+    setdef options -label                   -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::label3D $value]
+    setdef options -emphasis                -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::emphasis3D $value]
+    setdef options -data                    -minversion 5       -validvalue {}                   -type list.n          -trace no   -default {}
+    setdef options -shading                 -minversion 5       -validvalue formatShading3D      -type str|null        -trace no   -default "nothing"
+    setdef options -realisticMaterial       -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::realisticMaterial3D $value]
+    setdef options -lambertMaterial         -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::lambertMaterial3D $value]
+    setdef options -colorMaterial           -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::colorMaterial3D $value]
+    setdef options -zlevel                  -minversion 5       -validvalue {}                   -type num             -trace no   -default -10
+    setdef options -silent                  -minversion 5       -validvalue {}                   -type bool            -trace no   -default "False"
+    setdef options -animation               -minversion 5       -validvalue {}                   -type bool|null       -trace no   -default "True"
+    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                   -type num|jsfunc|null -trace no   -default 500
+    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing        -type str|null        -trace no   -default "cubicOut"
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]

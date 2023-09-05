@@ -12,58 +12,58 @@ proc ticklecharts::barSeries {index chart value} {
     #
     # Returns dict barSeries options
 
-    setdef options -type                    -minversion 5       -validvalue {}                   -type str             -default "bar"
-    setdef options -id                      -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
-    setdef options -name                    -minversion 5       -validvalue {}                   -type str             -default "barseries_${index}"
-    setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy        -type str             -default "series"
-    setdef options -legendHoverLink         -minversion 5       -validvalue {}                   -type bool            -default "True"
-    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS           -type str             -default "cartesian2d"
-    setdef options -xAxisIndex              -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -yAxisIndex              -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -polarIndex              -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -roundCap                -minversion 5       -validvalue {}                   -type bool            -default "False"
-    setdef options -showBackground          -minversion 5       -validvalue {}                   -type bool            -default "False"
-    setdef options -backgroundStyle         -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::backgroundStyle $value]
-    setdef options -label                   -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::label $value]
-    setdef options -labelLine               -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::labelLine $value]
-    setdef options -itemStyle               -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::itemStyle $value]
-    setdef options -labelLayout             -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::labelLayout $value]
-    setdef options -emphasis                -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::emphasis $value]
-    setdef options -blur                    -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::blur $value]
-    setdef options -select                  -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::select $value]
-    setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode   -type bool|str|null   -default "nothing"
-    setdef options -stack                   -minversion 5       -validvalue {}                   -type str|null        -default "nothing"
-    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy  -type str|null        -default "nothing"
-    setdef options -sampling                -minversion 5       -validvalue formatSampling       -type str             -default "max"
-    setdef options -cursor                  -minversion 5       -validvalue formatCursor         -type str|null        -default "pointer"
-    setdef options -barWidth                -minversion 5       -validvalue {}                   -type str|num|null    -default "nothing"
-    setdef options -barMaxWidth             -minversion 5       -validvalue {}                   -type str|num|null    -default "nothing"
-    setdef options -barMinWidth             -minversion 5       -validvalue {}                   -type str|num|null    -default "null"
-    setdef options -barMinHeight            -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -barMinAngle             -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -barGap                  -minversion 5       -validvalue formatBarGap         -type str|null        -default "nothing"
-    setdef options -barCategoryGap          -minversion 5       -validvalue formatBarCategoryGap -type str|null        -default "20%"
-    setdef options -large                   -minversion 5       -validvalue {}                   -type bool            -default "False"
-    setdef options -largeThreshold          -minversion 5       -validvalue {}                   -type num             -default 400
-    setdef options -progressive             -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -progressiveThreshold    -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -progressiveChunkMode    -minversion 5       -validvalue formatPChunkMode     -type str|null        -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                   -type list.d          -default {}
-    setdef options -markLine                -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::markLine $value]
-    setdef options -markPoint               -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::markPoint $value]
-    setdef options -zlevel                  -minversion 5       -validvalue {}                   -type num             -default 0
-    setdef options -z                       -minversion 5       -validvalue {}                   -type num             -default 2
-    setdef options -silent                  -minversion 5       -validvalue {}                   -type bool            -default "False"
-    setdef options -animation               -minversion 5       -validvalue {}                   -type bool|null       -default "nothing"
-    setdef options -animationThreshold      -minversion 5       -validvalue {}                   -type num|null        -default "nothing"
-    setdef options -animationDuration       -minversion 5       -validvalue {}                   -type num|jsfunc|null -default "nothing"
-    setdef options -animationEasing         -minversion 5       -validvalue formatAEasing        -type str|null        -default "nothing"
-    setdef options -animationDelay          -minversion 5       -validvalue {}                   -type num|jsfunc|null -default "nothing"
-    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                   -type num|jsfunc|null -default "nothing"
-    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing        -type str|null        -default "nothing"
-    setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                   -type num|jsfunc|null -default "nothing"
-    setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                   -type dict|null       -default [ticklecharts::universalTransition $value]
-    setdef options -tooltip                 -minversion 5       -validvalue {}                   -type dict|null       -default [ticklecharts::tooltip $value]
+    setdef options -type                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar"
+    setdef options -id                      -minversion 5       -validvalue {}                   -type str|null        -trace no   -default "nothing"
+    setdef options -name                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "barseries_${index}"
+    setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy        -type str             -trace no   -default "series"
+    setdef options -legendHoverLink         -minversion 5       -validvalue {}                   -type bool            -trace no   -default "True"
+    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS           -type str             -trace no   -default "cartesian2d"
+    setdef options -xAxisIndex              -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -yAxisIndex              -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -polarIndex              -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -roundCap                -minversion 5       -validvalue {}                   -type bool            -trace no   -default "False"
+    setdef options -showBackground          -minversion 5       -validvalue {}                   -type bool            -trace no   -default "False"
+    setdef options -backgroundStyle         -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::backgroundStyle $value]
+    setdef options -label                   -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::label $value]
+    setdef options -labelLine               -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::labelLine $value]
+    setdef options -itemStyle               -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::itemStyle $value]
+    setdef options -labelLayout             -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::labelLayout $value]
+    setdef options -emphasis                -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::blur $value]
+    setdef options -select                  -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::select $value]
+    setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode   -type bool|str|null   -trace no   -default "nothing"
+    setdef options -stack                   -minversion 5       -validvalue {}                   -type str|null        -trace yes  -default "nothing"
+    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy  -type str|null        -trace yes  -default "nothing"
+    setdef options -sampling                -minversion 5       -validvalue formatSampling       -type str             -trace no   -default "max"
+    setdef options -cursor                  -minversion 5       -validvalue formatCursor         -type str|null        -trace no   -default "pointer"
+    setdef options -barWidth                -minversion 5       -validvalue {}                   -type str|num|null    -trace no   -default "nothing"
+    setdef options -barMaxWidth             -minversion 5       -validvalue {}                   -type str|num|null    -trace no   -default "nothing"
+    setdef options -barMinWidth             -minversion 5       -validvalue {}                   -type str|num|null    -trace no   -default "null"
+    setdef options -barMinHeight            -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -barMinAngle             -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -barGap                  -minversion 5       -validvalue formatBarGap         -type str|null        -trace no   -default "nothing"
+    setdef options -barCategoryGap          -minversion 5       -validvalue formatBarCategoryGap -type str|null        -trace no   -default "20%"
+    setdef options -large                   -minversion 5       -validvalue {}                   -type bool            -trace no   -default "False"
+    setdef options -largeThreshold          -minversion 5       -validvalue {}                   -type num             -trace no   -default 400
+    setdef options -progressive             -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -progressiveThreshold    -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -progressiveChunkMode    -minversion 5       -validvalue formatPChunkMode     -type str|null        -trace no   -default "nothing"
+    setdef options -data                    -minversion 5       -validvalue {}                   -type list.d          -trace no   -default {}
+    setdef options -markLine                -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::markLine $value]
+    setdef options -markPoint               -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::markPoint $value]
+    setdef options -zlevel                  -minversion 5       -validvalue {}                   -type num             -trace no   -default 0
+    setdef options -z                       -minversion 5       -validvalue {}                   -type num             -trace no   -default 2
+    setdef options -silent                  -minversion 5       -validvalue {}                   -type bool            -trace no   -default "False"
+    setdef options -animation               -minversion 5       -validvalue {}                   -type bool|null       -trace no   -default "nothing"
+    setdef options -animationThreshold      -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
+    setdef options -animationDuration       -minversion 5       -validvalue {}                   -type num|jsfunc|null -trace no   -default "nothing"
+    setdef options -animationEasing         -minversion 5       -validvalue formatAEasing        -type str|null        -trace no   -default "nothing"
+    setdef options -animationDelay          -minversion 5       -validvalue {}                   -type num|jsfunc|null -trace no   -default "nothing"
+    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                   -type num|jsfunc|null -trace no   -default "nothing"
+    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing        -type str|null        -trace no   -default "nothing"
+    setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                   -type num|jsfunc|null -trace no   -default "nothing"
+    setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::universalTransition $value]
+    setdef options -tooltip                 -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::tooltip $value]
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
@@ -120,60 +120,60 @@ proc ticklecharts::lineSeries {index chart value} {
     #
     # Returns dict lineSeries options
 
-    setdef options -type                    -minversion 5       -validvalue {}                  -type str                -trace 0  -default "line"
-    setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -trace 0  -default "nothing"
-    setdef options -name                    -minversion 5       -validvalue {}                  -type str                -trace 0  -default "lineseries_${index}"
-    setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy       -type str                -trace 0  -default "series"
-    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS          -type str                -trace 0  -default "cartesian2d"
-    setdef options -xAxisIndex              -minversion 5       -validvalue {}                  -type num|null           -trace 0  -default "nothing"
-    setdef options -yAxisIndex              -minversion 5       -validvalue {}                  -type num|null           -trace 0  -default "nothing"
-    setdef options -polarIndex              -minversion 5       -validvalue {}                  -type num|null           -trace 0  -default "nothing"
-    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str.t|jsfunc|null  -trace 0  -default [echartsOptsTheme lineSeries.symbol]
-    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num.t|list.nt      -trace 0  -default [echartsOptsTheme lineSeries.symbolSize]
-    setdef options -symbolRotate            -minversion 5       -validvalue {}                  -type num|null           -trace 0  -default "nothing"
-    setdef options -symbolKeepAspect        -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "True"
-    setdef options -symbolOffset            -minversion 5       -validvalue {}                  -type list.d|null        -trace 0  -default "nothing"
-    setdef options -showSymbol              -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "True"
-    setdef options -showAllSymbol           -minversion 5       -validvalue formatShowAllSymbol -type bool|str|null      -trace 1  -default "auto"
-    setdef options -legendHoverLink         -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "True"
-    setdef options -stack                   -minversion 5       -validvalue {}                  -type str|null           -trace 0  -default "nothing"
-    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy -type str|null           -trace 0  -default "nothing"
-    setdef options -cursor                  -minversion 5       -validvalue formatCursor        -type str|null           -trace 0  -default "pointer"
-    setdef options -connectNulls            -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "False"
-    setdef options -clip                    -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "True"
-    setdef options -triggerLineEvent        -minversion "5.2.2" -validvalue {}                  -type bool               -trace 0  -default "False"
-    setdef options -step                    -minversion 5       -validvalue formatStep          -type bool|str           -trace 0  -default "False"
-    setdef options -label                   -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::label $value]
-    setdef options -endLabel                -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::endLabel $value]
-    setdef options -labelLine               -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::labelLine $value]
-    setdef options -labelLayout             -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::labelLayout $value]
-    setdef options -itemStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::itemStyle $value]
-    setdef options -lineStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::lineStyle $value]
-    setdef options -areaStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::areaStyle $value]
-    setdef options -emphasis                -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::emphasis $value]
-    setdef options -blur                    -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::blur $value]
-    setdef options -select                  -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::select $value]
-    setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode  -type bool|str|null      -trace 0  -default "nothing"
-    setdef options -smooth                  -minversion 5       -validvalue {}                  -type bool.t|num.t       -trace 0  -default [echartsOptsTheme lineSeries.smooth]
-    setdef options -smoothMonotone          -minversion 5       -validvalue formatSMonotone     -type str|null           -trace 0  -default "nothing"
-    setdef options -sampling                -minversion 5       -validvalue formatSampling      -type str|null           -trace 0  -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d             -trace 0  -default {}
-    setdef options -markPoint               -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::markPoint $value]
-    setdef options -markLine                -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::markLine $value]
-    setdef options -markArea                -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::markArea $value]
-    setdef options -zlevel                  -minversion 5       -validvalue {}                  -type num                -trace 0  -default 0
-    setdef options -z                       -minversion 5       -validvalue {}                  -type num                -trace 0  -default 2
-    setdef options -silent                  -minversion 5       -validvalue {}                  -type bool               -trace 0  -default "False"
-    setdef options -animation               -minversion 5       -validvalue {}                  -type bool|null          -trace 0  -default "nothing"
-    setdef options -animationThreshold      -minversion 5       -validvalue {}                  -type num|null           -trace 0  -default "nothing"
-    setdef options -animationDuration       -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace 0  -default "nothing"
-    setdef options -animationEasing         -minversion 5       -validvalue formatAEasing       -type str|null           -trace 0  -default "nothing"
-    setdef options -animationDelay          -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace 0  -default "nothing"
-    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace 0  -default "nothing"
-    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing       -type str|null           -trace 0  -default "nothing"
-    setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace 0  -default "nothing"
-    setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::universalTransition $value]
-    setdef options -tooltip                 -minversion 5       -validvalue {}                  -type dict|null          -trace 0  -default [ticklecharts::tooltip $value]
+    setdef options -type                    -minversion 5       -validvalue {}                  -type str                -trace no   -default "line"
+    setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -trace no   -default "nothing"
+    setdef options -name                    -minversion 5       -validvalue {}                  -type str                -trace no   -default "lineseries_${index}"
+    setdef options -colorBy                 -minversion "5.2.0" -validvalue formatColorBy       -type str                -trace no   -default "series"
+    setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS          -type str                -trace no   -default "cartesian2d"
+    setdef options -xAxisIndex              -minversion 5       -validvalue {}                  -type num|null           -trace no   -default "nothing"
+    setdef options -yAxisIndex              -minversion 5       -validvalue {}                  -type num|null           -trace no   -default "nothing"
+    setdef options -polarIndex              -minversion 5       -validvalue {}                  -type num|null           -trace no   -default "nothing"
+    setdef options -symbol                  -minversion 5       -validvalue formatItemSymbol    -type str.t|jsfunc|null  -trace no   -default [echartsOptsTheme lineSeries.symbol]
+    setdef options -symbolSize              -minversion 5       -validvalue {}                  -type num.t|list.nt      -trace no   -default [echartsOptsTheme lineSeries.symbolSize]
+    setdef options -symbolRotate            -minversion 5       -validvalue {}                  -type num|null           -trace no   -default "nothing"
+    setdef options -symbolKeepAspect        -minversion 5       -validvalue {}                  -type bool               -trace no   -default "True"
+    setdef options -symbolOffset            -minversion 5       -validvalue {}                  -type list.d|null        -trace no   -default "nothing"
+    setdef options -showSymbol              -minversion 5       -validvalue {}                  -type bool               -trace no   -default "True"
+    setdef options -showAllSymbol           -minversion 5       -validvalue formatShowAllSymbol -type bool|str|null      -trace yes  -default "auto"
+    setdef options -legendHoverLink         -minversion 5       -validvalue {}                  -type bool               -trace no   -default "True"
+    setdef options -stack                   -minversion 5       -validvalue {}                  -type str|null           -trace yes  -default "nothing"
+    setdef options -stackStrategy           -minversion "5.3.3" -validvalue formatStackStrategy -type str|null           -trace yes  -default "nothing"
+    setdef options -cursor                  -minversion 5       -validvalue formatCursor        -type str|null           -trace no   -default "pointer"
+    setdef options -connectNulls            -minversion 5       -validvalue {}                  -type bool               -trace no   -default "False"
+    setdef options -clip                    -minversion 5       -validvalue {}                  -type bool               -trace no   -default "True"
+    setdef options -triggerLineEvent        -minversion "5.2.2" -validvalue {}                  -type bool               -trace no   -default "False"
+    setdef options -step                    -minversion 5       -validvalue formatStep          -type bool|str           -trace no   -default "False"
+    setdef options -label                   -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::label $value]
+    setdef options -endLabel                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::endLabel $value]
+    setdef options -labelLine               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::labelLine $value]
+    setdef options -labelLayout             -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::labelLayout $value]
+    setdef options -itemStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::itemStyle $value]
+    setdef options -lineStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::lineStyle $value]
+    setdef options -areaStyle               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::areaStyle $value]
+    setdef options -emphasis                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::blur $value]
+    setdef options -select                  -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::select $value]
+    setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode  -type bool|str|null      -trace no   -default "nothing"
+    setdef options -smooth                  -minversion 5       -validvalue {}                  -type bool.t|num.t       -trace no   -default [echartsOptsTheme lineSeries.smooth]
+    setdef options -smoothMonotone          -minversion 5       -validvalue formatSMonotone     -type str|null           -trace no   -default "nothing"
+    setdef options -sampling                -minversion 5       -validvalue formatSampling      -type str|null           -trace no   -default "nothing"
+    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d             -trace no   -default {}
+    setdef options -markPoint               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markPoint $value]
+    setdef options -markLine                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markLine $value]
+    setdef options -markArea                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markArea $value]
+    setdef options -zlevel                  -minversion 5       -validvalue {}                  -type num                -trace no   -default 0
+    setdef options -z                       -minversion 5       -validvalue {}                  -type num                -trace no   -default 2
+    setdef options -silent                  -minversion 5       -validvalue {}                  -type bool               -trace no   -default "False"
+    setdef options -animation               -minversion 5       -validvalue {}                  -type bool|null          -trace no   -default "nothing"
+    setdef options -animationThreshold      -minversion 5       -validvalue {}                  -type num|null           -trace no   -default "nothing"
+    setdef options -animationDuration       -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace no   -default "nothing"
+    setdef options -animationEasing         -minversion 5       -validvalue formatAEasing       -type str|null           -trace no   -default "nothing"
+    setdef options -animationDelay          -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace no   -default "nothing"
+    setdef options -animationDurationUpdate -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace no   -default "nothing"
+    setdef options -animationEasingUpdate   -minversion 5       -validvalue formatAEasing       -type str|null           -trace no   -default "nothing"
+    setdef options -animationDelayUpdate    -minversion 5       -validvalue {}                  -type num|jsfunc|null    -trace no   -default "nothing"
+    setdef options -universalTransition     -minversion "5.2.0" -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::universalTransition $value]
+    setdef options -tooltip                 -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::tooltip $value]
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
