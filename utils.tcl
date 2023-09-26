@@ -12,37 +12,65 @@ proc ticklecharts::htmlMap {h html htmloptions} {
     #
     # Returns list map html
 
-    lappend mapoptions [list %width%      [set width  [lindex [dict get $htmloptions -width]  0]]]
-    lappend mapoptions [list %height%     [set height [lindex [dict get $htmloptions -height] 0]]]
-    lappend mapoptions [list %renderer%   [lindex [dict get $htmloptions -renderer]   0]]
-    lappend mapoptions [list %jsecharts%  [lindex [dict get $htmloptions -jsecharts]  0]]
-    lappend mapoptions [list %jschartvar% [lindex [dict get $htmloptions -jschartvar] 0]]
-    lappend mapoptions [list %divid%      [lindex [dict get $htmloptions -divid] 0]]
-    lappend mapoptions [list %title%      [lindex [dict get $htmloptions -title] 0]]
-    lappend mapoptions [list %jsvar%      [lindex [dict get $htmloptions -jsvar] 0]]
-    lappend mapoptions [list %class%      [lindex [dict get $htmloptions -class] 0]]
+    # Formats html options...
+    # Doesn't care about attributes in the html file.
+    foreach {key info} $htmloptions {
+        lassign $info value type
+        if {$value eq "nothing"} {continue}
+        switch -exact -- $type {
+            bool {
+                # Force string to lower for boolean value.
+                set value [string tolower $value]
+            }
+            jsfunc - list.d {
+                set value $info
+            }
+        }
+        set key [string trim [string map {"-" ""} $key]]
+        set key [string cat % $key %]
 
-    # Add style in html template...
-    set style [lindex [dict get $htmloptions -style] 0]
-
-    if {$style eq "nothing"} {
-        lappend mapoptions [list %style% [format {width:%s; height:%s;} $width $height]]
-    } else {
-        lappend mapoptions [list %style% $style]
+        dict set mapoptions $key $value
     }
 
-    # Add js script(s) in html template... or not.
-    set html [ticklecharts::setJsScript $html $h htmloptions]
+    # If '%style%' attribute is present in html file but 
+    # '-style' is not present in dict options, add it to my options.
+    # Note : '-width' or/and '-height' must be in dict options.
+    set style "%style%"
+    if {![dict exists $mapoptions $style]} {
+        set width [expr {
+            [dict exists $mapoptions "%width%"]
+                ? [dict get $mapoptions "%width%"]
+                : "nothing"
+            }
+        ]
+        set height [expr {
+            [dict exists $mapoptions "%height%"]
+                ? [dict get $mapoptions "%height%"]
+                : "nothing"
+            }
+        ]
 
-    return [string map [join $mapoptions] $html]
+        if {($width ne "nothing") && ($height ne "nothing")} {
+            dict set mapoptions $style [format {width:%s; height:%s;} $width $height]
+        } elseif {($width ne "nothing") && ($height eq "nothing")} {
+            dict set mapoptions $style [format {width:%s;} $width]
+        } elseif {($width eq "nothing") && ($height ne "nothing")} {
+            dict set mapoptions $style [format {height:%s;} $height]
+        }
+    }
+
+    # Adds js script(s) in html template... or not.
+    set html [ticklecharts::setJsScript $html $h mapoptions]
+
+    return [string map $mapoptions $html]
 }
 
-proc ticklecharts::setJsScript {html h htmloptions} {
+proc ticklecharts::setJsScript {html h mapoptions} {
     # Set js script(s) in html template file...
     #
-    # html        - template html string.
-    # h           - huddle object.
-    # htmloptions - html string map options.
+    # html       - template html string.
+    # h          - ehuddle object.
+    # mapoptions - html dict map options.
     #
     # Returns html
     variable gapiscript ; variable keyGMAPI
@@ -50,7 +78,7 @@ proc ticklecharts::setJsScript {html h htmloptions} {
     variable gmscript
     variable eGLscript
 
-    upvar 1 $htmloptions hoptions
+    upvar 1 $mapoptions hoptions
 
     # Add gmap script + Google maps API... if 'gmap' option is defined.
     # Add a comment in html template file if Google key API is not defined.
@@ -58,7 +86,7 @@ proc ticklecharts::setJsScript {html h htmloptions} {
     # Add 'GL' script if 'series 3D' type is defined.
     # Base html format.
     set jsScript {}
-    set frmt     {<script type="text/javascript" src="%s"></script>}
+    set frmt {<script type="text/javascript" src="%s"></script>}
     # gmap.js
     if {"gmap" in [$h keys]} {
         lappend jsScript [jsfunc new [format $frmt $gapiscript] -header]
@@ -84,19 +112,18 @@ proc ticklecharts::setJsScript {html h htmloptions} {
         }
     }
 
-    set script [lindex [dict get $hoptions -script] 0]
-
     if {[llength $jsScript]} {
-        if {$script ne "nothing"} {
-            dict set hoptions -script [format {{{%s}} list.d} \
-                                      [linsert {*}$script end {*}$jsScript]]
+        if {[dict exists $hoptions "%script%"]} {
+            set script [lindex [dict get $hoptions "%script%"] 0]
+            dict set hoptions "%script%" [format {{{%s}} list.d} \
+                                         [linsert {*}$script end {*}$jsScript]]
         } else {
-            dict set hoptions -script [format {{{%s}} list.d} $jsScript]
+            dict set hoptions "%script%" [format {{{%s}} list.d} $jsScript]
         }
     }
 
-    if {[lindex [dict get $hoptions -script] 0] ne "nothing"} {
-        set html [ticklecharts::addJsScript $html [dict get $hoptions -script]]
+    if {[dict exists $hoptions "%script%"]} {
+        set html [ticklecharts::addJsScript $html [dict get $hoptions "%script%"]]
     }
 
     return $html
@@ -124,7 +151,8 @@ proc ticklecharts::addJsScript {html value} {
                 null   {set item "%jschartvar%"}
             }
             if {[set f [lsearch $h *$item*]] < 0} {
-                error "Not possible to find `$item` string in the html template file..."
+                error "Not possible to find `$item` string\
+                       in the html template file..."
             }
             set listH [linsert $h $f+1 \
                       [format [list %-${indent}s %s] "" [join [$js get]]]]
@@ -142,7 +170,8 @@ proc ticklecharts::addJsScript {html value} {
                         null   {set item "%jschartvar%"}
                     }
                     if {[set f [lsearch $listH *$item*]] < 0} {
-                        error "Not possible to find `$item` string in the html template file..."
+                        error "Not possible to find `$item` string\
+                               in the html template file..."
                     }
                     set listH [linsert $listH $f+1 \
                               [format [list %-${indent}s %s] "" [join [$script get]]]]
@@ -164,36 +193,23 @@ proc ticklecharts::readHTMLTemplate {htmltemplate} {
     # Returns html file list
 
     if {[file isfile $htmltemplate]} {
-        set fp [open $htmltemplate r]
-        set html [read $fp]
-        close $fp
+        try {
+            set fp   [open $htmltemplate r]
+            set html [read $fp]
+        } on error {result options} {
+            error [dict get $options -errorinfo]
+        } finally {
+            catch {close $fp}
+        }
     } else {
-        # pseudo code to beautify the html string...
-        set len 0
-        set indent 0
-        foreach line [split $htmltemplate "\n"] {
-            set trimLine [string trim $line]
-            if {[string length $trimLine] > 0} {
-                set s [regexp -inline {^\s+} $line]
-                set l [expr {[string length $s] - 1}]
-
-                if {$len != 0} {
-                    if {$l > $len} {
-                        set indent [expr {$indent + ($l - $len)}]
-                    } elseif {$l < $len} {
-                        set indent [expr {($indent - ($len - $l))}]
-                    } else {
-                        set indent $indent 
-                    }
-                }
-                set len $l
-                lappend html [format "%${indent}s %s" "" $trimLine]
-            }
+        # %json% attribute should be
+        # defined in html template string...
+        set template [split $htmltemplate "\n"]
+        if {[lsearch $template "*%json%*"] < 0} {
+            error "'%json%' attribute should be defined\
+                    in html template string"
         }
-        if {[lsearch $html "*%json%*"] < 0} {
-            error "'%json%' should be defined in html template string"
-        }
-        set html [join $html "\n"]
+        set html [join $template "\n"]
     }
 
     return $html
@@ -241,6 +257,16 @@ proc ticklecharts::isAObject {obj} {
     #
     # Returns True or False.
     return [info object isa object $obj]
+}
+
+proc ticklecharts::classDef {name method} {
+    # Info class definition.
+    #
+    # name   - class name
+    # method - method name
+    #
+    # Returns the class method defintion.
+    return [info class definition $name $method]
 }
 
 proc ticklecharts::typeOf {value} {
@@ -472,7 +498,7 @@ proc ticklecharts::setdef {d key args} {
 
     # Distinguishes between the 3 libraries.
     set versionLib $echarts_version ; # for Echarts see ticklecharts.tcl
-    set trace 0
+    set trace no
 
     foreach {k value} $args {
         switch -exact -- $k {
@@ -534,7 +560,7 @@ proc ticklecharts::keyCompare {d other} {
             continue
         }
         if {$k ni $keys1} {
-            puts "warning ($infoproc): '$k' property is not in\
+            puts stderr "warning($infoproc): '$k' property is not in\
                 '[join $keys1 ", "]' or not supported..."
         }
     }
@@ -604,7 +630,7 @@ proc ticklecharts::merge {d other} {
             # All versions were not found, probably 'ticklecharts::echarts_version'
             # variable version is lower...
             if {$version eq "nothing"} {
-                puts "warning (multi-versions): no versions found for '$key',\
+                puts stderr "warning(multi-versions): no versions found for '$key',\
                       this key will not be taken into account..."
                 continue
             }
@@ -616,7 +642,7 @@ proc ticklecharts::merge {d other} {
         if {[dict exists $other $key]} {
 
             if {$vcompare > 0} {
-                puts "warning (version): '$key' is not supported... in\
+                puts stderr "warning(version): '$key' is not supported... in\
                      '$versionLib' (minimum version = '$minversion')"
                 continue
             }
@@ -676,18 +702,17 @@ proc ticklecharts::merge {d other} {
             }
         }
 
+        # Adds trace key.
+        if {$trace} {
+            ticklecharts::getTraceLevelProperties [info level] $key $value
+        }
+
         # Replaces spaces by special characters.
         if {$typekey in {str str.t}} {
             set value [ticklecharts::mapSpaceString $value]
         }
 
-        # Adds trace key.
-        set property [expr {
-                $trace ? [ticklecharts::getLevelProperties [info level] True] : "null"
-            }
-        ]
-
-        dict set _dict $key [list $value $typekey [list $trace $property]]
+        dict set _dict $key [list $value $typekey]
     }
 
     return $_dict
@@ -814,7 +839,8 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         }
 
         if {[string match {*setdef*} $val]} {
-            if {[string first "#" [string trim $val]] == -1 && [string match {*\[ticklecharts::*} $val]} {
+            if {([string first "#" [string trim $val]] == -1) && 
+                [string match {*\[ticklecharts::*} $val]} {
                 set str [string range $val 0 [expr {[string first "-default" $val] - 1}]]
                 set map [string trim [string map $listmap $str]]
 
@@ -993,14 +1019,12 @@ proc ticklecharts::random {val} {
     return [expr {int(rand() * $val)}]
 }
 
-proc ticklecharts::getLevelProperties {level {trace False}} {
+proc ticklecharts::getLevelProperties {level} {
     # Gets name level procedure
     #
     # level - num level procedure
-    # trace - bool
     #
     # Returns list name of procs...
-
     set properties {}
 
     for {set i $level} {$i > 0} {incr i -1} {
@@ -1008,16 +1032,6 @@ proc ticklecharts::getLevelProperties {level {trace False}} {
         if {[string match {ticklecharts::*} $name] && 
             $name ne "ticklecharts::formatEcharts"} {
             set property [string map {ticklecharts:: ""} $name]
-
-            # If $trace is true, adds an index if the level properties
-            # is related to a series.
-            if {$trace && [string match {ticklecharts::*Series} $name]} {
-                set index [lindex [info level $i] 1]
-                if {[ticklecharts::typeOf $index] ne "num"} {
-                    error "'$index' should be an integer value." 
-                }
-                set property $property\($index)
-            }
 
             if {$property ni $properties} {
                 lappend properties $property
@@ -1028,28 +1042,34 @@ proc ticklecharts::getLevelProperties {level {trace False}} {
     return [join [lreverse $properties] "."]
 }
 
-proc ticklecharts::checkJsFunc {opts} {
-    # Guess if options contains a function.
-    # for 'Tayget Scrap Book'
+proc ticklecharts::checkJsFunc {opts method} {
+    # Guess if options contains a function, variable
+    # javascript for 'self method'.
     #
-    # Raise an error if yes (not supported)
+    # opts   - list options
+    # method - name method
     #
-    # Returns nothing
+    # Returns nothing if my list contains no
+    # javascript code, an error otherwise.
 
     set map [string map {"{" "" "}" ""} $opts]
-
+    set error 0
     foreach index [lsearch -all $map "@JS=*"] {
         if {$index > -1} {
             set value [lindex $map $index+1]
             switch -glob -- {*}[$value get] {
-                "*function*"     {
-                    error "'function' inside Json is not supported..."
-                }
+                "*function*" -
                 "*new echarts.*" {
-                    error "'new echarts.*' inside Json is not supported..."
+                    set error 1 ; break
                 }
             }
         }
+    }
+
+    if {$error} {
+        return -code error \
+        "'function', 'variable'... inside\
+         'Json data' is not supported with '$method' method."
     }
 
     return {}
@@ -1076,7 +1096,7 @@ proc ticklecharts::procDefaultValue {proc key} {
 }
 
 proc ticklecharts::whichSeries? {levelP} {
-    # Returns name series (I hope...).
+    # Returns name series (I hope so !).
 
     return [lindex [split $levelP "."] 0]
 }
@@ -1108,7 +1128,7 @@ proc ticklecharts::urlExists? {url} {
     # Question : how-to-check-if-an-url-exists-with-the-shell-and-probably-curl
     set cmd [list curl --silent --head --fail $url]
     if {[catch {exec {*}$cmd 2>@1} msg]} {
-        puts "warning (url): $msg"
+        puts stderr "warning(url): $msg"
     }
 
     return {}
@@ -1149,7 +1169,8 @@ proc ::oo::Helpers::classvar {name} {
     # name - variable
     #
     # Returns nothing
-    if {[info exists ::argv0] && ([info script] eq "$::argv0")} {
+    if {([info exists ::argv0] && ([info script] eq "$::argv0")) ||
+        ($::ticklecharts::env in {"tsb" "jupyter"})} {
         set ns [info object namespace [uplevel 1 {self class}]]
         set vs [list $name $name]
 
