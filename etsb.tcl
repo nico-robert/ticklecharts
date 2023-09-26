@@ -22,13 +22,17 @@ if {[namespace exists ::tsb]} {
         }
         # All requirements must be fulfilled,
         # in order to function properly.
-        set tsbIsReady [expr {
+        set isReady [expr {
                 ([info exists ::tsb::ready] && $::tsb::ready) &&
                 [info exists ::ID] && [info exists ::W]
-                }
-            ]
+            }
+        ]
 
-        # To gain speed.
+        if {!$isReady} {error "'Tsb' file not sourced..."}
+
+        # Set environment
+        set env "tsb"
+        # To gain speed
         set minProperties "True"
 
         try {
@@ -78,7 +82,110 @@ if {[namespace exists ::tsb]} {
                 }
             }
         } on error {message} {
-            puts $message
+            puts stderr $message
+        }
+    }
+
+    # Define a new method 'RenderTsb' for
+    # all ticklecharts classes.
+    foreach class {
+        ticklecharts::chart ticklecharts::chart3D 
+        ticklecharts::Gridlayout ticklecharts::timeline
+        } {
+        oo::define $class {
+            method RenderTsb {args} {
+                # Export chart to Taygete Scrap Book.
+                # https://www.androwish.org/home/dir?name=undroid/tsb
+                #
+                # Be careful the tsb.tcl file should be sourced...
+                #
+                # args - Options described below.
+                #
+                # -renderer - 'canvas' or 'svg'
+                # -height   - size html canvas
+                # -merge    - If false, all of the current components
+                #             will be removed and new components will
+                #             be created according to the new option.
+                #             (false by default)
+                # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
+                #             to insert an JSON obj in Tsb Webview.
+                #             'eval' JSON obj is not recommended (security reasons).
+                #             JSON.parse is safe but 'function', 'js variable'
+                #             in JSON obj are not supported.
+                #             (false by default)
+                #
+                # Returns nothing.
+
+                if {[llength $args] % 2} {
+                    error "wrong # args: should be \"[self] [self method]\
+                        ?-renderer renderer? ...\""
+                }
+
+                set json [my toJSON] ; # jsondump
+
+                set opts [ticklecharts::renderOptions $args [self method]]
+                set height   [lindex [dict get $opts -height] 0]
+                set renderer [lindex [dict get $opts -renderer] 0]
+                set merge    [lindex [dict get $opts -merge] 0]
+                set evalJSON [lindex [dict get $opts -evalJSON] 0]
+
+                if {!$evalJSON} {
+                    if {[my getType] eq "timeline"} {
+                        set timelineopts [list {*}[my baseOption] {*}[my options]]
+                        ticklecharts::checkJsFunc $timelineopts [self method]
+                    } else {
+                        ticklecharts::checkJsFunc [my options] [self method]
+                    }
+                }
+
+                set uuid $::ticklecharts::etsb::uuid
+                # load if necessary 'echarts' js script...
+                #
+                set type ""
+                foreach script {escript eGLscript wcscript} {
+                    set ejs [set ::ticklecharts::$script]
+                    if {[dict exists $::ticklecharts::etsb::path $script]} {
+                        set type "text"
+                    } else {
+                        if {[ticklecharts::isURL? $ejs]} {
+                            set type "source"
+                        } else {
+                            # If I understand, it is not possible to insert 
+                            # a local file directly with the 'src' attribute in Webview.
+                            #
+                            try {
+                                set f [open $ejs r] ; # read *.js file
+                                set ejs [read $f] ; close $f
+                                # write full js script... inside tsb
+                                set ::ticklecharts::$script $ejs
+                                set type "text"
+                                dict incr ::ticklecharts::etsb::path $script
+                            } on error {result options} {
+                                error [dict get $options -errorinfo]
+                            }
+                        }
+                    }
+                    $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
+                }
+                set idEDiv [format {id_%s%s} $uuid $::ID]
+                # set div + echarts height
+                #
+                $::W call eDiv $idEDiv $height
+                # 
+                after 100 [list $::W call eSeries \
+                                        $idEDiv $json \
+                                        $renderer $merge \
+                                        $evalJSON]
+
+                set ::ticklecharts::theme "custom"
+
+                return {}
+            }
+
+            # export new method
+            export RenderTsb
+            # unexport method(s)
+            unexport toJSON Render
         }
     }
 }
