@@ -148,7 +148,6 @@ oo::define ticklecharts::dataset {
         }
 
         return [list {*}$opts]
-
     }
 
     method source {value t} {
@@ -233,7 +232,6 @@ oo::define ticklecharts::dataset {
             return $d
         }
     }
-
 }
 
 proc ticklecharts::isdatasetClass {value} {
