@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+  <head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="%jsecharts%"></script>
+  </head>
+  <body style="height: 100%; margin: 0">
+    <div id="%divid%" style="height: 100%"></div>
+    <script>
+      var %jschartvar% = echarts.init(document.getElementById("%divid%"), null, {
+        renderer: "%renderer%"
+      });
+      var %jsvar% = %json%;
+	    %jschartvar%.setOption(%jsvar%);
+      window.addEventListener("resize", %jschartvar%.resize);
+    </script>
+  </body>
+</html>
