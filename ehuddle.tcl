@@ -29,7 +29,8 @@ oo::class create ticklecharts::ehuddle {
 
     constructor {} {
         # init variables.
-        set _huddle {} ; set _series {}
+        set _huddle {}
+        set _series {}
     }
 }
 
@@ -43,7 +44,8 @@ oo::define ticklecharts::ehuddle {
         # Returns huddle
 
         if {[llength $args] % 2} {
-            error "args list must have an even number of elements..."
+            error "wrong # args: list must have an\
+                   even number of elements..."
         }
 
         set lhuddle {}
@@ -201,7 +203,7 @@ oo::define ticklecharts::ehuddle {
 
         # special case for timeline class
         lassign [self caller] _ obj method
-        if {$method eq "timelineToHuddle"} {
+        if {([$obj getType] eq "timeline") && ($method eq "ToHuddle")} {
             set listk {}
             foreach {k val} $value {
                 if {[string match {*@D=*} $k] && ($k in $listk)} {
@@ -254,6 +256,11 @@ oo::define ticklecharts::ehuddle {
     method get {} {
         # Returns the value of huddle instance
         return $_huddle
+    }
+
+    method getType {} {
+        # Returns type of class
+        return "ehuddle"
     }
 
     method getTypeSeries {} {
@@ -424,7 +431,7 @@ proc ticklecharts::eHuddleCritcl {bool} {
             }
 
         } else {
-            puts "warning : $infocrit"
+            puts stderr "warning : $infocrit"
         }
     }
 

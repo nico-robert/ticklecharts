@@ -8,16 +8,14 @@ namespace eval ticklecharts {}
 # The first chart needs to be a graph with an x/y axis.
 
 oo::class create ticklecharts::Gridlayout {
-    superclass ticklecharts::chart
-
-    variable _layout       ; # huddle
+    variable _h            ; # huddle
     variable _indexchart2D ; # grid index chart2D
     variable _indexchart3D ; # grid index chart3D
     variable _options      ; # list options chart
     variable _charts2D     ; # list charts 2D
     variable _charts3D     ; # list charts 3D
     variable _keyglob      ; # global key options
-    variable _dataset
+    variable _dataset      ; # dataset chart(s)
 
     constructor {args} {
         # Initializes a new layout Class.
@@ -39,29 +37,37 @@ oo::class create ticklecharts::Gridlayout {
 
 oo::define ticklecharts::Gridlayout {
 
-    method get {} {
-        # Gets huddle object
-        return $_layout
-    }
-
-    method options {} {
-        # Gets options
-        return $_options
-    }
-
     method globalKeyOptions {} {
         # Gets global key options
         return $_keyglob
     }
 
-    method dataset {} {
-        # Gets dataset
-        return $_dataset
-    }
-
     method getType {} {
         # Returns type of class
         return "gridlayout"
+    }
+
+    method getCharts {name} {
+        # Returns a charts list by typee.
+        #
+        # name  - type of charts
+        return [set _charts${name}]
+    }
+
+    method charts {} {
+        # Gets list charts.
+        return [list {*}[my getCharts "2D"] \
+                     {*}[my getCharts "3D"]]
+    }
+
+    method track {} {
+        # Compares properties.
+        #
+        # Returns nothing
+        foreach chart [my charts] {
+            $chart track
+        }
+        return {}
     }
 
     method Add {chart {args ""}} {
@@ -109,7 +115,7 @@ oo::define ticklecharts::Gridlayout {
             error "charts must have a key 'series'"
         }
 
-        # not supported yet...
+        # Not supported yet...
         if {"graphic" in $keys} {
             error "graphic not supported..."
         }
@@ -160,7 +166,7 @@ oo::define ticklecharts::Gridlayout {
                     }
                 }
                 *series  {
-                    # force index axis chart if exists or not...
+                    # Force index axis chart if exists or not...
                     # 2D
                     if {[dict get $opts @S=type] in {bar line scatter effectScatter heatmap pictorialBar candlestick graph boxplot lines}} {
 
@@ -202,7 +208,7 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # replace 'center' flag if exists by the one in args if exists...
+                    # Replace 'center' flag if exists by the one in args if exists...
                     if {[dict get $opts @S=type] in {pie sunburst gauge}} {
                         if {[info exists center]} {
                             set mytype [ticklecharts::typeOf $center]
@@ -213,7 +219,7 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # set position in series instead of grid... 
+                    # Set position in series instead of grid... 
                     # For 'funnel', 'sankey', 'treemap', 'map' or 'wordCloud' chart
                     if {[dict get $opts @S=type] in {sankey funnel wordCloud treemap map}} {
                         set g 1
@@ -273,12 +279,12 @@ oo::define ticklecharts::Gridlayout {
                 }
             }
 
-            # remove key global options 
+            # Remove key global options 
             lassign [split $key "="] _ k
             if {$k in $gopts} {continue}
 
             if {$key in [my globalKeyOptions]} {
-                puts "warning([self class]): '$key' in chart class is already\
+                puts stderr "warning([self class]): '$key' in chart class is already\
                      activated with 'SetGlobalOptions' method\
                      it is not taken into account..."
                 continue
@@ -288,7 +294,7 @@ oo::define ticklecharts::Gridlayout {
         }
 
         # Check if grid is defined.
-        # add grid option if no...
+        # Add grid option if no...
         if {!$g} {
             set f {}
             foreach val {top bottom left right width height} {
@@ -329,16 +335,13 @@ oo::define ticklecharts::Gridlayout {
         # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
             if {!$_indexchart2D} {
-                switch -exact -- [dict get $_options @D=series @S=type]  {
-                    pie        {error "'Pie' chart should not be added first..."}
-                    sunburst   {error "'Sunburst' chart should not be added first..."}
-                    themeRiver {error "'ThemeRiver' chart should not be added first..."}
-                    sankey     {error "'Sankey' chart should not be added first..."}
-                    gauge      {error "'Gauge' chart should not be added first..."}
-                    wordCloud  {error "'wordCloud' should not be added first..."}
-                    treemap    {error "'treemap' should not be added first..."}
-                    map        {error "'map' should not be added first..."}
-                    lines      {error "'lines' should not be added first..."}
+                set series [dict get $_options @D=series @S=type]
+                if {$series in {
+                    pie sunburst themeRiver sankey gauge 
+                    wordCloud treemap map lines
+                    }} {
+                    error "'$series' in Gridlayout classe should not\
+                           be added first..."
                 }
             }
         }
@@ -346,14 +349,14 @@ oo::define ticklecharts::Gridlayout {
         return {}
     }
 
-    method layoutToHuddle {} {
+    method ToHuddle {} {
         # Transform list layout to hudlle
         #
         # Returns nothing
 
         # Bug when several 'tooltip' < 5.3.0
         if {([ticklecharts::vCompare $::ticklecharts::echarts_version "5.3.0"] == -1) && 
-            ([llength [lsearch -all -exact $_options @D=tooltip]] > 1)} {
+            ([llength [lsearch -all -exact [my options] @D=tooltip]] > 1)} {
             error "Several 'tooltip' not supported..."
         }
 
@@ -361,14 +364,14 @@ oo::define ticklecharts::Gridlayout {
         set match2D 0 ; set match3D 0
         if {![llength [my globalKeyOptions]]} {
             # priority chart 2D for global options
-            foreach chart $_charts2D {
+            foreach chart [my getCharts "2D"] {
                 if {[$chart globalOptions] ne ""} {
                     set _options [linsert $_options 0 {*}[$chart globalOptions]]
                     set match2D 1 ; break
                 }
             }
             if {!$match2D} {
-                foreach chart $_charts3D {
+                foreach chart [my getCharts "3D"] {
                     if {[$chart globalOptions] ne ""} {
                         set _options [linsert $_options 0 {*}[$chart globalOptions]]
                         set match3D 1 ; break
@@ -379,87 +382,26 @@ oo::define ticklecharts::Gridlayout {
 
         set opts $_options
 
-        # no global options adds if need.
+        # No global options adds if need.
         if {![llength [my globalKeyOptions]] && !$match2D && !$match3D} {
             set optsg  [ticklecharts::globalOptions {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
             set opts   [linsert $opts 0 {*}$optsEH]
         }
 
-        # init ehuddle.
-        set _layout [ticklecharts::ehuddle new]
+        # Init ehuddle.
+        set _h [ticklecharts::ehuddle new]
 
         foreach {key value} $opts {
             lassign [split $key "="] type _
             if {($type eq "@D" || $type eq "@L") && $value ne ""} {
-                $_layout append $key $value
+                $_h append $key $value
             } else {
-                $_layout set $key $value
+                $_h set $key $value
             }
         }
 
         return {}
-    }
-
-    method RenderTsb {args} {
-        # Export chart to Taygete Scrap Book.
-        # https://www.androwish.org/home/dir?name=undroid/tsb
-        #
-        # Be careful the tsb.tcl file should be sourced...
-        #
-        # args - Options described below.
-        #
-        # -renderer - 'canvas' or 'svg'
-        # -height   - size html canvas
-        # -merge    - If false, all of the current components
-        #             will be removed and new components will
-        #             be created according to the new option.
-        #             (false by default)
-        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
-        #             to insert an JSON obj in Tsb Webview.
-        #             'eval' JSON obj is not recommended (security reasons).
-        #             JSON.parse is safe but 'function', 'js variable'
-        #             in JSON obj are not supported.
-        #             (false by default)
-        #
-        # Returns nothing.
-
-         # superclass ticklecharts::chart
-        next {*}$args
-
-    }
-
-    method Render {args} {
-        # Export chart to html.
-        #
-        # args - Options described below.
-        #
-        # -title      - header title html
-        # -width      - container's width
-        # -height     - container's height
-        # -renderer   - 'canvas' or 'svg'
-        # -jschartvar - name chart var
-        # -divid      - name id var
-        # -outfile    - full path html (by default in [info script]/render.html)
-        # -jsecharts  - full path echarts.min.js (by default cdn script)
-        # -jsvar      - name js var
-        # -script     - list data (jsfunc), jsfunc.
-        # -class      - container.
-        # -style      - css style.
-        # -template   - template (file or string).
-        #
-        # Returns full path html file.
-
-        # superclass ticklecharts::chart
-        next {*}$args
-    }
-
-    method toJSON {} {
-        # Returns json chart data.
-        my layoutToHuddle ; # transform to huddle
-
-        # ehuddle jsondump
-        return [[my get] toJSON]
     }
 
     method SetGlobalOptions {args} {
@@ -472,8 +414,8 @@ oo::define ticklecharts::Gridlayout {
         lappend _options {*}[$c options]
         lappend _keyglob {*}[dict keys [$c options]]
 
-        # check if chart has dataset.
-        # save is yes...
+        # Check if chart has dataset.
+        # Save if yes...
         if {[$c dataset] ne ""} {
             set _dataset [$c dataset]
         }
@@ -481,26 +423,52 @@ oo::define ticklecharts::Gridlayout {
         # destroy...
         $c destroy
 
-        # doesn't support 3D options
+        # Doesn't support 3D options
         set keys [dict keys $args]
         foreach opts3D {-grid3D -globe -geo3D -mapbox3D} {
             if {$opts3D in $keys} {
                 error "$opts3D (options 3D) not supported...\
-                with 'SetGlobalOptions' method"
+                with '[self method]' method"
             }
         }
 
         return {}
     }
 
-    # export of methods
-    export Add Render SetGlobalOptions RenderTsb
+    # Copy shared methods definition from 'ticklecharts::chart' class :
+    #
+    #   Render   - Export layout html.
+    #   dataset  - Returns dataset.
+    #   options  - Returns layout options.
+    #   toJSON   - Returns json chart data.
+    #   ToHtml   - Export chart as HTML fragment.
+    #   get      - Gets huddle object.
+    # ...
+    foreach method {Render dataset options toJSON ToHtml get} {
+        method $method {*}[ticklecharts::classDef "chart" $method]
+    }
 
+    # export of methods
+    export Add Render SetGlobalOptions
+
+}
+
+proc ticklecharts::isGridlayoutClass {value} {
+    # Check if value is Gridlayout class
+    #
+    # value - obj or string
+    #
+    # Returns true if 'value' is a Gridlayout class, false otherwise.
+    return [expr {
+            [ticklecharts::isAObject $value] && 
+            [string match "*::Gridlayout" [ticklecharts::typeOfClass $value]]
+        }
+    ]
 }
 
 proc ticklecharts::gridlayoutHasDataSetObj {dts} {
     # Check if gridlayout has dataset class
-    # only for chart class
+    # only for chart & chart3D classes.
     #
     # dts - upvar
     #
@@ -508,15 +476,13 @@ proc ticklecharts::gridlayoutHasDataSetObj {dts} {
     upvar 1 $dts dataset
 
     foreach obj [concat [ticklecharts::listNs] "::"] {
-        if {[ticklecharts::isAObject $obj]} {
-            if {[ticklecharts::typeOfClass $obj] eq "::ticklecharts::Gridlayout"} {
-                if {[$obj dataset] ne ""} {
-                    set dataset [$obj dataset]
-                    return 1
-                }
+        if {[ticklecharts::isGridlayoutClass $obj]} {
+            if {[$obj dataset] ne ""} {
+                set dataset [$obj dataset]
+                return 1
             }
         }
-    } 
+    }
 
     return 0
 }

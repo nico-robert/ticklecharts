@@ -4,82 +4,24 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart3D {
-    superclass ticklecharts::chart
+    variable _h            ; # huddle
+    variable _options      ; # list options chart3D
+    variable _opts_global  ; # list global options chart
+    variable _dataset      ; # dataset chart3D
+    variable _trace        ; # trace properties chart
 
-    variable _echartshchart3D  ; # huddle
-    variable _options3D        ; # list options chart3D
-    variable _opts3D_global    ; # list global options chart
-    variable _dataset          ; # dataset chart3D
-
-    constructor {args} {
-        # Initializes a new chart3D Class.
-        #
-        # args - Options described below.
-        #
-        # -theme  - name theme see : theme.tcl
-        #
-        ticklecharts::setTheme $args ; # theme options
-        set _opts3D_global {}
-        set _options3D     {}
-        set _dataset       {}
-    }
+    # See 'chart' class for further details on arguments.
+    constructor {*}[info class constructor "ticklecharts::chart"]
 }
 
 oo::define ticklecharts::chart3D {
-
-    method get {} {
-        # Gets huddle object
-        return $_echartshchart3D
-    }
-
-    method options {} {
-        # Gets chart3D list options
-        return $_options3D
-    }
-
-    method globalOptions {} {
-        # Note : This variable can be empty.
-        #
-        # Returns global options.
-        return $_opts3D_global
-    }
 
     method getType {} {
         # Gets type class
         return "chart3D"
     }
 
-    method dataset {} {
-        # Note : This variable can be empty.
-        #
-        # Returns dataset
-        return $_dataset
-    }
-
-    method getOptions {args} {
-        # args - Options described below.
-        #
-        # -series         - name of series
-        # -option         - name of option
-        # -globalOptions  - global options (no value required)
-        # -axis           - name of axis
-        #
-        # Returns default and options type
-        # according to a key (name of procedure)
-        # If nothing is found then returns an empty string.
-
-        # superclass ticklecharts::chart
-        next {*}$args
-    }
-
-    method keys {} {
-        # Returns keys without type.
-
-        # superclass ticklecharts::chart
-        next
-    }
-
-    method chart3DToHuddle {} {
+    method ToHuddle {} {
         # Transform list to ehudlle
         #
         # Returns nothing
@@ -94,85 +36,24 @@ oo::define ticklecharts::chart3D {
         }
 
         # init ehuddle.
-        set _echartshchart3D [ticklecharts::ehuddle new]
+        set _h [ticklecharts::ehuddle new]
 
         foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
-                $_echartshchart3D append $key $value
+                $_h append $key $value
             } elseif {[string match {*dataZoom} $key]} {
-                $_echartshchart3D append $key $value
+                $_h append $key $value
             } elseif {[string match {*visualMap} $key]} {
-                $_echartshchart3D append $key $value
+                $_h append $key $value
             } elseif {[string match {*dataset} $key]} {
-                $_echartshchart3D append $key $value
+                $_h append $key $value
             } else {
-                $_echartshchart3D set $key $value
+                $_h set $key $value
             }
         }
 
         return {}
-    }
-
-    method RenderTsb {args} {
-        # Export chart to Taygete Scrap Book.
-        # https://www.androwish.org/home/dir?name=undroid/tsb
-        #
-        # Be careful the tsb.tcl file should be sourced...
-        #
-        # args - Options described below.
-        #
-        # -renderer - 'canvas' or 'svg'
-        # -height   - size html canvas
-        # -merge    - If false, all of the current components
-        #             will be removed and new components will
-        #             be created according to the new option.
-        #             (false by default)
-        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
-        #             to insert an JSON obj in Tsb Webview.
-        #             'eval' JSON obj is not recommended (security reasons).
-        #             JSON.parse is safe but 'function', 'js variable'
-        #             in JSON obj are not supported.
-        #             (false by default)
-        #
-        # Returns nothing.
-
-        # superclass ticklecharts::chart
-        next {*}$args
-
-    }
-
-    method Render {args} {
-        # Export chart to html.
-        #
-        # args - Options described below.
-        #
-        # -title      - header title html
-        # -width      - container's width
-        # -height     - container's height
-        # -renderer   - 'canvas' or 'svg'
-        # -jschartvar - name chart var
-        # -divid      - name id var
-        # -outfile    - full path html (by default in [info script]/render.html)
-        # -jsecharts  - full path echarts.min.js (by default cdn script)
-        # -jsvar      - name js var
-        # -script     - list data (jsfunc), jsfunc.
-        # -class      - container.
-        # -style      - css style.
-        # -template   - template (file or string).
-        #
-        # Returns full path html file.
-
-        # superclass ticklecharts::chart
-        next {*}$args
-    }
-
-    method toJSON {} {
-        # Returns json chart data.
-        my chart3DToHuddle ; # transform to huddle
-
-        # ehuddle jsondump
-        return [[my get] toJSON]
     }
 
     method Xaxis3D {args} {
@@ -189,7 +70,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::xAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=xAxis3D [list {*}$f]
+        lappend _options @D=xAxis3D [list {*}$f]
 
         return {}
     }
@@ -208,7 +89,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::yAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=yAxis3D [list {*}$f]
+        lappend _options @D=yAxis3D [list {*}$f]
 
         return {}
     }
@@ -227,7 +108,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::zAxis3D $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=zAxis3D [list {*}$f]
+        lappend _options @D=zAxis3D [list {*}$f]
 
         return {}
     }
@@ -247,7 +128,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::line3DSeries [incr indexline3Dseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=series [list {*}$f]
+        lappend _options @D=series [list {*}$f]
 
         return {}
     }
@@ -267,7 +148,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::bar3DSeries [incr indexbar3Dseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=series [list {*}$f]
+        lappend _options @D=series [list {*}$f]
 
         return {}
     }
@@ -287,7 +168,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::surfaceSeries [incr indexsurfaceseries] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=series [list {*}$f]
+        lappend _options @D=series [list {*}$f]
 
         return {}
     }
@@ -307,7 +188,7 @@ oo::define ticklecharts::chart3D {
         set options [ticklecharts::scatter3DSeries [incr indexscatter3Dseries] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
-        lappend _options3D @D=series [list {*}$f]
+        lappend _options @D=series [list {*}$f]
 
         return {}
     }
@@ -338,7 +219,7 @@ oo::define ticklecharts::chart3D {
             "surfaceSeries"   {my AddSurfaceSeries    {*}[lrange $args 1 end]}
             "scatter3DSeries" {my AddScatter3DSeries  {*}[lrange $args 1 end]}
             default         {
-                set lb [info class definition [self class] [self method]]
+                set lb [ticklecharts::classDef [self class] [self method]]
                 set series {}
                 foreach line [split $lb "\n"] {
                     set line [string trim $line]
@@ -350,8 +231,8 @@ oo::define ticklecharts::chart3D {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First argument should be (case sensitive):'$series'\
-                       instead of '[lindex $args 0]'"
+                error "First argument for '[self method]' method should be\
+                      (case sensitive): '$series' instead of '[lindex $args 0]'"
             }
         }
 
@@ -390,7 +271,7 @@ oo::define ticklecharts::chart3D {
         foreach {key info} [$c options] {
             lassign [split $key "="] _ k
             if {$k in $g2Dopts} {continue}
-            lappend _options3D $key $info
+            lappend _options $key $info
             lappend key2d $key ;  # add keys 2D
         }
 
@@ -415,15 +296,15 @@ oo::define ticklecharts::chart3D {
 
         # Adds global 3D options first
         if {![llength [my globalOptions]]} {
-            set optsg          [ticklecharts::globalOptions3D $newDict]
-            set _opts3D_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
-            set _options3D     [linsert $_options3D 0 {*}$_opts3D_global]
+            set optsg        [ticklecharts::globalOptions3D $newDict]
+            set _opts_global [ticklecharts::optsToEchartsHuddle [$optsg get]]
+            set _options     [linsert $_options 0 {*}$_opts_global]
         }
 
         foreach {key value} $opts {
             if {[ticklecharts::iseDictClass $value] || [ticklecharts::iseListClass $value]} {
                 set f [ticklecharts::optsToEchartsHuddle [$value get]]
-                lappend _options3D $key [list {*}$f]
+                lappend _options $key [list {*}$f]
             } else {
                 error "should be an object... eDict or eList for this key: '$key'"
             }
@@ -432,8 +313,31 @@ oo::define ticklecharts::chart3D {
         return {}
     }
 
+    # Copy shared methods definition from 'ticklecharts::chart' class :
+    #
+    #   Render        - Export chart3D html.
+    #   setTrace      - Sets trace properties.
+    #   track         - Compares properties.
+    #   ToHtml        - Export chart as HTML fragment.
+    #   dataset       - Returns dataset.
+    #   options       - Gets chart3D list options.
+    #   get           - Gets huddle object.
+    #   toJSON        - Returns json chart data.
+    #   getOptions    - Returns default and options type.
+    #   keys          - Returns keys without type.
+    #   deleteSeries  - Delete series by index.
+    #   globalOptions - Returns global options. 
+    #                   Note : This variable can be empty.
+    # ...
+    foreach method {
+        Render setTrace track ToHtml options get toJSON
+        dataset getOptions keys deleteSeries globalOptions
+        } {
+        method $method {*}[ticklecharts::classDef "chart" $method]
+    }
+
     # export of methods
     export AddLine3DSeries AddBar3DSeries AddSurfaceSeries AddScatter3DSeries \
-           Xaxis3D Yaxis3D Zaxis3D SetOptions Render RenderTsb Add
+           Xaxis3D Yaxis3D Zaxis3D SetOptions Render Add
 
 }

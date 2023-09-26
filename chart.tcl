@@ -4,10 +4,11 @@
 namespace eval ticklecharts {}
 
 oo::class create ticklecharts::chart {
-    variable _echartshchart  ; # huddle
-    variable _options        ; # list options chart
-    variable _opts_global    ; # list global options chart
-    variable _dataset        ; # dataset chart
+    variable _h           ; # huddle
+    variable _options     ; # list options chart
+    variable _opts_global ; # list global options chart
+    variable _dataset     ; # dataset chart
+    variable _trace       ; # trace properties chart
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -20,6 +21,7 @@ oo::class create ticklecharts::chart {
         set _opts_global {}
         set _options     {}
         set _dataset     {}
+        set _trace       {}
 
         # Guess if current script has a 'Gridlayout' dataset.
         if {[ticklecharts::gridlayoutHasDataSetObj dataset]} {
@@ -32,7 +34,7 @@ oo::define ticklecharts::chart {
 
     method get {} {
         # Gets huddle object.
-        return $_echartshchart
+        return $_h
     }
 
     method options {} {
@@ -50,6 +52,27 @@ oo::define ticklecharts::chart {
     method getType {} {
         # Gets type class.
         return "chart"
+    }
+
+    method setTrace {levelP value} {
+        # Sets trace properties.
+        #
+        # levelP - level properties
+        # value  - value properties
+        #
+        # Returns nothing
+        lappend _trace $levelP $value
+
+        return {}
+    }
+
+    method track {} {
+        # Compares properties.
+        #
+        # Returns nothing
+        ticklecharts::track $_trace
+
+        return {}
     }
 
     method dataset {} {
@@ -119,11 +142,11 @@ oo::define ticklecharts::chart {
                 error "A value should be specified..."
             }
 
-            set info $value
+            set info $value ; break
         }
 
         foreach method $methods {
-            if {[catch {info class definition $typeOfClass $method} infomethod]} {continue}
+            if {[catch {ticklecharts::classDef $typeOfClass $method} infomethod]} {continue}
             foreach linebody [split $infomethod "\n"] {
                 set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
                 set linebody [string trim $linebody]
@@ -167,7 +190,7 @@ oo::define ticklecharts::chart {
         return {}
     }
 
-    method chartToHuddle {} {
+    method ToHuddle {} {
         # Transform list to ehudlle.
         #
         # Returns nothing
@@ -184,120 +207,28 @@ oo::define ticklecharts::chart {
         set mixed [my isMixed]
 
         # init ehuddle.
-        set _echartshchart [ticklecharts::ehuddle new]
+        set _h [ticklecharts::ehuddle new]
 
         foreach {key value} $opts {
 
             if {[string match {*series} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[string match {*dataZoom} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[string match {*calendar} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[string match {*visualMap} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[string match {*parallelAxis} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[string match {*dataset} $key]} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } elseif {[regexp {xAxis|yAxis|radar} $key] && $mixed} {
-                $_echartshchart append $key $value
+                $_h append $key $value
             } else {
-                $_echartshchart set $key $value
+                $_h set $key $value
             }
         }
-
-        return {}
-    }
-
-    method RenderTsb {args} {
-        # Export chart to Taygete Scrap Book.
-        # https://www.androwish.org/home/dir?name=undroid/tsb
-        #
-        # Be careful the tsb.tcl file should be sourced...
-        #
-        # args - Options described below.
-        #
-        # -renderer - 'canvas' or 'svg'
-        # -height   - size html canvas
-        # -merge    - If false, all of the current components
-        #             will be removed and new components will
-        #             be created according to the new option.
-        #             (false by default)
-        # -evalJSON - Two possibilities 'JSON.parse' or 'eval' 
-        #             to insert an JSON obj in Tsb Webview.
-        #             'eval' JSON obj is not recommended (security reasons).
-        #             JSON.parse is safe but 'function', 'js variable'
-        #             in JSON obj are not supported.
-        #             (false by default)
-        #
-        # Returns nothing.
-
-        if {!$::ticklecharts::tsbIsReady} {
-            error "::tsb file should be sourced..."
-        }
-
-        if {[llength $args] % 2} {
-            error "wrong # args: should be \"[self] RenderTsb\
-                   ?-renderer renderer? ...\""
-        }
-
-        set json [my toJSON] ; # jsondump
-
-        set opts_tsb [ticklecharts::tsbOptions $args]
-        set height   [lindex [dict get $opts_tsb -height] 0]
-        set renderer [lindex [dict get $opts_tsb -renderer] 0]
-        set merge    [lindex [dict get $opts_tsb -merge] 0]
-        set evalJSON [lindex [dict get $opts_tsb -evalJSON] 0]
-
-        if {!$evalJSON} {
-            if {[my getType] eq "timeline"} {
-                foreach c [my charts] {ticklecharts::checkJsFunc [$c options]} 
-            } else {
-                ticklecharts::checkJsFunc [my options]
-            }
-        }
-
-        set uuid $::ticklecharts::etsb::uuid
-        # load if necessary 'echarts' js script...
-        #
-        set type ""
-        foreach script {escript eGLscript wcscript} {
-            set ejs [set ::ticklecharts::$script]
-            if {[dict exists $::ticklecharts::etsb::path $script]} {
-                set type "text"
-            } else {
-                if {[ticklecharts::isURL? $ejs]} {
-                    set type "source"
-                } else {
-                    # If I understand, it is not possible to insert 
-                    # a local file directly with the 'src' attribute in Webview.
-                    #
-                    try {
-                        set f [open $ejs r] ; # read *.js file
-                        set ejs [read $f] ; close $f
-                        # write full js script... inside tsb
-                        set ::ticklecharts::$script $ejs
-                        set type "text"
-                        dict incr ::ticklecharts::etsb::path $script
-                    } on error {result options} {
-                        error [dict get $options -errorinfo]
-                    }
-                }
-            }
-            $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
-        }
-        set idEDiv [format {id_%s%s} $uuid $::ID]
-        # set div + echarts height
-        #
-        $::W call eDiv $idEDiv $height
-        # 
-        after 100 [list $::W call eSeries \
-                                  $idEDiv $json \
-                                  $renderer $merge \
-                                  $evalJSON]
-
-        set ::ticklecharts::theme "custom"
 
         return {}
     }
@@ -307,47 +238,28 @@ oo::define ticklecharts::chart {
         #
         # args - Options described below.
         #
-        # -title      - header title html
-        # -width      - container's width
-        # -height     - container's height
-        # -renderer   - 'canvas' or 'svg'
-        # -jschartvar - name chart var
-        # -divid      - name id var
-        # -outfile    - full path html (by default in [info script]/render.html)
-        # -jsecharts  - full path echarts.min.js (by default cdn script)
-        # -jsvar      - name js var
-        # -script     - list data (jsfunc), jsfunc.
-        # -class      - container.
-        # -style      - css style.
-        # -template   - template (file or string).
+        # -outfile - full path html (default: [info script]/render.html)
+        # Note : See 'ToHtml' method for others properties.
         #
         # Returns full path html file.
 
         if {[llength $args] % 2} {
-            error "wrong # args: should be \"[self] Render\
+            error "wrong # args: should be \"[self] [self method]\
                    ?-title title? ...\""
         }
 
-        set json [my toJSON] ; # jsondump
-        # arguments options
-        set opts_html  [ticklecharts::htmlOptions $args]
-        set outputFile [lindex [dict get $opts_html -outfile] 0]
-        set jsvar      [lindex [dict get $opts_html -jsvar] 0]
-        set template   [lindex [dict get $opts_html -template] 0]
+        # Gets arguments options
+        set opts [ticklecharts::renderOptions $args [self method]]
+        set outputFile [lindex [dict get $opts -outfile] 0]
 
-        # Read html template
-        set htemplate [ticklecharts::readHTMLTemplate $template]
-        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts_html]
-
-        # Replaces json data in html...
-        set jsonData [string map [list %json% $json] $newhtml]
-
+        # Writes data in the html file.
         try {
-            set   fp [open $outputFile w+]
-            puts  $fp $jsonData
-            close $fp
+            set fp   [open $outputFile w+]
+            puts $fp [my ToHtml {*}$opts]
         } on error {result options} {
             error [dict get $options -errorinfo]
+        } finally {
+            catch {close $fp}
         }
 
         if {$::ticklecharts::htmlstdout} {
@@ -357,9 +269,55 @@ oo::define ticklecharts::chart {
         return $outputFile
     }
 
+    method ToHtml {args} {
+	    # Export chart as HTML fragment.
+        #
+        # args - Options described below.
+        #
+        # -title      - header title html
+        # -width      - container's width
+        # -height     - container's height
+        # -renderer   - 'canvas' or 'svg'
+        # -jschartvar - name chart var
+        # -divid      - name id var
+        # -jsecharts  - full path echarts.min.js (default: cdn script)
+        # -jsvar      - name js var
+        # -script     - list data (jsfunc), jsfunc.
+        # -class      - container.
+        # -style      - css style.
+        # -template   - template (file or string).
+        #
+        # Returns HTML as a string
+
+	    if {[llength $args] % 2} {
+            error "wrong # args: should be \"[self] [self method]\
+            	         ?-title title? ...\""
+        }
+
+        set json [my toJSON] ; # jsondump
+
+        # Check if the method was invoked from 
+        # inside another object method.
+        if {![catch {self caller}]} {
+            set opts $args
+        } else {
+            # Gets arguments options
+            set opts [ticklecharts::renderOptions $args [self method]]
+        }
+
+        set template [lindex [dict get $opts -template] 0]
+        # Read html template
+        set htemplate [ticklecharts::readHTMLTemplate $template]
+        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts]
+
+        # Replaces json data in and return HTML...
+        return [string map [list %json% $json] $newhtml]
+    }
+
     method toJSON {} {
         # Returns json chart data.
-        my chartToHuddle ; # transform to huddle
+        my track    ; # Compares properties values with each other. 
+        my ToHuddle ; # Transforms to huddle.
 
         # ehuddle jsondump
         return [[my get] toJSON]
@@ -1018,7 +976,7 @@ oo::define ticklecharts::chart {
             "mapSeries"          {my AddMapSeries           {*}[lrange $args 1 end]}
             "linesSeries"        {my AddLinesSeries         {*}[lrange $args 1 end]}
             default              {
-                set lb [info class definition [self class] [self method]]
+                set lb [ticklecharts::classDef [self class] [self method]]
                 set series {}
                 foreach line [split $lb "\n"] {
                     set line [string trim $line]
@@ -1030,8 +988,8 @@ oo::define ticklecharts::chart {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First argument should be (case sensitive): '$series'\
-                       instead of '[lindex $args 0]'"
+                error "First argument for '[self method]' method should be\
+                      (case sensitive): '$series' instead of '[lindex $args 0]'"
             }
         }
 
@@ -1211,5 +1169,5 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries RenderTsb Add
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries Add
 }
