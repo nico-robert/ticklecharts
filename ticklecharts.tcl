@@ -208,12 +208,19 @@
                 # Fixed a bug introduced with version 3.1.2, when Render method's argument have spaces in options.
                 # Adds a series index for trace series command.
                 # Cosmetic changes.
+# 26-Sep-2023 : v3.2
+                # Add `scatter3D` series.
+                # Add `scatter3D` examples.
+                # Add `globe` option.
+                # A new method RenderJupyter (examples/notebook/README.md) to interact with jupyter notebook has been added. (Credit to Stefan Sobernig(https://github.com/mrcalvin))
+                # Add jupyter notebook(examples/notebook/ticklecharts.ipynb) example.
+                # Code refactoring.
 
 package require Tcl 8.6
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.1.5 ; # ticklEcharts version
+    variable version         3.2   ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-4-1)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
@@ -223,7 +230,7 @@ namespace eval ticklecharts {
     variable theme           "custom"
     variable htmlstdout      "True"
     variable minProperties   "False"
-    variable tsbIsReady      "False" ; # Tsb package.
+    variable env             "tcl"
     variable checkURL        "False" ; # Checks if a URL exists.
     variable htmltemplate    [file join $edir html template.html]
     variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"

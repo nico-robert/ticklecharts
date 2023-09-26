@@ -36,7 +36,7 @@ set chart [ticklecharts::chart new]
 # Initializes X axis with values
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 ```
-:warning: Important `-data` option should be a list of list `[list {...}]`
+:warning: Important `-data` _property_ should be a list of list `[list {...}]`
 ```tcl
 # Initializes Y axis
 $chart Yaxis
@@ -45,7 +45,7 @@ $chart Yaxis
 # Initializes line series
 $chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 ```
-Here `-data` corresponds to the Y values. (:warning: `-data` option should be a list of list `[list {...}]`)
+Here `-data` corresponds to the Y values. (:warning: `-data` _property_ should be a list of list)
 
 ```tcl
 # Export chart to html
@@ -130,7 +130,7 @@ Useful methods :
 1. Get default _options_ according to a `key` (name of procedure) :
 ```tcl
 # e.g for series :
-$chart getOptions -series line
+$chart getOptions -series lineSeries
 # e.g for axis :
 $chart getOptions -axis X
 # e.g for global options :
@@ -218,11 +218,14 @@ $chart Xaxis -axisLabel [list show "True" \
     - For basic _format_, `formatter` supports string template like this :
     > formatter `'{b0}: {c0}<br />{b1}: {c1}'`
     
-    - In Tcl you can use _substitution_ e.g.:
-    > formatter `{"{b0}: {c0}<br />{b1}: {c1}"}`
+    - Use Tcl _substitution_ e.g.:
+    > formatter : `{"{b0}: {c0}<br />{b1}: {c1}"}`
+
+    - Use ticklecharts::eString _class_ e.g.:
+    > formatter : `[new estr "{b0}: {c0}<br />{b1}: {c1}"]`
     
-    - Or use list map (deprecated) to replace some `Tcl` special chars e.g.:
-    > formatter `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
+    - (Deprecated) Use list map to replace some `Tcl` special chars e.g.:
+    > formatter : `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
 
     | Symbol        | Map      |
     | ------------- | ---------|
@@ -465,6 +468,7 @@ $layout Render
 - [x] calendar
 - [x] dataset
 - [x] aria
+- [x] globe
 - **Series :**
 - [x] line
 - [x] line3D
@@ -472,6 +476,7 @@ $layout Render
 - [x] bar3D
 - [x] pie
 - [x] scatter
+- [x] scatter3D
 - [x] effectScatter
 - [x] radar
 - [x] tree
@@ -583,3 +588,10 @@ Release :
 *  **08-Jul-2023** : 3.1.5
     - Fixed a bug introduced with version 3.1.2, when Render method's argument have spaces in options.
     - Cosmetic changes.
+*  **26-Sep-2023** : 3.2
+    - Add `scatter3D` series.
+    - Add `scatter3D` examples.
+    - Add `globe` option.
+    - A new method [RenderJupyter](examples/notebook/README.md) to interact with jupyter notebook has been added. (Credit to [Stefan Sobernig](https://github.com/mrcalvin))
+    - Add [jupyter notebook](examples/notebook/ticklecharts.ipynb) example.
+    - Code refactoring.
