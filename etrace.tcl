@@ -1,9 +1,7 @@
 # Copyright (c) 2022-2023 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
-namespace eval ticklecharts {
-    variable etrace [dict create]
-}
+namespace eval ticklecharts {}
 
 # Minimum versions
 set ECHARTSVMIN "5.0.0"
@@ -20,6 +18,7 @@ proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
     #
     # Returns nothing.
     variable escript ; variable echarts_version
+    variable checkURL
 
     # Minimum Echarts version...
     if {[ticklecharts::vCompare $minversion $echarts_version] == 1} {
@@ -40,7 +39,7 @@ proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
 
     # Verify if a URL exists.
     # Output warning message if url doesn't exists
-    if {$::ticklecharts::checkURL && [ticklecharts::isURL? $escript]} {
+    if {$checkURL && [ticklecharts::isURL? $escript]} {
         ticklecharts::urlExists? $escript
     }
 
@@ -56,6 +55,7 @@ proc ticklecharts::traceEchartsGLVersion {minversion baseversion args} {
     #
     # Returns nothing.
     variable eGLscript ; variable gl_version
+    variable checkURL
 
     # Minimum GL Echarts version...
     if {[ticklecharts::vCompare $minversion $gl_version] == 1} {
@@ -76,7 +76,7 @@ proc ticklecharts::traceEchartsGLVersion {minversion baseversion args} {
 
     # Verify if a URL exists.
     # Output warning message if url doesn't exists
-    if {$::ticklecharts::checkURL && [ticklecharts::isURL? $eGLscript]} {
+    if {$checkURL && [ticklecharts::isURL? $eGLscript]} {
         ticklecharts::urlExists? $eGLscript
     }
 
@@ -92,6 +92,7 @@ proc ticklecharts::traceGmapVersion {minversion baseversion args} {
     #
     # Returns nothing.
     variable gmscript ; variable gmap_version
+    variable checkURL
 
     # Minimum WordCloud Echarts version...
     if {[ticklecharts::vCompare $minversion $gmap_version] == 1} {
@@ -112,7 +113,7 @@ proc ticklecharts::traceGmapVersion {minversion baseversion args} {
 
     # Verify if a URL exists.
     # Output warning message if url doesn't exists
-    if {$::ticklecharts::checkURL && [ticklecharts::isURL? $gmscript]} {
+    if {$checkURL && [ticklecharts::isURL? $gmscript]} {
         ticklecharts::urlExists? $gmscript
     }
 
@@ -128,6 +129,7 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
     #
     # Returns nothing.
     variable wcscript ; variable wc_version
+    variable checkURL
 
     # Minimum WordCloud Echarts version...
     if {[ticklecharts::vCompare $minversion $wc_version] == 1} {
@@ -148,7 +150,7 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
 
     # Verify if a URL exists.
     # Output warning message if url doesn't exists
-    if {$::ticklecharts::checkURL && [ticklecharts::isURL? $wcscript]} {
+    if {$checkURL && [ticklecharts::isURL? $wcscript]} {
         ticklecharts::urlExists? $wcscript
     }
 
@@ -237,7 +239,7 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
                should be an object, now is '$obj'"
     }
 
-    # Guess if $value is an object...
+    # Guess if '$value' is an object...
     if {[ticklecharts::isAObject $value]} {
         set value [$value get]
     }
@@ -253,7 +255,9 @@ proc ticklecharts::track {properties} {
     #   - lineSeries
     #   - barSeries
     #   - barSeries3D
-    # Output a warning message If there is no match...
+    # Outputs :
+    #  - A 'warning' message if there is a conflict between the properties.
+    #  - An 'error' message if some axis combinations are not allowed.
     #
     # properties - list
     #
@@ -368,6 +372,20 @@ proc ticklecharts::track {properties} {
                     if {$v ne "truncate"} {
                         puts stderr "warning(trace):: '$keyP' is displayed when\
                              '$series.label.overflow' is set to 'truncate'."
+                    }
+                }
+            }
+            "xAxis.id" -
+            "yAxis.id" {
+                # Some axis combinations are not allowed.
+                foreach subkey {
+                    angleAxis.id radiusAxis.id radarCoordinate.id 
+                    singleAxis.id parallelAxis.id
+                } {
+                    if {[dict exists $properties $subkey]} {
+                        set axis1 [lindex [split $keyP "."] 0]
+                        set axis2 [lindex [split $subkey "."] 0]
+                        return -code error "'$axis2' not suitable with '$axis1'"
                     }
                 }
             }
