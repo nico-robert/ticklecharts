@@ -212,7 +212,7 @@
                 # Add `scatter3D` series.
                 # Add `scatter3D` examples.
                 # Add `globe` option.
-                # A new method RenderJupyter (examples/notebook/README.md) to interact with jupyter notebook has been added. (Credit to Stefan Sobernig(https://github.com/mrcalvin))
+                # A new method RenderJupyter (examples/notebook/README.md) to interact with jupyter notebook has been added [#1](https://github.com/nico-robert/ticklecharts/pull/1).
                 # Add jupyter notebook(examples/notebook/ticklecharts.ipynb) example.
                 # Code refactoring.
 
@@ -230,7 +230,7 @@ namespace eval ticklecharts {
     variable theme           "custom"
     variable htmlstdout      "True"
     variable minProperties   "False"
-    variable env             "tcl"
+    variable env             "tclsh"
     variable checkURL        "False" ; # Checks if a URL exists.
     variable htmltemplate    [file join $edir html template.html]
     variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"

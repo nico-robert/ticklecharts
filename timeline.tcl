@@ -43,7 +43,7 @@ oo::define ticklecharts::timeline {
     }
 
     method baseOption {} {
-        # Gets list charts.
+        # Gets list base options.
         return $_baseOption
     }
 

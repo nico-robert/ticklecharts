@@ -340,7 +340,7 @@ oo::define ticklecharts::Gridlayout {
                     pie sunburst themeRiver sankey gauge 
                     wordCloud treemap map lines
                     }} {
-                    error "'$series' in Gridlayout classe should not\
+                    error "'$series' in Gridlayout class should not\
                            be added first..."
                 }
             }

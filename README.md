@@ -592,6 +592,6 @@ Release :
     - Add `scatter3D` series.
     - Add `scatter3D` examples.
     - Add `globe` option.
-    - A new method [RenderJupyter](examples/notebook/README.md) to interact with jupyter notebook has been added. (Credit to [Stefan Sobernig](https://github.com/mrcalvin))
+    - A new method [RenderJupyter](examples/notebook/README.md) to interact with jupyter notebook has been added [#1](https://github.com/nico-robert/ticklecharts/pull/1).
     - Add [jupyter notebook](examples/notebook/ticklecharts.ipynb) example.
     - Code refactoring.

@@ -255,7 +255,7 @@ proc ticklecharts::isAObject {obj} {
     #
     # obj  - Instance.
     #
-    # Returns True or False.
+    # Returns true or talse.
     return [info object isa object $obj]
 }
 
@@ -265,7 +265,7 @@ proc ticklecharts::classDef {name method} {
     # name   - class name
     # method - method name
     #
-    # Returns the class method defintion.
+    # Returns the class method definition.
     return [info class definition $name $method]
 }
 
@@ -523,7 +523,8 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
     # type   - list default type
     # keyt   - upvar key type 
     #
-    # Returns true if mytype is found, false otherwise
+    # Returns true if mytype is found, 
+    # false otherwise
 
     upvar 1 $keyt typekey
 
@@ -694,11 +695,11 @@ proc ticklecharts::merge {d other} {
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
             if {$minProperties} {
-                if {$key ni {-type -name} && $typekey ni {
-                    dict list.o list.j str.t list.st list.dt list.nt bool.t num.t
-                    }} {
-                    continue
-                }
+                if {$key ni {-type -name -id} && $typekey ni {
+                    dict list.o list.j str.t list.st 
+                    list.dt list.nt bool.t num.t
+                    }
+                } {continue}
             }
         }
 
@@ -764,12 +765,8 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     set key  [string map {"-" ""} $key]
     set body [split [info body ticklecharts::$key] "\n"]
     set listmap {"setdef" "" "options" ""}
-    set buffer   ""
-    set info     0
-    set switch   0
-    set ifnP     ""
-    set copyifnP ""
-    set dataInfo {}
+    ldset {buffer ifnP copyifnP dataInfo} to {}
+    ldset {info switch copyifnP} to 0
 
     for {set i 0} {$i < [llength $body]} {incr i} {
         # find command in body...
@@ -884,8 +881,8 @@ proc ticklecharts::infoNameProc {levelP name} {
     # levelP - properties
     # name   - Name to be found in properties
     #
-    # Returns True if name match with current 
-    # level properties, False otherwise.
+    # Returns true if name match with current 
+    # level properties, false otherwise.
 
     return [string match $name $levelP]
 }
@@ -906,7 +903,7 @@ proc ticklecharts::keysOptsThemeExists {name} {
     #
     # name   - name theme option
     #
-    # Returns true , false otherwise.
+    # Returns true, false otherwise.
     variable opts_theme
 
     return [dict exists $opts_theme $name]
@@ -918,7 +915,8 @@ proc ticklecharts::keyDictExists {basekey d key} {
     # d   - dict
     # key - upvar name
     #
-    # Returns True if key name match, False otherwise.
+    # Returns true if key name match,
+    # false otherwise.
 
     upvar 1 $key name
 
@@ -951,7 +949,8 @@ proc ticklecharts::keyValueIsListOfList {value key} {
     # value - list options
     # key   - key option
     #
-    # Returns True if key value is a list of list, False otherwise.
+    # Returns true if key value is a list of list,
+    # false otherwise.
 
     set lflag [lsearch $value "*$key*"]
     set range [lindex $value $lflag+1]
@@ -964,7 +963,8 @@ proc ticklecharts::isListOfList {args} {
     #
     # args - list
     #
-    # Returns True if value is a list of list, False otherwise.
+    # Returns true if value is a list of list,
+    # false otherwise.
 
     # clean up the list... (spaces, \n...)
     regsub -all -line {(^\s+)|(\s+$)|\n} $args {} str
@@ -1106,7 +1106,8 @@ proc ticklecharts::isURL? {url} {
     #
     # url - string
     #
-    # Returns True if url is valid, False otherwise.
+    # Returns true if url is valid,
+    # false otherwise.
     return [regexp {^(https:|http:|www\.)\S*} $url]
 }
 
@@ -1186,11 +1187,28 @@ proc ticklecharts::itemKey {keySeries value} {
     # keySeries - list item keys
     # value     - dict
     #
-    # Returns the name of key if found, otherwise nothing.
+    # Returns the name of key if found, 
+    # otherwise nothing.
     foreach key $keySeries {
         if {[dict exists $value $key]} {
             return $key
         }
+    }
+
+    return {}
+}
+
+proc ticklecharts::ldset {varList to default} {
+    # Defines the default value in a variable list.
+    #
+    # varList  - list variables
+    # to       - not used
+    # default  - default value
+    #
+    # Returns nothing.
+    foreach var $varList {
+        upvar $var variable
+        set variable $default
     }
 
     return {}
