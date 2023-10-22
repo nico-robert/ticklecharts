@@ -150,7 +150,7 @@ oo::define ticklecharts::chart {
             foreach linebody [split $infomethod "\n"] {
                 set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
                 set linebody [string trim $linebody]
-                if {[string match -nocase "*ticklecharts::*$info*" $linebody]} {
+                if {[string match -nocase "*ticklecharts::$info*" $linebody]} {
                     if {[regexp {ticklecharts::([A-Za-z0-9]+)\s} $linebody -> match]} {
                         return [ticklecharts::infoOptions $match]
                     }
@@ -333,11 +333,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#xAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
-            error "radiusAxis or angleAxis not suitable with 'Xaxis'"
-        }
 
         set options [ticklecharts::xAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -357,11 +352,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#yAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"radiusAxis" in $mykeys || "angleAxis" in $mykeys} {
-            error "radiusAxis or angleAxis not suitable with 'Yaxis'"
-        }
 
         set options [ticklecharts::yAxis [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -381,11 +371,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#radiusAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not suitable with 'radiusAxis'"
-        }
 
         set options [ticklecharts::radiusAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -405,11 +390,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#angleAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not suitable with 'angleAxis'"
-        }
 
         set options [ticklecharts::angleAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -448,11 +428,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#radar
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not suitable with 'Radar coordinate'"
-        }
 
         set options [ticklecharts::radarCoordinate $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -472,11 +447,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#singleAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not suitable with 'SingleAxis'"
-        }
 
         set options [ticklecharts::singleAxis $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
@@ -496,11 +466,6 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#parallelAxis
         #
         # Returns nothing
-        set mykeys [my keys]
-
-        if {"xAxis" in $mykeys || "yAxis" in $mykeys} {
-            error "xAxis or yAxis not suitable with 'parallelAxis'"
-        }
 
         set options [ticklecharts::parallelAxis $args]
         foreach axis $options {
