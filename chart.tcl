@@ -234,14 +234,14 @@ oo::define ticklecharts::chart {
     }
 
     method Render {args} {
-        # Export chart to html.
+        # Export chart to HTML file.
         #
         # args - Options described below.
         #
-        # -outfile - full path html (default: [info script]/render.html)
+        # -outfile - full path HTML (default: [info script]/render.html)
         # Note : See 'ToHtml' method for others properties.
         #
-        # Returns full path html file.
+        # Returns full path HTML file.
 
         if {[llength $args] % 2} {
             error "wrong # args: should be \"[self] [self method]\
@@ -252,7 +252,7 @@ oo::define ticklecharts::chart {
         set opts [ticklecharts::renderOptions $args [self method]]
         set outputFile [lindex [dict get $opts -outfile] 0]
 
-        # Writes data in the html file.
+        # Writes data in the HTML file.
         try {
             set fp   [open $outputFile w+]
             puts $fp [my ToHtml {*}$opts]

@@ -186,7 +186,7 @@ proc ticklecharts::addJsScript {html value} {
 }
 
 proc ticklecharts::readHTMLTemplate {htmltemplate} {
-    # Open and read html template.
+    # Opens and reads html template.
     #
     # htmltemplate  - template html.
     #
