@@ -32,8 +32,8 @@ proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
         set escript [string map $vMap $escript]
     } else {
         puts stderr "warning(trace): Num version (@X.X.X) should be present in 'Echarts' path js.\
-              If no pattern matches, the script path is left unchanged\
-              and the 'echarts_version' variable is set to base version"
+                    If no pattern matches, the script path is left unchanged\
+                    and the 'echarts_version' variable is set to base version"
         set echarts_version $baseversion
     }
 
@@ -69,8 +69,8 @@ proc ticklecharts::traceEchartsGLVersion {minversion baseversion args} {
         set eGLscript [string map $vMap $eGLscript]
     } else {
         puts stderr "warning(trace): Num version (@X.X.X) should be present in 'EchartsGL' path js.\
-              If no pattern matches, the script path is left unchanged\
-              and the 'gl_version' variable is set to base version"
+                    If no pattern matches, the script path is left unchanged\
+                    and the 'gl_version' variable is set to base version"
         set gl_version $baseversion
     }
 
@@ -106,8 +106,8 @@ proc ticklecharts::traceGmapVersion {minversion baseversion args} {
         set gmscript [string map $vMap $gmscript]
     } else {
         puts stderr "warning(trace): Num version (@X.X.X) should be present in 'gmap' path js.\
-              If no pattern matches, the script path is left unchanged\
-              and the 'gmap_version' variable is set to base version"
+                    If no pattern matches, the script path is left unchanged\
+                    and the 'gmap_version' variable is set to base version"
         set gmap_version $baseversion
     }
 
@@ -143,8 +143,8 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
         set wcscript [string map $WCMap $wcscript]
     } else {
         puts stderr "warning(trace): Num version (@X.X.X) should be present in 'wordcloud' path js.\
-              If no pattern matches, the script path is left unchanged\
-              and the 'wc_version' variable is set to base version"
+                    If no pattern matches, the script path is left unchanged\
+                    and the 'wc_version' variable is set to base version"
         set wc_version $baseversion
     }
 
@@ -170,7 +170,7 @@ proc ticklecharts::traceKeyGMAPI {args} {
         set gapiscript [string map $vMap $gapiscript]
     } else {
         puts stderr "warning(trace): 'key=' should be present in Google script path js.\
-              If no pattern matches, the script path is left unchanged."
+                    If no pattern matches, the script path is left unchanged."
     }
 
     return {}
