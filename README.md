@@ -1,6 +1,6 @@
-ticklEcharts - chart library
+ticklEcharts
 ==========================
-Tcl wrapper around [Apache ECharts](https://echarts.apache.org/en/index.html) (JavaScript library).
+Tcl wrapper around [Apache ECharts](https://echarts.apache.org/en/index.html).
 
 ![Photo gallery](images/all.png)
 
