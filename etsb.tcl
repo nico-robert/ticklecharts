@@ -19,6 +19,18 @@ if {[namespace exists ::tsb]} {
             # Generate uuid for <div> tsb...
             variable uuid [ticklecharts::uuid]
             variable path [dict create]
+
+            proc readJsFile {file} {
+                # Returns data js file
+                try {
+                    set fp [open $file r]
+                    set js [read $fp]
+                } on error {result options} {
+                    error [dict get $options -errorinfo]
+                } finally {
+                    catch {close $fp}
+                }
+            }
         }
         # All requirements must be fulfilled,
         # in order to function properly.
@@ -46,6 +58,46 @@ if {[namespace exists ::tsb]} {
                 gl_version      eGLscript
                 wc_version      wcscript
                 } {
+                # Find folder according to variable version.
+                # The folder should be named like this : @X.X.X/***.js
+                # If the folder is not found, by default we take the variable ticklecharts::e**script
+                set v [set $e_version]
+                if {[file exists $eJsdir]} {
+                    if {[set edir_js [glob -nocomplain -directory $eJsdir -types d *$v]] ne "" && 
+                        [set ejs [glob -nocomplain -directory $edir_js -types f echarts*.js]] ne ""} {
+                        set js [etsb::readJsFile $ejs] ; # read *.js file
+                        # set variable with full js script.
+                        set $script $js
+                        dict incr etsb::path $script
+                    } else {
+                        # No version found on the folder name according to ticklecharts version.
+                        # Try to find out if there are folders with lower or higher versions.
+                        switch -exact -- $script {
+                            "escript"   {set name "echarts@"}
+                            "eGLscript" {set name "gl@"}
+                            "wcscript"  {set name "wordcloud@"}
+                        }
+                        set lversion {}
+                        foreach p [glob -nocomplain -directory $eJsdir -types d *$name*] {
+                            if {[regexp {([0-9]+\.[0-9]+\.[0-9]+)} [file tail $p] -> match]} {
+                                lappend lversion [list $match $p]
+                            }
+                        }
+                        if {[llength $lversion]} {
+                            # Take the highest version.
+                            set last [lindex [lsort -dictionary -index 0 $lversion] end]
+                            lassign $last lastversion lastpath
+                            if {[set ejs [glob -nocomplain -directory $lastpath -types f echarts*.js]] ne ""} {
+                                set js [etsb::readJsFile $ejs] ; # read *.js file
+                                # Changes 'e_version' with the new version.
+                                set ::ticklecharts::$e_version $lastversion
+                                # set variable with full js script.
+                                set $script $js
+                                dict incr etsb::path $script
+                            } 
+                        }
+                    }
+                }
                 # Replaces trace command, not supported...
                 # By another trace tsb command
                 foreach cmd $tracecmds {
@@ -64,20 +116,6 @@ if {[namespace exists ::tsb]} {
 
                         trace add variable ticklecharts::$e_version write [list ${cmd}_tsb]
                         break
-                    }
-                }
-                # Find folder according to variable version.
-                # The folder should be named like this : @X.X.X/***.js
-                # If the folder is not found, by default we take the variable ticklecharts::e**script
-                set v [set $e_version]
-                if {[file exists $eJsdir]} {
-                    if {[set edir_js [glob -nocomplain -directory $eJsdir -types d *$v]] ne "" && 
-                        [set ejs [glob -nocomplain -directory $edir_js -types f echarts*.js]] ne ""} {
-                        set f  [open $ejs r] ; # read *.js file
-                        set js [read $f] ; close $f
-                        # set variable with full js script.
-                        set $script $js
-                        dict incr etsb::path $script
                     }
                 }
             }
@@ -153,16 +191,11 @@ if {[namespace exists ::tsb]} {
                             # If I understand, it is not possible to insert 
                             # a local file directly with the 'src' attribute in Webview.
                             #
-                            try {
-                                set f [open $ejs r] ; # read *.js file
-                                set ejs [read $f] ; close $f
-                                # write full js script... inside tsb
-                                set ::ticklecharts::$script $ejs
-                                set type "text"
-                                dict incr ::ticklecharts::etsb::path $script
-                            } on error {result options} {
-                                error [dict get $options -errorinfo]
-                            }
+                            set ejs [ticklecharts::etsb::readJsFile $ejs] ; # read *.js file
+                            # write full js script... inside tsb
+                            set ::ticklecharts::$script $ejs
+                            set type "text"
+                            dict incr ::ticklecharts::etsb::path $script
                         }
                     }
                     $::W call eSrc $ejs [format {%s_%s} $script $uuid] $type
