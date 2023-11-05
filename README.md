@@ -498,7 +498,7 @@ $layout Render
 - [ ] custom (see _note_ below)
 - [x] wordCloud
 
-> **Note** _custom_ series : This series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
+> **Note :** _custom_ series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
  If you are interested, please report to the github issue tracker.
 
 License :
