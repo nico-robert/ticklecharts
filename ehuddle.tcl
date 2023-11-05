@@ -9,10 +9,10 @@ namespace eval ::huddle::types::jsfunc {
 
     # type definition
     set settings {
-                    publicMethods {jsfunc}
-                    tag jsf
-                    isContainer no
-                }
+        publicMethods {jsfunc}
+        tag jsf
+        isContainer no
+    }
 
     proc jsfunc {arg} {
         return [wrap [list jsf $arg]]
@@ -299,7 +299,7 @@ oo::define ticklecharts::ehuddle {
 proc ticklecharts::ehuddle_num val {
     # Returns format hudlle num
     if {![string is double -strict $val]} {
-        error "Argument 'ehuddle' num '$val' is not a number"
+        error "wrong # args: 'ehuddle' num '$val' is not a number"
     }
 
     return [list num $val]
@@ -426,8 +426,8 @@ proc ticklecharts::eHuddleCritcl {bool} {
                 # Procedure already activated...
                 # Output a message to say that it is already running.
                 #
-                puts "'ticklecharts::eHuddleCritcl' procedure\
-                       is already activated..."
+                puts stderr "'ticklecharts::eHuddleCritcl' procedure\
+                             is already activated..."
             }
 
         } else {
