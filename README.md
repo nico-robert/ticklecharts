@@ -113,7 +113,7 @@ set data(0) {
 
 # Init dataset class.
 # Note : Starting from version '2.6', it is possible 
-#        to add several 'source' for the same class like this :
+# to add several 'source' like this :
 # > [list [list -source $data(0) -sourceHeader "True"] [list -source $data(1) ...]]]
 set obj [ticklecharts::dataset new [list -source $data(0) -sourceHeader "True"]]
 
@@ -172,7 +172,7 @@ $chart getOptions -option title
 2. Delete _series_ by index:
 ```tcl
 $chart Add "lineSeries" -data [list {1 2 3 4}]
-$chart Add "barSeries"  -data [list {4 5 6 7}]
+$chart Add "barSeries"  -data [list {5 6 7 8}]
 
 # Delete bar series :
 $chart deleteSeries 1
@@ -423,11 +423,11 @@ $pie SetOptions -legend {top "6%" left "65%"}
 $pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
                      -labelLine {show "True"} \
                      -dataItem {
-                      {value 1048 name "C++"}
-                      {value 300 name "Tcl"}
-                      {value 580 name "Javascript"}
-                      {value 484 name "Python"}
-                      {value 735 name "C"}
+                        {value 1048 name "C++"}
+                        {value 300 name "Tcl"}
+                        {value 580 name "Javascript"}
+                        {value 484 name "Python"}
+                        {value 735 name "C"}
                     }
 
 
