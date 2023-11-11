@@ -14,7 +14,15 @@ proc ticklecharts::formatEcharts {formattype value key} {
     # Returns nothing.
     variable echarts_version
 
-    if {$formattype eq "" || $value eq "nothing" || $value eq "null"} {
+    if {$formattype eq ""} {
+        return {}
+    }
+
+    if {[ticklecharts::iseStringClass $value]} {
+        set value [$value get]
+    }
+
+    if {$value eq "nothing" || $value eq "null"} {
         return {}
     }
 
