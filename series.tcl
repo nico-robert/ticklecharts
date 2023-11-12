@@ -606,11 +606,11 @@ proc ticklecharts::scatterSeries {index chart value} {
     }
 
     set lflag [list \
-               -label -labelLine -lineStyle \
-               -markPoint -markLine -universalTransition \
-               -labelLayout -itemStyle -markArea $itemKey \
-               -emphasis -blur -select -tooltip -rippleEffect -encode \
-            ]
+        -label -labelLine -lineStyle \
+        -markPoint -markLine -universalTransition \
+        -labelLayout -itemStyle -markArea $itemKey \
+        -emphasis -blur -select -tooltip -rippleEffect -encode \
+    ]
 
     # does not remove '-labelLayout' for js function.
     if {[dict exists $value -labelLayout] && [ticklecharts::typeOf [dict get $value -labelLayout]] eq "jsfunc"} {
@@ -689,11 +689,20 @@ proc ticklecharts::heatmapSeries {index chart value} {
         }
     }
 
-    # remove key(s)...
-    set value [dict remove $value -label \
-                                  -labelLine \
-                                  -labelLayout -itemStyle -markLine -markPoint -markArea \
-                                  -emphasis -blur -select -universalTransition -encode -tooltip]
+    set lflag [list \
+        -label \
+        -labelLine \
+        -labelLayout -itemStyle -markLine -markPoint -markArea \
+        -emphasis -blur -select -universalTransition -encode -tooltip \
+    ]
+
+    # does not remove '-labelLayout' for js function.
+    if {[dict exists $value -labelLayout] && [ticklecharts::typeOf [dict get $value -labelLayout]] eq "jsfunc"} {
+        set lflag [lsearch -inline -all -not -exact $lflag "-labelLayout"]
+        set value [dict remove $value {*}$lflag]
+    } else {
+        set value [dict remove $value {*}$lflag]
+    }
 
     set options [merge $options $value]
 
