@@ -21,6 +21,8 @@ if {[namespace exists ::tsb]} {
             variable path [dict create]
 
             proc readJsFile {file} {
+                # file - js file
+                #
                 # Returns data js file
                 try {
                     set fp [open $file r]
@@ -30,6 +32,8 @@ if {[namespace exists ::tsb]} {
                 } finally {
                     catch {close $fp}
                 }
+
+                return $js
             }
         }
         # All requirements must be fulfilled,
