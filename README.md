@@ -114,8 +114,8 @@ set data(0) {
 # Init dataset class.
 # Note : Starting from version '2.6', it is possible 
 # to add several 'source' like this :
-# > [list [list -source $data(0) -sourceHeader "True"] [list -source $data(1) ...]]]
-set obj [ticklecharts::dataset new [list -source $data(0) -sourceHeader "True"]]
+# > [list [list source $data(0) sourceHeader "True"] [list source $data(1) ...]]]
+set obj [ticklecharts::dataset new [list source $data(0) sourceHeader "True"]]
 
 # Add 'obj' dataset to chart class. 
 $chart SetOptions -dataset $obj
