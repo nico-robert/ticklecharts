@@ -2,6 +2,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -22,7 +24,7 @@ try {
     set dimensions {"Income" "Life Expectancy" "Population" "Country" {name "Year" type "ordinal"}}
 
     # dataset class
-    set dset [ticklecharts::dataset new [list [list -dimensions $dimensions -source $datajson]]]
+    set dset [ticklecharts::dataset new [list dimensions $dimensions source $datajson]]
 
     set chart3D [ticklecharts::chart3D new]
 

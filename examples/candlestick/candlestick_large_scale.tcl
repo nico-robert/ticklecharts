@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : re-working 'dataset' class should be a list of list...
 # v3.0 : Fixes bug (or not !) with echarts version 5.4.1... when borderColor is set with itemStyle
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -85,7 +87,7 @@ set downBorderColor "#008F28"
 set dataCount 2000
 
 set source [generateOHLC $dataCount]
-set dset [ticklecharts::dataset new [list [list -source $source]]]
+set dset   [ticklecharts::dataset new [list source $source]]
 
 set layout [ticklecharts::Gridlayout new]
 

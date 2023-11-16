@@ -3,6 +3,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -31,9 +33,9 @@ try {
 
     # dataset class
     set dset [ticklecharts::dataset new [list \
-                                            [list -source $datajson -sourceHeader "True" -id "raw"] \
-                                            [list -id "since_year" -fromDatasetId "raw" -transform {{type "filter" config {dimension "Year" gte 1950}}}] \
-                                            [list -id "income_aggregate" -fromDatasetId "since_year" -transform {
+                                            [list source $datajson sourceHeader "True" id "raw"] \
+                                            [list id "since_year" fromDatasetId "raw" transform {{type "filter" config {dimension "Year" gte 1950}}}] \
+                                            [list id "income_aggregate" fromDatasetId "since_year" transform {
                                                     {
                                                         type "ecSimpleTransform:aggregate" config {
                                                         resultDimensions {

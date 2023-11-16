@@ -1,5 +1,9 @@
 lappend auto_path [file dirname [file dirname [file dirname [file dirname [file normalize [info script]]]]]]
 
+# v1.0 : Initial example
+# v2.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
+
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
@@ -50,10 +54,10 @@ set source {
 
 # dataset class
 set dset [ticklecharts::dataset new [list \
-                                        [list -source $source] \
-                                        [list -transform {{type "filter" config {dimension 4 eq 1990}}}] \
-                                        [list -transform {{type "filter" config {dimension 4 eq 2015}}}] \
-                                        [list -transform {{type "ecStat:regression" config {method "logarithmic"}}}] \
+                                        [list source $source] \
+                                        [list transform {{type "filter" config {dimension 4 eq 1990}}}] \
+                                        [list transform {{type "filter" config {dimension 4 eq 2015}}}] \
+                                        [list transform {{type "ecStat:regression" config {method "logarithmic"}}}] \
                                     ] \
 ]
 

@@ -5,6 +5,8 @@ if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 set dimensions {product 2015 2016 2017}
 
@@ -18,7 +20,7 @@ set source [new elist {
 ]
 
 # dataset class
-set dset [ticklecharts::dataset new [list -dimensions $dimensions -source $source]]
+set dset [ticklecharts::dataset new [list dimensions $dimensions source $source]]
 
 set chart [ticklecharts::chart new]
 

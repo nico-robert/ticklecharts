@@ -7,6 +7,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #        Note : v3.0 version > Since some versions this is no longer quite true, it can be a simple list.
 #        Note : Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v5.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -34,7 +36,7 @@ try {
                          [new edict {name "dummy" type "number"}]]
 
     # dataset class
-    set dset [ticklecharts::dataset new [list -dimensions $dimensions -source $datajson]]
+    set dset [ticklecharts::dataset new [list dimensions $dimensions source $datajson]]
 
     # layout
     set layout [ticklecharts::Gridlayout new]

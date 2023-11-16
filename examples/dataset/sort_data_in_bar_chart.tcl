@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : re-working 'dataset' class should be a list of list...
 # v3.0 : Replace 'render' method by 'Render' (Note the first letter in capital letter...)
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,8 +26,8 @@ set source {
 
 # dataset class
 set dset [ticklecharts::dataset new [list \
-                                        [list -dimensions $dimensions -source $source] \
-                                        [list -transform {{type "sort" config {dimension "score" order "desc"}}}] \
+                                        [list dimensions $dimensions source $source] \
+                                        [list transform {{type "sort" config {dimension "score" order "desc"}}}] \
                                     ] \
 ]
                                     

@@ -5,6 +5,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
 #        Note : map list formatter + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v4.0 : Update of the dataset class example with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -19,9 +21,9 @@ set source {
 }
 
 set dset [ticklecharts::dataset new [list \
-                                        [list -source $source] \
-                                        [list -transform {{type "boxplot" config {itemNameFormatter {"expr {value}"}}}}] \
-                                        [list -fromDatasetIndex 1 -fromTransformResult 1]
+                                        [list source $source] \
+                                        [list transform {{type "boxplot" config {itemNameFormatter {"expr {value}"}}}}] \
+                                        [list fromDatasetIndex 1 fromTransformResult 1]
                                     ] \
 ]
 
