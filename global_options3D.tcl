@@ -10,9 +10,7 @@ proc ticklecharts::globalOptions3D {value} {
     #
     # Returns dict options
 
-    if {[llength $value] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -darkMode         -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
     setdef options -backgroundColor  -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
@@ -32,9 +30,7 @@ proc ticklecharts::grid3D {value} {
 
     set d [dict get $value -grid3D]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options show                   -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
     setdef options boxWidth               -minversion 5  -validvalue {}           -type num|null         -default 100
@@ -79,9 +75,7 @@ proc ticklecharts::globe {value} {
 
     set d [dict get $value -globe]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options show                   -minversion 5  -validvalue {}               -type bool             -default "True"
     setdef options zlevel                 -minversion 5  -validvalue {}               -type num|null         -default -10

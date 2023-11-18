@@ -5,6 +5,8 @@ namespace eval ticklecharts {}
 
 proc ticklecharts::radiusAxis {value} {
 
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
     setdef options -id             -minversion 5  -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -polarIndex     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
     setdef options -type           -minversion 5  -validvalue formatType          -type str|null            -trace no   -default "nothing"
@@ -51,6 +53,8 @@ proc ticklecharts::radiusAxis {value} {
 
 proc ticklecharts::radarCoordinate {value} {
 
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
     setdef options -id           -minversion 5  -validvalue {}               -type str|null       -trace yes  -default "nothing"
     setdef options -zlevel       -minversion 5  -validvalue {}               -type num|null       -trace no   -default "nothing"
     setdef options -z            -minversion 5  -validvalue {}               -type num|null       -trace no   -default "nothing"
@@ -82,6 +86,8 @@ proc ticklecharts::radarCoordinate {value} {
 }
 
 proc ticklecharts::angleAxis {value} {
+
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -id             -minversion 5  -validvalue {}               -type str|null            -trace yes  -default "nothing"
     setdef options -polarIndex     -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
@@ -123,6 +129,8 @@ proc ticklecharts::angleAxis {value} {
 }
 
 proc ticklecharts::xAxis {chart value} {
+
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -id             -minversion 5       -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -show           -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
@@ -181,6 +189,8 @@ proc ticklecharts::xAxis {chart value} {
 }
 
 proc ticklecharts::yAxis {chart value} {
+
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -id              -minversion 5       -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -show            -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
@@ -242,6 +252,8 @@ proc ticklecharts::yAxis {chart value} {
 
 proc ticklecharts::singleAxis {value} {
 
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
     setdef options -id             -minversion 5  -validvalue {}                 -type str|null            -trace yes  -default "nothing"
     setdef options -zlevel         -minversion 5  -validvalue {}                 -type num                 -trace no   -default 0
     setdef options -z              -minversion 5  -validvalue {}                 -type num                 -trace no   -default 2
@@ -288,9 +300,7 @@ proc ticklecharts::parallelAxis {value} {
 
     foreach item {*}$value {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options -id              -minversion 5  -validvalue {}                  -type str|null            -trace yes  -default "nothing"
         setdef options -dim             -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0

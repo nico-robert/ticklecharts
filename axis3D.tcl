@@ -5,6 +5,8 @@ namespace eval ticklecharts {}
 
 proc ticklecharts::xAxis3D {value} {
 
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
     setdef options -show           -minversion 5  -validvalue {}          -type bool|null     -default "True"
     setdef options -name           -minversion 5  -validvalue {}          -type str|null      -default "X"
     setdef options -grid3DIndex    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
@@ -39,6 +41,8 @@ proc ticklecharts::xAxis3D {value} {
 
 proc ticklecharts::yAxis3D {value} {
 
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
     setdef options -show           -minversion 5  -validvalue {}          -type bool|null     -default "True"
     setdef options -name           -minversion 5  -validvalue {}          -type str|null      -default "Y"
     setdef options -grid3DIndex    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
@@ -72,6 +76,8 @@ proc ticklecharts::yAxis3D {value} {
 }
 
 proc ticklecharts::zAxis3D {value} {
+
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -show           -minversion 5  -validvalue {}          -type bool|null     -default "True"
     setdef options -name           -minversion 5  -validvalue {}          -type str|null      -default "Z"

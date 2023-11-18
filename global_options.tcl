@@ -10,9 +10,7 @@ proc ticklecharts::globalOptions {value} {
     #
     # Returns dict options
 
-    if {[llength $value] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -darkMode                -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
     setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
@@ -117,9 +115,7 @@ proc ticklecharts::title {value} {
 
     set d [dict get $value -title]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id                -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
     setdef options show              -minversion 5  -validvalue {}                      -type bool        -default "True"
@@ -176,9 +172,7 @@ proc ticklecharts::grid {value} {
 
     set d [dict get $value -grid]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id              -minversion 5  -validvalue {}           -type str|null         -default "nothing"
     setdef options show            -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
@@ -222,9 +216,7 @@ proc ticklecharts::tooltip {value} {
 
     set d [dict get $value $key]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options show               -minversion 5       -validvalue {}               -type bool                   -default "True"
     setdef options trigger            -minversion 5       -validvalue formatTrigger    -type str|null               -default "item"
@@ -269,9 +261,7 @@ proc ticklecharts::legend {value} {
 
     set d [dict get $value -legend]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options type                    -minversion 5  -validvalue formatLegendType      -type str              -default "plain"
     setdef options id                      -minversion 5  -validvalue {}                    -type str|null         -default "nothing"
@@ -355,9 +345,7 @@ proc ticklecharts::polar {value} {
 
     set d [dict get $value -polar]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id     -minversion 5  -validvalue {} -type str|null            -default "nothing"
     setdef options zlevel -minversion 5  -validvalue {} -type num|null            -default "nothing"
@@ -380,9 +368,7 @@ proc ticklecharts::visualMap {value} {
 
     set d [dict get $value -visualMap]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     if {![dict exists $d type]} {
         error "visualMap 'type' should be specified... 'continuous' or 'piecewise'"
@@ -501,9 +487,7 @@ proc ticklecharts::toolbox {value} {
 
     set d [dict get $value -toolbox]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id         -minversion 5  -validvalue {}           -type str|null      -default "nothing"
     setdef options show       -minversion 5  -validvalue {}           -type bool          -default "True"
@@ -543,9 +527,7 @@ proc ticklecharts::dataZoom {value} {
 
     set d [dict get $value -dataZoom]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     if {![dict exists $d type]} {
         error "dataZoom 'type' should be specified... 'inside' or 'slider'"
@@ -660,9 +642,7 @@ proc ticklecharts::parallel {value} {
 
     set d [dict get $value -parallel]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id                  -minversion 5  -validvalue {}                    -type str|null      -default "nothing"
     setdef options zlevel              -minversion 5  -validvalue {}                    -type num|null      -default "nothing"
@@ -699,9 +679,7 @@ proc ticklecharts::brush {value} {
 
     set d [dict get $value -brush]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id             -minversion 5  -validvalue {}                    -type str|null             -default "nothing"
     setdef options toolbox        -minversion 5  -validvalue formatToolBox         -type list.s               -default [list {rect polygon keep clear}]
@@ -738,9 +716,7 @@ proc ticklecharts::axisPointerGlobal {value} {
 
     set d [dict get $value -axisPointer]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id               -minversion 5       -validvalue {}                    -type str|null        -default "nothing"
     setdef options show             -minversion 5       -validvalue {}                    -type bool            -default "True"
@@ -776,9 +752,7 @@ proc ticklecharts::geo {value} {
 
     set d [dict get $value -geo]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id              -minversion 5        -validvalue {}                  -type str|null       -default "nothing"
     setdef options show            -minversion 5        -validvalue {}                  -type bool           -default "True"
@@ -829,9 +803,7 @@ proc ticklecharts::calendar {value} {
 
     set d [dict get $value -calendar]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options id          -minversion 5  -validvalue {}            -type str|null              -default "nothing"
     setdef options zlevel      -minversion 5  -validvalue {}            -type num                   -default 0
@@ -870,9 +842,7 @@ proc ticklecharts::aria {value} {
 
     set d [dict get $value -aria]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options enabled   -minversion 5   -validvalue {}   -type bool       -default "True"
     setdef options label     -minversion 5   -validvalue {}   -type dict|null  -default [ticklecharts::ariaLabel $d]
@@ -897,9 +867,7 @@ proc ticklecharts::gmap {value} {
 
     set d [dict get $value -gmap]
 
-    if {[llength $d] % 2} {
-        ticklecharts::errorEvenArgs
-    }
+    if {[llength $d] % 2} ticklecharts::errorEvenArgs
 
     setdef options center              -minGMversion 1.4.0 -validvalue {}           -type list.n         -default {}
     setdef options zoom                -minGMversion 1.4.0 -validvalue {}           -type num            -default 5

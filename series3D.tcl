@@ -11,6 +11,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
     # value - Options described in proc ticklecharts::bar3DSeries below.
     #
     # Returns dict bar3DSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3D"
     setdef options -name                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3DSeries_${index}"
@@ -90,6 +91,7 @@ proc ticklecharts::line3DSeries {index chart value} {
     # value - Options described in proc ticklecharts::line3DSeries below.
     #
     # Returns dict line3DSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}             -type str             -default "line3D"
     setdef options -name                    -minversion 5  -validvalue {}             -type str             -default "line3Dseries_${index}"
@@ -152,6 +154,7 @@ proc ticklecharts::surfaceSeries {index value} {
     # value - Options described in proc ticklecharts::surfaceSeries below.
     #
     # Returns dict surfaceSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}               -type str             -default "surface"
     setdef options -name                    -minversion 5  -validvalue {}               -type str             -default "surfaceseries_${index}"
@@ -223,6 +226,7 @@ proc ticklecharts::scatter3DSeries {index chart value} {
     # value - Options described in proc ticklecharts::scatter3DSeries below.
     #
     # Returns dict scatter3DSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}                -type str               -default "scatter3D"
     setdef options -name                    -minversion 5  -validvalue {}                -type str               -default "scatter3Dseries_${index}"

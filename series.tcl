@@ -11,6 +11,7 @@ proc ticklecharts::barSeries {index chart value} {
     # value - Options described in proc ticklecharts::barSeries below.
     #
     # Returns dict barSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar"
     setdef options -id                      -minversion 5       -validvalue {}                   -type str|null        -trace no   -default "nothing"
@@ -119,6 +120,7 @@ proc ticklecharts::lineSeries {index chart value} {
     # value - Options described in proc ticklecharts::lineSeries below.
     #
     # Returns dict lineSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str                -trace no   -default "line"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -trace no   -default "nothing"
@@ -229,6 +231,7 @@ proc ticklecharts::pieSeries {index chart value} {
     # value - Options described in proc ticklecharts::pieSeries below.
     #
     # Returns dict pieSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "pie"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -339,6 +342,7 @@ proc ticklecharts::funnelSeries {index chart value} {
     # value - Options described in proc ticklecharts::funnelSeries below.
     #
     # Returns dict funnelSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "funnel"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -438,6 +442,7 @@ proc ticklecharts::radarSeries {index value} {
     # value - Options described in proc ticklecharts::radarSeries below.
     #
     # Returns dict radarSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str             -default "radar"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null        -default "nothing"
@@ -507,6 +512,7 @@ proc ticklecharts::scatterSeries {index chart value} {
     # value - Options described in proc ticklecharts::scatterSeries below.
     #
     # Returns dict scatterSeries or effectScatterSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue formatTypeScatter  -type str               -default "scatter"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -633,6 +639,7 @@ proc ticklecharts::heatmapSeries {index chart value} {
     # value - Options described in proc ticklecharts::heatmapSeries below.
     #
     # Returns dict heatmapSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                 -minversion 5  -validvalue {}                 -type str              -default "heatmap"
     setdef options -id                   -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
@@ -716,6 +723,7 @@ proc ticklecharts::sunburstSeries {index value} {
     # value - Options described in proc ticklecharts::sunburstSeries below.
     #
     # Returns dict sunburstSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}                 -type str             -default "sunburst"
     setdef options -id                      -minversion 5  -validvalue {}                 -type str|null        -default "nothing"
@@ -772,6 +780,7 @@ proc ticklecharts::treeSeries {index value} {
     # value - Options described in proc ticklecharts::treeSeries below.
     #
     # Returns dict treeSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str                  -default "tree"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null             -default "nothing"
@@ -840,6 +849,7 @@ proc ticklecharts::themeRiverSeries {index value} {
     # value - Options described in proc ticklecharts::themeRiverSeries below.
     #
     # Returns dict themeRiverSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "themeRiver"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -887,6 +897,7 @@ proc ticklecharts::sankeySeries {index value} {
     # value - Options described in proc ticklecharts::sankeySeries below.
     #
     # Returns dict sankeySeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5        -validvalue {}                  -type str               -default "sankey"
     setdef options -id                      -minversion 5        -validvalue {}                  -type str|null          -default "nothing"
@@ -955,6 +966,7 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
     # value - Options described in proc ticklecharts::pictorialBarSeries below.
     #
     # Returns dict pictorialBarSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "pictorialBar"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1059,6 +1071,7 @@ proc ticklecharts::candlestickSeries {index chart value} {
     # value - Options described in proc ticklecharts::candlestickSeries below.
     #
     # Returns dict candlestickSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "candlestick"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1146,6 +1159,7 @@ proc ticklecharts::parallelSeries {index value} {
     # value - Options described in proc ticklecharts::parallelSeries below.
     #
     # Returns dict parallelSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "parallel"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1207,6 +1221,7 @@ proc ticklecharts::gaugeSeries {index value} {
     # value - Options described in proc ticklecharts::gaugeSeries below.
     #
     # Returns dict gaugeSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str               -default "gauge"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null          -default "nothing"
@@ -1282,6 +1297,7 @@ proc ticklecharts::graphSeries {index value} {
     # value - Options described in proc ticklecharts::graphSeries below.
     #
     # Returns dict graphSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                 -type str               -default "graph"
     setdef options -id                      -minversion 5       -validvalue {}                 -type str|null          -default "nothing"
@@ -1383,6 +1399,7 @@ proc ticklecharts::wordcloudSeries {index value} {
     # value - Options described in proc ticklecharts::wordcloudSeries below.
     #
     # Returns dict wordcloudSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type              -minWCversion 2        -validvalue {}               -type str            -default "wordCloud"
     setdef options -shape             -minWCversion 2        -validvalue formatWCshape    -type str            -default "circle"
@@ -1421,6 +1438,7 @@ proc ticklecharts::boxplotSeries {index chart value} {
     # value - Options described in proc ticklecharts::boxplotSeries below.
     #
     # Returns dict boxplotSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                    -type str               -default "boxplot"
     setdef options -id                      -minversion 5       -validvalue {}                    -type str|null          -default "nothing"
@@ -1503,6 +1521,7 @@ proc ticklecharts::treemapSeries {index value} {
     # value - Options described in proc ticklecharts::treemapSeries below.
     #
     # Returns dict treemapSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5  -validvalue {}                  -type str               -default "treemap"
     setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
@@ -1574,6 +1593,7 @@ proc ticklecharts::mapSeries {index chart value} {
     # value - Options described in proc ticklecharts::mapSeries below.
     #
     # Returns dict mapSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                 -minversion 5              -validvalue {}                  -type str                     -default "map"
     setdef options -id                   -minversion 5              -validvalue {}                  -type str|null                -default "nothing"
@@ -1668,6 +1688,7 @@ proc ticklecharts::linesSeries {index chart value} {
     # value - Options described in proc ticklecharts::linesSeries below.
     #
     # Returns dict linesSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -type                    -minversion 5       -validvalue {}                  -type str                -default "lines"
     setdef options -id                      -minversion 5       -validvalue {}                  -type str|null           -default "nothing"
@@ -1756,6 +1777,7 @@ proc ticklecharts::graphic {value} {
     # value - Options described in proc ticklecharts::graphic below.
     #
     # Returns dict graphic options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
     setdef options -id       -minversion 5  -validvalue {} -type str|null    -default "nothing"
     setdef options -elements -minversion 5  -validvalue {} -type list.o|null -default [ticklecharts::childrenElements $value "-elements"]
