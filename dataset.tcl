@@ -31,27 +31,46 @@ oo::class create ticklecharts::dataset {
             set value [list $value]
         }
 
+        foreach line [split [lindex [info class constructor [self class]] 1] "\n"] {
+            if {[string match {*-minversion [0-9]*} $line]} {
+                # Adds minus sign to key to control 
+                # Simply to check whether properties with a minus sign are also accepted.
+                ${ns}::setdef options -[lindex $line 2] -minversion {} -validvalue {} -type null -default "nothing"
+            }
+        }
+
         foreach item $value {
 
             if {[llength $item] % 2} {
-                error "item list must have an even number of elements..."
+                error "dataset 'item' list must have an even number of elements..."
+            }
+
+            # Keep compatibility with previous versions.
+            # Removes the minus sign at the beginning of the key.
+            # Note : Both are accepted, with or without.
+            foreach {key info} $item {
+                if {[string range $key 0 0] eq "-"} {
+                    set item   [dict remove $item $key]
+                    set newkey [string range $key 1 end]
+                    dict set item $newkey $info
+                }
             }
 
             set source [my source $item sType]
 
-            ${ns}::setdef options -id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
-            ${ns}::setdef options -sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
-            ${ns}::setdef options -dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
-            ${ns}::setdef options -source               -minversion 5  -validvalue {}                 -type list.$sType|null  -default $source
-            ${ns}::setdef options -transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
-            ${ns}::setdef options -fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
-            ${ns}::setdef options -fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
-            ${ns}::setdef options -fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
+            ${ns}::setdef options id                   -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            ${ns}::setdef options sourceHeader         -minversion 5  -validvalue formatSourceHeader -type str|bool|num|null -default "nothing"
+            ${ns}::setdef options dimensions           -minversion 5  -validvalue {}                 -type list.j|null       -default [my dimensions $item]
+            ${ns}::setdef options source               -minversion 5  -validvalue {}                 -type list.$sType|null  -default $source
+            ${ns}::setdef options transform            -minversion 5  -validvalue {}                 -type list.o|null       -default [my transform $item]
+            ${ns}::setdef options fromDatasetIndex     -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
+            ${ns}::setdef options fromDatasetId        -minversion 5  -validvalue {}                 -type str|null          -default "nothing"
+            ${ns}::setdef options fromTransformResult  -minversion 5  -validvalue {}                 -type num|null          -default "nothing"
 
             if {$sType eq "o"} {
-                set item [dict remove $item -transform -dimensions -source]
+                set item [dict remove $item transform dimensions source]
             } else {
-                set item [dict remove $item -transform -dimensions]
+                set item [dict remove $item transform dimensions]
             }
 
             # set dataset...
@@ -86,7 +105,7 @@ oo::define ticklecharts::dataset {
         #
         # Returns dimension
 
-        if {![ticklecharts::keyDictExists "-dimensions" $value key]} {
+        if {![ticklecharts::keyDictExists "dimensions" $value key]} {
             return "nothing"
         }
 
@@ -127,13 +146,17 @@ oo::define ticklecharts::dataset {
         #
         # Returns list transform value(s)
 
-        if {![ticklecharts::keyDictExists "-transform" $value key]} {
+        if {![ticklecharts::keyDictExists "transform" $value key]} {
             return "nothing"
         }
 
         set ns [namespace qualifiers [self class]]
 
         foreach item [dict get $value $key] {
+
+            if {[llength $item] % 2} {
+                error "transform 'item' list must have an even number of elements..."
+            }
 
             ${ns}::setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
             ${ns}::setdef options config -minversion 5  -validvalue {}              -type dict|null -default [ticklecharts::config $item]
@@ -160,11 +183,11 @@ oo::define ticklecharts::dataset {
         upvar 1 $t type
         set type "d"
 
-        if {![ticklecharts::keyDictExists "-source" $value key]} {
+        if {![ticklecharts::keyDictExists "source" $value key]} {
             return "nothing"
         }
 
-        # '-source' support 2 types :
+        # 'source' support 2 types :
         # 1) 2d array, where dimension names can be provided in the first row/column,
         #       or do not provide, only data. :
         #       set source {
@@ -175,7 +198,7 @@ oo::define ticklecharts::dataset {
         #           {50.1 12755 "Cheese Brownie"}
         #           {...}
         #       }
-        # 2) "array of classes" format ('-source' should be a 'elist class'): 
+        # 2) "array of classes" format ('source' should be a 'elist class'): 
         #       Define the dimension of array. In cartesian coordinate system,
         #       if the type of x-axis is category, map the first dimension to
         #       x-axis by default, the second dimension to y-axis.
@@ -193,11 +216,11 @@ oo::define ticklecharts::dataset {
 
         if {[ticklecharts::iseListClass $d]} {
             if {![ticklecharts::isListOfList [$d get]]} {
-                error "'-source' should be a list of list..."
+                error "'source' should be a list of list..."
             }
             foreach item {*}[lindex [$d get] 0] {
                 if {[llength $item] % 2} {
-                    error "item list must have an even number of elements..."
+                    error "source 'item' list must have an even number of elements..."
                 }
                 set k {}
                 foreach {key info} $item {
@@ -227,7 +250,7 @@ oo::define ticklecharts::dataset {
 
         } else {
             if {![ticklecharts::isListOfList $d]} {
-                error "'-source' should be a list of list..."
+                error "'source' should be a list of list..."
             }
             return $d
         }
