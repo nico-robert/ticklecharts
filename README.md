@@ -52,24 +52,24 @@ Here `-data` corresponds to the Y values. (:warning: `-data` _property_ should b
 $chart Render
 ```
 ##### :heavy_check_mark: Arguments available :
-| args | Description
-| ------ | ------
-| _-title_ | header title html (default value : `"ticklEcharts !!!"`)
-| _-width_ | container's width (default value : `900px`)
-| _-height_ | container's height (default value : `500px`)
-| _-renderer_ | `canvas` or `svg` (default value : `canvas`)
-| _-jschartvar_ | variable name chart (default value : `chart_[ticklecharts::uuid]`) 
-| _-divid_ | name container's ID (default value : `id_[ticklecharts::uuid]`) 
-| _-outfile_ | full path html file (output by default in `[info script]/render.html`)
-| _-jsecharts_ | full path `echarts.min.js` file (by default `https://cdn.jsdelivr.net/...` script)
-| _-jsvar_ | variable name js (default value : `option_[ticklecharts::uuid]`)
-| _-script_ | jsfunc (default value : `'null'`)
-| _-class_ | specify container's CSS (default value : `"chart-container"`)
-| _-style_ | add inline style (default value : `width:'-width'; height:'-height';`)
-| _-template_ | `file` or `string` (default value `'file'`: _html/template.html_))
+| args           | Description             | Default value
+| ------         | ------                  | ------
+| _-title_       | Header title html       | `"ticklEcharts !!!"`
+| _-width_       | Container's width       | `900px`
+| _-height_      | Container's height      | `500px`
+| _-renderer_    | canvas or svg           | `canvas`
+| _-jschartvar_  | Variable name chart     | `chart_[uuid]`
+| _-divid_       | Name container's ID     | `id_[uuid]`
+| _-outfile_     | Full path html file     | `./render.html`
+| _-jsecharts_   | Full path echarts.js    | `https://cdn.jsdelivr.net/...`
+| _-jsvar_       | js variable name        | `option_[uuid]`
+| _-script_      | jsfunc class            | `'null'`
+| _-class_       | Dpecify container's CSS | `"chart-container"`
+| _-style_       | Inline style            | `width:'-width'; height:'-height';`
+| _-template_    | file or string          | `'file'` (template.html)
 
 ```tcl
-# Demo
+# Example properties :
 $chart Render -width "1200px" -height "800px" -renderer "svg"
 ```
 Data series :
@@ -86,7 +86,7 @@ $chart Yaxis
 $chart Add "lineSeries" -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # Mon = X value
 # 150 = Y value
-# And now -data in Xaxis method can be deleted and written like this :
+# Now '-data' in Xaxis method is not included
 $chart Xaxis
 $chart Yaxis
 ```
@@ -95,21 +95,21 @@ $chart Yaxis
 # Example for lineseries
 # Additional options are valid... see ticklecharts::lineItem in options.tcl
 $chart Add "lineSeries" -dataItem {
-                                {name "Mon" value 150}
-                                {name "Tue" value 230}
-                                {name "Wed" value 224}
-                                {name "Thu" value 218}
-                                {name "Fri" value 135}
-                                {name "Sat" value 147}
-                                {name "Sun" value 260}
-                                }
+                            {name "Mon" value 150}
+                            {name "Tue" value 230}
+                            {name "Wed" value 224}
+                            {name "Thu" value 218}
+                            {name "Fri" value 135}
+                            {name "Sat" value 147}
+                            {name "Sun" value 260}
+                        }
 ```
 `dataset` (class) :
 ```tcl
 set data(0) {
-        {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
-        {"value" 150 230 224 218 135 147 260}
-        }
+    {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
+    {"value" 150 230 224 218 135 147 260}
+}
 
 # Init dataset class.
 # Note : Starting from version '2.6', it is possible 
@@ -227,12 +227,12 @@ $chart Xaxis -axisLabel [list show "True" \
     - (Deprecated) Use list map to replace some `Tcl` special chars e.g.:
     > formatter : `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
 
-    | Symbol        | Map      |
-    | ------------- | ---------|
-    | `{`           | <0123>   |
-    | `}`           | <0125>   |
-    | `[`           | <091>    |
-    | `]`           | <093>    |
+    | Symbol        | Map      
+    | ------------- | ---------
+    | `{`           | <0123>   
+    | `}`           | <0125>   
+    | `[`           | <091>    
+    | `]`           | <093>    
 *  **Add a js script, variable... in html template file** :
 ```tcl
 # Initializes a new jsfunc Class
