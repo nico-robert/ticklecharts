@@ -215,12 +215,17 @@
                 # A new method RenderJupyter (examples/notebook/README.md) to interact with jupyter notebook has been added [#1](https://github.com/nico-robert/ticklecharts/pull/1).
                 # Add jupyter notebook(examples/notebook/ticklecharts.ipynb) example.
                 # Code refactoring.
+# 19-Nov-2023 : v3.2.1
+                # The 'ticklecharts::etsb' package is now able to search for a version number other than the global variables.
+                # Changes the format of the `dataset` key property, the missing minus sign at the beginning of a key is also accepted.
+                # Add `globe` examples.
+                # Cosmetic changes.
 
 package require Tcl 8.6
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.2   ; # ticklEcharts version
+    variable version         3.2.1 ; # ticklEcharts version
     variable echarts_version 5.4.1 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-4-1)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)

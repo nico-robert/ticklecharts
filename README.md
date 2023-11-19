@@ -52,20 +52,20 @@ Here `-data` corresponds to the Y values. (:warning: `-data` _property_ should b
 $chart Render
 ```
 ##### :heavy_check_mark: Arguments available :
-| args           | Description             | Default value
+| args           | Description             | Default values
 | ------         | ------                  | ------
 | _-title_       | Header title html       | `"ticklEcharts !!!"`
-| _-width_       | Container's width       | `900px`
-| _-height_      | Container's height      | `500px`
-| _-renderer_    | canvas or svg           | `canvas`
+| _-width_       | Container's width       | `"900px"`
+| _-height_      | Container's height      | `"500px"`
+| _-renderer_    | canvas or svg           | `"canvas"`
 | _-jschartvar_  | Variable name chart     | `chart_[uuid]`
 | _-divid_       | Name container's ID     | `id_[uuid]`
-| _-outfile_     | Full path html file     | `./render.html`
+| _-outfile_     | Full path html file     | `'./render.html'`
 | _-jsecharts_   | Full path echarts.js    | `https://cdn.jsdelivr.net/...`
 | _-jsvar_       | js variable name        | `option_[uuid]`
 | _-script_      | jsfunc class            | `'null'`
 | _-class_       | Dpecify container's CSS | `"chart-container"`
-| _-style_       | Inline style            | `width:'-width'; height:'-height';`
+| _-style_       | Inline style            | `"width:'-width'; height:'-height'";`
 | _-template_    | file or string          | `'file'` (template.html)
 
 ```tcl
@@ -595,3 +595,8 @@ Release :
     - A new method [RenderJupyter](examples/notebook/README.md) to interact with jupyter notebook has been added [#1](https://github.com/nico-robert/ticklecharts/pull/1).
     - Add [jupyter notebook](examples/notebook/ticklecharts.ipynb) example.
     - Code refactoring.
+*  **19-Nov-2023** : 3.2.1
+    - The `ticklecharts::etsb` package is now able to search for a version number other than the global variables.
+    - Changes the format of the `dataset` key property, the missing minus sign at the beginning of a key is also accepted.
+    - Add `globe` examples.
+    - Cosmetic changes.
