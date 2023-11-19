@@ -102,13 +102,17 @@ proc ticklecharts::setJsScript {html h mapoptions} {
         lappend jsScript [jsfunc new [format $frmt $wcscript] -header]
     }
     # GL.js
-    foreach series3D {
-        line3D scatter3D bar3D lines3D map3D 
-        surface polygons3D scatterGL graphGL flowGL
-        } {
-        if {$series3D in [$h getTypeSeries]} {
-            lappend jsScript [jsfunc new [format $frmt $eGLscript] -header]
-            break
+    if {"globe" in [$h keys]} {
+        lappend jsScript [jsfunc new [format $frmt $eGLscript] -header]
+    } else {
+        foreach series3D {
+            line3D scatter3D bar3D lines3D map3D 
+            surface polygons3D scatterGL graphGL flowGL
+            } {
+            if {$series3D in [$h getTypeSeries]} {
+                lappend jsScript [jsfunc new [format $frmt $eGLscript] -header]
+                break
+            }
         }
     }
 
