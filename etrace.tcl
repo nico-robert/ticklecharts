@@ -271,7 +271,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties xAxis.type] 
                     if {$v ne "category"} {
                         puts stderr "warning(trace): xAxis.type should be set to 'category'\
-                            if '$keyP' is set to '$value'"
+                                     if '$keyP' is set to '$value'"
                     }
                 }
             }
@@ -292,7 +292,7 @@ proc ticklecharts::track {properties} {
                     }
                     if {$v in {time category} && ($xval ne "value")} {
                         puts stderr "warning(trace): yAxis.type should be set to 'value' or 'log'\
-                            if '$keyP' is set."
+                                    if '$keyP' is set."
                     }
                 }
             }
@@ -316,7 +316,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.label.position]
                     if {($v ne "nothing") && ($v ni {top insideRight})} {
                         puts stderr "warning(trace): '$keyP' is valid only\
-                            when '$series.label.position' is a 'string' (like 'top', 'insideRight')."
+                                    when '$series.label.position' is a 'string' (like 'top', 'insideRight')."
                     }
                 }
             }
@@ -327,7 +327,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.labelLine.lineStyle.join]
                     if {$v ne "miter"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
-                            when '$series.labelLine.lineStyle.join' is set as 'miter'"
+                                    when '$series.labelLine.lineStyle.join' is set as 'miter'"
                     }
                 }
             }
@@ -338,7 +338,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.labelLine.lineStyle.miterLimit]
                     if {$v eq "nothing"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
-                            when '$series.labelLine.lineStyle.miterLimit' is set, now it set to '$v'"
+                                    when '$series.labelLine.lineStyle.miterLimit' is set, now it set to '$v'"
                     }
                 }
             }
@@ -349,7 +349,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.itemStyle.borderJoin]
                     if {$v ne "miter"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
-                            when '$series.itemStyle.borderJoin' is set as 'miter'"
+                                    when '$series.itemStyle.borderJoin' is set as 'miter'"
                     }
                 }
             }
@@ -360,7 +360,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.itemStyle.borderMiterLimit]
                     if {$v eq "nothing"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
-                            when '$series.itemStyle.borderMiterLimit' is set, now it set to '$v'"
+                                    when '$series.itemStyle.borderMiterLimit' is set, now it set to '$v'"
                     }
                 }
             }
@@ -371,7 +371,7 @@ proc ticklecharts::track {properties} {
                     set v [dict get $properties $series.label.overflow]
                     if {$v ne "truncate"} {
                         puts stderr "warning(trace):: '$keyP' is displayed when\
-                             '$series.label.overflow' is set to 'truncate'."
+                                    '$series.label.overflow' is set to 'truncate'."
                     }
                 }
             }
