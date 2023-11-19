@@ -88,7 +88,7 @@ proc ticklecharts::globe {value} {
     setdef options globeRadius            -minversion 5  -validvalue {}               -type num|null         -default 100
     setdef options globeOuterRadius       -minversion 5  -validvalue {}               -type num|null         -default 150
     setdef options environment            -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "auto"
-    setdef options environment            -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "auto"
+    setdef options baseTexture            -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "nothing"
     setdef options heightTexture          -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "nothing"
     setdef options displacementTexture    -minversion 5  -validvalue {}               -type str|jsfunc|null  -default "nothing"
     setdef options displacementScale      -minversion 5  -validvalue {}               -type num|null         -default 0
