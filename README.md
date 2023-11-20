@@ -64,7 +64,7 @@ $chart Render
 | _-jsecharts_   | Full path echarts.js    | `https://cdn.jsdelivr.net/...`
 | _-jsvar_       | js variable name        | `option_[uuid]`
 | _-script_      | jsfunc class            | `'null'`
-| _-class_       | Dpecify container's CSS | `"chart-container"`
+| _-class_       | Specify container's CSS | `"chart-container"`
 | _-style_       | Inline style            | `"width:'-width'; height:'-height'";`
 | _-template_    | file or string          | `'file'` (template.html)
 

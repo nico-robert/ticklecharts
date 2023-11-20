@@ -87,8 +87,9 @@ proc ticklecharts::setJsScript {html h mapoptions} {
     # Base html format.
     set jsScript {}
     set frmt {<script type="text/javascript" src="%s"></script>}
+    set keys [$h keys]
     # gmap.js
-    if {"gmap" in [$h keys]} {
+    if {"gmap" in $keys} {
         lappend jsScript [jsfunc new [format $frmt $gapiscript] -header]
         if {$keyGMAPI eq "??"} {
             lappend jsScript [jsfunc new {
@@ -102,7 +103,7 @@ proc ticklecharts::setJsScript {html h mapoptions} {
         lappend jsScript [jsfunc new [format $frmt $wcscript] -header]
     }
     # GL.js
-    if {"globe" in [$h keys]} {
+    if {"globe" in $keys} {
         lappend jsScript [jsfunc new [format $frmt $eGLscript] -header]
     } else {
         foreach series3D {
@@ -259,7 +260,7 @@ proc ticklecharts::isAObject {obj} {
     #
     # obj  - Instance.
     #
-    # Returns true or talse.
+    # Returns true or false.
     return [info object isa object $obj]
 }
 
@@ -770,7 +771,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     set body [split [info body ticklecharts::$key] "\n"]
     set listmap {"setdef" "" "options" ""}
     ldset {buffer ifnP copyifnP dataInfo} to {}
-    ldset {info switch copyifnP} to 0
+    ldset {info switch} to 0
 
     for {set i 0} {$i < [llength $body]} {incr i} {
         # find command in body...
@@ -835,8 +836,8 @@ proc ticklecharts::infoOptions {key {indent 0}} {
             if {[lsearch $buffer *setdef*] > -1} {
                 lappend dataInfo [format "%${indent}s \}" ""]
             }
-            set buffer "" ; set info 0
-            set ifnP ""   ; set copyifnP ""
+            ldset {buffer ifnP copyifnP} to {}
+            set info 0
         }
 
         if {[string match {*setdef*} $val]} {
