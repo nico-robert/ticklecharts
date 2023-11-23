@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Use '-dataItem' property for pictorialBarSeries instead of '-data' (both are accepted).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -41,7 +42,7 @@ $picBar Xaxis -type "value" \
 
 $picBar Add "pictorialBarSeries" -name "2015" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
                                  -barCategoryGap "40%" \
-                                 -data [list \
+                                 -dataItem [list \
                                         [list value 157 symbol $pathSymbols(reindeer)] \
                                         [list value 21  symbol $pathSymbols(ship)] \
                                         [list value 66  symbol $pathSymbols(plane)] \
@@ -51,7 +52,7 @@ $picBar Add "pictorialBarSeries" -name "2015" -label $labelSetting -symbolRepeat
 
 $picBar Add "pictorialBarSeries" -name "2016" -label $labelSetting -symbolRepeat "True" -symbolSize [list {80% 60%}] \
                                  -barGap "10%" \
-                                 -data [list \
+                                 -dataItem [list \
                                         [list value 184 symbol $pathSymbols(reindeer)] \
                                         [list value 29  symbol $pathSymbols(ship)] \
                                         [list value 73  symbol $pathSymbols(plane)] \

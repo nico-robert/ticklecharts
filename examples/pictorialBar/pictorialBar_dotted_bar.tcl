@@ -6,6 +6,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Update example with the new 'Add' method for chart series.
 # v4.0 : Replaces '-dataBarItem' by '-dataItem' (both properties are available).
 #        Replaces '-dataLineItem' by '-dataItem' (both properties are available).
+# v5.0 : Use '-dataItem' property for pictorialBarSeries instead of '-data' (both are accepted).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -63,7 +64,7 @@ $picBar Add "pictorialBarSeries" -name "dotted" -symbol "rect" -itemStyle {borde
                                  -symbolSize [list {12 4}] \
                                  -symbolMargin 1 \
                                  -z "-10" \
-                                 -data $lineData
+                                 -dataItem $lineData
 
 
 set fbasename [file rootname [file tail [info script]]]

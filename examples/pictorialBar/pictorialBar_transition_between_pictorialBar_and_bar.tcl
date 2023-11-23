@@ -4,6 +4,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Set new 'Add' method for chart series + uses substitution for formatter property.
 #        Note : map list formatter + Add***Series will be deleted in the next major release, 
 #               in favor of this writing. (see formatter property + 'Add' method below)
+# v3.0 : Use '-dataItem' property for pictorialBarSeries instead of '-data' (both are accepted).
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -57,12 +58,12 @@ $chart Add "pictorialBarSeries" -name "typeA" \
                                 -symbolClip "True" \
                                 -symbolBoundingData $bodyMax \
                                 -label $labelSetting \
-                                -data [list \
-                                        [list value 123 symbol [lindex $symbols 0]] \
-                                        [list value 34  symbol [lindex $symbols 1]] \
-                                        [list value 101 symbol [lindex $symbols 2]] \
-                                        [list value 89  symbol [lindex $symbols 3]] \
-                                        [list value 72  symbol [lindex $symbols 4]] \
+                                -dataItem [list \
+                                    [list value 123 symbol [lindex $symbols 0]] \
+                                    [list value 34  symbol [lindex $symbols 1]] \
+                                    [list value 101 symbol [lindex $symbols 2]] \
+                                    [list value 89  symbol [lindex $symbols 3]] \
+                                    [list value 72  symbol [lindex $symbols 4]] \
                                 ] \
                             -markLine $markLineSetting \
                             -z 10
@@ -71,12 +72,12 @@ $chart Add "pictorialBarSeries" -name "typeB" \
                                 -symbolClip "True" \
                                 -symbolBoundingData $bodyMax \
                                 -label $labelSetting \
-                                -data [list \
-                                        [list value 12  symbol [lindex $symbols 0]] \
-                                        [list value 44  symbol [lindex $symbols 1]] \
-                                        [list value 131 symbol [lindex $symbols 2]] \
-                                        [list value 33  symbol [lindex $symbols 3]] \
-                                        [list value 142 symbol [lindex $symbols 4]] \
+                                -dataItem [list \
+                                    [list value 12  symbol [lindex $symbols 0]] \
+                                    [list value 44  symbol [lindex $symbols 1]] \
+                                    [list value 131 symbol [lindex $symbols 2]] \
+                                    [list value 33  symbol [lindex $symbols 3]] \
+                                    [list value 142 symbol [lindex $symbols 4]] \
                                 ] \
                             -markLine $markLineSetting \
                             -z 10
@@ -85,12 +86,12 @@ $chart Add "pictorialBarSeries" -name "full" \
                                 -symbolBoundingData $bodyMax \
                                 -animationDuration 0 \
                                 -itemStyle {color "#ccc" borderColor null} \
-                                -data [list \
-                                        [list value 1 symbol [lindex $symbols 0]] \
-                                        [list value 1 symbol [lindex $symbols 1]] \
-                                        [list value 1 symbol [lindex $symbols 2]] \
-                                        [list value 1 symbol [lindex $symbols 3]] \
-                                        [list value 1 symbol [lindex $symbols 4]] \
+                                -dataItem [list \
+                                    [list value 1 symbol [lindex $symbols 0]] \
+                                    [list value 1 symbol [lindex $symbols 1]] \
+                                    [list value 1 symbol [lindex $symbols 2]] \
+                                    [list value 1 symbol [lindex $symbols 3]] \
+                                    [list value 1 symbol [lindex $symbols 4]] \
                                 ]
 
 set fbasename [file rootname [file tail [info script]]]
