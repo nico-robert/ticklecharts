@@ -193,6 +193,26 @@ oo::define ticklecharts::chart3D {
         return {}
     }
 
+    method AddLines3DSeries {args} {
+        # Add data series chart (use only for lines3D chart)
+        #
+        # args - Options described below.
+        #
+        # gets default option values : [self] getOptions -series lines
+        # or
+        # from doc : https://echarts.apache.org/en/option-gl.html#series-lines3D
+        #
+        # Returns nothing
+        classvar indexlines3Dseries
+
+        set options [ticklecharts::lines3DSeries [incr indexlines3Dseries] [self] $args]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options @D=series [list {*}$f]
+
+        return {}
+    }
+
     method Add {args} {
         # This method is identical to methods for adding series, it is a 
         # different way of writing it.
@@ -218,6 +238,7 @@ oo::define ticklecharts::chart3D {
             "bar3DSeries"     {my AddBar3DSeries      {*}[lrange $args 1 end]}
             "surfaceSeries"   {my AddSurfaceSeries    {*}[lrange $args 1 end]}
             "scatter3DSeries" {my AddScatter3DSeries  {*}[lrange $args 1 end]}
+            "lines3DSeries"   {my AddLines3DSeries    {*}[lrange $args 1 end]}
             default         {
                 set lb [ticklecharts::classDef [self class] [self method]]
                 set series {}
@@ -337,7 +358,7 @@ oo::define ticklecharts::chart3D {
     }
 
     # export of methods
-    export AddLine3DSeries AddBar3DSeries AddSurfaceSeries AddScatter3DSeries \
+    export AddLine3DSeries AddBar3DSeries AddSurfaceSeries AddScatter3DSeries AddLines3DSeries \
            Xaxis3D Yaxis3D Zaxis3D SetOptions Render Add
 
 }

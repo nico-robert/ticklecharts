@@ -471,6 +471,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
                 "scatterSeries"    {append validvalue " calendar gmap"}
                 "linesSeries"      {lappend validvalue gmap}
                 "line3DSeries"     {set validvalue "cartesian3D"}
+                "lines3DSeries"    {set validvalue {geo3D globe}}
                 "scatter3DSeries"  -
                 "bar3DSeries"      {set validvalue {cartesian3D geo3D globe}}
             }

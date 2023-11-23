@@ -472,6 +472,7 @@ $layout Render
 - **Series :**
 - [x] line
 - [x] line3D
+- [x] lines3D
 - [x] bar
 - [x] bar3D
 - [x] pie

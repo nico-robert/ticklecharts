@@ -113,6 +113,33 @@ proc ticklecharts::scatter3DItem {value itemKey} {
     return [list {*}$opts]
 }
 
+proc ticklecharts::lines3DItem {value itemKey} {
+
+    foreach item [dict get $value $itemKey] {
+
+        if {[llength $item] % 2} {
+            ticklecharts::errorEvenArgs
+        }
+
+        if {![dict exists $item coords]} {
+            ticklecharts::errorKeyArgs $itemKey coords
+        }
+
+        setdef options coords     -minversion 5  -validvalue {}  -type list.n           -default {}
+        setdef options name       -minversion 5  -validvalue {}  -type str|null         -default "nothing"
+        setdef options value      -minversion 5  -validvalue {}  -type num|list.n|null  -default "nothing"
+        setdef options lineStyle  -minversion 5  -validvalue {}  -type dict|null        -default [ticklecharts::lineStyle3D $item]
+
+        # remove key(s)...
+        set item [dict remove $item lineStyle]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+}
 
 proc ticklecharts::nameTextStyle3D {value} {
 
@@ -983,4 +1010,26 @@ proc ticklecharts::layers3D {value} {
     }
 
     return [list {*}$opts]
+}
+
+proc ticklecharts::effect3D {value} {
+
+    if {![ticklecharts::keyDictExists "effect" $value key]} {
+        return "nothing"
+    }
+
+    set d [dict get $value $key]
+    
+    setdef options show            -minversion 5  -validvalue {}  -type bool       -default "False"
+    setdef options period          -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    setdef options constantSpeed   -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    setdef options trailWidth      -minversion 5  -validvalue {}  -type num|null   -default 4
+    setdef options trailLength     -minversion 5  -validvalue {}  -type num|null   -default 0.1
+    setdef options trailColor      -minversion 5  -validvalue {}  -type str|null   -default "nothing"
+    setdef options trailOpacity    -minversion 5  -validvalue {}  -type num|null   -default "nothing"
+    #...
+
+    set options [merge $options $d]
+
+    return [new edict $options]
 }

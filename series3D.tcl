@@ -49,7 +49,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataBar3DItem' or '-dataItem'\
+            error "'chart3D' Class cannot contains '-data', '-dataBar3DItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -63,7 +63,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::bar3DItem $value $itemKey]
@@ -115,7 +115,7 @@ proc ticklecharts::line3DSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataLine3DItem' or '-dataItem'\
+            error "'chart3D' Class cannot contains '-data', '-dataLine3DItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -129,7 +129,7 @@ proc ticklecharts::line3DSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::line3DItem $value $itemKey]
@@ -184,7 +184,7 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value $itemKey]} {
         foreach k {-data -equation -parametricEquation} {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '$itemKey'... for\
+                error "'chart3D' args cannot contains '$k' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
@@ -194,7 +194,7 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value -equation]} {
         foreach k [list -data $itemKey -parametricEquation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '-equation'... for\
+                error "'chart3D' args cannot contains '$k' and '-equation'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
@@ -203,7 +203,7 @@ proc ticklecharts::surfaceSeries {index value} {
     if {[dict exists $value -parametricEquation]} {
         foreach k [list -data $itemKey -equation] {
             if {[dict exists $value $k]} {
-                error "'chart' args cannot contains '$k' and '-parametricEquation'... for\
+                error "'chart3D' args cannot contains '$k' and '-parametricEquation'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
             }
         }
@@ -257,7 +257,7 @@ proc ticklecharts::scatter3DSeries {index chart value} {
 
     if {$dataset ne ""} {
         if {[dict exists $value -data] || [dict exists $value $itemKey]} {
-            error "'chart' Class cannot contains '-data', '-dataScatter3DItem' or '-dataItem'\
+            error "'chart3D' Class cannot contains '-data', '-dataScatter3DItem' or '-dataItem'\
                     when a class dataset is defined."
         }
 
@@ -271,7 +271,7 @@ proc ticklecharts::scatter3DSeries {index chart value} {
 
     } elseif {[dict exists $value $itemKey]} {
         if {[dict exists $value -data]} {
-            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::scatter3DItem $value $itemKey]
@@ -283,6 +283,66 @@ proc ticklecharts::scatter3DSeries {index chart value} {
 
     # remove key(s)...
     set value [dict remove $value -encode -itemStyle -label -emphasis $itemKey]
+                                
+    set options [merge $options $value]
+
+    return $options
+}
+
+proc ticklecharts::lines3DSeries {index chart value} {
+    # options : https://echarts.apache.org/en/option-gl.html#series-lines3D
+    #
+    # index - index series.
+    # chart - self.
+    # value - Options described in proc ticklecharts::lines3DSeries below.
+    #
+    # Returns dict lines3DSeries options
+    if {[llength $value] % 2} ticklecharts::errorEvenArgs
+
+    setdef options -type                    -minversion 5  -validvalue {}             -type str             -default "lines3D"
+    setdef options -name                    -minversion 5  -validvalue {}             -type str             -default "lines3Dseries_${index}"
+    setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS     -type str             -default "geo3D"
+    setdef options -geo3DIndex              -minversion 5  -validvalue {}             -type num|null        -default "nothing"
+    setdef options -globeIndex              -minversion 5  -validvalue {}             -type num|null        -default "nothing"
+    setdef options -polyline                -minversion 5  -validvalue {}             -type bool            -default "False"
+    setdef options -blendMode               -minversion 5  -validvalue formatBlendM   -type str|null        -default "nothing"
+    setdef options -lineStyle               -minversion 5  -validvalue {}             -type dict|null       -default [ticklecharts::lineStyle3D $value]
+    setdef options -effect                  -minversion 5  -validvalue {}             -type dict|null       -default [ticklecharts::effect3D $value]
+    setdef options -data                    -minversion 5  -validvalue {}             -type list.n          -default {}
+    setdef options -zlevel                  -minversion 5  -validvalue {}             -type num             -default -10
+    setdef options -silent                  -minversion 5  -validvalue {}             -type bool            -default "False"
+
+    # check if chart includes a dataset class
+    set dataset [$chart dataset]
+
+    # Both properties item are accepted.
+    #   -dataLines3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataLines3DItem -dataItem} $value]
+
+    if {$dataset ne ""} {
+        if {[dict exists $value $itemKey]} {
+            error "'chart3D' Class cannot contains '$itemKey'\
+                    when a class dataset is defined."
+        }
+
+        set options [dict remove $options -data]
+        # set dimensions in dataset class...
+        # setdef options -dimensions     -minversion 5  -validvalue {}                 -type list.d|null      -default "nothing"
+        setdef options   -dataGroupId    -minversion 5  -validvalue {}                 -type str|null         -default "nothing"
+        setdef options   -seriesLayoutBy -minversion 5  -validvalue formatSeriesLayout -type str|null         -default "nothing"
+        setdef options   -encode         -minversion 5  -validvalue {}                 -type dict|null        -default [ticklecharts::encode $chart $value]
+        setdef options   -datasetIndex   -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
+
+    } else {
+        if {![dict exists $value $itemKey]} {
+            error "'chart3D' object should contain '-dataLines3DItem' or '-dataItem'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lines3DItem $value $itemKey]
+    }
+
+    # remove key(s)...
+    set value [dict remove $value -lineStyle -encode -effect $itemKey]
                                 
     set options [merge $options $value]
 
