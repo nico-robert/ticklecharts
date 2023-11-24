@@ -1025,13 +1025,17 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -data
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-data -dataItem} $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data] || [dict exists $value -dataItem]} {
+        if {[dict exists $value $itemKey]} {
             error "'chart' object cannot contains '-data' or '-dataItem' when a class dataset is defined for\
                    '[ticklecharts::getLevelProperties [info level]]'."
         }
 
-        set options [dict remove $options -data]
         # set dimensions in dataset class... if need
         # setdef options -dimensions    -minversion 5  -validvalue {}                 -type list.d|null  -default "nothing"
         setdef options  -dataGroupId    -minversion 5  -validvalue {}                 -type str|null     -default "nothing"
@@ -1039,16 +1043,11 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
         setdef options  -encode         -minversion 5  -validvalue {}                 -type dict|null    -default [ticklecharts::encode $chart $value]
 
     } else {
-        if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
+        if {![dict exists $value $itemKey]} {
             error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
         }
 
-        # Both properties are supported.
-        foreach key {-data -dataItem} {
-            if {[dict exists $value $key]} break
-        }
-
-        setdef options -data  -minversion 5 -validvalue {} -type list.o -default [ticklecharts::pictorialBarItem $value $key]
+        setdef options -data -minversion 5 -validvalue {} -type list.o -default [ticklecharts::pictorialBarItem $value $itemKey]
     }
 
     # remove key(s)... 
@@ -1056,7 +1055,7 @@ proc ticklecharts::pictorialBarSeries {index chart value} {
                                   -labelLine -lineStyle \
                                   -markPoint -markLine -markArea \
                                   -labelLayout -itemStyle -universalTransition \
-                                  -emphasis -blur -select -tooltip -encode -data -dataItem]
+                                  -emphasis -blur -select -tooltip -encode $itemKey]
 
     set options [merge $options $value]
 
