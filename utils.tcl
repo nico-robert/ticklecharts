@@ -560,14 +560,13 @@ proc ticklecharts::keyCompare {d other} {
     set keys1 [dict keys $d]
 
     foreach k [dict keys $other] {
-        # special case : insert 'dummy' as name of key for theming...
-        if {[string match -nocase *item $k] || 
-            [string match -nocase *dummy $k]} {
+        # Special case for 'dummy' key for theming...
+        if {[string match -nocase *dummy $k]} {
             continue
         }
         if {$k ni $keys1} {
             puts stderr "warning($infoproc): '$k' property is not in\
-                '[join $keys1 ", "]' or not supported..."
+                        '[join $keys1 ", "]' or not supported..."
         }
     }
 
@@ -637,7 +636,7 @@ proc ticklecharts::merge {d other} {
             # variable version is lower...
             if {$version eq "nothing"} {
                 puts stderr "warning(multi-versions): no versions found for '$key',\
-                      this key will not be taken into account..."
+                            this key will not be taken into account..."
                 continue
             }
             set minversion $version
@@ -649,7 +648,7 @@ proc ticklecharts::merge {d other} {
 
             if {$vcompare > 0} {
                 puts stderr "warning(version): '$key' is not supported... in\
-                     '$versionLib' (minimum version = '$minversion')"
+                            '$versionLib' (minimum version = '$minversion')"
                 continue
             }
 
@@ -979,7 +978,6 @@ proc ticklecharts::isListOfList {args} {
             [string range $str end-1 end] eq "\}\}"
         }
     ]
-
 }
 
 proc ticklecharts::uuid {} {
