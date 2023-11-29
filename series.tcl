@@ -875,14 +875,18 @@ proc ticklecharts::themeRiverSeries {index value} {
     setdef options -blur                    -minversion 5       -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
     setdef options -select                  -minversion 5       -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode  -type bool|str|null     -default "False"
-    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d            -default [ticklecharts::themeriverItem $value]
+    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d            -default [ticklecharts::themeRiverData $value]
     setdef options -tooltip                 -minversion 5       -validvalue {}                  -type dict|null         -default [ticklecharts::tooltip $value]
+
+    if {![dict exists $value -data]} {
+        error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
+    }
 
     # remove key(s)...
     set value [dict remove $value -label \
                                   -labelLine \
                                   -labelLayout -itemStyle \
-                                  -emphasis -blur -select]
+                                  -emphasis -blur -select -data]
 
 
     set options [merge $options $value]
@@ -1206,7 +1210,7 @@ proc ticklecharts::parallelSeries {index value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -lineStyle -emphasis]
+    set value [dict remove $value -lineStyle -emphasis $itemKey]
 
     set options [merge $options $value]
 
@@ -1281,7 +1285,7 @@ proc ticklecharts::gaugeSeries {index value} {
 
     # remove key(s)...
     set value [dict remove $value -axisLine -progress -splitLine -axisTick \
-                                  -axisLabel -pointer -anchor -itemStyle \
+                                  -axisLabel -pointer -anchor -itemStyle $itemKey \
                                   -emphasis -title -detail -markPoint -markLine -markArea]
 
     set options [merge $options $value]
@@ -1419,10 +1423,21 @@ proc ticklecharts::wordcloudSeries {index value} {
     setdef options -layoutAnimation   -minWCversion 2        -validvalue {}               -type bool           -default "True"
     setdef options -textStyle         -minWCversion 2        -validvalue {}               -type dict|null      -default [ticklecharts::textStyle $value -textStyle]
     setdef options -emphasis          -minWCversion 2        -validvalue {}               -type dict|null      -default [ticklecharts::emphasis $value]
-    setdef options -data              -minWCversion 2        -validvalue {}               -type list.o         -default [ticklecharts::dataWCItem $value]
+
+    # Both properties item are accepted.
+    #   -dataWCItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataWCItem -dataItem} $value]
+
+    if {![dict exists $value $itemKey]} {
+        error "'-dataWCItem' or '-dataItem' properties should be defined\ 
+               for '[ticklecharts::getLevelProperties [info level]]'."
+    }
+
+    setdef options -data  -minWCversion 2 -validvalue {} -type list.o -default [ticklecharts::dataWCItem $value $itemKey]
 
     # remove key(s)...
-    set value [dict remove $value -textStyle -emphasis -dataWCItem -dataItem]
+    set value [dict remove $value -textStyle -emphasis $itemKey]
 
     set options [merge $options $value]
 

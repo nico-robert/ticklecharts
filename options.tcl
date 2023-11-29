@@ -108,25 +108,18 @@ proc ticklecharts::linksItem {value key} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::themeriverItem {value} {
+proc ticklecharts::themeRiverData {value} {
 
-    # Both properties are supported.
-    set key [ticklecharts::itemKey {-data -dataItem} $value]
-
-    if {$key eq ""} {
-        set levelP [uplevel 1 {
-                ticklecharts::getLevelProperties [info level]
-            }
-        ]
-        error "Property '-data' or '-dataItem'\
-               not defined for $levelP"
+    if {![dict exists $value -data]} {
+        return "nothing"
     }
 
-    foreach item [dict get $value $key] {
+    foreach item [dict get $value -data] {
 
         if {[llength $item] != 3} {
             error "Item list should be a list of 3 elements for\
-                  [ticklecharts::getLevelProperties [info level]]"
+                  [ticklecharts::getLevelProperties [info level]] see\
+                  https://echarts.apache.org/en/option.html#series-themeRiver.data"
         }
 
         lassign $item date value name
@@ -135,8 +128,8 @@ proc ticklecharts::themeriverItem {value} {
         setdef options value  -minversion 5  -validvalue {}   -type num      -default "nothing"
         setdef options name   -minversion 5  -validvalue {}   -type str      -default "nothing"
 
-        # simply to check if the data in my list item are correct...
-        merge $options [dict create date $date value $value name $name]
+        # Check that the items on my list are correct.
+        merge $options [list date $date value $value name $name]
 
         lappend opts [list $date $value $name]
         set options {}
@@ -824,19 +817,7 @@ proc ticklecharts::candlestickItem {value itemKey} {
     return [list {*}$opts]
 }
 
-proc ticklecharts::dataWCItem {value} {
-
-    # Both properties are supported.
-    set key [ticklecharts::itemKey {-dataWCItem -dataItem} $value]
-
-    if {$key eq ""} {
-        set levelP [uplevel 1 {
-                ticklecharts::getLevelProperties [info level]
-            }
-        ]
-        error "Property '-dataWCItem' or '-dataItem'\
-               not defined for $levelP"
-    }
+proc ticklecharts::dataWCItem {value key} {
 
     foreach item [dict get $value $key] {
 
@@ -4333,7 +4314,7 @@ proc ticklecharts::detail {value} {
     #...
 
     # remove key(s)...
-    set d [dict remove $d rich]
+    set d [dict remove $d richItem richitem]
 
     set options [merge $options $d]
 
@@ -4437,7 +4418,7 @@ proc ticklecharts::edgeLabel {value} {
     #...
 
     # remove key(s)...
-    set d [dict remove $d rich]
+    set d [dict remove $d richItem richitem]
 
     set options [merge $options $d]
 
