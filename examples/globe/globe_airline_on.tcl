@@ -18,7 +18,8 @@ try {
     set htmldata [::http::data $token]
     set datajson [json::json2dict $htmldata]
     set airports [dict get $datajson airports]
-    set routes {}
+    set routes   {}
+    set dataItem {}
     set data [dict get $datajson routes]
 
     foreach val $data {
