@@ -1768,7 +1768,7 @@ proc ticklecharts::linesSeries {index chart value} {
 
     } else {
         if {![dict exists $value $itemKey]} {
-            error "'chart' object should contain '-dataLinesItem' or '-dataItem'"
+            error "'chart' object should contains '-dataLinesItem' or '-dataItem'"
         }
         setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::linesItem $value $itemKey]
     }

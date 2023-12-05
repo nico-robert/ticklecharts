@@ -181,12 +181,12 @@ proc ticklecharts::axisLine3D {value} {
     set property [string range $levelP 0 6]
         
     if {$property eq "xAxis3D" || $property eq "yAxis3D" || $property eq "zAxis3D"} {
-        set levelP [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
+        set levelT [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
     } else {
-        set levelP [string map {3D ""} $levelP]
+        set levelT [string map {3D ""} $levelP]
     }
 
-    set show [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
+    set show [expr {[keysOptsThemeExists $levelT.show] ? [echartsOptsTheme $levelT.show] : "True"}]
     
     set d [dict get $value $key]
 
@@ -228,9 +228,9 @@ proc ticklecharts::lineStyle3D {value} {
     set property [string range $levelP 0 6]
         
     if {$property eq "xAxis3D" || $property eq "yAxis3D" || $property eq "zAxis3D"} {
-        set levelP [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
+        set levelT [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
     } else {
-        set levelP [string map {3D ""} $levelP]
+        set levelT [string map {3D ""} $levelP]
     }
 
     set color     [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
@@ -280,7 +280,7 @@ proc ticklecharts::textStyle3D {value key} {
     variable theme
     variable minProperties
 
-    set levelP [string map [list 3D "" textStyle $key] [ticklecharts::getLevelProperties [info level]]]
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set minP $minProperties
 
     if {![dict exists $value $key]} {
@@ -292,9 +292,10 @@ proc ticklecharts::textStyle3D {value key} {
         }
     }
 
-    set color      [expr {[keysOptsThemeExists $levelP.color]      ? [echartsOptsTheme $levelP.color] : "nothing"}]
-    set fontSize   [expr {[keysOptsThemeExists $levelP.fontSize]   ? [echartsOptsTheme $levelP.fontSize] : "nothing"}]
-    set fontWeight [expr {[keysOptsThemeExists $levelP.fontWeight] ? [echartsOptsTheme $levelP.fontWeight] : "nothing"}]
+    set levelT     [string map [list 3D "" textStyle $key] $levelP]
+    set color      [expr {[keysOptsThemeExists $levelT.color]      ? [echartsOptsTheme $levelT.color] : "nothing"}]
+    set fontSize   [expr {[keysOptsThemeExists $levelT.fontSize]   ? [echartsOptsTheme $levelT.fontSize] : "nothing"}]
+    set fontWeight [expr {[keysOptsThemeExists $levelT.fontWeight] ? [echartsOptsTheme $levelT.fontWeight] : "nothing"}]
 
     setdef options color        -minversion 5  -validvalue formatColor       -type str.t|jsfunc|null -default $color
     setdef options borderWidth  -minversion 5  -validvalue {}                -type num               -default 0
@@ -336,12 +337,12 @@ proc ticklecharts::axisTick3D {value} {
     set property [string range $levelP 0 6]
     
     if {$property eq "xAxis3D" || $property eq "yAxis3D" || $property eq "zAxis3D"} {
-        set levelP [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
+        set levelT [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
     } else {
-        set levelP [string map {3D ""} $levelP]
+        set levelT [string map {3D ""} $levelP]
     }
 
-    set show [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
+    set show [expr {[keysOptsThemeExists $levelT.show] ? [echartsOptsTheme $levelT.show] : "True"}]
 
     set d [dict get $value $key]
 
@@ -384,12 +385,12 @@ proc ticklecharts::splitLine3D {value} {
     set property [string range $levelP 0 6]
     
     if {$property eq "xAxis3D" || $property eq "yAxis3D" || $property eq "zAxis3D"} {
-        set levelP [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
+        set levelT [string cat $property [string map {3D ""} [string range $levelP 7 end]]]
     } else {
-        set levelP [string map {3D ""} $levelP]
+        set levelT [string map {3D ""} $levelP]
     }
 
-    set showgrid [expr {[keysOptsThemeExists $levelP.show] ? [echartsOptsTheme $levelP.show] : "True"}]
+    set showgrid [expr {[keysOptsThemeExists $levelT.show] ? [echartsOptsTheme $levelT.show] : "True"}]
 
     set d [dict get $value $key]
 
@@ -436,7 +437,7 @@ proc ticklecharts::itemStyle3D {value} {
     variable theme
     variable minProperties
 
-    set levelP [string map {3D ""} [ticklecharts::getLevelProperties [info level]]]
+    set levelP [ticklecharts::getLevelProperties [info level]]
     set minP $minProperties
 
     if {![ticklecharts::keyDictExists "itemStyle" $value key]} {
@@ -448,7 +449,8 @@ proc ticklecharts::itemStyle3D {value} {
         }
     }
 
-    set color [expr {[keysOptsThemeExists $levelP.color] ? [echartsOptsTheme $levelP.color] : "nothing"}]
+    set levelT [string map {3D ""} $levelP]
+    set color [expr {[keysOptsThemeExists $levelT.color] ? [echartsOptsTheme $levelT.color] : "nothing"}]
 
     set d [dict get $value $key]
 
@@ -479,10 +481,11 @@ proc ticklecharts::areaStyle3D {value} {
         return "nothing"
     }
 
-    set levelP [string map {3D ""} [ticklecharts::getLevelProperties [info level]]]
+    set levelP [ticklecharts::getLevelProperties [info level]]
+    set levelT [string map {3D ""} $levelP]
 
-    if {[keysOptsThemeExists $levelP.color]} {
-        set color [echartsOptsTheme $levelP.color]
+    if {[keysOptsThemeExists $levelT.color]} {
+        set color [echartsOptsTheme $levelT.color]
     } else {
         set color [list {rgba(250,250,250,0.3) rgba(200,200,200,0.3)}]
     }
