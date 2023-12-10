@@ -181,6 +181,10 @@ $chart deleteSeries 1
 ```tcl
 $chart toJSON
 ```
+3. Export _chart_ as HTML fragment :
+```tcl
+$chart toHTML
+```
 
 Javascript function :
 -------------------------
