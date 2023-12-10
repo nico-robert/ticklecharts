@@ -339,7 +339,7 @@ oo::define ticklecharts::chart3D {
     #   Render        - Export chart3D html.
     #   setTrace      - Sets trace properties.
     #   track         - Compares properties.
-    #   ToHtml        - Export chart as HTML fragment.
+    #   toHTML        - Export chart as HTML fragment.
     #   dataset       - Returns dataset.
     #   options       - Gets chart3D list options.
     #   get           - Gets huddle object.
@@ -351,7 +351,7 @@ oo::define ticklecharts::chart3D {
     #                   Note : This variable can be empty.
     # ...
     foreach method {
-        Render setTrace track ToHtml options get toJSON
+        Render setTrace track toHTML options get toJSON
         dataset getOptions keys deleteSeries globalOptions
         } {
         method $method {*}[ticklecharts::classDef "chart" $method]

@@ -45,10 +45,10 @@ if {[info commands ::jupyter::html] ne ""} {
                 # Gets arguments options
                 set jupyteropts [ticklecharts::renderOptions $args [self method]]
                 # Sets default arguments html options.
-                set htmlopts [ticklecharts::renderOptions {} "ToHtml"]
+                set htmlopts [ticklecharts::renderOptions {} "toHTML"]
                 set opts     [dict merge $htmlopts $jupyteropts]
 
-                set srcDoc [my ToHtml {*}$opts]
+                set srcDoc [my toHTML {*}$opts]
                 set width  [lindex [dict get $opts -width] 0]
                 set height [lindex [dict get $opts -height] 0]
 
@@ -83,7 +83,7 @@ if {[info commands ::jupyter::html] ne ""} {
             # export new method
             export RenderJupyter
             # unexport method(s)
-            unexport toJSON Render
+            unexport toJSON Render toHTML
         }
     }
 }

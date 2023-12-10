@@ -444,10 +444,10 @@ oo::define ticklecharts::Gridlayout {
     #   dataset  - Returns dataset.
     #   options  - Returns layout options.
     #   toJSON   - Returns json chart data.
-    #   ToHtml   - Export chart as HTML fragment.
+    #   toHTML   - Export chart as HTML fragment.
     #   get      - Gets huddle object.
     # ...
-    foreach method {Render dataset options toJSON ToHtml get} {
+    foreach method {Render dataset options toJSON toHTML get} {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 

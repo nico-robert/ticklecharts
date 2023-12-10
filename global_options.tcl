@@ -53,8 +53,8 @@ proc ticklecharts::renderOptions {value method} {
     set outfile [file join [file dirname [info script]] render.html]
 
     switch -exact -- $method  {
-        "ToHtml" {
-            # Global options for 'ToHtml' method
+        "toHTML" {
+            # Global options for 'toHTML' method
             setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
             setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
             setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"

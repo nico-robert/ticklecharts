@@ -161,12 +161,12 @@ oo::define ticklecharts::timeline {
     # Copy shared methods definition from 'ticklecharts::chart' class :
     #
     #   Render  - Export timeline html.
-    #   ToHtml  - Export chart as HTML fragment.
+    #   toHTML  - Export chart as HTML fragment.
     #   toJSON  - Returns json timeline data.
     #   get     - Gets huddle object.
     #   options - Gets chart(s) list options.
     # ...
-    foreach method {Render ToHtml toJSON get options} {
+    foreach method {Render toHTML toJSON get options} {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 

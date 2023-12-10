@@ -222,7 +222,7 @@ if {[namespace exists ::tsb]} {
             # export new method
             export RenderTsb
             # unexport method(s)
-            unexport toJSON Render
+            unexport toJSON Render toHTML
         }
     }
 }

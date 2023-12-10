@@ -239,7 +239,7 @@ oo::define ticklecharts::chart {
         # args - Options described below.
         #
         # -outfile - full path HTML (default: [info script]/render.html)
-        # Note : See 'ToHtml' method for others properties.
+        # Note : See 'toHTML' method for others properties.
         #
         # Returns full path HTML file.
 
@@ -255,7 +255,7 @@ oo::define ticklecharts::chart {
         # Writes data in the HTML file.
         try {
             set fp   [open $outputFile w+]
-            puts $fp [my ToHtml {*}$opts]
+            puts $fp [my toHTML {*}$opts]
         } on error {result options} {
             error [dict get $options -errorinfo]
         } finally {
@@ -269,7 +269,7 @@ oo::define ticklecharts::chart {
         return $outputFile
     }
 
-    method ToHtml {args} {
+    method toHTML {args} {
 	    # Export chart as HTML fragment.
         #
         # args - Options described below.
