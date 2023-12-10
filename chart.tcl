@@ -320,7 +320,7 @@ oo::define ticklecharts::chart {
         my ToHuddle ; # Transforms to huddle.
 
         # ehuddle jsondump
-        return [[my get] toJSON]
+        return [[my get] dump]
     }
 
     method Xaxis {args} {
