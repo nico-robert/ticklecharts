@@ -252,7 +252,7 @@ proc ticklecharts::timelineItem {value} {
     # force string value for this key below
     # with 'eString' class.
     set typeOf [ticklecharts::typeOf [dict get $d value]]
-    if {$typeOf ne "str"} {
+    if {$typeOf ni {str str.e}} {
         dict set d value [new estr [dict get $d value]]
     }
 

@@ -148,10 +148,13 @@ proc ticklecharts::title {value} {
     setdef options shadowOffsetY     -minversion 5  -validvalue {}                      -type num|null    -default "nothing"
     #...
 
-    # force string representation for 'text' and 'subtext' keys if exists...
+    # Force string representation for 'text' and 'subtext' keys if exists.
     foreach key {text subtext} {
         if {[dict exists $d $key]} {
-            dict set d $key [new estr [dict get $d $key]]
+            set val [dict get $d $key]
+            if {[ticklecharts::typeOf $val] ni {str str.e}} {
+                dict set d $key [new estr $val]
+            }
         }
     }
 

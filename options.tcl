@@ -3843,7 +3843,7 @@ proc ticklecharts::encode {chart value} {
         set v [dict get $d value]
         foreach dimension [$dataset dim] {
             lassign $dimension datadim type
-            if {($v in $datadim) && ([ticklecharts::typeOf $v] ne "str")} {
+            if {($v in $datadim) && ([ticklecharts::typeOf $v] ni {str str.e})} {
                 # force string representation
                 dict set d "value" [new estr $v]
                 break

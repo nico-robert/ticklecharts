@@ -228,9 +228,10 @@ oo::define ticklecharts::Gridlayout {
                                 set myvalue [expr $[set val]]
                                 set mytype [ticklecharts::typeOf $myvalue]
 
-                                switch -- $mytype {
-                                    "str"   {dict set opts @S=$val $myvalue}
-                                    "num"   {dict set opts @N=$val $myvalue}
+                                switch -exact -- $mytype {
+                                    str     {dict set opts @S=$val $myvalue}
+                                    str.e   {dict set opts @S=$val [$myvalue get]}
+                                    num     {dict set opts @N=$val $myvalue}
                                     default {error "$val must be a str or a float... now is $mytype"}
                                 }
                             }
@@ -269,9 +270,10 @@ oo::define ticklecharts::Gridlayout {
                             set myvalue [expr $[set val]]
                             set mytype [ticklecharts::typeOf $myvalue]
 
-                            switch -- $mytype {
-                                "str"   {dict set opts @S=$val $myvalue}
-                                "num"   {dict set opts @N=$val $myvalue}
+                            switch -exact -- $mytype {
+                                str     {dict set opts @S=$val $myvalue}
+                                str.e   {dict set opts @S=$val [$myvalue get]}
+                                num     {dict set opts @N=$val $myvalue}
                                 default {error "$val must be a str or a float... now is $mytype"}
                             }
                         }
@@ -302,8 +304,9 @@ oo::define ticklecharts::Gridlayout {
                     set myvalue [expr $[set val]]
                     set mytype [ticklecharts::typeOf $myvalue]
 
-                    switch -- $mytype {
+                    switch -exact -- $mytype {
                         "str"   {lappend f @S=$val $myvalue}
+                        "str.e" {lappend f @S=$val [$myvalue get]}
                         "num"   {lappend f @N=$val $myvalue}
                         default {error "$val must be a str or a float... now is $mytype"}
                     }
