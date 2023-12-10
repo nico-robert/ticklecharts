@@ -28,7 +28,7 @@ $chart Render
 # Initializes a new 2D Chart Class
 set chart [ticklecharts::chart new]
 ```
-##### :heavy_check_mark: Argument available :
+##### Argument available :
 | args | Type | Description
 | ------ | ------ | ------
 | _-theme_ | str | set the default theme for chart instance (default `custom`) possible values: `vintage,westeros,wonderland,dark`
@@ -51,7 +51,7 @@ Here `-data` corresponds to the Y values. (:warning: `-data` _property_ should b
 # Export chart to html
 $chart Render
 ```
-##### :heavy_check_mark: Arguments available :
+##### Arguments available :
 | args           | Description             | Default values
 | ------         | ------                  | ------
 | _-title_       | Header title html       | `"ticklEcharts !!!"`
