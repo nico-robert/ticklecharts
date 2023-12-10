@@ -229,6 +229,7 @@ proc ticklecharts::ehuddleType {type} {
 
     switch -exact -- $type {
         str.t   - str     {set htype @S}
+        str.et  - str.e   {set htype @SE}
         num.t   - num     {set htype @N}
         bool.t  - bool    {set htype @B}
         list.st - list.s  {set htype @LS}
@@ -305,7 +306,7 @@ proc ticklecharts::typeOf {value} {
             "*::eColor"  {return e.color}
             "*::eList"   {return list}
             "*::eDict"   {return dict}
-            "*::eString" {return str}
+            "*::eString" {return str.e}
         }
     }
 
@@ -378,13 +379,6 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 append opts [format " ${htype}=$key {%s}" \
                             [ticklecharts::dictToEchartsHuddle [$value get]] \
                             ]
-            }
-            str - str.t {
-                if {[ticklecharts::iseStringClass $value]} {
-                    append opts [format " ${htype}=$key {%s}" [$value get]]
-                } else {
-                    append opts [format " ${htype}=$key %s" $value]
-                }
             }
             default {
                 append opts [format " ${htype}=$key %s" $value]
@@ -469,18 +463,10 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                             [ticklecharts::dictToEchartsHuddle [$value get]] \
                             ]
             }
-            str - str.t {
-                if {[ticklecharts::iseStringClass $value]} {
-                    append opts [format " ${htype}=$subkey {%s}" [$value get]]
-                } else {
-                    append opts [format " ${htype}=$subkey %s" $value]
-                }
-            }
             default {
                 append opts [format " ${htype}=$subkey %s" $value]
             }
         }
-
     }
 
     return $opts
@@ -533,8 +519,14 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
 
     upvar 1 $keyt typekey
 
+    # If variable 'mytype' is a eString class,
+    # replaces default values 'type' by new type.
+    if {$mytype eq "str.e"} {
+        set type [string map {str str.e str.t str.et} $type]
+    }
+
     foreach valtype [split $type "|"] {
-        if {[string match $mytype* "$valtype"]} {
+        if {[string match $mytype* $valtype]} {
             set typekey $valtype
             return 1
         }
@@ -599,7 +591,7 @@ proc ticklecharts::merge {d other} {
             if {[dict exists $other $key]} {
                 set namevalue [dict get $other $key]
                 # Force string representation.
-                if {[ticklecharts::typeOf $namevalue] ne "str"} {
+                if {[ticklecharts::typeOf $namevalue] ni {str str.e}} {
                     dict set other $key [new estr $namevalue]
                 }
             }
@@ -663,14 +655,7 @@ proc ticklecharts::merge {d other} {
 
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
-                set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
-                if {$multiversions} {
-                    error "bad type(set) for this key '$key'= $mytype\
-                           should be :$type for $minversion version"
-                } else {
-                    error "bad type(set) for this key '$key'= $mytype\
-                           should be :$type"
-                }
+                ticklecharts::errorType "set" $key $mytype $type $minversion $multiversions
             }
 
             set value [dict get $other $key]
@@ -686,21 +671,14 @@ proc ticklecharts::merge {d other} {
 
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
-                set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
-                if {$multiversions} {
-                    error "bad type(default) for this key '$key'= $mytype\
-                           should be :$type for $minversion version"
-                } else {
-                    error "bad type(default) for this key '$key'= $mytype\
-                           should be :$type"
-                }
+                ticklecharts::errorType "default" $key $mytype $type $minversion $multiversions
             }
             # Minimum properties...
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
             if {$minProperties} {
                 if {$key ni {-type -name -id} && $typekey ni {
-                    dict list.o list.j str.t list.st 
+                    dict list.o list.j str.t str.et list.st 
                     list.dt list.nt bool.t num.t
                     }
                 } {continue}
@@ -1215,4 +1193,28 @@ proc ticklecharts::ldset {varList to default} {
     }
 
     return {}
+}
+
+proc ticklecharts::errorType {what key mytype type minversion multiversions} {
+    # Error message for incorrect type.
+    #
+    # what           - message type
+    # key            - dict key
+    # mytype         - type found by the typeOf function
+    # type           - default list type (*|*)
+    # minversion     - minimum version
+    # multiversions  - boolean value for multi-versions
+    #
+    # Throws an error
+
+    set type   [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
+    set mytype [string map {.e ""} $mytype]
+
+    if {$multiversions} {
+        error "bad type($what) for this key '$key'= $mytype\
+               should be '$type' for '$minversion' version"
+    } else {
+        error "bad type($what) for this key '$key'= $mytype\
+               should be '$type'"
+    }
 }

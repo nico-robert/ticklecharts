@@ -62,6 +62,7 @@ oo::define ticklecharts::ehuddle {
                 "@S"    {set value [huddle string $info]}
                 "@N"    {set value [huddle number $info]}
                 "@NULL" {set value [huddle null]}
+                "@SE"   {set value [huddle string [$info get]]}
                 "@LS"   {
                             set value [huddle list {*}[join $info]]
                         }
@@ -104,6 +105,7 @@ oo::define ticklecharts::ehuddle {
                                         "@DO"   -
                                         "@B"    -
                                         "@S"    -
+                                        "@SE"   -
                                         "@N"    -
                                         "@NULL" -
                                         "@JS"   -
@@ -138,6 +140,7 @@ oo::define ticklecharts::ehuddle {
                                                                 "@L"    -
                                                                 "@B"    -
                                                                 "@S"    -
+                                                                "@SE"    -
                                                                 "@N"    -
                                                                 "@NULL" -
                                                                 "@JS"   -
@@ -277,7 +280,7 @@ oo::define ticklecharts::ehuddle {
         }
     }
 
-    method toJSON {} {
+    method dump {} {
         # Transform huddle to JSON
         # replace special chars by space... etc.
         # 
@@ -296,9 +299,9 @@ oo::define ticklecharts::ehuddle {
     }
 }
 
-proc ticklecharts::ehuddle_num val {
+proc ticklecharts::ehuddleNum val {
     # Returns format hudlle num
-    if {![string is double -strict $val]} {
+    if {[ticklecharts::typeOf $val] ne "num"} {
         error "wrong # args: 'ehuddle' num '$val' is not a number"
     }
 
@@ -313,12 +316,12 @@ proc ticklecharts::ehuddleListNum data {
 
     if {[llength {*}$data] == 1} {
         foreach val [lindex {*}$data 0] {
-            lappend listv [ticklecharts::ehuddle_num $val]
+            lappend listv [ticklecharts::ehuddleNum $val]
         }
     } else {
         foreach val {*}$data {
             lappend listv [format {L {%s}} [lmap v $val {
-                        ticklecharts::ehuddle_num $v
+                        ticklecharts::ehuddleNum $v
                     }
                 ]
             ]
@@ -336,14 +339,11 @@ proc ticklecharts::ehuddleListMap data {
 
     foreach val {*}$data {
         lappend listv [format {L {%s}} [lmap v $val {
-                    if {[string is double -strict $v]} {
-                        list num $v
-                    } elseif {$v eq "null"} {
-                        list null
-                    } elseif {[iseStringClass $v]} {
-                        list s [$v get]
-                    } else {
-                        list s $v
+                    switch -exact -- [ticklecharts::typeOf $v] {
+                        num     {list num $v}
+                        null    {list null}
+                        str.e   {list s [$v get]}
+                        default {list s $v}
                     }
                 }
             ]
@@ -360,14 +360,11 @@ proc ticklecharts::ehuddleListInsert data {
     set listv {}
 
     foreach val [lindex {*}$data 0] {
-        if {[string is double -strict $val]} {
-            lappend listv [list num $val]
-        } elseif {$val eq "null"} {
-            lappend listv [list null]
-        } elseif {[iseStringClass $val]} {
-            lappend listv [list s [$val get]]
-        } else {
-            lappend listv [list s $val]
+        switch -exact -- [ticklecharts::typeOf $val] {
+            num     {lappend listv [list num $val]}
+            null    {lappend listv [list null]}
+            str.e   {lappend listv [list s [$val get]]}
+            default {lappend listv [list s $val]}
         }
     }
 
