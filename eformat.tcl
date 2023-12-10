@@ -223,7 +223,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatFontWeight {
             # possible values...
-            if {![string is double -strict $value]} {
+            if {[ticklecharts::typeOf $value] eq "str"} {
                 set validvalue {normal bold bolder lighter}
                 if {$value ni $validvalue} {
                     error "'$value' should be '[formatMsgError $validvalue]'\
@@ -366,7 +366,7 @@ proc ticklecharts::formatEcharts {formattype value key} {
 
         formatOpacity {
             # possible values...
-            if {[string is double -strict $value]} {
+            if {[ticklecharts::typeOf $value] eq "num"} {
                 if {![expr {$value >= 0 && $value <= 1}]} {
                     error "'$value' should be between '0' and '1'\
                             for this key: '$key' in $nameproc"
