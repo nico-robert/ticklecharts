@@ -167,7 +167,7 @@ $chart getOptions -option title
  sublink           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
  ...
  ...
-# following options voluntarily deleted... 
+# Following options voluntarily deleted... 
 ```
 2. Delete _series_ by index:
 ```tcl
@@ -183,7 +183,7 @@ $chart toJSON
 ```
 3. Export _chart_ as HTML fragment :
 ```tcl
-$chart toHTML
+$chart toHTML ?-template ?...
 ```
 
 Javascript function :
