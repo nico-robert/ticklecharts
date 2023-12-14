@@ -143,7 +143,6 @@ proc ticklecharts::addJsScript {html value} {
     #
     # Returns html
 
-    set h [split $html "\n"]
     lassign $value js type
 
     switch -exact -- $type {
@@ -155,15 +154,15 @@ proc ticklecharts::addJsScript {html value} {
                 header {set item "%jsecharts%" ; set indent 3}
                 null   {set item "%jschartvar%"}
             }
-            if {[set f [lsearch $h *$item*]] < 0} {
+            if {[set f [lsearch $html *$item*]] < 0} {
                 error "Not possible to find `$item` string\
                        in the html template file..."
             }
-            set listH [linsert $h $f+1 \
-                      [format [list %-${indent}s %s] "" [join [$js get]]]]
+            set listHtml [linsert $html $f+1 \
+                         [format [list %-${indent}s %s] "" [join [$js get]]]]
         }
         list.d {
-            set listH $h
+            set listHtml $html
             foreach script {*}[lreverse $js] {
                 set indent 0
                 # insert Jsfunc...
@@ -174,12 +173,12 @@ proc ticklecharts::addJsScript {html value} {
                         header {set item "%jsecharts%" ; set indent 3}
                         null   {set item "%jschartvar%"}
                     }
-                    if {[set f [lsearch $listH *$item*]] < 0} {
+                    if {[set f [lsearch $listHtml *$item*]] < 0} {
                         error "Not possible to find `$item` string\
                                in the html template file..."
                     }
-                    set listH [linsert $listH $f+1 \
-                              [format [list %-${indent}s %s] "" [join [$script get]]]]
+                    set listHtml [linsert $listHtml $f+1 \
+                                 [format [list %-${indent}s %s] "" [join [$script get]]]]
                 } else {
                     error "should be a 'jsfunc' class... in list data script."
                 }
@@ -187,20 +186,20 @@ proc ticklecharts::addJsScript {html value} {
         }
     }
 
-    return [join $listH "\n"]
+    return $listHtml
 }
 
-proc ticklecharts::readHTMLTemplate {htmltemplate} {
+proc ticklecharts::readHTMLTemplate {template} {
     # Opens and reads html template.
     #
-    # htmltemplate  - template html.
+    # template  - template html.
     #
-    # Returns html file list
+    # Returns html file|string as a list.
 
-    if {[file isfile $htmltemplate]} {
+    if {[file isfile $template]} {
         try {
-            set fp   [open $htmltemplate r]
-            set html [read $fp]
+            set fp   [open $template r]
+            set html [split [read $fp] "\n"]
         } on error {result options} {
             error [dict get $options -errorinfo]
         } finally {
@@ -209,12 +208,11 @@ proc ticklecharts::readHTMLTemplate {htmltemplate} {
     } else {
         # %json% attribute should be
         # defined in html template string...
-        set template [split $htmltemplate "\n"]
-        if {[lsearch $template "*%json%*"] < 0} {
+        set html [split $template "\n"]
+        if {[lsearch $html "*%json%*"] < 0} {
             error "'%json%' attribute should be defined\
-                    in html template string"
+                    in html 'template' string"
         }
-        set html [join $template "\n"]
     }
 
     return $html

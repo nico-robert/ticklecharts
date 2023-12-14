@@ -311,7 +311,7 @@ oo::define ticklecharts::chart {
         set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts]
 
         # Replaces json data in and return HTML...
-        return [string map [list %json% $json] $newhtml]
+        return [join [string map [list %json% $json] $newhtml] "\n"]
     }
 
     method toJSON {} {
