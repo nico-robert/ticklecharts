@@ -29,23 +29,25 @@ $chart Render
 set chart [ticklecharts::chart new]
 ```
 ##### Argument available :
-| args | Type | Description
-| ------ | ------ | ------
-| _-theme_ | str | set the default theme for chart instance (default `custom`) possible values: `vintage,westeros,wonderland,dark`
+| args     | Type   | Default value
+| ------   | ------ | ------
+| _-theme_ | str    | `custom` (possible values: `vintage,westeros,wonderland,dark`)
 ```tcl
 # Initializes X axis with values
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
 ```
-:warning: Important `-data` _property_ should be a list of list `[list {...}]`
+> [!IMPORTANT]  
+>  `-data` _property_ should be a list of list `[list {...}]`
 ```tcl
 # Initializes Y axis
 $chart Yaxis
 ```
 ```tcl
 # Initializes line series
+# '-data' should be a list of list [list {...}]
 $chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 ```
-Here `-data` corresponds to the Y values. (:warning: `-data` _property_ should be a list of list)
+Here `-data` corresponds to the Y values.
 
 ```tcl
 # Export chart to html
@@ -503,8 +505,9 @@ $layout Render
 - [ ] custom (see _note_ below)
 - [x] wordCloud
 
-> **Note :** _custom_ series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
- If you are interested, please report to the github issue tracker.
+> [!NOTE]  
+> _custom_ series contains a lot of _Javascript_ codes, I don’t think it’s interesting to write it in this package.  
+> If you are interested, please report to the github issue tracker.
 
 License :
 -------------------------
