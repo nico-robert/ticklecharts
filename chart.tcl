@@ -298,7 +298,9 @@ oo::define ticklecharts::chart {
 
         # Check if the method was invoked from 
         # inside another object method.
-        if {![catch {self caller}]} {
+        set methodCall "nothing"
+        if {![catch {self caller} infoCaller]} {
+            set methodCall [lindex $infoCaller 2]
             set opts $args
         } else {
             # Gets arguments options
@@ -307,8 +309,10 @@ oo::define ticklecharts::chart {
 
         set template [lindex [dict get $opts -template] 0]
         # Read html template
-        set htemplate [ticklecharts::readHTMLTemplate $template]
-        set newhtml   [ticklecharts::htmlMap [my get] $htemplate $opts]
+        if {$methodCall ne "RenderJupyter"} {
+            set template [ticklecharts::readHTMLTemplate $template]
+        }
+        set newhtml [ticklecharts::htmlMap [my get] $template $opts]
 
         # Replaces json data in and return HTML...
         return [join [string map [list %json% $json] $newhtml] "\n"]

@@ -206,13 +206,14 @@ proc ticklecharts::readHTMLTemplate {template} {
             catch {close $fp}
         }
     } else {
-        # %json% attribute should be
-        # defined in html template string...
         set html [split $template "\n"]
-        if {[lsearch $html "*%json%*"] < 0} {
-            error "'%json%' attribute should be defined\
-                    in html 'template' string"
-        }
+    }
+
+    # %json% attribute should be
+    # defined in html template string...
+    if {[lsearch $html "*%json%*"] < 0} {
+        error "'%json%' attribute should be defined\
+                in html 'template' file|string"
     }
 
     return $html
