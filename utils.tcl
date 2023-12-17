@@ -643,21 +643,19 @@ proc ticklecharts::merge {d other} {
                 continue
             }
 
-            set mytype [ticklecharts::typeOf [dict get $other $key]]
-
             # REMINDER ME: use 'dict remove' for this...
-            if {$mytype eq "dict" || $type in {dict|null dict dict.o|null} || 
-                [string match {*list.o*} $type]} {
-                error "type key : dict, dict.o, list.o shouldn't\
-                       not be defined in 'other' dict... for '$key' property."
+            if {$type in {dict|null dict dict.o|null list.o|null list.o}} {
+                error "Default values for type dict, dict.o or list.o shouldn't\
+                       not be defined in 'other' dict... for '$key' key property."
             }
+
+            set value  [dict get $other $key]
+            set mytype [ticklecharts::typeOf $value]
 
             # check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 ticklecharts::errorType "set" $key $mytype $type $minversion $multiversions
             }
-
-            set value [dict get $other $key]
 
             # Verification of certain values (especially for string types)
             ticklecharts::formatEcharts $validvalue $value $key $mytype
