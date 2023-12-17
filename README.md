@@ -29,9 +29,9 @@ $chart Render
 set chart [ticklecharts::chart new]
 ```
 ##### Argument available :
-| args     | Type   | Default value
-| ------   | ------ | ------
-| _-theme_ | str    | `custom` (possible values: `vintage,westeros,wonderland,dark`)
+| args     | Description            | Default value
+| ------   | ------                 | ------
+| _-theme_ | Defines the theme name | `custom` (possible values: `vintage,westeros,wonderland,dark`)
 ```tcl
 # Initializes X axis with values
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
@@ -50,7 +50,7 @@ $chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 Here `-data` corresponds to the Y values.
 
 ```tcl
-# Export chart to html
+# Export chart to html file
 $chart Render
 ```
 ##### Arguments available :
@@ -95,7 +95,7 @@ $chart Yaxis
 `-dataItem` :
 ```tcl
 # Example for lineseries
-# Additional options are valid... see ticklecharts::lineItem in options.tcl
+# Additional options are valid... See ticklecharts::lineItem in options.tcl
 $chart Add "lineSeries" -dataItem {
                             {name "Mon" value 150}
                             {name "Tue" value 230}
@@ -115,7 +115,7 @@ set data(0) {
 
 # Init dataset class.
 # Note : Starting from version '2.6', it is possible 
-# to add several 'source' like this :
+# to add several 'items' like this :
 # > [list [list source $data(0) sourceHeader "True"] [list source $data(1) ...]]]
 set obj [ticklecharts::dataset new [list source $data(0) sourceHeader "True"]]
 
