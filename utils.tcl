@@ -660,7 +660,7 @@ proc ticklecharts::merge {d other} {
             set value [dict get $other $key]
 
             # Verification of certain values (especially for string types)
-            ticklecharts::formatEcharts $validvalue $value $key
+            ticklecharts::formatEcharts $validvalue $value $key $mytype
 
         } else {
             # Does not take this key, depending on the version used.
