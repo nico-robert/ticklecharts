@@ -535,7 +535,8 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
 }
 
 proc ticklecharts::keyCompare {d other} {
-    # Compare keys... Output warning message if key name doesn't exist, 
+    # Compares the keys of dictionaries.
+    # Output warning message if key name doesn't exist, 
     # in key default option...
     #
     # d      - dict
@@ -543,21 +544,26 @@ proc ticklecharts::keyCompare {d other} {
     #
     # Returns nothing
 
-    if {![ticklecharts::isDict $other] || $other eq ""} {
+    if {$other eq "" || ![ticklecharts::isDict $other]} {
         return {}
     }
 
-    set infoproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
     set keys1 [dict keys $d]
+    set limit 5 ; set j 1
 
     foreach k [dict keys $other] {
-        # Special case for 'dummy' key for theming...
-        if {[string match -nocase *dummy $k]} {
-            continue
-        }
+        # Special case for 'dummy' key for theming.
+        if {[string match -nocase *dummy $k]} {continue}
         if {$k ni $keys1} {
+            if {$j > $limit} {
+                error "The warning limit for key comparison\
+                       has been exceeded."
+            }
+            set level    [expr {[info level] - 1}]
+            set infoproc [ticklecharts::getLevelProperties $level]
             puts stderr "warning($infoproc): '$k' property is not in\
                         '[join $keys1 ", "]' or not supported..."
+            incr j
         }
     }
 
@@ -572,11 +578,10 @@ proc ticklecharts::merge {d other} {
     # other  - list values
     #
     # Returns a new dictionary
-
-    # Compare keys... output warning message if key name doesn't exist 
-    # in key default option...
     variable minProperties
 
+    # Output warning message if key name doesn't exist 
+    # in key default option.
     ticklecharts::keyCompare $d $other
 
     set _dict [dict create]
