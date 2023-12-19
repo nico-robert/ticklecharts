@@ -311,7 +311,7 @@ ticklecharts::eHuddleCritcl True
 source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200,000
 #             | This run (Mac Os Core i7)
 #    pure Tcl |   25354915 microseconds per iteration 
-#    critcl   |    6338728 microseconds per iteration (≃5x faster)
+#    critcl   |    6338728 microseconds per iteration (≃4x faster)
 ```
 `Note` : _No advantage to use this command with small data..._
 
