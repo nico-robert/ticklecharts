@@ -132,7 +132,6 @@ proc ticklecharts::setJsScript {html h mapoptions} {
     }
 
     return $html
-
 }
 
 proc ticklecharts::addJsScript {html value} {
