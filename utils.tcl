@@ -756,7 +756,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         set val [lindex $body $i]
         if {[string match {*infoNameProc*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
-            set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
+            regsub -all {[{}\[\]]} $val {} map
             foreach index [lsearch -all $map "*infoNameProc*"] {
                 lappend cmd [lindex $map $index+2]
             }
@@ -766,13 +766,13 @@ proc ticklecharts::infoOptions {key {indent 0}} {
 
         if {[string match {*whichSeries*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
-            set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
+            regsub -all {[{}\[\]]} $val {} map
             # case operator (in & eq).
             if {[string match {* in *} $val]} {
                 foreach index [lsearch -all $map "*whichSeries*"] {
                     if {[lrange $map $index+3 end] eq ""} {
                         # find next line
-                        set mapb [string map [list \{ "" \} ""] [lindex $body $i+1]]
+                        regsub -all {[{}]} [lindex $body $i+1] {} mapb
                         if {[string match {*Series*} $mapb]} {lappend cmd $mapb}
                         continue
                     }
@@ -795,8 +795,9 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         }
 
         if {$switch} {
-            if {[string match {*Series\" \{*} $val] && ![string match {*switch*} $val]} {
-                set map [string map [list \{ "" \} "" \] "" \[ ""] $val]
+            if {[string match {*Series\" \{*} $val] && 
+               ![string match {*switch*} $val]} {
+                regsub -all {[{}\[\]]} $val {} map
                 foreach index [lsearch -all $map "*Series*"] {
                     lappend cmd [lindex $map $index]
                 }
