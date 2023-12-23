@@ -124,7 +124,7 @@ oo::define ticklecharts::chart {
                     set methods {SetOptions}
                 }
                 "-globalOptions" {
-                    # no value required...
+                    # No value required.
                     if {[my getType] eq "chart3D"} {
                         return [ticklecharts::infoOptions "globalOptions3D"]
                     } else {
@@ -135,11 +135,14 @@ oo::define ticklecharts::chart {
                     set methods [lsearch -all -inline -nocase $methodClass *axis*]
                     lappend methods [lsearch -all -inline -nocase $methodClass *coordinate*]
                 }
-                default {error "Unknown key '$key' specified"}
+                default {
+                    error "Unknown key '$key' specified, should be '-series',\
+                          '-option', '-globalOptions' or '-axis' property."
+                }
             }
 
             if {$value eq ""} {
-                error "A value should be specified..."
+                error "A value should be specified with key property."
             }
 
             set info $value ; break
@@ -148,7 +151,7 @@ oo::define ticklecharts::chart {
         foreach method $methods {
             if {[catch {ticklecharts::classDef $typeOfClass $method} infomethod]} {continue}
             foreach linebody [split $infomethod "\n"] {
-                set linebody [string map [list \{ "" \} "" \] "" \[ ""] $linebody]
+                regsub -all {[{}\[\]]} $linebody {} linebody
                 set linebody [string trim $linebody]
                 if {[string match -nocase "*ticklecharts::$info*" $linebody]} {
                     if {[regexp {ticklecharts::([A-Za-z0-9]+)\s} $linebody -> match]} {
@@ -910,14 +913,14 @@ oo::define ticklecharts::chart {
         # It is the same thing that main method.
         #
         # Note : Probably that in my next major release, I would choose
-        # this way of writing to add a series... To ensure conformity with other
+        # this way of writing to add a series, to ensure conformity with other
         # classes (layout, timeline)
         #
         # Returns nothing
 
         if {[llength [lrange $args 1 end]] % 2} {
-            error "item list for '\[self] Add '[lindex $args 0]' method...'\
-                   must have an even number of elements."
+            error "wrong # args: [self] Add '[lindex $args 0]'\
+                   method must have an even number of elements."
         }
 
         switch -exact -- [lindex $args 0] {
@@ -957,8 +960,8 @@ oo::define ticklecharts::chart {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First argument for '[self method]' method should be\
-                      (case sensitive): '$series' instead of '[lindex $args 0]'"
+                error "wrong # args: First argument for '[self method]' method should\
+                       be (case sensitive): '$series' instead of '[lindex $args 0]'"
             }
         }
 
@@ -1007,7 +1010,8 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
         if {[llength $args] % 2} {
-            error "[self] SetOptions \$args must have an even number of elements..."
+            error "wrong # args: [self] SetOptions \$args must have\
+                   an even number of elements."
         }
 
         set opts {}
@@ -1015,7 +1019,7 @@ oo::define ticklecharts::chart {
         if {[dict exists $args -dataset]} {
             set dts [dict get $args -dataset]
             if {![ticklecharts::isdatasetClass $dts]} {
-                error "key value '-dataset' should be a 'dataset' Class..."
+                error "Property '-dataset' should be a 'dataset' Class."
             }
 
             foreach itemD [$dts get] {
@@ -1048,8 +1052,8 @@ oo::define ticklecharts::chart {
 
         if {[dict exists $args -visualMap]} {
             # v2.8.1
-            # keep compatibility with previous versions...
-            # 'visualMap' now accepts 'multiple' lists or 'one' like before...
+            # Keep compatibility with previous versions.
+            # 'visualMap' now accepts 'multiple' lists or 'one' like before.
             set key "-visualMap"
             if {![ticklecharts::keyValueIsListOfList $args $key]} {
                 dict set args $key [list [dict get $args $key]]
@@ -1065,8 +1069,8 @@ oo::define ticklecharts::chart {
 
         if {[dict exists $args -dataZoom]} {
             # v3.0.1
-            # keep compatibility with previous versions...
-            # 'dataZoom' now accepts 'one' list or 'multiple' lists like before...
+            # Keep compatibility with previous versions.
+            # 'dataZoom' now accepts 'one' list or 'multiple' lists like before.
             set key "-dataZoom"
             if {![ticklecharts::keyValueIsListOfList $args $key]} {
                 dict set args $key [list [dict get $args $key]]
@@ -1126,7 +1130,8 @@ oo::define ticklecharts::chart {
                 set f [ticklecharts::optsToEchartsHuddle [$value get]]
                 lappend _options $key [list {*}$f]
             } else {
-                error "should be an object... eDict or eList for this key: '$key'"
+                error "wrong # args: Should be an object\
+                      'eDict' or 'eList' for this key '$key'."
             }
         }
 

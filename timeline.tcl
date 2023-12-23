@@ -76,13 +76,13 @@ oo::define ticklecharts::timeline {
         # Returns nothing
 
         if {[llength $args] == 0} {
-             error "wrong # args: timeline arguments should not be equal\
-                                  to 0 for the 'Add' method."
+             error "wrong # args: 'timeline' arguments should not be equal\
+                    to 0 for the 'Add' method."
         }
 
         if {[$chart getType] ni {chart chart3D gridlayout}} {
-            error "First argument for 'Add' method should be a 'chart',\
-                  'chart3D' or 'gridlayout' class."
+            error "wrong # args: First argument for 'Add' method\
+                   should be a 'chart', 'chart3D' or 'gridlayout' class."
         }
 
         lappend _data [ticklecharts::timelineItem $args]
@@ -181,7 +181,8 @@ proc ticklecharts::timelineOpts {value} {
     # Returns dict options
 
     if {[llength $value] % 2} {
-        error "\[self\] SetOptions \$value must have an even number of elements..."
+        error "wrong # args: \[self\] SetOptions \$value\
+               must have an even number of elements."
     }
 
     setdef options -show              -minversion 5  -validvalue {}                      -type bool             -default "True"

@@ -28,7 +28,7 @@ oo::define ticklecharts::chart3D {
 
         set opts [my options]
 
-        # If globalOptions is not defined, adds global options first...
+        # If globalOptions is not defined, adds global options first.
         if {![llength [my globalOptions]]} {
             set optsg  [ticklecharts::globalOptions3D {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
@@ -223,14 +223,14 @@ oo::define ticklecharts::chart3D {
         # It is the same thing that main method.
         #
         # Note : Probably that in my next major release, I would choose
-        # this way of writing to add a 3D series... To ensure conformity with other
+        # this way of writing to add a 3D series, to ensure conformity with other
         # classes (layout, timeline)
         #
         # Returns nothing
 
         if {[llength [lrange $args 1 end]] % 2} {
-            error "item list for '\[self] Add '[lindex $args 0]' method...'\
-                   must have an even number of elements."
+            error "wrong # args: Item for '\[self] Add '[lindex $args 0]'\
+                   method must have an even number of elements."
         }
 
         switch -exact -- [lindex $args 0] {
@@ -252,8 +252,8 @@ oo::define ticklecharts::chart3D {
                 set series [format {%s or %s} \
                            [join [lrange $series 0 end-1] ", "] \
                            [lindex $series end]]
-                error "First argument for '[self method]' method should be\
-                      (case sensitive): '$series' instead of '[lindex $args 0]'"
+                error "wrong # args: First argument for '[self method]' method should\
+                       be (case sensitive): '$series' instead of '[lindex $args 0]'"
             }
         }
 
@@ -272,15 +272,16 @@ oo::define ticklecharts::chart3D {
         #
         # Returns nothing
         if {[llength $args] % 2} {
-            error "[self] SetOptions \$args must have an even number of elements..."
+            error "wrong # args: [self] SetOptions \$args must have\
+                   an even number of elements."
         }
 
         set opts {}
 
-        # Set options from chart '2D' class...
+        # Set options from chart '2D' class.
         set c [ticklecharts::chart new]
 
-        # remove options 3D even if this option is not defined.
+        # Remove options 3D even if this option is not defined.
         set args2D [dict remove $args "-grid3D" "-globe"]
         $c SetOptions {*}$args2D
 
@@ -310,7 +311,7 @@ oo::define ticklecharts::chart3D {
             lappend opts "@L=globe" [ticklecharts::globe $args]
         }
 
-        # delete keys from args to avoid warning for global options
+        # Delete keys from args to avoid warning for global options
         set keyList [list {*}[dict keys $opts] {*}$key2d]
         set keyopts [lmap k $keyList {lassign [split $k "="] _ key ; format -%s $key}]
         set newDict [dict remove $args {*}$keyopts]
@@ -327,7 +328,8 @@ oo::define ticklecharts::chart3D {
                 set f [ticklecharts::optsToEchartsHuddle [$value get]]
                 lappend _options $key [list {*}$f]
             } else {
-                error "should be an object... eDict or eList for this key: '$key'"
+                error "wrong # args: Should be an object\
+                       'eDict' or 'eList' for this key '$key'."
             }
         }
 

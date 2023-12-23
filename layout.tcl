@@ -3,7 +3,7 @@
 #
 namespace eval ticklecharts {}
 
-# This class allows you to add multiple charts on the same div...
+# This class allows you to add multiple charts on the same div.
 # The charts are not necessarily of the same type.
 # The first chart needs to be a graph with an x/y axis.
 
@@ -115,23 +115,23 @@ oo::define ticklecharts::Gridlayout {
             error "charts must have a key 'series'"
         }
 
-        # Not supported yet...
+        # Not supported yet.
         if {"graphic" in $keys} {
-            error "graphic not supported..."
+            error "graphic not supported."
         }
 
         if {([lsearch $keys grid*] == -1) && ($args eq "")} {
-            error "charts must have a grid key if no options..."
+            error "charts must have a grid key if no options."
         }
 
         switch -exact -- $chartType {
-            "chart"   {incr _indexchart2D ; lappend _charts2D $chart}
-            "chart3D" {incr _indexchart3D ; lappend _charts3D $chart}
-            default {error "class '$chartType' not supported..."}
+            chart   {incr _indexchart2D ; lappend _charts2D $chart}
+            chart3D {incr _indexchart3D ; lappend _charts3D $chart}
+            default {error "class '$chartType' not supported."}
         }
 
         set g 0 ; # variable for grid*
-        # Gets global options...
+        # Gets global options.
         set optsg [ticklecharts::globalOptions {}]
         set gopts [string map {- ""} [dict keys [$optsg get]]]
 
@@ -139,13 +139,13 @@ oo::define ticklecharts::Gridlayout {
 
             switch -glob -- $key {
                 *legend  {
-                    # Find data name in series if data legend is not specified...
+                    # Find data name in series if data legend is not specified.
                     if {[lsearch [dict keys $opts] *data] == -1 || [lsearch [dict keys $opts] @NULL=data] > -1} {
                         set data_name {}
                         foreach series_opts [lsearch -all [$chart options] *=series] {
                             set myserie [lindex [$chart options] [expr {$series_opts + 1}]]
 
-                            # if item data...
+                            # if item data.
                             if {[dict exists $myserie @DO=data @AO]} {
                                 foreach data_item [dict get $myserie @DO=data @AO] {
                                     if {[dict exists $data_item @S=name]} {
@@ -161,12 +161,12 @@ oo::define ticklecharts::Gridlayout {
                             }
 
                         }
-                        # add data name in legend...
+                        # Adds data name in legend.
                         dict set opts @LS=data [list $data_name]
                     }
                 }
                 *series  {
-                    # Force index axis chart if exists or not...
+                    # Force index axis chart if exists or not.
                     # 2D
                     if {[dict get $opts @S=type] in {bar line scatter effectScatter heatmap pictorialBar candlestick graph boxplot lines}} {
 
@@ -208,18 +208,18 @@ oo::define ticklecharts::Gridlayout {
                         }
                     }
 
-                    # Replace 'center' flag if exists by the one in args if exists...
+                    # Replace 'center' property if exists by the one in args if exists.
                     if {[dict get $opts @S=type] in {pie sunburst gauge}} {
                         if {[info exists center]} {
                             set mytype [ticklecharts::typeOf $center]
                             if {$mytype ne "list"} {
-                                error "'center' flag must be a list"
+                                error "'center' property must be a list"
                             }
                             dict set opts @LD=center [list $center]
                         }
                     }
 
-                    # Set position in series instead of grid... 
+                    # Set position in series instead of grid.
                     # For 'funnel', 'sankey', 'treemap', 'map' or 'wordCloud' chart
                     if {[dict get $opts @S=type] in {sankey funnel wordCloud treemap map}} {
                         set g 1
@@ -232,7 +232,8 @@ oo::define ticklecharts::Gridlayout {
                                     str     {dict set opts @S=$val $myvalue}
                                     str.e   {dict set opts @S=$val [$myvalue get]}
                                     num     {dict set opts @N=$val $myvalue}
-                                    default {error "$val must be a str or a float... now is $mytype"}
+                                    default {error "$val must be a string or a number,\
+                                                    currently this value is '$mytype'"}
                                 }
                             }
                         }
@@ -240,11 +241,10 @@ oo::define ticklecharts::Gridlayout {
                 }
                 *radar -
                 *polar {
-                    set coordinatecenter [lsearch -inline [dict keys $opts] *center]
                     if {[info exists center]} {
                         set mytype [ticklecharts::typeOf $center]
                         if {$mytype ne "list"} {
-                            error "'center' flag must be a list"
+                            error "'center' property must be a list"
                         }
                         dict set opts @LD=center [list $center]
                     }
@@ -274,7 +274,8 @@ oo::define ticklecharts::Gridlayout {
                                 str     {dict set opts @S=$val $myvalue}
                                 str.e   {dict set opts @S=$val [$myvalue get]}
                                 num     {dict set opts @N=$val $myvalue}
-                                default {error "$val must be a str or a float... now is $mytype"}
+                                default {error "$val must be a string or a number,\
+                                                currently this value is '$mytype'"}
                             }
                         }
                     }
@@ -287,8 +288,8 @@ oo::define ticklecharts::Gridlayout {
 
             if {$key in [my globalKeyOptions]} {
                 puts stderr "warning([self class]): '$key' in chart class is already\
-                     activated with 'SetGlobalOptions' method\
-                     it is not taken into account..."
+                             activated with 'SetGlobalOptions' method\
+                             it is not taken into account."
                 continue
             }
 
@@ -296,7 +297,7 @@ oo::define ticklecharts::Gridlayout {
         }
 
         # Check if grid is defined.
-        # Add grid option if no...
+        # Add grid option if no.
         if {!$g} {
             set f {}
             foreach val {top bottom left right width height} {
@@ -305,17 +306,18 @@ oo::define ticklecharts::Gridlayout {
                     set mytype [ticklecharts::typeOf $myvalue]
 
                     switch -exact -- $mytype {
-                        "str"   {lappend f @S=$val $myvalue}
-                        "str.e" {lappend f @S=$val [$myvalue get]}
-                        "num"   {lappend f @N=$val $myvalue}
-                        default {error "$val must be a str or a float... now is $mytype"}
+                        str     {lappend f @S=$val $myvalue}
+                        str.e   {lappend f @S=$val [$myvalue get]}
+                        num     {lappend f @N=$val $myvalue}
+                        default {error "$val must be a string or a number,\
+                                        currently this value is '$mytype'"}
                     }
                 }
             }
             if {[llength $f]} {
                 switch -exact -- $chartType {
-                    "chart"   {lappend _options @D=grid [list {*}$f]}
-                    "chart3D" {lappend _options @D=grid3D [list {*}$f]}
+                    chart   {lappend _options @D=grid [list {*}$f]}
+                    chart3D {lappend _options @D=grid3D [list {*}$f]}
                 }
             }
         }
@@ -324,17 +326,17 @@ oo::define ticklecharts::Gridlayout {
         # Error if yes , not possible.
         set keypolar [lsearch [dict keys $_options] *polar]
         if {!$_indexchart2D && $keypolar > -1} {
-            error "'Polar' mode should not be added first..."
+            error "'Polar' mode should not be added first."
         }
 
         # Check if radar key exists in first place
         # Error if yes , not possible.
         set keyradar [lsearch [dict keys $_options] *radar]
         if {!$_indexchart2D && $keyradar > -1} {
-            error "'Radar' mode should not be added first..."
+            error "'Radar' mode should not be added first."
         }
 
-        # Check if pie, sunburst, themeriver, sankey... chart type exists in first place
+        # Check if pie, sunburst, themeriver, sankey charts type exists in first place
         # Error if yes, not possible.
         if {[dict exists $_options @D=series @S=type]} {
             if {!$_indexchart2D} {
@@ -344,7 +346,7 @@ oo::define ticklecharts::Gridlayout {
                     wordCloud treemap map lines
                     }} {
                     error "'$series' in Gridlayout class should not\
-                           be added first..."
+                           be added first."
                 }
             }
         }
@@ -360,7 +362,7 @@ oo::define ticklecharts::Gridlayout {
         # Bug when several 'tooltip' < 5.3.0
         if {([ticklecharts::vCompare $::ticklecharts::echarts_version "5.3.0"] == -1) && 
             ([llength [lsearch -all -exact [my options] @D=tooltip]] > 1)} {
-            error "Several 'tooltip' not supported..."
+            error "Several 'tooltip' not supported."
         }
 
         # Insert or not global options in the top of list.
@@ -418,19 +420,19 @@ oo::define ticklecharts::Gridlayout {
         lappend _keyglob {*}[dict keys [$c options]]
 
         # Check if chart has dataset.
-        # Save if yes...
+        # Save if yes.
         if {[$c dataset] ne ""} {
             set _dataset [$c dataset]
         }
 
-        # destroy...
+        # destroy.
         $c destroy
 
         # Doesn't support 3D options
         set keys [dict keys $args]
         foreach opts3D {-grid3D -globe -geo3D -mapbox3D} {
             if {$opts3D in $keys} {
-                error "$opts3D (options 3D) not supported...\
+                error "$opts3D (options 3D) not supported\
                 with '[self method]' method"
             }
         }
