@@ -608,3 +608,10 @@ Release :
     - Changes the format of the `dataset` key property, the missing minus sign at the beginning of a key is also accepted.
     - Add `globe` examples.
     - Cosmetic changes.
+*  **24-Dec-2023** : 3.2.2
+    - Add `lines3D` series.
+    - Add `lines3D` examples.
+    - Add `toHTML` public method (Export chart as HTML fragment).
+    - Better handling of error messages and argument length.
+    - Add the `ticklecharts::eString` class as a new `ehuddle` type.
+    - Cosmetic changes.
