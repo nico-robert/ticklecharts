@@ -155,7 +155,7 @@ proc ticklecharts::addJsScript {html value} {
             }
             if {[set f [lsearch $html *$item*]] < 0} {
                 error "Not possible to find `$item` string\
-                       in the html template file..."
+                       in the html template file."
             }
             set listHtml [linsert $html $f+1 \
                          [format [list %-${indent}s %s] "" [join [$js get]]]]
@@ -174,12 +174,12 @@ proc ticklecharts::addJsScript {html value} {
                     }
                     if {[set f [lsearch $listHtml *$item*]] < 0} {
                         error "Not possible to find `$item` string\
-                               in the html template file..."
+                               in the html template file."
                     }
                     set listHtml [linsert $listHtml $f+1 \
                                  [format [list %-${indent}s %s] "" [join [$script get]]]]
                 } else {
-                    error "should be a 'jsfunc' class... in list data script."
+                    error "should be a 'jsfunc' class in list data script."
                 }
             }
         }
@@ -330,7 +330,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
         switch -exact -- $type {
             dict - dict.o {
                 if {![ticklecharts::iseDictClass $value]} {
-                    error "should be a eDict class..."
+                    error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$key {%s}" \
                             [ticklecharts::dictToEchartsHuddle [$value get]] \
@@ -406,7 +406,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
         switch -exact -- $type {
             dict {
                 if {![ticklecharts::iseDictClass $value]} {
-                    error "should be a eDict class..."
+                    error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$subkey %s" \
                             [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
@@ -414,7 +414,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
             }
             dict.o {
                 if {![ticklecharts::iseDictClass $value]} {
-                    error "should be a eDict class..."
+                    error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$subkey {%s}" \ 
                             [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
@@ -561,7 +561,7 @@ proc ticklecharts::keyCompare {d other} {
             set level    [expr {[info level] - 1}]
             set infoproc [ticklecharts::getLevelProperties $level]
             puts stderr "warning($infoproc): '$k' property is not in\
-                        '[join $keys1 ", "]' or not supported..."
+                        '[join $keys1 ", "]' or not supported."
             incr j
         }
     }
@@ -608,11 +608,11 @@ proc ticklecharts::merge {d other} {
             set lvers [split $minversion ":"]
 
             if {[llength $lvers] != [llength $vtype]} {
-                error "Each versions must matched with a type of keys..."
+                error "Each versions must matched with a type of keys."
             }
 
             if {[lsort -dictionary $lvers] ne $lvers} {
-                error "Each versions must be in ascending order..."
+                error "Each versions must be in ascending order."
             }
 
             set i 0 ; set version "nothing" ; set save_v "0.0.0"
@@ -631,7 +631,7 @@ proc ticklecharts::merge {d other} {
             # variable version is lower...
             if {$version eq "nothing"} {
                 puts stderr "warning(multi-versions): no versions found for '$key',\
-                            this key will not be taken into account..."
+                            this key will not be taken into account."
                 continue
             }
             set minversion $version
@@ -642,7 +642,7 @@ proc ticklecharts::merge {d other} {
         if {[dict exists $other $key]} {
 
             if {$vcompare > 0} {
-                puts stderr "warning(version): '$key' is not supported... in\
+                puts stderr "warning(version): '$key' is not supported with this version\
                             '$versionLib' (minimum version = '$minversion')"
                 continue
             }
@@ -650,7 +650,7 @@ proc ticklecharts::merge {d other} {
             # REMINDER ME: use 'dict remove' for this...
             if {$type in {dict|null dict dict.o|null list.o|null list.o}} {
                 error "Default values for type dict, dict.o or list.o shouldn't\
-                       not be defined in 'other' dict... for '$key' key property."
+                       not be defined in 'other' dict for '$key' key property."
             }
 
             set value  [dict get $other $key]
@@ -914,6 +914,24 @@ proc ticklecharts::keyDictExists {basekey d key} {
     return 0
 }
 
+proc ticklecharts::getValue {value key} {
+    # Get the value of key.
+    # Raise an error if item value is not even.
+    #
+    # value - dict value
+    # key   - key item value
+    #
+    # Returns dict value.
+
+    set d [dict get $value $key]
+
+    if {[llength $d] % 2} {
+        uplevel 1 {ticklecharts::errorEvenArgs}
+    }
+
+    return $d
+}
+
 proc ticklecharts::listNs {{parentns ::}} {
     # From https://wiki.tcl-lang.org/page/namespace
     #
@@ -1125,7 +1143,7 @@ proc ticklecharts::errorEvenArgs {} {
     uplevel 1 {
         error "wrong # args: item list for\
               '[ticklecharts::getLevelProperties [info level]]'\
-               must have an even number of elements..."
+               must have an even number of elements."
     }
 }
 
@@ -1141,8 +1159,8 @@ proc ticklecharts::errorKeyArgs {property value} {
         }
     ]
 
-     error "wrong # args: key '$value' must be defined\
-            in item property '$property' for '$levelP'"
+    error "wrong # args: key '$value' must be defined\
+           in item property '$property' for '$levelP'"
 }
 
 proc ::oo::Helpers::classvar {name} {

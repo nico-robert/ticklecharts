@@ -28,9 +28,8 @@ proc ticklecharts::grid3D {value} {
     #
     # Returns dict grid3D options
 
-    set d [dict get $value -grid3D]
-
-    if {[llength $d] % 2} ticklecharts::errorEvenArgs
+    # Gets key value.
+    set d [ticklecharts::getValue $value "-grid3D"]
 
     setdef options show                   -minversion 5  -validvalue {}           -type bool|null        -default "nothing"
     setdef options boxWidth               -minversion 5  -validvalue {}           -type num|null         -default 100
@@ -73,9 +72,8 @@ proc ticklecharts::globe {value} {
     #
     # Returns dict globe options
 
-    set d [dict get $value -globe]
-
-    if {[llength $d] % 2} ticklecharts::errorEvenArgs
+    # Gets key value.
+    set d [ticklecharts::getValue $value "-globe"]
 
     setdef options show                   -minversion 5  -validvalue {}               -type bool             -default "True"
     setdef options zlevel                 -minversion 5  -validvalue {}               -type num|null         -default -10
