@@ -147,7 +147,8 @@ proc ticklecharts::nameTextStyle3D {value} {
         return "nothing"
     }
 
-    set d [dict get $value $key]
+    # Gets key value.
+    set d [ticklecharts::getValue $value $key]
 
     setdef options color        -minversion 5  -validvalue formatColor       -type str|null  -default "nothing"
     setdef options borderWidth  -minversion 5  -validvalue {}                -type num       -default 0
