@@ -92,9 +92,9 @@ proc ticklecharts::globe {value} {
     setdef options displacementScale      -minversion 5  -validvalue {}               -type num|null         -default 0
     setdef options displacementQuality    -minversion 5  -validvalue formatDQuality   -type str              -default "medium"
     setdef options shading                -minversion 5  -validvalue formatShading3D  -type str|null         -default "nothing"
-    setdef options realisticMaterial      -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::realisticMaterial3D $value]
-    setdef options lambertMaterial        -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::lambertMaterial3D $value]
-    setdef options colorMaterial          -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::colorMaterial3D $value]
+    setdef options realisticMaterial      -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::realisticMaterial3D $d]
+    setdef options lambertMaterial        -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::lambertMaterial3D $d]
+    setdef options colorMaterial          -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::colorMaterial3D $d]
     setdef options light                  -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::light3D $d]
     setdef options atmosphere             -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::atmosphere3D $d]
     setdef options postEffect             -minversion 5  -validvalue {}               -type dict|null        -default [ticklecharts::postEffect3D $d]

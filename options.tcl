@@ -4569,8 +4569,8 @@ proc ticklecharts::breadcrumb {value} {
     setdef options bottom         -minversion 5       -validvalue formatBottom  -type str|num|null  -default "auto"
     setdef options height         -minversion 5       -validvalue {}            -type num           -default 22
     setdef options emptyItemWidth -minversion 5       -validvalue {}            -type num           -default 25
-    setdef options itemStyle      -minversion 5       -validvalue {}            -type dict|null     -default [ticklecharts::itemStyle $value]
-    setdef options emphasis       -minversion "5.4.0" -validvalue {}            -type dict|null     -default [ticklecharts::emphasis $value]
+    setdef options itemStyle      -minversion 5       -validvalue {}            -type dict|null     -default [ticklecharts::itemStyle $d]
+    setdef options emphasis       -minversion "5.4.0" -validvalue {}            -type dict|null     -default [ticklecharts::emphasis $d]
     #...
 
     # remove key(s)...
