@@ -448,7 +448,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                                 lappend tt [ticklecharts::dictToEchartsHuddle $vv]
                             }
                         }
-                        lappend l [list @D $tt]
+                        lappend l [list @A $tt]
                         continue
                     }
 
