@@ -183,7 +183,7 @@ $chart deleteSeries 1
 ```tcl
 $chart toJSON
 ```
-3. Export _chart_ as HTML fragment :
+4. Export _chart_ as HTML fragment :
 ```tcl
 $chart toHTML ?-template ?...
 ```
