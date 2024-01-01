@@ -15,7 +15,7 @@ proc ticklecharts::globalOptions {value} {
     setdef options -darkMode                -minversion 5  -validvalue {}            -type bool.t|null               -default [echartsOptsTheme darkMode]
     setdef options -backgroundColor         -minversion 5  -validvalue formatColor   -type str.t|jsfunc|e.color|null -default [echartsOptsTheme backgroundColor]
     setdef options -color                   -minversion 5  -validvalue formatColor   -type list.st|e.color|null      -default [echartsOptsTheme color]
-    setdef options -animation               -minversion 5  -validvalue {}            -type bool|str|null             -default "True"
+    setdef options -animation               -minversion 5  -validvalue {}            -type bool|null                 -default "True"
     setdef options -animationDuration       -minversion 5  -validvalue {}            -type num|null                  -default 1000
     setdef options -animationDurationUpdate -minversion 5  -validvalue {}            -type num|null                  -default 500
     setdef options -animationDelayUpdate    -minversion 5  -validvalue {}            -type jsfunc|null               -default "nothing"
