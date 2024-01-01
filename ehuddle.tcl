@@ -44,8 +44,8 @@ oo::define ticklecharts::ehuddle {
         # Returns huddle
 
         if {[llength $args] % 2} {
-            error "wrong # args: list must have an\
-                   even number of elements..."
+            error "wrong # args: 'ehuddle' list must have an\
+                   even number of elements."
         }
 
         set lhuddle {}
@@ -58,119 +58,76 @@ oo::define ticklecharts::ehuddle {
             # Transform key to huddle type...
             #
             switch -exact -- $type {
-                "@B"    {set value [huddle boolean $info]}
-                "@S"    {set value [huddle string $info]}
-                "@N"    {set value [huddle number $info]}
-                "@NULL" {set value [huddle null]}
-                "@SE"   {set value [huddle string [$info get]]}
-                "@LS"   {
-                            set value [huddle list {*}[join $info]]
-                        }
+                "@B"    {set value [list HUDDLE [list b [string tolower $info]]]}
+                "@S"    {set value [list HUDDLE [list s $info]]}
+                "@N"    {set value [list HUDDLE [list num $info]]}
+                "@NULL" {set value [list HUDDLE null]}
+                "@SE"   {set value [list HUDDLE [list s [$info get]]]}
+                "@LS"   {set value [huddle list {*}[join $info]]}
                 "@LN"   {
-                            set listv [ticklecharts::ehuddleListNum $info]
-                            set value [format {HUDDLE {L {%s}}} $listv]
-                        }
+                        set listv [ticklecharts::ehuddleListNum $info]
+                        set value [format {HUDDLE {L {%s}}} $listv]
+                    }
                 "@LD"   {
-                            if {[llength {*}$info] == 1} {
-                                set listv [ticklecharts::ehuddleListInsert $info]
-                            } else {
-                                set listv [ticklecharts::ehuddleListMap $info]
-                            }
-                            set value [format {HUDDLE {L {%s}}} $listv]
+                        if {[llength {*}$info] == 1} {
+                            set listv [ticklecharts::ehuddleListInsert $info]
+                        } else {
+                            set listv [ticklecharts::ehuddleListMap $info]
                         }
+                        set value [format {HUDDLE {L {%s}}} $listv]
+                    }
                 "@LJ"   {
-                            set subH {}
-                            foreach var {*}$info {
-                                lassign $var k vvv 
-                                lassign [split $k "="] type kk
-                                switch -exact -- $type {
-                                    "@LS"   {set h [huddle list {*}[join $vvv]]}
-                                    "@L"    {lappend subH [huddle create {*}[my set {*}$vvv]]}
-                                    default {error "no @LJ type '$type' specified for '$keyvalue'"}
-                                }
+                        set subH {}
+                        foreach var {*}$info {
+                            lassign $var k vvv 
+                            lassign [split $k "="] type _
+                            switch -exact -- $type {
+                                "@LS"   {set h [huddle list {*}[join $vvv]]}
+                                "@L"    {lappend subH [huddle create {*}[my set {*}$vvv]]}
+                                default {error "No @LJ type '$type' specified for '$keyvalue'."}
                             }
-                            set value [huddle append h {*}$subH]
-                       }
+                        }
+                        set value [huddle append h {*}$subH]
+                    }
                 "@JS"  {set value [huddle jsfunc [$info get]]}
                 "@D"   {set value [huddle list [huddle create {*}[my set {*}$info]]]}
                 "@L"   {set value [huddle create {*}[my set {*}$info]]}
                 "@AO"  {
-                            foreach lvalue $info {
-                                set subdata {}
-                                foreach {k val} $lvalue {
-                                    lassign [split $k "="] subtype subkeyvalue1
-
-                                    switch -exact -- $subtype {
-                                        "@L"    -
-                                        "@DO"   -
-                                        "@B"    -
-                                        "@S"    -
-                                        "@SE"   -
-                                        "@N"    -
-                                        "@NULL" -
-                                        "@JS"   -
-                                        "@LS"   -
-                                        "@LD"   -
-                                        "@LN"  {lappend subdata {*}[my set $k $val]}
-                                        default {error "(2) Unknown type '$subtype' specified for '$subkeyvalue1'"}
-                                    }
-                                }
-                                lappend lhuddle [huddle create {*}$subdata]
-                            }
-                            continue
-                        }
-                "@DO"   {
-                            set subdata {} ; set subdatalist {}
-                            foreach {k val} $info  {
-                                if {$k ne "@AO"} { error "key value must be @AO instead of '$k'"}
-                                set suv {}
-                                foreach vv $val {
-                                    set subdatalist {}
-                                    foreach {sk vk} $vv {
-                                        lassign [split $sk "="] subtype _
-                                        switch -exact -- $subtype {
-                                            "@D"  {
-                                                    set dlist {}
-                                                    foreach vald $vk {
-                                                        set llist {}
-                                                        foreach {subkeyvald subvald} $vald {
-                                                            set _subdata {}
-                                                            lassign [split $subkeyvald "="] subtype subkeyvalue1
-                                                            switch -exact -- $subtype {
-                                                                "@L"    -
-                                                                "@B"    -
-                                                                "@S"    -
-                                                                "@SE"    -
-                                                                "@N"    -
-                                                                "@NULL" -
-                                                                "@JS"   -
-                                                                "@LS"   -
-                                                                "@LD"   -
-                                                                "@LN"  {lappend _subdata {*}[my set $subkeyvald $subvald]}
-                                                                default {error "(3) Unknown type '$subtype' specified for '$subkeyvalue1'"}
-                                                            }
-
-                                                            if {$_subdata ne ""} {append llist "$_subdata "}
-                                                        }
-                                                        lappend dlist [huddle create {*}$llist]
-                                                    }
-                                                    lappend suv [huddle list {*}$dlist]
-                                            }
-                                            default {lappend subdatalist {*}[my set $sk $vk]}
+                        set suv {}
+                        foreach vv $info {
+                            set subdatalist {}
+                            foreach {sk vk} $vv {
+                                lassign [split $sk "="] subtype _
+                                switch -exact -- $subtype {
+                                    "@A" {
+                                        set dlist {}
+                                        foreach vald $vk {
+                                            set subdata [my set {*}$vald]
+                                            lappend dlist [huddle create {*}$subdata]
                                         }
+                                        lappend suv [huddle list {*}$dlist]
                                     }
-                                    if {[llength $subdatalist]} {
-                                        lappend suv [huddle create {*}$subdatalist]
-                                    }
+                                    default {lappend subdatalist {*}[my set $sk $vk]}
                                 }
-                                lappend subdata {*}$suv
                             }
-                            set value [huddle list {*}$subdata]
+                            if {[llength $subdatalist]} {
+                                lappend suv [huddle create {*}$subdatalist]
+                            }
                         }
-
-                default {error "(1) Unknown type '$type' specified for '$keyvalue'"}
+                        set value $suv
+                    }
+                "@DO"   {
+                        set subdata {}
+                        foreach {k val} $info {
+                            if {$k ne "@AO"} {
+                                error "Key value must be @AO instead of '$k'."
+                            }
+                            lappend subdata {*}[lindex [my set $k $val] end]
+                        }
+                        set value [huddle list {*}$subdata]
+                    }
+                default {error "Unknown type '$type' specified for '$keyvalue'."}
             }
-
             lappend lhuddle $keyvalue $value
         }
 
@@ -302,7 +259,7 @@ oo::define ticklecharts::ehuddle {
 proc ticklecharts::ehuddleNum val {
     # Returns format hudlle num
     if {[ticklecharts::typeOf $val] ne "num"} {
-        error "wrong # args: 'ehuddle' num '$val' is not a number"
+        error "wrong # args: 'ehuddle' num '$val' is not a number."
     }
 
     return [list num $val]
@@ -424,7 +381,7 @@ proc ticklecharts::eHuddleCritcl {bool} {
                 # Output a message to say that it is already running.
                 #
                 puts stderr "'ticklecharts::eHuddleCritcl' procedure\
-                             is already activated..."
+                             is already activated."
             }
 
         } else {
