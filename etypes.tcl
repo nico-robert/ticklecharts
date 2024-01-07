@@ -1,18 +1,20 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
     namespace ensemble create -command ::new
-    namespace export elist edict estr
+    namespace export elist elist.n elist.s edict estr
 }
 
 oo::class create ticklecharts::eList {
     variable _elist
+    variable _type
 
     constructor {args} {
         # Initializes a new eList Class.
         #
-        set _elist $args
+        set _elist [lrange $args 0 end-1]
+        set _type  [lindex $args end]
     }
 }
 
@@ -23,14 +25,19 @@ oo::define ticklecharts::eList {
     }
 
     method getType {} {
-        # Returns type
+        # Returns class type
         return "eList"
+    }
+
+    method lType {} {
+        # Returns type list
+        return $_type
     }
 }
 
-proc ticklecharts::elist {args} {
-    # This procedure substitutes a pure Tcl list...
-    # It can replace list types : 
+foreach ptype {elist elist.n elist.s} {
+    # This procedure substitutes a pure Tcl list.
+    # It can replace these list types :
     #   - list.s (list string)
     #   - list.n (list integer)
     #   - list.d (list integer || string or both)
@@ -43,16 +50,28 @@ proc ticklecharts::elist {args} {
     # new elist {"a" "b" "c"}
     # new elist {"a" "b"} {1 2}
     #
-    # Returns a eList object
-    return [ticklecharts::eList new $args]
+    # Note : 
+    # It is also possible to force the list type, 
+    # which replaces the list.d type and avoids 
+    # checking all the values in the list. 
+    # This is useful for improving performance 
+    # when we are certain of the type to be integrated. 
+    #
+    # Returns a eList object.
+    set tlist [string map {e ""} $ptype]
+    proc ticklecharts::${ptype} {args} [string map [list %tlist% $tlist] {
+            return [ticklecharts::eList new $args %tlist%]
+        }
+    ]
 }
 
 proc ticklecharts::iseListClass {value} {
-    # Check if value is eList class
+    # Check if value is eList class.
     #
     # value - obj or string
     #
-    # Returns true if 'value' is a eList class, false otherwise.
+    # Returns true if 'value' is a eList class, 
+    # false otherwise.
     return [expr {
             [string match {::oo::Obj[0-9]*} $value] && 
             [string match "*::eList" [ticklecharts::typeOfClass $value]]
@@ -83,7 +102,7 @@ oo::define ticklecharts::eDict {
 }
 
 proc ticklecharts::edict {value} {
-    # This procedure substitutes a pure Tcl dict...
+    # This procedure substitutes a pure Tcl dict.
     # It can replace dict types : 
     #   - dict   (pure dict)
     #   - dict.o (pure dict)
@@ -93,7 +112,7 @@ proc ticklecharts::edict {value} {
     # example :
     # new edict {key value key1 value1 ...}
     #
-    # Returns a eDict object
+    # Returns a eDict object.
 
     if {![ticklecharts::isDict $value]} {
         error "should be a dict representation..."
@@ -103,11 +122,12 @@ proc ticklecharts::edict {value} {
 }
 
 proc ticklecharts::iseDictClass {value} {
-    # Check if value is eDict class
+    # Check if value is eDict class.
     #
     # value - obj or string
     #
-    # Returns true if 'value' is a eDict class, false otherwise.
+    # Returns true if 'value' is a eDict class, 
+    # false otherwise.
     return [expr {
             [string match {::oo::Obj[0-9]*} $value] && 
             [string match "*::eDict" [ticklecharts::typeOfClass $value]]
@@ -138,20 +158,21 @@ oo::define ticklecharts::eString {
 }
 
 proc ticklecharts::estr {str} {
-    # This procedure substitutes a pure Tcl string...
+    # This procedure substitutes a pure Tcl string.
     # 
     # str - string
     #
-    # Returns a eString object
+    # Returns a eString object.
     return [ticklecharts::eString new $str]
 }
 
 proc ticklecharts::iseStringClass {value} {
-    # Check if value is eString class
+    # Check if value is eString class.
     #
     # value - obj or string
     #
-    # Returns true if 'value' is a eString class, false otherwise.
+    # Returns true if 'value' is a eString class, 
+    # false otherwise.
     return [expr {
             [string match {::oo::Obj[0-9]*} $value] && 
             [string match "*::eString" [ticklecharts::typeOfClass $value]]
