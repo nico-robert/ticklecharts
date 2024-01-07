@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -294,19 +294,19 @@ oo::define ticklecharts::chart {
 
 	    if {[llength $args] % 2} {
             error "wrong # args: should be \"[self] [self method]\
-            	         ?-title title? ...\""
+            	   ?-title title? ...\""
         }
 
         set json [my toJSON] ; # jsondump
 
         # Check if the method was invoked from 
         # inside another object method.
-        set methodCall "nothing"
         if {![catch {self caller} infoCaller]} {
             set methodCall [lindex $infoCaller 2]
             set opts $args
         } else {
             # Gets arguments options
+            set methodCall "nothing"
             set opts [ticklecharts::renderOptions $args [self method]]
         }
 
