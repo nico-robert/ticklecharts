@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -211,11 +211,11 @@ oo::define ticklecharts::Gridlayout {
                     # Replace 'center' property if exists by the one in args if exists.
                     if {[dict get $opts @S=type] in {pie sunburst gauge}} {
                         if {[info exists center]} {
-                            set mytype [ticklecharts::typeOf $center]
-                            if {$mytype ne "list"} {
-                                error "'center' property must be a list"
+                            switch -exact -- [ticklecharts::typeOf $center] {
+                                list    {dict set opts @LD=center [list $center]}
+                                list.e  {dict set opts @LD=center [$center get]}
+                                default {error "layout 'center' property must be a list"}
                             }
-                            dict set opts @LD=center [list $center]
                         }
                     }
 
@@ -227,7 +227,6 @@ oo::define ticklecharts::Gridlayout {
                             if {[info exists [set val]]} {
                                 set myvalue [expr $[set val]]
                                 set mytype [ticklecharts::typeOf $myvalue]
-
                                 switch -exact -- $mytype {
                                     str     {dict set opts @S=$val $myvalue}
                                     str.e   {dict set opts @S=$val [$myvalue get]}
@@ -242,11 +241,11 @@ oo::define ticklecharts::Gridlayout {
                 *radar -
                 *polar {
                     if {[info exists center]} {
-                        set mytype [ticklecharts::typeOf $center]
-                        if {$mytype ne "list"} {
-                            error "'center' property must be a list"
+                        switch -exact -- [ticklecharts::typeOf $center] {
+                            list    {dict set opts @LD=center [list $center]}
+                            list.e  {dict set opts @LD=center [$center get]}
+                            default {error "layout 'center' property must be a list"}
                         }
-                        dict set opts @LD=center [list $center]
                     }
                 }
                 *visualMap {
