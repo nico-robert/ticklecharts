@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -302,7 +302,7 @@ proc ticklecharts::typeOf {value} {
         switch -glob -- [ticklecharts::typeOfClass $value] {
             "*::jsfunc"  {return jsfunc}
             "*::eColor"  {return e.color}
-            "*::eList"   {return list}
+            "*::eList"   {return list.e}
             "*::eDict"   {return dict}
             "*::eString" {return str.e}
         }
@@ -505,22 +505,37 @@ proc ticklecharts::setdef {d key args} {
     dict set _dict $key [list $default $type $validvalue $minversion $versionLib $trace]
 }
 
-proc ticklecharts::matchTypeOf {mytype type keyt} {
+proc ticklecharts::matchTypeOf {mytype type keyt value} {
     # Guess type, follow optional list.
     # 
     # mytype - type
     # type   - list default type
-    # keyt   - upvar key type 
+    # keyt   - upvar key type
+    # value  - Just to know the type of list 
+    #          for the 'eList' class.
     #
     # Returns true if mytype is found, 
-    # false otherwise
+    # false otherwise.
 
     upvar 1 $keyt typekey
 
-    # If variable 'mytype' is a eString class,
-    # replaces default values 'type' by new type.
-    if {$mytype eq "str.e"} {
-        set type [string map {str str.e str.t str.et} $type]
+    switch -exact -- $mytype {
+        str.e {
+            # If variable 'mytype' is a eString class,
+            # replaces default values 'type' by new type.
+            set type [string map {str str.e str.t str.et} $type]
+        }
+        list.e {
+            # If variable 'mytype' is a eList class,
+            # replaces default values 'type' by new type.
+            # Only valid for replace these type list.d list.dt.
+            set lType [$value lType]
+            set mytype $lType
+            if {$lType ne "list"} {
+                set lmap [list list.d $lType list.dt ${lType}t]
+                set type [string map $lmap $type]
+            }
+        }
     }
 
     foreach valtype [split $type "|"] {
@@ -536,7 +551,7 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
 proc ticklecharts::keyCompare {d other} {
     # Compares the keys of dictionaries.
     # Output warning message if key name doesn't exist, 
-    # in key default option...
+    # in key default option.
     #
     # d      - dict
     # other  - list values
@@ -594,13 +609,13 @@ proc ticklecharts::merge {d other} {
             if {[dict exists $other $key]} {
                 set namevalue [dict get $other $key]
                 # Force string representation.
-                if {[ticklecharts::typeOf $namevalue] ni {str str.e}} {
+                if {[ticklecharts::typeOf $namevalue] ni {str str.e null}} {
                     dict set other $key [new estr $namevalue]
                 }
             }
         }
 
-        # Several versions for same key...
+        # Several versions for same key.
         set multiversions 0
         if {[string match {*:*} $minversion]} {
             set multiversions 1
@@ -657,8 +672,8 @@ proc ticklecharts::merge {d other} {
             set mytype [ticklecharts::typeOf $value]
 
             # check type in default list
-            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
-                ticklecharts::errorType "set" $key $mytype $type $minversion $multiversions
+            if {![ticklecharts::matchTypeOf $mytype $type typekey $value]} {
+                ticklecharts::errorType "set" $key $mytype $type $minversion $multiversions $value
             }
 
             # Verification of certain values (especially for string types)
@@ -671,8 +686,8 @@ proc ticklecharts::merge {d other} {
             set mytype [ticklecharts::typeOf $value]
 
             # check type in default list
-            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
-                ticklecharts::errorType "default" $key $mytype $type $minversion $multiversions
+            if {![ticklecharts::matchTypeOf $mytype $type typekey $value]} {
+                ticklecharts::errorType "default" $key $mytype $type $minversion $multiversions $value
             }
             # Minimum properties...
             # Only write values that are defined in the *.tcl file.
@@ -894,12 +909,12 @@ proc ticklecharts::keysOptsThemeExists {name} {
 }
 
 proc ticklecharts::keyDictExists {basekey d key} {
-    # Check if keyname exists in dict.
+    # Check if key exists in dict.
     #
     # d   - dict
     # key - upvar name
     #
-    # Returns true if key name match,
+    # Returns true if key name exists,
     # false otherwise.
 
     upvar 1 $key name
@@ -946,7 +961,7 @@ proc ticklecharts::listNs {{parentns ::}} {
 }
 
 proc ticklecharts::keyValueIsListOfList {value key} {
-    # Check if key 'value' is a list of list...
+    # Checks if key 'value' is of type list of list.
     #
     # value - list options
     # key   - key option
@@ -961,7 +976,7 @@ proc ticklecharts::keyValueIsListOfList {value key} {
 }
 
 proc ticklecharts::isListOfList {args} {
-    # Check if 'value' is a list of list...
+    # Checks if the 'value' is of type list of list.
     #
     # args - list
     #
@@ -969,7 +984,7 @@ proc ticklecharts::isListOfList {args} {
     # false otherwise.
 
     # clean up the list... (spaces, \n...)
-    regsub -all -line {(^\s+)|(\s+$)|\n} $args {} str
+    regsub -all -line {(^\s+)|(\s+$)|\n|\t} $args {} str
 
     return [expr {
             [string range $str 0 1] eq "\{\{" &&
@@ -994,7 +1009,7 @@ proc ticklecharts::uuid {} {
         if {$c == "4"} {
             append uuid $c ; continue
         }
-        set r [ticklecharts::random 16]
+        set r [expr {int(rand() * 16)}]
         if {$d > 0} {
             set r [expr {($d + $r) % 16 | 0}]
             set d [expr {int($d / 16.)}]
@@ -1011,13 +1026,6 @@ proc ticklecharts::uuid {} {
     }
 
     return $uuid
-}
-
-proc ticklecharts::random {val} {
-    # Returns random number.
-    #
-    # val - num
-    return [expr {int(rand() * $val)}]
 }
 
 proc ticklecharts::getLevelProperties {level} {
@@ -1103,7 +1111,7 @@ proc ticklecharts::whichSeries? {levelP} {
 }
 
 proc ticklecharts::isURL? {url} {
-    # Check if 'url' is valid...
+    # Checks whether the url is valid.
     #
     # url - string
     #
@@ -1113,7 +1121,7 @@ proc ticklecharts::isURL? {url} {
 }
 
 proc ticklecharts::urlExists? {url} {
-    # Check if 'url' exists, if 'checkURL' variable
+    # Checks whether the url exists, when 'checkURL' variable
     # is set to True. 'curl' util for testing.
     # I suppose if available for all platforms.
     # Platform tested :
@@ -1172,7 +1180,7 @@ proc ::oo::Helpers::classvar {name} {
     #
     # Returns nothing
     if {([info exists ::argv0] && ([info script] eq "$::argv0")) ||
-        ($::ticklecharts::env in {"tsb" "jupyter"})} {
+        ($::ticklecharts::env in {tsb jupyter})} {
         set ns [info object namespace [uplevel 1 {self class}]]
         set vs [list $name $name]
 
@@ -1215,7 +1223,7 @@ proc ticklecharts::ldset {varList to default} {
     return {}
 }
 
-proc ticklecharts::errorType {what key mytype type minversion multiversions} {
+proc ticklecharts::errorType {what key mytype type minversion multiversions value} {
     # Error message for incorrect type.
     #
     # what           - message type
@@ -1224,11 +1232,16 @@ proc ticklecharts::errorType {what key mytype type minversion multiversions} {
     # type           - default list type (*|*)
     # minversion     - minimum version
     # multiversions  - boolean value for multi-versions
+    # value          - Just to know the type of list 
+    #                  for the 'eList' class.
     #
     # Throws an error
 
-    set type   [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
-    set mytype [string map {.e ""} $mytype]
+    set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
+    switch -exact -- $mytype {
+        str.e  {set mytype "str"}
+        list.e {set mytype [$value lType]}
+    }
 
     if {$multiversions} {
         error "bad type($what) for this key '$key'= $mytype\
