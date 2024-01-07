@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -176,7 +176,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         }
 
         formatColor {
-            if {$type eq "list"} {
+            if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
                     if {[ticklecharts::isListOfList [$value get]]} {
                         set value {*}[$value get]
@@ -419,7 +419,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         }
 
         formatItemSymbol {
-            if {$type eq "list"} {
+            if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
                     if {[ticklecharts::isListOfList [$value get]]} {
                         set value {*}[$value get]
@@ -1014,7 +1014,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {rect polygon keep clear}
 
-            if {$type eq "list"} {
+            if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
                     if {[ticklecharts::isListOfList [$value get]]} {
                         set value {*}[$value get]
@@ -1088,7 +1088,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         }
 
         formatTimelineMerge {
-            if {$type eq "list"} {
+            if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
                     if {[ticklecharts::isListOfList [$value get]]} {
                         set value {*}[$value get]
@@ -1182,7 +1182,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatBRadius {
             # possible values...
-            if {$type eq "list"} {
+            if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
                     if {[ticklecharts::isListOfList [$value get]]} {
                         set value {*}[$value get]
@@ -1199,7 +1199,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] >= 0} {
                     set len [llength {*}$value]
                     if {![expr {$len == 2 || $len == 4}]} {
-                        error "length of list should be equal to 2 or 4"
+                        error "length of list should be equal to 2 or 4."
                     }
                 }
             }
