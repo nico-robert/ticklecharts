@@ -12,7 +12,9 @@ proc ticklecharts::formatEcharts {formattype value key type} {
     # key        - key flag.
     # type       - type of value.
     #
-    # Returns nothing.
+    # Returns nothing or raise an error if the value does
+    # not match the default values or does not exactly conform
+    # to a range of values.
     variable echarts_version
 
     if {$formattype eq ""} {
@@ -27,7 +29,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
     if {$value eq "nothing" || $value eq "null"} {
         return {}
     }
-
+    
     set nameproc [ticklecharts::getLevelProperties [expr {[info level] - 1}]]
 
     switch -exact -- $formattype {
@@ -36,8 +38,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {self blank}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -45,8 +47,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {auto left right center}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                       for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -54,8 +56,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {auto top bottom middle}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                       for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -63,10 +65,10 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatBarGap {
             # possible values...
             if {![regexp {^[-0-9.]+%$} $value]} {
-                error "$key ($nameproc) : The gap between bars between different series,\
-                      is a percent value like '30%', which means 30% of the bar width.\
-                      Set barGap as '-100%' can overlap bars that belong to different series,\
-                      which is useful when making a series of bar be background."
+                errorEFormat "$key ($nameproc) : The gap between bars between different series,\
+                    is a percent value like '30%', which means 30% of the bar width.\
+                    Set barGap as '-100%' can overlap bars that belong to different series,\
+                    which is useful when making a series of bar be background."
             }
         }
 
@@ -84,9 +86,9 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                error "$key ($nameproc) : value can be instant pixel value like 20;\
-                       it can also be a percentage value relative to container width like '20%';\
-                       and it can also be 'auto', left', 'center', or 'right'"
+                errorEFormat "$key ($nameproc) : value can be instant pixel value like 20;\
+                    it can also be a percentage value relative to container width like '20%';\
+                    and it can also be 'auto', left', 'center', or 'right'"
             }
         }
 
@@ -105,11 +107,11 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                error "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
-                       Percent value: For example, can be a string '33%', means the final result\
-                       should be calculated by this value and the height of its parent.\
-                       'center': means position the element in the middle of according to its parent.\
-                       Only one between left and right can work."
+                errorEFormat "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
+                    Percent value: For example, can be a string '33%', means the final result\
+                    should be calculated by this value and the height of its parent.\
+                    'center': means position the element in the middle of according to its parent.\
+                    Only one between left and right can work."
             }
         }
 
@@ -128,11 +130,11 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                error "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
-                       Percent value: For example, can be a string '33%', means the final result\
-                       should be calculated by this value and the height of its parent.\
-                       'middle': means position the element in the middle of according to its parent.\
-                       Only one between top and bottom can work."
+                errorEFormat "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
+                    Percent value: For example, can be a string '33%', means the final result\
+                    should be calculated by this value and the height of its parent.\
+                    'middle': means position the element in the middle of according to its parent.\
+                    Only one between top and bottom can work."
             }
         }
 
@@ -150,9 +152,9 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                error "$key ($nameproc) value can be instant pixel value like 20;\
-                       it can also be a percentage value relative to container width like '20%';\
-                       and it can also be 'auto', top', 'middle', or 'bottom'"
+                errorEFormat "$key ($nameproc) value can be instant pixel value like 20;\
+                    it can also be a percentage value relative to container width like '20%';\
+                    and it can also be 'auto', top', 'middle', or 'bottom'"
             }
         }
 
@@ -170,8 +172,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                error "$key ($nameproc) value can be instant pixel value like 20;\
-                       it can also be a percentage value relative to container width like '20%'."
+                errorEFormat "$key ($nameproc) value can be instant pixel value like 20;\
+                    it can also be a percentage value relative to container width like '20%'."
             }
         }
 
@@ -205,7 +207,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
 
                 if {!$match} {
-                    error "$key ($nameproc). Color can be represented in RGB, for example 'rgb(128, 128, 128)'.\
+                    errorEFormat "$key ($nameproc). Color can be represented in RGB,\for example 'rgb(128, 128, 128)'.\
                         RGBA can be used when you need alpha channel, for example 'rgba(128, 128, 128, 0.5)'.\
                         You may also use hexadecimal format, for example '#ccc'"
                 }
@@ -216,8 +218,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {normal italic oblique}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -226,8 +228,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {normal bold bolder lighter}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -240,8 +242,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {inherit solid dashed dotted}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -250,8 +252,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {truncate break breakAll none}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -259,8 +261,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {item axis none}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -268,16 +270,16 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {mousemove click}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
         formatTriggerOn {
             # possible values...
             set validvalue {mousemove click mousemove|click none}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -285,8 +287,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {html richText}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -295,8 +297,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {inside top left right bottom}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                            for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -305,8 +307,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {seriesAsc seriesDesc valueAsc valueDesc}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -314,8 +316,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {line shadow none cross}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -323,8 +325,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {auto x y radius angle}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -341,8 +343,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                             bounceInOut
                             }
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -350,8 +352,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {inherit butt round square}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -359,8 +361,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {bevel round miter}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -368,8 +370,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             if {$type eq "num"} {
                 if {![expr {$value >= 0 && $value <= 1}]} {
-                    error "'$value' should be between '0' and '1'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be between '0' and '1'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -378,8 +380,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {plain scroll}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -387,8 +389,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {horizontal vertical}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -397,8 +399,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {auto left right}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -412,8 +414,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
 
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -441,8 +443,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                     }
                 }
                 if {!$match} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -451,8 +453,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {series data}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -475,8 +477,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -484,8 +486,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {lttb average max min sum}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -493,8 +495,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {sequential mod}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -502,24 +504,24 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {x y}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatStartangle {
             # possible values...
             if {![expr {$value >= 0 && $value <= 360}]} {
-                error "'$value' should be between '0' and '360'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be between '0' and '360'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatEndangle {
             # possible values...
             if {![expr {$value <= 0 && $value >= -360}]} {
-                error "'$value' should be between '0' and '-360'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be between '0' and '-360'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -527,8 +529,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {expansion scale}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -536,8 +538,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {expansion transition}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -546,8 +548,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {descending ascending none desc asc}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -556,8 +558,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {center left right right}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -592,8 +594,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
 
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -602,8 +604,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {shiftX shiftY}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -611,8 +613,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {none coordinateSystem series global}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -620,8 +622,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {value category time log}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -629,8 +631,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {start middle center end}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -638,8 +640,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {polygon circle}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -647,8 +649,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {curve polyline}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -656,8 +658,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {top bottom}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -665,8 +667,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {left right}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -675,8 +677,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {auto}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -688,8 +690,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 ne-resize nw-resize n-resize se-resize sw-resize s-resize w-resize
             }
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -697,8 +699,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {all raw}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -721,8 +723,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
             }
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -731,8 +733,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {spline}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -741,8 +743,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {split clone}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -751,8 +753,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {auto}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -761,8 +763,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {none labelLine edge}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -771,8 +773,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {radius area}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -782,8 +784,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {start middle end}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -792,8 +794,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {start middle end}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -801,8 +803,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {stroke fill}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -810,8 +812,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {canvas svg}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -819,8 +821,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {png jpg svg}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -828,8 +830,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {filter weakFilter empty none}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -837,8 +839,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {left right top bottom}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -851,8 +853,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -861,13 +863,13 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {radial tangential}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             } elseif {$type eq "num"} {
                 if {![expr {$value >= -90 && $value <= 90}]} {
-                    error "'$value' should be between '-90' and '90'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be between '-90' and '90'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -881,8 +883,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -890,15 +892,16 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {LR RL TB BT}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatEForkPosition  {
             # possible values...
             if {![regexp {^[0-9.]+%$} $value]} {
-                error "'$value' should be be between\['0%', '100%'\]"
+                errorEFormat "'$value' should be be between\['0%', '100%'\]\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -907,8 +910,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {scale move}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -917,16 +920,16 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {left right justify}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                       for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatMaxMin {
             # possible values...
             if {![expr {$value >= 0 && $value <= 100}]} {
-                error "'$value' should be between '0' and '100'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be between '0' and '100'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -935,8 +938,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {shift ctrl alt}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -945,8 +948,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {filter sort ecSimpleTransform:aggregate ecStat:regression boxplot}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -954,8 +957,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {number float int ordinal time}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -963,8 +966,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {row column}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -973,8 +976,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {undefined auto}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -983,8 +986,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {start end center}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -993,8 +996,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {fixed}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1004,8 +1007,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {start end}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1024,8 +1027,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
                 foreach val {*}$value {
                     if {$val ni $validvalue} {
-                        error "'$value' should be '[formatMsgError $validvalue]'\
-                                for this key: '$key' in $nameproc"
+                        errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                            for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
             }
@@ -1036,8 +1039,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {all none}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1046,8 +1049,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {rect polygon lineX lineY}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1055,8 +1058,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {single multiple}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1064,8 +1067,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {debounces fixRate}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1073,8 +1076,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {slider}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1082,8 +1085,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {time category value}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1104,8 +1107,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 # possible values...
                 set validvalue {xAxis series}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1114,8 +1117,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {left right}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1128,8 +1131,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
             }
             if {!$match} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1138,15 +1141,17 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             set validvalue {circle cardioid diamond triangle-forward triangle
                             pentagon triangle-upright star square}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatDataBox {
             foreach val $value {
                 if {[llength $val] != 5} {
-                    error "'val' should be a list of 5 elements :\[min,  Q1,  median (or Q2),  Q3,  max\]"
+                    errorEFormat "'val' should be a list of 5 elements :\
+                        \[min,  Q1,  median (or Q2),  Q3,  max\]\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1155,8 +1160,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {value index id}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1164,8 +1169,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {samesign all positive negative}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1174,8 +1179,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {auto start end}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1193,13 +1198,15 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] < 0} {
                     set len [llength {*}$value]
                     if {$len != 2} {
-                        error "length of list should be equal to 2."
+                        errorEFormat "length of list should be equal to 2\
+                            for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] >= 0} {
                     set len [llength {*}$value]
                     if {![expr {$len == 2 || $len == 4}]} {
-                        error "length of list should be equal to 2 or 4."
+                        errorEFormat "length of list should be equal to 2 or 4\
+                            for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
             }
@@ -1209,8 +1216,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {render emphasis}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1219,14 +1226,14 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {radial tangential}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
             if {$type eq "num"} {
                 if {![expr {$value >= -90 && $value <= 90}]} {
-                    error "'$value' should be between '-90' and '90'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be between '-90' and '90'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1236,8 +1243,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {show hide}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1245,8 +1252,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {scatter effectScatter}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1255,12 +1262,14 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 if {[ticklecharts::vCompare $echarts_version "5.2.2"] >= 0} {
                     if {[string toupper $value] ne $value} {
-                        error "Case sensitive is not respected for '$value'"
+                        errorEFormat "Case sensitive is not respected for '$value'\
+                            for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
                 if {[ticklecharts::vCompare $echarts_version "5.2.2"] < 0} {
                     if {[string tolower $value] ne $value} {
-                        error "Case sensitive is not respected for '$value'"
+                        errorEFormat "Case sensitive is not respected for '$value'\
+                            for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
             }
@@ -1270,8 +1279,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {linear radial}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1279,8 +1288,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {repeat-x repeat-y no-repeat repeat}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1289,16 +1298,16 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatRangeSymbolSize {
             # possible values...
             if {![expr {$value >= 0 && $value <= 1}]} {
-                error "'$value' should be between '0' and '1'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be between '0' and '1'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
         formatRangeRotation {
             # possible values... (in radians)
             if {![expr {$value >= -3.141592 && $value <= 3.141592}]} {
-                error "'$value' should be between '-Pi()' and 'Pi()'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be between '-Pi()' and 'Pi()'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1307,8 +1316,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             if {$type eq "str"} {
                 set validvalue {roadmap satellite hybrid terrain}
                 if {$value ni $validvalue} {
-                    error "'$value' should be '[formatMsgError $validvalue]'\
-                            for this key: '$key' in $nameproc"
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
                 }
             }
         }
@@ -1317,8 +1326,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {source-over lighter}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1328,8 +1337,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {low medium high ultra}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1337,8 +1346,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {perspective orthogonal orthographic}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1346,8 +1355,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {cw ccw}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1355,8 +1364,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {left middle right}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1364,8 +1373,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {color lambert realistic}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1373,8 +1382,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {overlay blend}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -1382,18 +1391,16 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             set validvalue {albedo emission}
             if {$value ni $validvalue} {
-                error "'$value' should be '[formatMsgError $validvalue]'\
-                        for this key: '$key' in $nameproc"
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
-
-
     }
 
     return {}
 }
 
-proc ticklecharts::formatMsgError {values} {
+proc ticklecharts::eFormat {values} {
     # Formatting possible values.
     #
     # values - list.
@@ -1405,9 +1412,20 @@ proc ticklecharts::formatMsgError {values} {
 
     set newl [lsort -dictionary $values]
     set newl [format {%s or %s} \
-                    [join [lrange $newl 0 end-1] ", "] \
-                    [lindex $newl end] \
-            ]
+        [join [lrange $newl 0 end-1] ", "] \
+        [lindex $newl end] \
+    ]
 
     return $newl
+}
+
+proc ticklecharts::errorEFormat {msg} {
+    # Returns an error message related 
+    # to the incorrect format of the property.
+    #
+    # msg - string error message.
+    #
+    # Raise an error.
+    return -level [info level] \
+           -code error "wrong # eformat: $msg"
 }

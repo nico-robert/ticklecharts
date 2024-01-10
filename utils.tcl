@@ -154,7 +154,7 @@ proc ticklecharts::addJsScript {html value} {
                 null   {set item "%jschartvar%"}
             }
             if {[set f [lsearch $html *$item*]] < 0} {
-                error "Not possible to find `$item` string\
+                error "Not possible to find '$item' string\
                        in the html template file."
             }
             set listHtml [linsert $html $f+1 \
@@ -173,13 +173,15 @@ proc ticklecharts::addJsScript {html value} {
                         null   {set item "%jschartvar%"}
                     }
                     if {[set f [lsearch $listHtml *$item*]] < 0} {
-                        error "Not possible to find `$item` string\
+                        error "Not possible to find '$item' string\
                                in the html template file."
                     }
                     set listHtml [linsert $listHtml $f+1 \
-                                 [format [list %-${indent}s %s] "" [join [$script get]]]]
+                                 [format [list %-${indent}s %s] \
+                                 "" [join [$script get]]]]
                 } else {
-                    error "should be a 'jsfunc' class in list data script."
+                    error "wrong # args: should be a 'jsfunc'\
+                           class in list data script."
                 }
             }
         }
@@ -208,11 +210,11 @@ proc ticklecharts::readHTMLTemplate {template} {
         set html [split $template "\n"]
     }
 
-    # %json% attribute should be
-    # defined in html template string...
+    # %json% attribute should be defined in html template.
     if {[lsearch $html "*%json%*"] < 0} {
-        error "'%json%' attribute should be defined\
-                in html 'template' file|string"
+        return -level [info level] \
+                -code error  "wrong # html: '%json%' attribute\
+                should be defined in html file or string 'template'"
     }
 
     return $html
@@ -505,14 +507,12 @@ proc ticklecharts::setdef {d key args} {
     dict set _dict $key [list $default $type $validvalue $minversion $versionLib $trace]
 }
 
-proc ticklecharts::matchTypeOf {mytype type keyt value} {
+proc ticklecharts::matchTypeOf {mytype type keyt} {
     # Guess type, follow optional list.
     # 
     # mytype - type
     # type   - list default type
     # keyt   - upvar key type
-    # value  - Just to know the type of list 
-    #          for the 'eList' class.
     #
     # Returns true if mytype is found, 
     # false otherwise.
@@ -529,9 +529,10 @@ proc ticklecharts::matchTypeOf {mytype type keyt value} {
             # If variable 'mytype' is a eList class,
             # replaces default values 'type' by new type.
             # Only valid for replace these type list.d list.dt.
-            set lType [$value lType]
+            upvar 1 value obj
+            set lType [$obj lType]
             set mytype $lType
-            if {$lType ne "list"} {
+            if {$lType in {list.s list.n}} {
                 set lmap [list list.d $lType list.dt ${lType}t]
                 set type [string map $lmap $type]
             }
@@ -658,22 +659,23 @@ proc ticklecharts::merge {d other} {
 
             if {$vcompare > 0} {
                 puts stderr "warning(version): '$key' is not supported with this version\
-                            '$versionLib' (minimum version = '$minversion')"
+                            '$versionLib' (minimum version = '$minversion'),\
+                            this key will not be taken into account."
                 continue
             }
 
             # REMINDER ME: use 'dict remove' for this...
             if {$type in {dict|null dict dict.o|null list.o|null list.o}} {
-                error "Default values for type dict, dict.o or list.o shouldn't\
-                       not be defined in 'other' dict for '$key' key property."
+                error "wrong # type: default values for type dict, dict.o or list.o\
+                       shouldn't not be defined in 'other' dict for '$key' key property."
             }
 
             set value  [dict get $other $key]
             set mytype [ticklecharts::typeOf $value]
 
             # check type in default list
-            if {![ticklecharts::matchTypeOf $mytype $type typekey $value]} {
-                ticklecharts::errorType "set" $key $mytype $type $minversion $multiversions $value
+            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
+                errorType "set" $key $mytype $type $minversion $multiversions
             }
 
             # Verification of certain values (especially for string types)
@@ -686,8 +688,8 @@ proc ticklecharts::merge {d other} {
             set mytype [ticklecharts::typeOf $value]
 
             # check type in default list
-            if {![ticklecharts::matchTypeOf $mytype $type typekey $value]} {
-                ticklecharts::errorType "default" $key $mytype $type $minversion $multiversions $value
+            if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
+                errorType "default" $key $mytype $type $minversion $multiversions
             }
             # Minimum properties...
             # Only write values that are defined in the *.tcl file.
@@ -1038,10 +1040,8 @@ proc ticklecharts::getLevelProperties {level} {
 
     for {set i $level} {$i > 0} {incr i -1} {
         set name [lindex [info level $i] 0]
-        if {[string match {ticklecharts::*} $name] && 
-            $name ne "ticklecharts::formatEcharts"} {
+        if {[string match {ticklecharts::*} $name]} {
             set property [string map {ticklecharts:: ""} $name]
-
             if {$property ni $properties} {
                 lappend properties $property
             }
@@ -1062,23 +1062,18 @@ proc ticklecharts::checkJsFunc {opts method} {
     # javascript code, an error otherwise.
 
     set map [string map {"{" "" "}" ""} $opts]
-    set error 0
+
     foreach index [lsearch -all $map "@JS=*"] {
-        if {$index > -1} {
-            set value [lindex $map $index+1]
-            switch -glob -- {*}[$value get] {
-                "*function*" -
-                "*new echarts.*" {
-                    set error 1 ; break
-                }
+        set value [lindex $map $index+1]
+        switch -glob -- {*}[$value get] {
+            "*function*" -
+            "*new echarts.*" {
+                return -level [info level] -code error \
+                    "wrong # js: 'function', 'variable'...\
+                    inside 'Json data' is not\
+                    supported with '$method' method."
             }
         }
-    }
-
-    if {$error} {
-        return -code error \
-        "'function', 'variable'... inside\
-         'Json data' is not supported with '$method' method."
     }
 
     return {}
@@ -1148,11 +1143,12 @@ proc ticklecharts::errorEvenArgs {} {
     # Error number of elements.
     #
     # Raise an error.
-    uplevel 1 {
-        error "wrong # args: item list for\
-              '[ticklecharts::getLevelProperties [info level]]'\
-               must have an even number of elements."
-    }
+    set level  [uplevel 1 {info level}]
+    set levelP [ticklecharts::getLevelProperties $level]
+
+    return -level [info level] \
+           -code error "wrong # args: item list for\
+                       '$levelP' must have an even number of elements."
 }
 
 proc ticklecharts::errorKeyArgs {property value} {
@@ -1162,13 +1158,12 @@ proc ticklecharts::errorKeyArgs {property value} {
     # value    - name
     #
     # Raise an error.
-    set levelP [uplevel 1 {
-            ticklecharts::getLevelProperties [info level]
-        }
-    ]
+    set level  [uplevel 1 {info level}]
+    set levelP [ticklecharts::getLevelProperties $level]
 
-    error "wrong # args: key '$value' must be defined\
-           in item property '$property' for '$levelP'"
+    return -level [info level] \
+           -code error "wrong # args: key '$value' must be defined\
+                        in item property '$property' for '$levelP'."
 }
 
 proc ::oo::Helpers::classvar {name} {
@@ -1223,7 +1218,7 @@ proc ticklecharts::ldset {varList to default} {
     return {}
 }
 
-proc ticklecharts::errorType {what key mytype type minversion multiversions value} {
+proc ticklecharts::errorType {what key mytype type minversion multiversions} {
     # Error message for incorrect type.
     #
     # what           - message type
@@ -1232,22 +1227,35 @@ proc ticklecharts::errorType {what key mytype type minversion multiversions valu
     # type           - default list type (*|*)
     # minversion     - minimum version
     # multiversions  - boolean value for multi-versions
-    # value          - Just to know the type of list 
-    #                  for the 'eList' class.
     #
-    # Throws an error
-
+    # Throws an error.
     set type [string map {.t "" .st ".s" .dt ".d" .nt ".n"} $type]
     switch -exact -- $mytype {
         str.e  {set mytype "str"}
-        list.e {set mytype [$value lType]}
+        list.e {
+            upvar 1 value obj
+            set mytype [$obj lType]
+        }
+    }
+
+    # Info level procedure.
+    set level  [info level]
+    set levelP [ticklecharts::getLevelProperties $level]
+
+    # Reformats the default list 'type' for easier reading.
+    set t [split $type "|"]
+    if {[llength $t] > 1} {
+        set type [format {%s or %s} \
+            [join [lrange $t 0 end-1] ", "] [lindex $t end] \
+        ]
     }
 
     if {$multiversions} {
-        error "bad type($what) for this key '$key'= $mytype\
-               should be '$type' for '$minversion' version"
+        return -level $level -code error "wrong # etype($what): property '$key'\
+            for this '$minversion' version should be '$type' instead of '$mytype'\
+            in '$levelP' level procedure."
     } else {
-        error "bad type($what) for this key '$key'= $mytype\
-               should be '$type'"
+        return -level $level -code error "wrong # etype($what): property '$key'\
+            should be '$type' instead of '$mytype' for '$levelP' level procedure."
     }
 }
