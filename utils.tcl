@@ -211,7 +211,7 @@ proc ticklecharts::readHTMLTemplate {template} {
     }
 
     # %json% attribute should be defined in html template.
-    if {[lsearch $html "*%json%*"] < 0} {
+    if {[lsearch $html *%json%*] < 0} {
         return -level [info level] \
                 -code error  "wrong # html: '%json%' attribute\
                 should be defined in html file or string 'template'"
@@ -302,11 +302,11 @@ proc ticklecharts::typeOf {value} {
 
     if {[ticklecharts::isAObject $value]} {
         switch -glob -- [ticklecharts::typeOfClass $value] {
-            "*::jsfunc"  {return jsfunc}
-            "*::eColor"  {return e.color}
-            "*::eList"   {return list.e}
-            "*::eDict"   {return dict}
-            "*::eString" {return str.e}
+            *::jsfunc  {return jsfunc}
+            *::eColor  {return e.color}
+            *::eList   {return list.e}
+            *::eDict   {return dict}
+            *::eString {return str.e}
         }
     }
 
@@ -493,14 +493,14 @@ proc ticklecharts::setdef {d key args} {
 
     foreach {k value} $args {
         switch -exact -- $k {
-            "-minWCversion" {set minversion $value ; set versionLib $wc_version}
-            "-minGMversion" {set minversion $value ; set versionLib $gmap_version}
-            "-minversion"   {set minversion $value}
-            "-validvalue"   {set validvalue $value}
-            "-type"         {set type       $value}
-            "-trace"        {set trace      $value}
-            "-default"      {set default    $value}
-            default         {error "Unknown key '$k' specified"}
+            -minWCversion {set minversion $value ; set versionLib $wc_version}
+            -minGMversion {set minversion $value ; set versionLib $gmap_version}
+            -minversion   {set minversion $value}
+            -validvalue   {set validvalue $value}
+            -type         {set type       $value}
+            -trace        {set trace      $value}
+            -default      {set default    $value}
+            default       {error "Unknown key '$k' specified"}
         }
     }
 
@@ -530,7 +530,9 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
             # replaces default values 'type' by new type.
             # Only valid for replace these type list.d list.dt.
             upvar 1 value obj
-            set lType [$obj lType]
+            if {[catch {$obj lType} lType]} {
+                error "wrong # args: $lType"
+            }
             set mytype $lType
             if {$lType in {list.s list.n}} {
                 set lmap [list list.d $lType list.dt ${lType}t]
@@ -571,13 +573,13 @@ proc ticklecharts::keyCompare {d other} {
         if {[string match -nocase *dummy $k]} {continue}
         if {$k ni $keys1} {
             if {$j > $limit} {
-                error "The warning limit for key comparison\
-                       has been exceeded."
+                return -level [info level] -code error \
+                    "The warning limit for key comparison has been exceeded."
             }
             set level    [expr {[info level] - 1}]
             set infoproc [ticklecharts::getLevelProperties $level]
             puts stderr "warning($infoproc): '$k' property is not in\
-                        '[join $keys1 ", "]' or not supported."
+                        '[join [lsort -dict $keys1] ", "]' or not supported."
             incr j
         }
     }
@@ -774,7 +776,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         if {[string match {*infoNameProc*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
             regsub -all {[{}\[\]]} $val {} map
-            foreach index [lsearch -all $map "*infoNameProc*"] {
+            foreach index [lsearch -all $map *infoNameProc*] {
                 lappend cmd [lindex $map $index+2]
             }
             set ifnP "**[join $cmd " || "]**"
@@ -786,7 +788,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
             regsub -all {[{}\[\]]} $val {} map
             # case operator (in & eq).
             if {[string match {* in *} $val]} {
-                foreach index [lsearch -all $map "*whichSeries*"] {
+                foreach index [lsearch -all $map *whichSeries*] {
                     if {[lrange $map $index+3 end] eq ""} {
                         # find next line
                         regsub -all {[{}]} [lindex $body $i+1] {} mapb
@@ -799,7 +801,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
                 set cmd {}
             }
             if {[string match {* eq *} $val]} {
-                foreach index [lsearch -all $map "*whichSeries*"] {
+                foreach index [lsearch -all $map *whichSeries*] {
                     lappend cmd [lindex $map $index+3]
                 }
                 set ifnP "**[join $cmd " || "]**"
@@ -815,7 +817,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
             if {[string match {*Series\" \{*} $val] && 
                ![string match {*switch*} $val]} {
                 regsub -all {[{}\[\]]} $val {} map
-                foreach index [lsearch -all $map "*Series*"] {
+                foreach index [lsearch -all $map *Series*] {
                     lappend cmd [lindex $map $index]
                 }
                 set ifnP "**[join $cmd " || "]**"
@@ -971,7 +973,7 @@ proc ticklecharts::keyValueIsListOfList {value key} {
     # Returns true if key value is a list of list,
     # false otherwise.
 
-    set lflag [lsearch $value "*$key*"]
+    set lflag [lsearch $value *$key*]
     set range [lindex $value $lflag+1]
 
     return [ticklecharts::isListOfList $range]
@@ -1063,11 +1065,11 @@ proc ticklecharts::checkJsFunc {opts method} {
 
     set map [string map {"{" "" "}" ""} $opts]
 
-    foreach index [lsearch -all $map "@JS=*"] {
+    foreach index [lsearch -all $map @JS=*] {
         set value [lindex $map $index+1]
-        switch -glob -- {*}[$value get] {
-            "*function*" -
-            "*new echarts.*" {
+        switch -glob -- [$value get] {
+            *function* -
+            *new*echarts.* {
                 return -level [info level] -code error \
                     "wrong # js: 'function', 'variable'...\
                     inside 'Json data' is not\
@@ -1091,7 +1093,7 @@ proc ticklecharts::procDefaultValue {proc key} {
 
     if {[set lineProc [lsearch $myProc *$key*]] > -1} {
         set opts [lindex $myProc $lineProc]
-        if {[set d [lsearch -exact $opts "-default"]] > -1} {
+        if {[set d [lsearch -exact $opts -default]] > -1} {
             return [lindex $opts $d+1]
         }
     }
@@ -1174,7 +1176,7 @@ proc ::oo::Helpers::classvar {name} {
     # name - variable
     #
     # Returns nothing
-    if {([info exists ::argv0] && ([info script] eq "$::argv0")) ||
+    if {([info exists ::argv0] && ([info script] eq $::argv0)) ||
         ($::ticklecharts::env in {tsb jupyter})} {
         set ns [info object namespace [uplevel 1 {self class}]]
         set vs [list $name $name]
@@ -1234,7 +1236,9 @@ proc ticklecharts::errorType {what key mytype type minversion multiversions} {
         str.e  {set mytype "str"}
         list.e {
             upvar 1 value obj
-            set mytype [$obj lType]
+            if {[catch {$obj lType} mytype]} {
+                error "wrong # etype($what) : $mytype"
+            }
         }
     }
 
