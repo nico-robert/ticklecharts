@@ -10,11 +10,11 @@ oo::class create ticklecharts::eList {
     variable _elist
     variable _type
 
-    constructor {args} {
+    constructor {value type} {
         # Initializes a new eList Class.
         #
-        set _elist [lrange $args 0 end-1]
-        set _type  [lindex $args end]
+        set _elist $value
+        set _type  $type
     }
 }
 
