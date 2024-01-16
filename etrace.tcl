@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -378,15 +378,35 @@ proc ticklecharts::track {properties} {
             "xAxis.id" -
             "yAxis.id" {
                 # Some axis combinations are not allowed.
-                foreach subkey {
+                foreach axisID {
                     angleAxis.id radiusAxis.id radarCoordinate.id 
                     singleAxis.id parallelAxis.id
                 } {
-                    if {[dict exists $properties $subkey]} {
+                    if {[dict exists $properties $axisID]} {
                         set axis1 [lindex [split $keyP "."] 0]
-                        set axis2 [lindex [split $subkey "."] 0]
+                        set axis2 [lindex [split $axisID "."] 0]
                         return -code error "'$axis2' not suitable with '$axis1'"
                     }
+                }
+            }
+            "barSeries(*).data"  -
+            "lineSeries(*).data" {
+                if {$value ne ""} {
+                    foreach axis {xAxis yAxis} {
+                        if {[dict exists $properties $axis.data]} {
+                            set val [dict get $properties $axis.data]
+                            if {($val ne "nothing") && [llength $value] > 1} {
+                                return -code error "'$keyP' is defined as \[\[X, Y] \[...]], data\
+                                    '$axis.data' property should not exist."
+                            }
+                        }
+                    }                    
+                }
+            }
+            "xAxis.data" -
+            "yAxis.data" {
+                if {($value ne "nothing") && [llength $value] > 1} {
+                    return -code error "'$keyP' cannot be defined as \[\[X, Y] \[...]]."
                 }
             }
         }

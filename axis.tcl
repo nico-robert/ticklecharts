@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -135,7 +135,7 @@ proc ticklecharts::xAxis {chart value} {
     setdef options -id             -minversion 5       -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -show           -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
     setdef options -type           -minversion 5       -validvalue formatType          -type str|null            -trace yes  -default "category"
-    setdef options -data           -minversion 5       -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
+    setdef options -data           -minversion 5       -validvalue {}                  -type list.d|null         -trace yes  -default "nothing"
     setdef options -gridIndex      -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -alignTicks     -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace no   -default "nothing"
     setdef options -position       -minversion 5       -validvalue formatXAxisPosition -type str                 -trace no   -default "bottom"
@@ -201,7 +201,7 @@ proc ticklecharts::yAxis {chart value} {
     setdef options -realtimeSort    -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
     setdef options -sortSeriesIndex -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -type            -minversion 5       -validvalue formatType          -type str|null            -trace yes  -default "value"
-    setdef options -data            -minversion 5       -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
+    setdef options -data            -minversion 5       -validvalue {}                  -type list.d|null         -trace yes  -default "nothing"
     setdef options -name            -minversion 5       -validvalue {}                  -type str|null            -trace no   -default "nothing"
     setdef options -nameLocation    -minversion 5       -validvalue formatNameLocation  -type str                 -trace no   -default "end"
     setdef options -nameTextStyle   -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $value]

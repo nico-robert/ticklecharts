@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -49,7 +49,7 @@ proc ticklecharts::barSeries {index chart value} {
     setdef options -progressive             -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
     setdef options -progressiveThreshold    -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
     setdef options -progressiveChunkMode    -minversion 5       -validvalue formatPChunkMode     -type str|null        -trace no   -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                   -type list.d          -trace no   -default {}
+    setdef options -data                    -minversion 5       -validvalue {}                   -type list.d          -trace yes  -default {}
     setdef options -markLine                -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::markLine $value]
     setdef options -markPoint               -minversion 5       -validvalue {}                   -type dict|null       -trace no   -default [ticklecharts::markPoint $value]
     setdef options -zlevel                  -minversion 5       -validvalue {}                   -type num             -trace no   -default 0
@@ -93,7 +93,7 @@ proc ticklecharts::barSeries {index chart value} {
             error "'chart' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::barItem $value $itemKey]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::barItem $value $itemKey]
     } else {
         if {![dict exists $value -data]} {
             error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
@@ -159,7 +159,7 @@ proc ticklecharts::lineSeries {index chart value} {
     setdef options -smooth                  -minversion 5       -validvalue {}                  -type bool.t|num.t       -trace no   -default [echartsOptsTheme lineSeries.smooth]
     setdef options -smoothMonotone          -minversion 5       -validvalue formatSMonotone     -type str|null           -trace no   -default "nothing"
     setdef options -sampling                -minversion 5       -validvalue formatSampling      -type str|null           -trace no   -default "nothing"
-    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d             -trace no   -default {}
+    setdef options -data                    -minversion 5       -validvalue {}                  -type list.d             -trace yes  -default {}
     setdef options -markPoint               -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markPoint $value]
     setdef options -markLine                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markLine $value]
     setdef options -markArea                -minversion 5       -validvalue {}                  -type dict|null          -trace no   -default [ticklecharts::markArea $value]
@@ -204,7 +204,7 @@ proc ticklecharts::lineSeries {index chart value} {
             error "'chart' object cannot contains '-data' and '$itemKey'... for\
                    '[ticklecharts::getLevelProperties [info level]]'"
         }
-        setdef options -data -minversion 5  -validvalue {} -type list.o -default [ticklecharts::lineItem $value $itemKey]
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::lineItem $value $itemKey]
     } else {
         if {![dict exists $value -data]} {
             error "Property '-data' not defined for '[ticklecharts::getLevelProperties [info level]]'"
