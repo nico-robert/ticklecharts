@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -63,7 +63,13 @@ oo::define ticklecharts::ehuddle {
                 "@N"    {set value [list HUDDLE [list num $info]]}
                 "@NULL" {set value [list HUDDLE null]}
                 "@SE"   {set value [list HUDDLE [list s [$info get]]]}
-                "@LS"   {set value [huddle list {*}[join $info]]}
+                "@LS"   {
+                        if {[llength $info] == 1} {
+                            set value [huddle list {*}[join $info]]
+                        } else {
+                            set value [huddle list {*}$info]
+                        }
+                    }
                 "@LN"   {
                         set listv [ticklecharts::ehuddleListNum $info]
                         set value [format {HUDDLE {L {%s}}} $listv]
