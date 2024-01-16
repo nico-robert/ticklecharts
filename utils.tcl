@@ -335,19 +335,16 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                     error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$key {%s}" \
-                            [ticklecharts::dictToEchartsHuddle [$value get]] \
-                            ]
+                    [ticklecharts::dictToEchartsHuddle [$value get]] \
+                ]
             }
             list.o {
                 set l {}
-                if {([llength $value] == 1) && [ticklecharts::iseListClass $value]} {
-                    set value {*}[$value get]
-                }
                 foreach val $value {
                     if {[ticklecharts::iseDictClass $val]} {
                         lappend l [ticklecharts::dictToEchartsHuddle [$val get]]
                     } elseif {[ticklecharts::iseListClass $val]} {
-                        lappend l [ticklecharts::dictToEchartsHuddle [lindex {*}[$val get] 0]]
+                        lappend l [ticklecharts::dictToEchartsHuddle {*}[$val get]]
                     } else {
                         lappend l [ticklecharts::dictToEchartsHuddle $val]
                     }
@@ -356,7 +353,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             }
             list.st - list.s {
                 if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$key %s" [$value get]]
+                    append opts [format " ${htype}=$key {%s}" [$value get]]
                 } else {
                     append opts [format " ${htype}=$key {%s}" $value]
                 }
@@ -377,8 +374,8 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             }
             e.color {
                 append opts [format " ${htype}=$key {%s}" \
-                            [ticklecharts::dictToEchartsHuddle [$value get]] \
-                            ]
+                    [ticklecharts::dictToEchartsHuddle [$value get]] \
+                ]
             }
             default {
                 append opts [format " ${htype}=$key %s" $value]
@@ -411,8 +408,8 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                     error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$subkey %s" \
-                            [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
-                            ]
+                    [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
+                ]
             }
             dict.o {
                 if {![ticklecharts::iseDictClass $value]} {
@@ -424,14 +421,14 @@ proc ticklecharts::dictToEchartsHuddle {options} {
             }
             list.st - list.s {
                 if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$subkey %s" [$value get]]
+                    append opts [format " ${htype}=$subkey {%s}" [$value get]]
                 } else {
                     append opts [format " ${htype}=$subkey {%s}" $value]
                 }
             }
             list.dt - list.d - list.nt - list.n {
                 if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$subkey {%s}" [$value get]]
+                    append opts [format " ${htype}=$subkey {%s}" [list [$value get]]]
                 } else {
                     append opts [format " ${htype}=$subkey {%s}" [list $value]]
                 }
@@ -445,7 +442,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                             if {[ticklecharts::iseDictClass $vv]} {
                                 lappend tt [ticklecharts::dictToEchartsHuddle [$vv get]]
                             } elseif {[ticklecharts::iseListClass $vv]} {
-                                lappend tt [ticklecharts::dictToEchartsHuddle [lindex {*}[$vv get] 0]]
+                                lappend tt [ticklecharts::dictToEchartsHuddle {*}[$vv get]]
                             } else {
                                 lappend tt [ticklecharts::dictToEchartsHuddle $vv]
                             }
@@ -460,8 +457,8 @@ proc ticklecharts::dictToEchartsHuddle {options} {
             }
             e.color {
                 append opts [format " ${htype}=$subkey {%s}" \
-                            [ticklecharts::dictToEchartsHuddle [$value get]] \
-                            ]
+                    [ticklecharts::dictToEchartsHuddle [$value get]] \
+                ]
             }
             default {
                 append opts [format " ${htype}=$subkey %s" $value]

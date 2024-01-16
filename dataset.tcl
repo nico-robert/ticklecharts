@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -215,10 +215,10 @@ oo::define ticklecharts::dataset {
         set ns [namespace qualifiers [self class]]
 
         if {[ticklecharts::iseListClass $d]} {
-            if {![ticklecharts::isListOfList [$d get]]} {
+            if {![ticklecharts::isListOfList {*}[$d get]]} {
                 error "'source' should be a list of list..."
             }
-            foreach item {*}[lindex [$d get] 0] {
+            foreach item {*}[$d get] {
                 if {[llength $item] % 2} {
                     error "source 'item' list must have an even number of elements..."
                 }

@@ -180,13 +180,12 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatColor {
             if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
-                    if {[ticklecharts::isListOfList [$value get]]} {
-                        set value {*}[$value get]
-                    } else {
-                        set value [$value get]
-                    }
+                    set value [$value get]
                 }
-                foreach val {*}$value {
+                if {[llength $value] == 1} {
+                    set value {*}$value
+                }
+                foreach val $value {
                     ticklecharts::formatEcharts $formattype $val $key [ticklecharts::typeOf $val]
                 }
             }
@@ -207,9 +206,9 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
 
                 if {!$match} {
-                    errorEFormat "$key ($nameproc). Color can be represented in RGB,\for example 'rgb(128, 128, 128)'.\
+                    errorEFormat "$key ($nameproc). Color can be represented in RGB, for example 'rgb(128, 128, 128)'.\
                         RGBA can be used when you need alpha channel, for example 'rgba(128, 128, 128, 0.5)'.\
-                        You may also use hexadecimal format, for example '#ccc'"
+                        You may also use hexadecimal format, for example '#ccc'. The current value is '$value'"
                 }
             }
         }
@@ -423,13 +422,12 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatItemSymbol {
             if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
-                    if {[ticklecharts::isListOfList [$value get]]} {
-                        set value {*}[$value get]
-                    } else {
-                        set value [$value get]
-                    }
+                    set value [$value get]
                 }
-                foreach val {*}$value {
+                if {[llength $value] == 1} {
+                    set value {*}$value
+                }
+                foreach val $value {
                     ticklecharts::formatEcharts $formattype $val $key [ticklecharts::typeOf $val]
                 }
             }
@@ -1019,13 +1017,12 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
             if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
-                    if {[ticklecharts::isListOfList [$value get]]} {
-                        set value {*}[$value get]
-                    } else {
-                        set value [$value get]
-                    }
+                    set value [$value get]
                 }
-                foreach val {*}$value {
+                if {[llength $value] == 1} {
+                    set value {*}$value
+                }
+                foreach val $value {
                     if {$val ni $validvalue} {
                         errorEFormat "'$value' should be '[eFormat $validvalue]'\
                             for this key: '$key' in '$nameproc' level procedure."
@@ -1093,13 +1090,12 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatTimelineMerge {
             if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
-                    if {[ticklecharts::isListOfList [$value get]]} {
-                        set value {*}[$value get]
-                    } else {
-                        set value [$value get]
-                    }
+                    set value [$value get]
                 }
-                foreach val {*}$value {
+                if {[llength $value] == 1} {
+                    set value {*}$value
+                }
+                foreach val $value {
                     ticklecharts::formatEcharts $formattype $val $key [ticklecharts::typeOf $val]
                 }
             }
@@ -1189,21 +1185,20 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             if {$type in {list list.e}} {
                 if {[ticklecharts::iseListClass $value]} {
-                    if {[ticklecharts::isListOfList [$value get]]} {
-                        set value {*}[$value get]
-                    } else {
-                        set value [$value get]
-                    }
+                    set value [$value get]
                 }
+                if {[llength $value] == 1} {
+                    set value {*}$value
+                }
+                set len [llength $value]
+
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] < 0} {
-                    set len [llength {*}$value]
                     if {$len != 2} {
                         errorEFormat "length of list should be equal to 2\
                             for this key: '$key' in '$nameproc' level procedure."
                     }
                 }
                 if {[ticklecharts::vCompare $echarts_version "5.3.0"] >= 0} {
-                    set len [llength {*}$value]
                     if {![expr {$len == 2 || $len == 4}]} {
                         errorEFormat "length of list should be equal to 2 or 4\
                             for this key: '$key' in '$nameproc' level procedure."
