@@ -179,7 +179,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatColor {
             if {$type in {list list.e}} {
-                if {[ticklecharts::iseListClass $value]} {
+                if {$type eq "list.e"} {
                     set value [$value get]
                 }
                 if {[llength $value] == 1} {
@@ -421,7 +421,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatItemSymbol {
             if {$type in {list list.e}} {
-                if {[ticklecharts::iseListClass $value]} {
+                if {$type eq "list.e"} {
                     set value [$value get]
                 }
                 if {[llength $value] == 1} {
@@ -1016,7 +1016,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             set validvalue {rect polygon keep clear}
 
             if {$type in {list list.e}} {
-                if {[ticklecharts::iseListClass $value]} {
+                if {$type eq "list.e"} {
                     set value [$value get]
                 }
                 if {[llength $value] == 1} {
@@ -1089,7 +1089,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatTimelineMerge {
             if {$type in {list list.e}} {
-                if {[ticklecharts::iseListClass $value]} {
+                if {$type eq "list.e"} {
                     set value [$value get]
                 }
                 if {[llength $value] == 1} {
@@ -1184,7 +1184,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatBRadius {
             # possible values...
             if {$type in {list list.e}} {
-                if {[ticklecharts::iseListClass $value]} {
+                if {$type eq "list.e"} {
                     set value [$value get]
                 }
                 if {[llength $value] == 1} {
