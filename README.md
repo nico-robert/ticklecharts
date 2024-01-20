@@ -95,7 +95,7 @@ $chart Yaxis
 `-dataItem` :
 ```tcl
 # Example for lineseries
-# Additional options are valid... See ticklecharts::lineItem in options.tcl
+# Additional options are valid, see ticklecharts::lineItem in options.tcl
 $chart Add "lineSeries" -dataItem {
                             {name "Mon" value 150}
                             {name "Tue" value 230}
@@ -169,7 +169,7 @@ $chart getOptions -option title
  sublink           -minversion 5  -validvalue {}                      -type str|null    -default "nothing"
  ...
  ...
-# Following options voluntarily deleted... 
+# Following options voluntarily deleted.
 ```
 2. Delete _series_ by index:
 ```tcl
@@ -239,7 +239,7 @@ $chart Xaxis -axisLabel [list show "True" \
     | `}`           | <0125>   
     | `[`           | <091>    
     | `]`           | <093>    
-*  **Add a js script, variable... in html template file** :
+*  **Add a js script, variable, etc. in html template file** :
 ```tcl
 # Initializes a new jsfunc Class
 ticklecharts::jsfunc new {args} -start? -end? -header?  
@@ -302,8 +302,7 @@ You may be processing important data and if you want to gain speed, this command
 ```tcl
 package require ticklecharts
 
-# load critcl package
-# compile & replace...
+# Load critcl package
 # Note : A warning message may be displayed on your console
 # if there was a problem compiling or loading critcl package
 ticklecharts::eHuddleCritcl True
@@ -313,18 +312,18 @@ source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200
 #    pure Tcl |   25354915 microseconds per iteration 
 #    critcl   |    6338728 microseconds per iteration (≃4x faster)
 ```
-`Note` : _No advantage to use this command with small data..._
+`Note` : _No advantage to use this command with small data._
 
 Global variables :
 -------------------------
 ```tcl
 package require ticklecharts
 
-# Set theme... with variable
+# Set theme with global variable
 # Or with class : ticklecharts::(Gridlayout|chart|timeline|chart3D) new -theme "vintage"
 set ::ticklecharts::theme "vintage" ; # default "custom" 
 
-# Minimum properties...
+# Minimum properties:
 # Only write values that are defined in the *.tcl file. (Benefit : performance + minifying your HTML files)
 # Be careful, properties in the *.tcl file must be implicitly marked.
 set ::ticklecharts::minProperties "True" ; # default "False"
@@ -354,10 +353,10 @@ See the **[examples](/examples)** folder for all demos (from [Apache Echarts exa
 
 ![line and bar mixed](images/line_and_bar_mixed.png)
 ```tcl
-# line + bar on same canvas...
+# line + bar on same canvas.
 package require ticklecharts
 
-# init chart class...
+# Init chart class.
 set chart [ticklecharts::chart new]
 
 # Set options :
@@ -368,20 +367,20 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" c
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
 
-# Uses Tcl substitution for 'formatter' property...
+# Uses Tcl substitution for 'formatter' property.
 $chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50 \
                                    -axisLabel {formatter {"{value} ml"}}
 $chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5 \
                                    -axisLabel {formatter {"{value} °C"}}
 
-# Add bars...
+# Add bars.
 $chart Add "barSeries" -name "Evaporation" \
                        -data [list {2.0 4.9 7.0 23.2 25.6 76.7 135.6 162.2 32.6 20.0 6.4 3.3}]
                     
 $chart Add "barSeries" -name "Precipitation" \
                        -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}]                    
 
-# Add line...                    
+# Add line.                  
 $chart Add "lineSeries" -name "Temperature" \
                         -yAxisIndex 1 \
                         -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
@@ -391,7 +390,7 @@ $chart Render
 ```
 ![line, bar and pie layout](images/line_bar_pie_layout.png)
 ```tcl
-# demo layout line + bar + pie...
+# Demo layout with line, bar and pie charts.
 set data(0) {1 2 3 4 5}
 set data(1) {2 3.6 6 2 10}
 
