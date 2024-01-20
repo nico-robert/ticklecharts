@@ -12,7 +12,7 @@ proc ticklecharts::htmlMap {h html htmloptions} {
     #
     # Returns list map html
 
-    # Formats html options...
+    # Formats html options.
     # Doesn't care about attributes in the html file.
     foreach {key info} $htmloptions {
         lassign $info value type
@@ -59,14 +59,14 @@ proc ticklecharts::htmlMap {h html htmloptions} {
         }
     }
 
-    # Adds js script(s) in html template... or not.
+    # Add or not js script(s) in html template.
     set html [ticklecharts::setJsScript $html $h mapoptions]
 
     return [string map $mapoptions $html]
 }
 
 proc ticklecharts::setJsScript {html h mapoptions} {
-    # Set js script(s) in html template file...
+    # Set js script(s) in html template file.
     #
     # html       - template html string.
     # h          - ehuddle object.
@@ -80,7 +80,7 @@ proc ticklecharts::setJsScript {html h mapoptions} {
 
     upvar 1 $mapoptions hoptions
 
-    # Add gmap script + Google maps API... if 'gmap' option is defined.
+    # Add gmap script + Google maps API if 'gmap' option is defined.
     # Add a comment in html template file if Google key API is not defined.
     # Add 'wordcloud' script if defined.
     # Add 'GL' script if 'series 3D' type is defined.
@@ -135,7 +135,7 @@ proc ticklecharts::setJsScript {html h mapoptions} {
 }
 
 proc ticklecharts::addJsScript {html value} {
-    # Add js script(s) in html template file...
+    # Add js script(s) in html template file.
     #
     # html  - template html string.
     # value - list jsfunc class or jsfunc class.
@@ -154,8 +154,11 @@ proc ticklecharts::addJsScript {html value} {
                 null   {set item "%jschartvar%"}
             }
             if {[set f [lsearch $html *$item*]] < 0} {
-                error "Not possible to find '$item' string\
-                       in the html template file."
+                # Inserting a script, variable, function, etc. in the html file is
+                # based on a search for a string if this is not found,
+                # an error is generated.
+                return -level [info level] -code error "Not possible to\
+                    find '$item' string in the html template file."
             }
             set listHtml [linsert $html $f+1 \
                          [format [list %-${indent}s %s] "" [join [$js get]]]]
@@ -164,7 +167,7 @@ proc ticklecharts::addJsScript {html value} {
             set listHtml $html
             foreach script {*}[lreverse $js] {
                 set indent 0
-                # insert Jsfunc...
+                # Insert Jsfunc.
                 if {[ticklecharts::typeOf $script] eq "jsfunc"} {
                     switch -exact -- [$script position] {
                         start  {set item "%jschartvar%"}
@@ -173,8 +176,9 @@ proc ticklecharts::addJsScript {html value} {
                         null   {set item "%jschartvar%"}
                     }
                     if {[set f [lsearch $listHtml *$item*]] < 0} {
-                        error "Not possible to find '$item' string\
-                               in the html template file."
+                        # Look at the comment above.
+                        return -level [info level] -code error "Not possible to\
+                            find '$item' string in the html template file."
                     }
                     set listHtml [linsert $listHtml $f+1 \
                                  [format [list %-${indent}s %s] \
@@ -314,16 +318,16 @@ proc ticklecharts::typeOf {value} {
 }
 
 proc ticklecharts::optsToEchartsHuddle {options} {
-    # Transform a dict to echartshuddle format...
-    # Level one.
+    # Transform a dict to echartshuddle format (first level).
     # 
     # options - dict options
     #
     # Returns list (echartshuddle)
+    if {[llength $options] % 2} ticklecharts::errorEvenArgs
 
     set opts {}
 
-    dict for {key info} $options {
+    foreach {key info} $options {
         lassign $info value type trace
 
         set key   [string map {- ""} $key]
@@ -360,7 +364,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             }
             list.dt - list.d - list.nt - list.n {
                 if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$key {%s}" [$value get]]
+                    append opts [format " ${htype}=$key {%s}" [list [$value get]]]
                 } else {
                     append opts [format " ${htype}=$key {%s}" [list $value]]
                 }
@@ -368,7 +372,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
             list.j {
                 set l {}
                 foreach val $value {
-                    lappend l [ticklecharts::dictToEchartsHuddle [dict create $key $val]]
+                    lappend l [ticklecharts::dictToEchartsHuddle [list $key $val]]
                 }
                 append opts [format " ${htype}=$key {%s}" [list $l]]
             }
@@ -387,17 +391,16 @@ proc ticklecharts::optsToEchartsHuddle {options} {
 }
 
 proc ticklecharts::dictToEchartsHuddle {options} {
-    # Transform a dict to echartshuddle format...
-    # Level two.
+    # Transform a dict to echartshuddle format (second level).
     # 
     # options - dict options
     #
     # Returns list (echartshuddle)
+    if {[llength $options] % 2} ticklecharts::errorEvenArgs
 
-    set d [dict create {*}$options]
     set opts {}
 
-    dict for {subkey subinfo} $options {
+    foreach {subkey subinfo} $options {
         lassign $subinfo value type trace
 
         set htype [ticklecharts::ehuddleType $type]
@@ -416,8 +419,8 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                     error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$subkey {%s}" \ 
-                            [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
-                            ]
+                    [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
+                ]
             }
             list.st - list.s {
                 if {[ticklecharts::iseListClass $value]} {
@@ -604,7 +607,7 @@ proc ticklecharts::merge {d other} {
         lassign $info value type validvalue minversion versionLib trace
 
         # force string value for this keys below
-        # if value is boolean or double...
+        # if value is boolean or double.
         if {$key in {-id id -name name}} {
             if {[dict exists $other $key]} {
                 set namevalue [dict get $other $key]
@@ -643,7 +646,7 @@ proc ticklecharts::merge {d other} {
                 incr i
             }
             # All versions were not found, probably 'ticklecharts::echarts_version'
-            # variable version is lower...
+            # variable version is lower.
             if {$version eq "nothing"} {
                 puts stderr "warning(multi-versions): no versions found for '$key',\
                             this key will not be taken into account."
@@ -663,7 +666,7 @@ proc ticklecharts::merge {d other} {
                 continue
             }
 
-            # REMINDER ME: use 'dict remove' for this...
+            # REMINDER ME: use 'dict remove' for this.
             if {$type in {dict|null dict dict.o|null list.o|null list.o}} {
                 error "wrong # type: default values for type dict, dict.o or list.o\
                        shouldn't not be defined in 'other' dict for '$key' key property."
@@ -690,7 +693,7 @@ proc ticklecharts::merge {d other} {
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 errorType "default" $key $mytype $type $minversion $multiversions
             }
-            # Minimum properties...
+            # Minimum properties:
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
             if {$minProperties} {
@@ -749,7 +752,7 @@ proc ticklecharts::isDict {value} {
     #
     # value - dict
     #
-    # Returns true if 'value' is a dictionary, otherwise false.
+    # Returns true, otherwise false.
     return [expr {![catch {dict size $value}]}]
 }
 
@@ -768,7 +771,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     ldset {info switch} to 0
 
     for {set i 0} {$i < [llength $body]} {incr i} {
-        # find command in body...
+        # Find command in body.
         set val [lindex $body $i]
         if {[string match {*infoNameProc*} $val]} {
             set info 1 ; set cmd {} ; set switch 0
@@ -825,7 +828,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
         # append line body if command
         if {$info} {append buffer $val}
 
-        # Guess if command is over...
+        # Guess if command is over.
         if {[info complete $buffer] && $buffer ne ""} {
             # omit if 'setdef' is not defined.
             if {[lsearch $buffer *setdef*] > -1} {
@@ -984,7 +987,7 @@ proc ticklecharts::isListOfList {args} {
     # Returns true if value is a list of list,
     # false otherwise.
 
-    # clean up the list... (spaces, \n...)
+    # Cleans up the list of braces, spaces.
     regsub -all -line {(^\s+)|(\s+$)|\n|\t} $args {} str
 
     return [expr {
@@ -1034,7 +1037,7 @@ proc ticklecharts::getLevelProperties {level} {
     #
     # level - num level procedure
     #
-    # Returns list name of procs...
+    # Returns list name of procs.
     set properties {}
 
     for {set i $level} {$i > 0} {incr i -1} {
@@ -1068,7 +1071,7 @@ proc ticklecharts::checkJsFunc {opts method} {
             *function* -
             *new*echarts.* {
                 return -level [info level] -code error \
-                    "wrong # js: 'function', 'variable'...\
+                    "wrong # js: 'function', 'variable', etc.\
                     inside 'Json data' is not\
                     supported with '$method' method."
             }
@@ -1091,7 +1094,13 @@ proc ticklecharts::procDefaultValue {proc key} {
     if {[set lineProc [lsearch $myProc *$key*]] > -1} {
         set opts [lindex $myProc $lineProc]
         if {[set d [lsearch -exact $opts -default]] > -1} {
-            return [lindex $opts $d+1]
+            set value [lindex $opts $d+1]
+            # Special case when default value is an variable.
+            if {[string range $value 0 0] eq "$"} {
+                set var   [string range $value 1 end]
+                set value [uplevel 1 [list set $var]]
+            }
+            return $value
         }
     }
 
