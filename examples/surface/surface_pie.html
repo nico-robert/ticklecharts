@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>surface_pie</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+  </head>
+  <body>
+    <div id="id_b1082c2c90364e6fb0269c8055257083" class="chart-container" style="width:1300px; height:900px;"></div>
+    <script>
+      var chart_b1082c2c90364e6fb0269c8055257083 = echarts.init(document.getElementById("id_b1082c2c90364e6fb0269c8055257083"), null, {renderer: "canvas"});
+      var option_b1082c2c90364e6fb0269c8055257083 = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "textStyle": {
+        "color": "#fff",
+        "fontStyle": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 26,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15,
+      "data": [
+        "Tcl",
+        "C++",
+        "C",
+        "Python"
+      ]
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid3D": [{
+      "show": false,
+      "boxWidth": 100,
+      "boxHeight": 20,
+      "boxDepth": 100,
+      "environment": "#021041",
+      "viewControl": {
+        "projection": "perspective",
+        "autoRotateDirection": "cw",
+        "autoRotateSpeed": 10,
+        "autoRotateAfterStill": 3,
+        "damping": 0.8,
+        "rotateSensitivity": 1,
+        "zoomSensitivity": 1,
+        "panSensitivity": 1,
+        "distance": 300,
+        "alpha": 25,
+        "beta": 130,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "minAlpha": -90,
+        "maxAlpha": 90,
+        "animation": true,
+        "animationDurationUpdate": 1000,
+        "animationEasingUpdate": "cubicInOut"
+      },
+      "zlevel": -10,
+      "bottom": "50%"
+    }],
+  "xAxis3D": [{
+      "show": true,
+      "name": "X",
+      "nameGap": 20,
+      "type": "value",
+      "min": -1,
+      "max": 1,
+      "scale": false
+    }],
+  "yAxis3D": [{
+      "show": true,
+      "name": "Y",
+      "nameGap": 20,
+      "type": "value",
+      "min": -1,
+      "max": 1,
+      "scale": false
+    }],
+  "zAxis3D": [{
+      "show": true,
+      "name": "Z",
+      "nameGap": 20,
+      "type": "value",
+      "min": -1,
+      "max": 1,
+      "scale": false
+    }],
+  "series": [
+    {
+      "type": "surface",
+      "name": "Tcl",
+      "coordinateSystem": "cartesian3D",
+      "parametric": true,
+      "wireframe": {"show": false},
+      "parametricEquation": {
+        "u": {
+          "step": 0.098125,
+          "min": -3.14,
+          "max": 9.42
+        },
+        "v": {
+          "step": 0.157,
+          "min": 0,
+          "max": 6.28
+        },
+        "x": function(u, v) {
+            if (u < 0.0) {
+                return 0 + Math.cos(0.0) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 1.2560000000000002 ){
+                return 0 + Math.cos(1.2560000000000002) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.cos(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "y": function(u, v) {
+            if (u < 0.0) {
+                return 0 + Math.sin(0.0) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 1.2560000000000002 ){
+                return 0 + Math.sin(1.2560000000000002) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.sin(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "z": function(u, v) {
+            if (u < - Math.PI * 0.5 ) {
+                return Math.sin(u);
+            }
+            if (u > Math.PI * 2.5 ){
+                return Math.sin(u);
+            }
+            return Math.sin(v) > 0 ? 1*1 : -1;
+        }
+      },
+      "itemStyle": {
+        "color": "rgb(0,127,244)",
+        "opacity": 0.8
+      },
+      "zlevel": -10,
+      "silent": false
+    },
+    {
+      "type": "surface",
+      "name": "C++",
+      "coordinateSystem": "cartesian3D",
+      "parametric": true,
+      "wireframe": {"show": false},
+      "parametricEquation": {
+        "u": {
+          "step": 0.098125,
+          "min": -3.14,
+          "max": 9.42
+        },
+        "v": {
+          "step": 0.157,
+          "min": 0,
+          "max": 6.28
+        },
+        "x": function(u, v) {
+            if (u < 1.2560000000000002) {
+                return 0 + Math.cos(1.2560000000000002) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 2.5120000000000005 ){
+                return 0 + Math.cos(2.5120000000000005) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.cos(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "y": function(u, v) {
+            if (u < 1.2560000000000002) {
+                return 0 + Math.sin(1.2560000000000002) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 2.5120000000000005 ){
+                return 0 + Math.sin(2.5120000000000005) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.sin(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "z": function(u, v) {
+            if (u < - Math.PI * 0.5 ) {
+                return Math.sin(u);
+            }
+            if (u > Math.PI * 2.5 ){
+                return Math.sin(u);
+            }
+            return Math.sin(v) > 0 ? 1*1 : -1;
+        }
+      },
+      "itemStyle": {
+        "color": "rgb(255,150,230)",
+        "opacity": 0.8
+      },
+      "zlevel": -10,
+      "silent": false
+    },
+    {
+      "type": "surface",
+      "name": "C",
+      "coordinateSystem": "cartesian3D",
+      "parametric": true,
+      "wireframe": {"show": false},
+      "parametricEquation": {
+        "u": {
+          "step": 0.098125,
+          "min": -3.14,
+          "max": 9.42
+        },
+        "v": {
+          "step": 0.157,
+          "min": 0,
+          "max": 6.28
+        },
+        "x": function(u, v) {
+            if (u < 2.5120000000000005) {
+                return 0 + Math.cos(2.5120000000000005) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 5.024000000000001 ){
+                return 0 + Math.cos(5.024000000000001) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.cos(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "y": function(u, v) {
+            if (u < 2.5120000000000005) {
+                return 0 + Math.sin(2.5120000000000005) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 5.024000000000001 ){
+                return 0 + Math.sin(5.024000000000001) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.sin(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "z": function(u, v) {
+            if (u < - Math.PI * 0.5 ) {
+                return Math.sin(u);
+            }
+            if (u > Math.PI * 2.5 ){
+                return Math.sin(u);
+            }
+            return Math.sin(v) > 0 ? 1*2 : -1;
+        }
+      },
+      "itemStyle": {
+        "color": "rgb(209,200,150)",
+        "opacity": 1
+      },
+      "zlevel": -10,
+      "silent": false
+    },
+    {
+      "type": "surface",
+      "name": "Python",
+      "coordinateSystem": "cartesian3D",
+      "parametric": true,
+      "wireframe": {"show": false},
+      "parametricEquation": {
+        "u": {
+          "step": 0.098125,
+          "min": -3.14,
+          "max": 9.42
+        },
+        "v": {
+          "step": 0.157,
+          "min": 0,
+          "max": 6.28
+        },
+        "x": function(u, v) {
+            if (u < 5.024000000000001) {
+                return 0 + Math.cos(5.024000000000001) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 6.28 ){
+                return 0 + Math.cos(6.28) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.cos(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "y": function(u, v) {
+            if (u < 5.024000000000001) {
+                return 0 + Math.sin(5.024000000000001) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            if (u > 6.28 ){
+                return 0 + Math.sin(6.28) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+            }
+            return 0 + Math.sin(u) * (1 + Math.cos(v) * -0.3333333333333333) * 1;
+        },
+        "z": function(u, v) {
+            if (u < - Math.PI * 0.5 ) {
+                return Math.sin(u);
+            }
+            if (u > Math.PI * 2.5 ){
+                return Math.sin(u);
+            }
+            return Math.sin(v) > 0 ? 1*1 : -1;
+        }
+      },
+      "itemStyle": {
+        "color": "rgb(209,126,23)",
+        "opacity": 0.8
+      },
+      "zlevel": -10,
+      "silent": false
+    }
+  ]
+};
+      chart_b1082c2c90364e6fb0269c8055257083.setOption(option_b1082c2c90364e6fb0269c8055257083);
+    </script>
+  </body>
+</html>
