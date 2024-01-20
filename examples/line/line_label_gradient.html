@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>line_label_gradient</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_e50f7091377449f990a0607b52e7a93d" class="chart-container" style="width:1300px; height:900px;"></div>
+    <script>
+      var chart_e50f7091377449f990a0607b52e7a93d = echarts.init(document.getElementById("id_e50f7091377449f990a0607b52e7a93d"), null, {renderer: "canvas"});
+      var option_e50f7091377449f990a0607b52e7a93d = {
+  "backgroundColor": "#080b30",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "title": [{
+      "show": true,
+      "text": "Tcl + Echarts",
+      "target": "blank",
+      "textStyle": {
+        "color": "#fff",
+        "fontStyle": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 20,
+        "width": 100,
+        "height": 50,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": null,
+        "ellipsis": "..."
+      },
+      "subtarget": "blank",
+      "textAlign": null,
+      "textVerticalAlign": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "z": 2,
+      "left": "center",
+      "top": "5%",
+      "right": "auto",
+      "bottom": "auto",
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderWidth": 1,
+      "borderRadius": 0
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "axis",
+      "axisPointer": {
+        "type": "line",
+        "axis": "auto",
+        "lineStyle": {
+          "color": {
+            "type": "linear",
+            "x": 0,
+            "y": 0,
+            "x2": 0,
+            "y2": 1,
+            "colorStops": [
+              {
+                "offset": 0,
+                "color": "rgba(0, 255, 233, 0.01)"
+              },
+              {
+                "offset": 0.5,
+                "color": "rgba(255, 255, 255,1)"
+              },
+              {
+                "offset": 1,
+                "color": "rgba(0, 255, 233, 0.01)"
+              }
+            ],
+            "global": false
+          },
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        },
+        "animation": true,
+        "animationThreshold": 2000,
+        "animationDuration": 1000,
+        "animationEasing": "cubicOut",
+        "animationDurationUpdate": 200,
+        "animationEasingUpdate": "exponentialOut"
+      },
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "grid": [{
+      "left": "5%",
+      "top": "15%",
+      "right": "5%",
+      "bottom": "15%"
+    }],
+  "xAxis": [{
+      "show": true,
+      "type": "category",
+      "data": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "gridIndex": 0,
+      "position": "bottom",
+      "offset": 0,
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "scale": false,
+      "splitNumber": 5,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null
+      },
+      "axisLabel": {
+        "show": true,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 8,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "color": "#fff",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "splitLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "splitArea": {
+        "interval": 0,
+        "show": false,
+        "areaStyle": {
+          "color": "#f00",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 0.5
+        }
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "yAxis": [{
+      "show": true,
+      "gridIndex": 0,
+      "position": "left",
+      "offset": 0,
+      "realtimeSort": true,
+      "sortSeriesIndex": 0,
+      "type": "value",
+      "nameLocation": "end",
+      "nameGap": 15,
+      "nameRotate": 0,
+      "inverse": false,
+      "boundaryGap": false,
+      "min": 0,
+      "scale": false,
+      "splitNumber": 4,
+      "minInterval": 0,
+      "silent": false,
+      "triggerEvent": false,
+      "axisLine": {
+        "show": false,
+        "onZero": true,
+        "symbol": null
+      },
+      "axisTick": {
+        "show": false,
+        "interval": "auto",
+        "length": 5
+      },
+      "axisLabel": {
+        "show": false,
+        "interval": "auto",
+        "inside": false,
+        "rotate": 0,
+        "margin": 20,
+        "showMinLabel": null,
+        "showMaxLabel": null,
+        "hideOverlap": false,
+        "color": "#d1e6eb",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 0,
+        "padding": 0,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "splitLine": {
+        "show": true,
+        "onZero": true,
+        "symbol": null,
+        "lineStyle": {
+          "color": "rgba(255,255,255,0.1)",
+          "width": 1,
+          "type": "solid",
+          "dashOffset": 0,
+          "cap": "butt",
+          "join": "bevel",
+          "shadowBlur": 0,
+          "shadowColor": null,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "opacity": 1
+        }
+      },
+      "zlevel": 0,
+      "z": 0
+    }],
+  "series": [
+    {
+      "type": "line",
+      "name": "lineseries_1",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "circle",
+      "symbolSize": 25,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": true,
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "label": {
+        "show": true,
+        "position": "top",
+        "rotate": 0,
+        "color": "#6c50f3",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "itemStyle": {
+        "color": "#6c50f3",
+        "borderColor": "#fff",
+        "borderWidth": 3,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "shadowBlur": 0,
+        "shadowColor": "rgba(0, 0, 0, .3)",
+        "shadowOffsetX": 2,
+        "shadowOffsetY": 2,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "color": "#6c50f3",
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "shadowBlur": 0,
+        "shadowColor": "rgba(0, 0, 0, .3)",
+        "shadowOffsetX": 5,
+        "shadowOffsetY": 5,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(108,80,243,0.3)'
+            },
+            {
+                offset: 1,
+                color: 'rgba(108,80,243,0)'
+            }
+        ], false),
+        "shadowBlur": 20,
+        "shadowColor": "rgba(108,80,243, 0.9)",
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "smooth": false,
+      "data": [
+        502.84,
+        205.97,
+        332.79,
+        281.55,
+        398.35,
+        214.02
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "tooltip": {
+        "show": false,
+        "trigger": "item",
+        "showContent": true,
+        "alwaysShowContent": false,
+        "triggerOn": "mousemove|click",
+        "transitionDuration": 0.4,
+        "padding": 5,
+        "order": "seriesAsc"
+      }
+    },
+    {
+      "type": "line",
+      "name": "lineseries_2",
+      "colorBy": "series",
+      "coordinateSystem": "cartesian2d",
+      "symbol": "circle",
+      "symbolSize": 25,
+      "symbolKeepAspect": true,
+      "showSymbol": true,
+      "showAllSymbol": true,
+      "legendHoverLink": true,
+      "cursor": "pointer",
+      "connectNulls": false,
+      "clip": true,
+      "triggerLineEvent": false,
+      "step": false,
+      "label": {
+        "show": true,
+        "position": "top",
+        "rotate": 0,
+        "color": "#00ca95",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "..."
+      },
+      "itemStyle": {
+        "color": "#00ca95",
+        "borderColor": "#fff",
+        "borderWidth": 3,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "shadowBlur": 0,
+        "shadowColor": "rgba(0, 0, 0, .3)",
+        "shadowOffsetX": 2,
+        "shadowOffsetY": 2,
+        "opacity": 1
+      },
+      "lineStyle": {
+        "color": "#00ca95",
+        "type": "solid",
+        "dashOffset": 0,
+        "cap": "butt",
+        "join": "bevel",
+        "shadowBlur": 0,
+        "shadowColor": "rgba(0, 0, 0, .3)",
+        "shadowOffsetX": 5,
+        "shadowOffsetY": 5,
+        "opacity": 1
+      },
+      "areaStyle": {
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(0,202,149,0.3)'
+            },
+            {
+                offset: 1,
+                color: 'rgba(0,202,149,0)'
+            }
+        ], false),
+        "shadowBlur": 20,
+        "shadowColor": "rgba(0,202,149, 0.9)",
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "opacity": 0.5
+      },
+      "smooth": false,
+      "data": [
+        281.55,
+        398.35,
+        214.02,
+        179.55,
+        289.57,
+        356.14
+      ],
+      "zlevel": 0,
+      "z": 2,
+      "silent": false,
+      "tooltip": {
+        "show": false,
+        "trigger": "item",
+        "showContent": true,
+        "alwaysShowContent": false,
+        "triggerOn": "mousemove|click",
+        "transitionDuration": 0.4,
+        "padding": 5,
+        "order": "seriesAsc"
+      }
+    }
+  ]
+};
+      chart_e50f7091377449f990a0607b52e7a93d.setOption(option_e50f7091377449f990a0607b52e7a93d);
+    </script>
+  </body>
+</html>
