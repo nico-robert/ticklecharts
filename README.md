@@ -33,38 +33,33 @@ set chart [ticklecharts::chart new]
 | ------   | ------                 | ------
 | _-theme_ | Defines the theme name | `custom` (possible values: `vintage,westeros,wonderland,dark`)
 ```tcl
-# Initializes X axis with values
+# Adds the X axis with its values.
 $chart Xaxis -data [list {Mon Tue Wed Thu Fri Sat Sun}]
+
+# Adds the Y axis.
+$chart Yaxis
+
+# Adds data for line series.
+$chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 ```
 > [!IMPORTANT]  
 >  `-data` _property_ should be a list of list `[list {...}]`
 ```tcl
-# Initializes Y axis
-$chart Yaxis
-```
-```tcl
-# Initializes line series
-# '-data' should be a list of list [list {...}]
-$chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
-```
-Here `-data` corresponds to the Y values.
-
-```tcl
-# Export chart to html file
+# Export chart to HTML file
 $chart Render
 ```
 ##### Arguments available :
 | args           | Description             | Default values
 | ------         | ------                  | ------
-| _-title_       | Header title html       | `"ticklEcharts !!!"`
+| _-title_       | HTML page header        | `"ticklEcharts !!!"`
 | _-width_       | Container's width       | `"900px"`
 | _-height_      | Container's height      | `"500px"`
 | _-renderer_    | canvas or svg           | `"canvas"`
 | _-jschartvar_  | Variable name chart     | `chart_[uuid]`
 | _-divid_       | Name container's ID     | `id_[uuid]`
-| _-outfile_     | Full path html file     | `'./render.html'`
+| _-outfile_     | Full path HTML file     | `'./render.html'`
 | _-jsecharts_   | Full path echarts.js    | `https://cdn.jsdelivr.net/...`
-| _-jsvar_       | js variable name        | `option_[uuid]`
+| _-jsvar_       | JS variable name        | `option_[uuid]`
 | _-script_      | jsfunc class            | `'null'`
 | _-class_       | Specify container's CSS | `"chart-container"`
 | _-style_       | Inline style            | `"width:'-width'; height:'-height'";`
@@ -106,7 +101,7 @@ $chart Add "lineSeries" -dataItem {
                             {name "Sun" value 260}
                         }
 ```
-`dataset` (class) :
+`-dataset` :
 ```tcl
 set data(0) {
     {"Day" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}
@@ -119,7 +114,7 @@ set data(0) {
 # > [list [list source $data(0) sourceHeader "True"] [list source $data(1) ...]]]
 set obj [ticklecharts::dataset new [list source $data(0) sourceHeader "True"]]
 
-# Add 'obj' dataset to chart class. 
+# Add '$obj' to dataset property. 
 $chart SetOptions -dataset $obj
 # Add line series.
 $chart Xaxis
@@ -188,89 +183,101 @@ $chart toJSON
 $chart toHTML ?-template ?...
 ```
 
-Javascript function :
+Add extra JS script, variable, etc. :
 -------------------------
-* **Add a javascript function to json** :
+* **Add a JavaScript function** :
+
+When permitted, `ticklecharts::jsfunc` class can insert a function directly in `JSON` data :
+
 ```tcl
-# Initializes a new jsfunc Class
-ticklecharts::jsfunc new {args}
+# Initializes a new jsfunc Class and insert 
+# a 'JS function' as argument :
+set js [ticklecharts::jsfunc new {
+        function (value, index) {
+            return value + ' (C°)';
+        }
+    }
+]
+
+# Add $js variable to 'formatter' property. 
+$chart Xaxis -axisLabel [subst {
+    show "True"
+    margin 8
+    formatter $js
+    showMinLabel "null"
+    # ...
+}]
+$chart toJSON
 ```
-This function will be able to be inserted directly into the `JSON` data and will also create a new type `jsfunc`.
-```tcl
-# Demo
-set js [ticklecharts::jsfunc new {function (value, index) {
-                                return value + ' (C°)';
-                                },
-                                }]
-
-$chart Xaxis -axisLabel [list show "True" \
-                              margin 8 \
-                              formatter $js \
-                              showMinLabel "null" \
-                              ... ]
-
-# 'json' result :
+* **Output** :
+```js
 "axisLabel": {
   "show": true,
   "margin": 8,
   "formatter": function (value, index) {
-                          return value + ' (C°)';
-                          },
+    return value + ' (C°)';
+  },
   "showMinLabel": null,
-  ...
+  // ...
 }
 ```
-*  **formatter** (Accepts a _javascript function_ most times):
-    - For basic _format_, `formatter` supports string template like this :
-    > formatter `'{b0}: {c0}<br />{b1}: {c1}'`
-    
-    - Use Tcl _substitution_ e.g.:
-    > formatter : `{"{b0}: {c0}<br />{b1}: {c1}"}`
+> [!NOTE]  
+> **formatter** accepts a _javascript function_ most times but in some cases `formatter` supports   
+[string template](https://echarts.apache.org/en/option.html#grid.tooltip.formatter) like this `'{b0}: {c0}<br />{b1}: {c1}'`
 
-    - Use ticklecharts::eString _class_ e.g.:
-    > formatter : `[new estr "{b0}: {c0}<br />{b1}: {c1}"]`
-    
-    - (Deprecated) Use list map to replace some `Tcl` special chars e.g.:
-    > formatter : `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
+There are three ways to do this :
 
-    | Symbol        | Map      
-    | ------------- | ---------
-    | `{`           | <0123>   
-    | `}`           | <0125>   
-    | `[`           | <091>    
-    | `]`           | <093>    
-*  **Add a js script, variable, etc. in html template file** :
+- Encapsulates the string with braces + quotes :
+> `{"{b0}: {c0}<br />{b1}: {c1}"}`
+- Use ticklecharts::eString _class_ :
+> `new estr "{b0}: {c0}<br />{b1}: {c1}"`
+
+- Replaces special chars : (Deprecated)
+> `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
+
+| Chars         | Map      
+| ------------- | ---------
+| `{`           | <0123>   
+| `}`           | <0125>   
+| `[`           | <091>    
+| `]`           | <093>    
+
+* **Add script, variable etc.** :
+
+Combined with `Render` method and `-script` property, you can add JavaScript elements in the HTML template file.  
+* Depending on where you want to insert them, three optional argument are supported :
+
+  - `-start` : To place your element at the beginning of the file. 
+  - `-end` : To place your element at the end of the file. 
+  - `-header`: To place your element in the file header.
+
 ```tcl
-# Initializes a new jsfunc Class
-ticklecharts::jsfunc new {args} -start? -end? -header?  
-```
-Combined with `Render` method and `-script` flag, you can add a js script (`jsfunc` class) to html template file.  
-For this add :
-- `-start` : To place your script at the beginning of the file. 
-- `-end` : To place your script at the end of the file. 
-- `-header`: To place your script in the file header.
-```tcl
-# Demo
-set js [ticklecharts::jsfunc new {
-                                var maskImage = new Image();
-                                maskImage.src = './logo.png';
-                                } -start
-                            ]
+# Adds a variable at the start:
+set var [ticklecharts::jsfunc new {
+        var maskImage = new Image();
+        maskImage.src = './logo.png';
+    } -start
+]
+
+# Adds a header script:
 set header [ticklecharts::jsfunc new {
-                        <script type="text/javascript" src="tcl.js"></script>
-                    } -header
-            ]
-...
-$chart Render -outfile demo.html -title demo -script [list [list $js $header]]
+        <script type="text/javascript" src="tcl.js"></script>
+    } -header
+]
+# Note: Inserting a script, variable, etc. in the HTML file is
+# based on a search for a string in the template if this is not found,
+# an error is generated.
+$chart Render -title "Example jsfunc class" -script [list [list $var $header]]
 ```
+* **Output** :
 ```js
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>demo</title>
+    <title>Example jsfunc class</title>
     <script type="text/javascript" src="echarts.min.js"></script>
-    // -header script...
+    <!-- -header <script>...</script> -->
     <script type="text/javascript" src="tcl.js"></script>
   </head>
   <body>
@@ -283,10 +290,10 @@ $chart Render -outfile demo.html -title demo -script [list [list $js $header]]
         var option = {
             "backgroundColor": "rgba(0,0,0,0)",
             "color": [
-            ...
+              // ...
             ],
             "maskImage": maskImage,
-            ...
+            // ...
         }
     ...
     </script>
@@ -313,6 +320,23 @@ source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200
 #    critcl   |    6338728 microseconds per iteration (≃4x faster)
 ```
 `Note` : _No advantage to use this command with small data._
+
+Type substitution  :
+-------------------------
+Since version **3.1**, two new classes have been introduced. They allow string and list values to be substituted.  
+In some cases, it is difficult to find the type for a variable, since everything is considered to be a string in `Tcl`.  
+These 2 classes below get around the problem (partly):
+ - ticklecharts::eString
+ - ticklecharts::eList
+
+_See [line_eList.tcl](examples/line/line_eList.tcl) and `line and bar mixed` demo to know why this class has been implemented for certain cases_.   
+
+Since version **3.2.3** when default type is `list.d` it can be replaced by `list.s` or `list.n` ehuddle type.  
+This improves performance by avoiding the need to scan the list to find the type of data. By example, the default type   
+for `Xaxis.data` is `list.d`, this property can be written as follows : 
+```tcl
+$chart Xaxis -data [new elist.s {...}]; # If you are sure that the data is of type 'string'.
+```
 
 Global variables :
 -------------------------
@@ -356,10 +380,10 @@ See the **[examples](/examples)** folder for all demos (from [Apache Echarts exa
 # line + bar on same canvas.
 package require ticklecharts
 
-# Init chart class.
+# Initializes a new 2D Chart Class.
 set chart [ticklecharts::chart new]
 
-# Set options :
+# Set options
 $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" crossStyle {color "#999"}}} \
                   -grid {left "3%" right "4%" bottom "3%" containLabel "True"} \
                   -legend {}
@@ -367,11 +391,12 @@ $chart SetOptions -tooltip {show True trigger "axis" axisPointer {type "cross" c
 $chart Xaxis -data [list {"Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"}] \
              -axisPointer {type "shadow"}
 
-# Uses Tcl substitution for 'formatter' property.
+# Encapsulates the string with braces + quotes or use 'ticklecharts::eString'
+# class for 'formatter' property (See '# string template' section).
 $chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50 \
                                    -axisLabel {formatter {"{value} ml"}}
 $chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5 \
-                                   -axisLabel {formatter {"{value} °C"}}
+                                   -axisLabel [list formatter [new estr "{value} °C"]]
 
 # Add bars.
 $chart Add "barSeries" -name "Evaporation" \
@@ -380,12 +405,12 @@ $chart Add "barSeries" -name "Evaporation" \
 $chart Add "barSeries" -name "Precipitation" \
                        -data [list {2.6 5.9 9.0 26.4 28.7 70.7 175.6 182.2 48.7 18.8 6.0 2.3}]                    
 
-# Add line.                  
+# Add line series.                  
 $chart Add "lineSeries" -name "Temperature" \
                         -yAxisIndex 1 \
                         -data [list {2.0 2.2 3.3 4.5 6.3 10.2 20.3 23.4 23.0 16.5 12.0 6.2}]
 
-
+# Output
 $chart Render
 ```
 ![line, bar and pie layout](images/line_bar_pie_layout.png)
@@ -394,11 +419,12 @@ $chart Render
 set data(0) {1 2 3 4 5}
 set data(1) {2 3.6 6 2 10}
 
+# Format label
 set js [ticklecharts::jsfunc new {
-                function (value, index) {
-                    return value + ' (C°)';
-                },
-            }]
+    function (value, index) {
+        return value + ' (C°)';
+    },
+}]
 
 set line [ticklecharts::chart new]
                   
@@ -408,8 +434,8 @@ $line SetOptions -title   {text "layout line + bar + pie charts..."} \
     
 $line Xaxis -data [list $data(0)] -boundaryGap "False"
 $line Yaxis
-$line Add "lineSeries" -data [list $data(0)] -areaStyle {} -smooth true
-$line Add "lineSeries" -data [list $data(1)] -smooth true
+$line Add "lineSeries" -data [list $data(0)] -areaStyle {} -smooth "True"
+$line Add "lineSeries" -data [list $data(1)] -smooth "True"
 
 set bar [ticklecharts::chart new]
 
@@ -435,8 +461,10 @@ $pie Add "pieSeries" -name "Access From" -radius [list {"50%" "70%"}] \
                         {value 735 name "C"}
                     }
 
-
+# Initializes a new 'Gridlayout' Class.
 set layout [ticklecharts::Gridlayout new]
+
+# Arrange the different series on the canvas.
 $layout Add $bar  -bottom "60%" -width "40%" -left "5%"
 $layout Add $line -top    "60%" -width "40%" -left "5%"
 $layout Add $pie  -center [list {75% 50%}]
