@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 
 # Credit to Stefan Sobernig (https://github.com/mrcalvin) :
@@ -39,7 +39,7 @@ if {[info commands ::jupyter::html] ne ""} {
             
                 if {[llength $args] % 2} {
                     error "wrong # args: should be \"[self] [self method]\
-                                ?-renderer renderer? ...\""
+                          ?-renderer renderer? ...\""
                 }
 
                 # Gets arguments options
@@ -49,18 +49,25 @@ if {[info commands ::jupyter::html] ne ""} {
                 set opts     [dict merge $htmlopts $jupyteropts]
 
                 set srcDoc [my toHTML {*}$opts]
-                set width  [lindex [dict get $opts -width] 0]
-                set height [lindex [dict get $opts -height] 0]
+
+                # Add global options to main options.
+                if {[my getType] in {chart chart3D}} {
+                    set myopts [list {*}[my globalOptions] {*}[my options]]
+                } else {
+                    set myopts [my options]
+                }
 
                 # function, variable... javascript inside
                 # 'Json' is not supported.
                 if {[my getType] eq "timeline"} {
-                    set timelineopts [list {*}[my baseOption] {*}[my options]]
+                    set timelineopts [list {*}[my baseOption] {*}$myopts]
                     ticklecharts::checkJsFunc $timelineopts [self method]
                 } else {
-                    ticklecharts::checkJsFunc [my options] [self method]
+                    ticklecharts::checkJsFunc $myopts [self method]
                 }
 
+                set width  [lindex [dict get $opts -width] 0]
+                set height [lindex [dict get $opts -height] 0]
                 # TODO : 
                 # Provide for different ways of embedding <iframe/> 
                 # content (srcdoc vs. data-url)?

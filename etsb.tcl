@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 # From https://wiki.tcl-lang.org/page/Taygete+Scrap+Book :
@@ -160,7 +160,7 @@ if {[namespace exists ::tsb]} {
 
                 if {[llength $args] % 2} {
                     error "wrong # args: should be \"[self] [self method]\
-                        ?-renderer renderer? ...\""
+                          ?-renderer renderer? ...\""
                 }
 
                 set json [my toJSON] ; # jsondump
@@ -171,12 +171,19 @@ if {[namespace exists ::tsb]} {
                 set merge    [lindex [dict get $opts -merge] 0]
                 set evalJSON [lindex [dict get $opts -evalJSON] 0]
 
+                # Add global options to main options.
+                if {[my getType] in {chart chart3D}} {
+                    set myopts [list {*}[my globalOptions] {*}[my options]]
+                } else {
+                    set myopts [my options]
+                }
+                
                 if {!$evalJSON} {
                     if {[my getType] eq "timeline"} {
-                        set timelineopts [list {*}[my baseOption] {*}[my options]]
+                        set timelineopts [list {*}[my baseOption] {*}$myopts]
                         ticklecharts::checkJsFunc $timelineopts [self method]
                     } else {
-                        ticklecharts::checkJsFunc [my options] [self method]
+                        ticklecharts::checkJsFunc $myopts [self method]
                     }
                 }
 
