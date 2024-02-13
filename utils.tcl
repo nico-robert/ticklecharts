@@ -713,6 +713,11 @@ proc ticklecharts::merge {d other} {
         # Replaces spaces by special characters.
         if {$typekey in {str str.t}} {
             set value [ticklecharts::mapSpaceString $value]
+            if {$value eq ""} {
+                # To avoid the incorrect number of arguments
+                # error for the ehuddle class.
+                set value "{}"
+            }
         }
 
         dict set _dict $key [list $value $typekey]
