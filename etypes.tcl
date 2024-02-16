@@ -103,9 +103,6 @@ oo::define ticklecharts::eDict {
 
 proc ticklecharts::edict {value} {
     # This procedure substitutes a pure Tcl dict.
-    # It can replace dict types : 
-    #   - dict   (pure dict)
-    #   - dict.o (pure dict)
     # 
     # value - dict tcl
     #

@@ -243,7 +243,6 @@ proc ticklecharts::ehuddleType {type} {
         null              {set htype @NULL}
         e.color - dict    {set htype @L}
         list.o            {set htype @DO}
-        dict.o            {set htype @LO}
         jsfunc            {set htype @JS}
         default           {error "no type for '$type'"}
     }
@@ -334,7 +333,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
-            dict - dict.o {
+            dict {
                 if {![ticklecharts::iseDictClass $value]} {
                     error "should be a 'eDict' class."
                 }
@@ -411,14 +410,6 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                     error "should be a 'eDict' class."
                 }
                 append opts [format " ${htype}=$subkey %s" \
-                    [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
-                ]
-            }
-            dict.o {
-                if {![ticklecharts::iseDictClass $value]} {
-                    error "should be a 'eDict' class."
-                }
-                append opts [format " ${htype}=$subkey {%s}" \ 
                     [list [ticklecharts::dictToEchartsHuddle [$value get]]] \
                 ]
             }
@@ -667,8 +658,8 @@ proc ticklecharts::merge {d other} {
             }
 
             # REMINDER ME: use 'dict remove' for this.
-            if {$type in {dict|null dict dict.o|null list.o|null list.o}} {
-                error "wrong # type: default values for type dict, dict.o or list.o\
+            if {$type in {dict|null dict list.o|null list.o}} {
+                error "wrong # type: default values for type dict or list.o\
                        shouldn't not be defined in 'other' dict for '$key' key property."
             }
 
