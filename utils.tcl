@@ -597,7 +597,7 @@ proc ticklecharts::merge {d other} {
     dict for {key info} $d {
         lassign $info value type validvalue minversion versionLib trace
 
-        # force string value for this keys below
+        # Force string value for this keys below
         # if value is boolean or double.
         if {$key in {-id id -name name}} {
             if {[dict exists $other $key]} {
@@ -627,7 +627,7 @@ proc ticklecharts::merge {d other} {
             set i 0 ; set version "nothing" ; set save_v "0.0.0"
             foreach v $lvers {
                 if {[ticklecharts::vCompare $v $versionLib] <= 0} {
-                    # replaces the type of key according to echarts key version
+                    # Replaces the type of key according to echarts key version
                     if {[ticklecharts::vCompare $v $save_v] >= 0} {
                         set version $v
                         set type [lindex $vtype $i]
@@ -639,8 +639,8 @@ proc ticklecharts::merge {d other} {
             # All versions were not found, probably 'ticklecharts::echarts_version'
             # variable version is lower.
             if {$version eq "nothing"} {
-                puts stderr "warning(multi-versions): no versions found for '$key',\
-                            this key will not be taken into account."
+                puts stderr "warning(multi-versions): no versions found for '$key' property,\
+                            it will not be taken into account."
                 continue
             }
             set minversion $version
@@ -651,9 +651,9 @@ proc ticklecharts::merge {d other} {
         if {[dict exists $other $key]} {
 
             if {$vcompare > 0} {
-                puts stderr "warning(version): '$key' is not supported with this version\
+                puts stderr "warning(version): '$key' property is not supported with this version\
                             '$versionLib' (minimum version = '$minversion'),\
-                            this key will not be taken into account."
+                            it will not be taken into account."
                 continue
             }
 
@@ -666,7 +666,7 @@ proc ticklecharts::merge {d other} {
             set value  [dict get $other $key]
             set mytype [ticklecharts::typeOf $value]
 
-            # check type in default list
+            # Check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 errorType "set" $key $mytype $type $minversion $multiversions
             }
@@ -680,7 +680,7 @@ proc ticklecharts::merge {d other} {
 
             set mytype [ticklecharts::typeOf $value]
 
-            # check type in default list
+            # Check type in default list
             if {![ticklecharts::matchTypeOf $mytype $type typekey]} {
                 errorType "default" $key $mytype $type $minversion $multiversions
             }
