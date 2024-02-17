@@ -463,10 +463,10 @@ oo::define ticklecharts::chart {
         return {}
     }
 
-    method ParallelAxis {args} {
+    method ParallelAxis {value} {
         # Init ParallelAxis (available only for parallel chart)
         #
-        # args - Options described below.
+        # value - Options described below.
         #
         # gets default option values : [self] getOptions -axis Parallel
         # or
@@ -474,8 +474,7 @@ oo::define ticklecharts::chart {
         #
         # Returns nothing
 
-        set options [ticklecharts::parallelAxis $args]
-        foreach axis $options {
+        foreach axis [ticklecharts::parallelAxis $value] {
             set f [ticklecharts::optsToEchartsHuddle $axis]
             lappend _options @D=parallelAxis [list {*}$f]
         }
