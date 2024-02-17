@@ -298,43 +298,65 @@ proc ticklecharts::singleAxis {value} {
 
 proc ticklecharts::parallelAxis {value} {
 
-    foreach item {*}$value {
+    set setopts {}
+    foreach line [split [info body ticklecharts::parallelAxis] "\n"] {
+        if {[string match {*-minversion [0-9]*} $line]} {
+            # Adds minus sign to key to control 
+            # Simply to check whether properties with a minus sign are also accepted.
+            lappend setopts [list setdef options -[lindex $line 2] -minversion {} -validvalue {} -type null -default "nothing"]
+        }
+    }
+
+    foreach item $value {
 
         if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
-        setdef options -id              -minversion 5  -validvalue {}                  -type str|null            -trace yes  -default "nothing"
-        setdef options -dim             -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0
-        setdef options -parallelIndex   -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0
-        setdef options -realtime        -minversion 5  -validvalue {}                  -type bool                -trace no   -default "True"
-        setdef options -areaSelectStyle -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::areaSelectStyle $item]
-        setdef options -type            -minversion 5  -validvalue formatType          -type str|null            -trace no   -default "value"
-        setdef options -name            -minversion 5  -validvalue {}                  -type str|null            -trace no   -default "nothing"
-        setdef options -nameLocation    -minversion 5  -validvalue formatNameLocation  -type str|null            -trace no   -default "end"
-        setdef options -nameTextStyle   -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $item]
-        setdef options -nameGap         -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -nameRotate      -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -nameTruncate    -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
-        setdef options -inverse         -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options -boundaryGap     -minversion 5  -validvalue {}                  -type bool|list.d|null    -trace no   -default "nothing"
-        setdef options -min             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-        setdef options -max             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-        setdef options -scale           -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options -splitNumber     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -minInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -maxInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -interval        -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -logBase         -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options -silent          -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options -triggerEvent    -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options -axisLine        -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $item]
-        setdef options -axisTick        -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $item]
-        setdef options -minorTick       -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $item]
-        setdef options -axisLabel       -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLabel $item]
-        setdef options -data            -minversion 5  -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
+        # Inserts properties with minus sign.
+        foreach val $setopts {{*}$val}
+
+        # Removes minus sign at the beginning of the item key.
+        # Note: both are accepted.
+        foreach {key info} $item {
+            if {[string range $key 0 0] eq "-"} {
+                set item   [dict remove $item $key]
+                set newkey [string range $key 1 end]
+                dict set item $newkey $info
+            }
+        }
+
+        setdef options id              -minversion 5  -validvalue {}                  -type str|null            -trace yes  -default "nothing"
+        setdef options dim             -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0
+        setdef options parallelIndex   -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0
+        setdef options realtime        -minversion 5  -validvalue {}                  -type bool                -trace no   -default "True"
+        setdef options areaSelectStyle -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::areaSelectStyle $item]
+        setdef options type            -minversion 5  -validvalue formatType          -type str|null            -trace no   -default "value"
+        setdef options name            -minversion 5  -validvalue {}                  -type str|null            -trace no   -default "nothing"
+        setdef options nameLocation    -minversion 5  -validvalue formatNameLocation  -type str|null            -trace no   -default "end"
+        setdef options nameTextStyle   -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $item]
+        setdef options nameGap         -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options nameRotate      -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options nameTruncate    -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
+        setdef options inverse         -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+        setdef options boundaryGap     -minversion 5  -validvalue {}                  -type bool|list.d|null    -trace no   -default "nothing"
+        setdef options min             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
+        setdef options max             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
+        setdef options scale           -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+        setdef options splitNumber     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options minInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options maxInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options interval        -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options logBase         -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options silent          -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+        setdef options triggerEvent    -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+        setdef options axisLine        -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $item]
+        setdef options axisTick        -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $item]
+        setdef options minorTick       -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $item]
+        setdef options axisLabel       -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLabel $item]
+        setdef options data            -minversion 5  -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
         #...
 
         # remove key(s)...
-        set item [dict remove $item -areaSelectStyle -nameTextStyle -axisLine -axisTick -minorTick -axisLabel -nameTruncate]
+        set item [dict remove $item areaSelectStyle nameTextStyle axisLine axisTick minorTick axisLabel nameTruncate]
 
         lappend opts [merge $options $item]
         set options {}
