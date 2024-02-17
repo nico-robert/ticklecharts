@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Add ParallelAxis as method instead of a option.
 # v3.0 : Move '-backgroundColor', '-animation' from constructor to 'SetOptions' method with v3.0.1
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Update of 'ParallelAxis' method with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without. (v3.2.3)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -161,27 +163,31 @@ try {
                                      outOfRange {color "#ccc"} \
                                      top 20 textStyle {fontWeight normal fontSize 12 color #fff} realtime "False" \
                                      ] \
-                      -parallel {left 280 top 20 width 400 layout "vertical" parallelAxisDefault {
-                                                                                    type value name "nutrients" nameLocation "end" nameGap 20 nameTextStyle {color #fff fontSize 14 verticalAlign "middle"}
-                                                                                    axisLine {show "True" lineStyle {color "#aaa"}} axisTick {lineStyle {color "#777"}} splitLine {show "False"}
-                                                                                    axisLabel {color #fff} realtime "False"
-                                                                                }}
-    $chart ParallelAxis [list [list -dim 16 -name [dict get [lindex $schema 16] name] -scale "True" -nameLocation "end"] \
-                                        [list -dim 2 -name [dict get [lindex $schema 2] name] ] \
-                                        [list -dim 4 -name [dict get [lindex $schema 4] name] ] \
-                                        [list -dim 3 -name [dict get [lindex $schema 3] name] ] \
-                                        [list -dim 5 -name [dict get [lindex $schema 5] name] ] \
-                                        [list -dim 6 -name [dict get [lindex $schema 6] name] ] \
-                                        [list -dim 7 -name [dict get [lindex $schema 7] name] ] \
-                                        [list -dim 8 -name [dict get [lindex $schema 8] name]] \
-                                        [list -dim 9 -name [dict get [lindex $schema 9] name]] \
-                                        [list -dim 10 -name [dict get [lindex $schema 10] name]] \
-                                        [list -dim 11 -name [dict get [lindex $schema 11] name]] \
-                                        [list -dim 12 -name [dict get [lindex $schema 12] name]] \
-                                        [list -dim 13 -name [dict get [lindex $schema 13] name]] \
-                                        [list -dim 14 -name [dict get [lindex $schema 14] name]] \
-                                        [list -dim 15 -name [dict get [lindex $schema 15] name]] \
-                                    ]
+                      -parallel {
+                            left 280 top 20 width 400 layout "vertical" 
+                            parallelAxisDefault {
+                                type value name "nutrients" nameLocation "end" nameGap 20 nameTextStyle {color #fff fontSize 14 verticalAlign "middle"}
+                                axisLine {show "True" lineStyle {color "#aaa"}} axisTick {lineStyle {color "#777"}} splitLine {show "False"}
+                                axisLabel {color #fff} realtime "False"
+                            }
+                        }
+    $chart ParallelAxis [list \
+        [list dim 16 name [dict get [lindex $schema 16] name] scale "True" nameLocation "end"] \
+        [list dim 2  name [dict get [lindex $schema 2] name] ] \
+        [list dim 4  name [dict get [lindex $schema 4] name] ] \
+        [list dim 3  name [dict get [lindex $schema 3] name] ] \
+        [list dim 5  name [dict get [lindex $schema 5] name] ] \
+        [list dim 6  name [dict get [lindex $schema 6] name] ] \
+        [list dim 7  name [dict get [lindex $schema 7] name] ] \
+        [list dim 8  name [dict get [lindex $schema 8] name]] \
+        [list dim 9  name [dict get [lindex $schema 9] name]] \
+        [list dim 10 name [dict get [lindex $schema 10] name]] \
+        [list dim 11 name [dict get [lindex $schema 11] name]] \
+        [list dim 12 name [dict get [lindex $schema 12] name]] \
+        [list dim 13 name [dict get [lindex $schema 13] name]] \
+        [list dim 14 name [dict get [lindex $schema 14] name]] \
+        [list dim 15 name [dict get [lindex $schema 15] name]] \
+    ]
     
     $chart Add "parallelSeries" -name "nutrients" \
                                 -inactiveOpacity 0 \

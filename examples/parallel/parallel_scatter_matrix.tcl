@@ -4,6 +4,8 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v2.0 : Add ParallelAxis as method instead of a option.
 # v3.0 : Move '-animation' from constructor to 'SetOptions' method with v3.0.1
 # v4.0 : Update example with the new 'Add' method for chart series.
+# v5.0 : Update of 'ParallelAxis' method with key property without the minus sign at the beginning.
+#        Note : Both are accepted, with or without. (v3.2.3)
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -194,19 +196,23 @@ $layout SetGlobalOptions -animation "False" \
 
 set parallel [ticklecharts::chart new]
 
-$parallel SetOptions -parallel {left 2% right 18% bottom 5% height 30% width 55% parallelAxisDefault {
-                                                                                type value name "AQI指数" nameLocation "end" nameGap 20 splitNumber 3 nameTextStyle {fontSize 14 verticalAlign "middle"}
-                                                                                axisLine {show "True" lineStyle {color "#555"}} axisTick {lineStyle {color "#555"}} splitLine {show "False"}
-                                                                                axisLabel {color "#555"}
-                                                                               }}
-$parallel ParallelAxis [list [list -dim 0 -name [dict get [lindex $schema 0] text]] \
-                                      [list -dim 1 -name [dict get [lindex $schema 1] text] ] \
-                                      [list -dim 2 -name [dict get [lindex $schema 2] text] ] \
-                                      [list -dim 3 -name [dict get [lindex $schema 3] text] ] \
-                                      [list -dim 4 -name [dict get [lindex $schema 4] text] ] \
-                                      [list -dim 5 -name [dict get [lindex $schema 5] text] ] \
-                                      [list -dim 6 -name [dict get [lindex $schema 6] text] -type "category" -data [list [list "优" "良" "轻度" "中度" "重度" "严重"]]] \
-                                ]
+$parallel SetOptions -parallel {
+        left 2% right 18% bottom 5% height 30% width 55% 
+        parallelAxisDefault {
+            type value name "AQI指数" nameLocation "end" nameGap 20 splitNumber 3 nameTextStyle {fontSize 14 verticalAlign "middle"}
+            axisLine {show "True" lineStyle {color "#555"}} axisTick {lineStyle {color "#555"}} splitLine {show "False"}
+            axisLabel {color "#555"}
+        }
+    }
+$parallel ParallelAxis [list \
+    [list dim 0 name [dict get [lindex $schema 0] text]] \
+    [list dim 1 name [dict get [lindex $schema 1] text] ] \
+    [list dim 2 name [dict get [lindex $schema 2] text] ] \
+    [list dim 3 name [dict get [lindex $schema 3] text] ] \
+    [list dim 4 name [dict get [lindex $schema 4] text] ] \
+    [list dim 5 name [dict get [lindex $schema 5] text] ] \
+    [list dim 6 name [dict get [lindex $schema 6] text] type "category" data {{"优" "良" "轻度" "中度" "重度" "严重"}}] \
+]
 
 
 $parallel Add "parallelSeries" -name "parallel" -smooth "True" -lineStyle {width 1 opacity 0.3} -data [list {*}$rawData]
