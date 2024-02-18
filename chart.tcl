@@ -178,17 +178,16 @@ oo::define ticklecharts::chart {
         # Delete series by index.
         #
         # Returns nothing
-        set i -1 ; set j 0 ; set k 0
+        set i -1 ; set j 0
         foreach {key opts} [my options] {
             if {[string match {*series} $key]} {
                 if {[incr i] == $index} {
-                    set k 1 ; break
+                    set _options [lreplace [my options] $j $j+1]
+                    break
                 }
             }
             incr j 2
         }
-
-        if {$k} {set _options [lreplace [my options] $j [expr {$j + 1}]]}
 
         return {}
     }
