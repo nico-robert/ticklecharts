@@ -51,19 +51,19 @@ $chart Render
 ##### Arguments available :
 | args           | Description             | Default values
 | ------         | ------                  | ------
-| _-title_       | HTML page header        | `"ticklEcharts !!!"`
+| _-title_       | HTML title page         | `"ticklEcharts !!!"`
 | _-width_       | Container's width       | `"900px"`
 | _-height_      | Container's height      | `"500px"`
 | _-renderer_    | canvas or svg           | `"canvas"`
 | _-jschartvar_  | Variable name chart     | `chart_[uuid]`
 | _-divid_       | Name container's ID     | `id_[uuid]`
 | _-outfile_     | Full path HTML file     | `'./render.html'`
-| _-jsecharts_   | Full path echarts.js    | `https://cdn.jsdelivr.net/...`
-| _-jsvar_       | JS variable name        | `option_[uuid]`
-| _-script_      | jsfunc class            | `'null'`
+| _-jsecharts_   | Script echarts.js       | `https://cdn.jsdelivr.net/...`
+| _-jsvar_       | Variable name option    | `option_[uuid]`
+| _-script_      | Extra JS script         | `'null'` (see `Add script` section)
 | _-class_       | Specify container's CSS | `"chart-container"`
 | _-style_       | Inline style            | `"width:'-width'; height:'-height'";`
-| _-template_    | file or string          | `'file'` (template.html)
+| _-template_    | File or string template | `'file'` (template.html)
 
 ```tcl
 # Example properties :
@@ -83,7 +83,7 @@ $chart Yaxis
 $chart Add "lineSeries" -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
 # Mon = X value
 # 150 = Y value
-# Now '-data' in Xaxis method is not included
+# Please note : X data is not included.
 $chart Xaxis
 $chart Yaxis
 ```
@@ -92,14 +92,14 @@ $chart Yaxis
 # Example for lineseries
 # Additional options are valid, see ticklecharts::lineItem in options.tcl
 $chart Add "lineSeries" -dataItem {
-                            {name "Mon" value 150}
-                            {name "Tue" value 230}
-                            {name "Wed" value 224}
-                            {name "Thu" value 218}
-                            {name "Fri" value 135}
-                            {name "Sat" value 147}
-                            {name "Sun" value 260}
-                        }
+    {name "Mon" value 150}
+    {name "Tue" value 230}
+    {name "Wed" value 224}
+    {name "Thu" value 218}
+    {name "Fri" value 135}
+    {name "Sat" value 147}
+    {name "Sun" value 260}
+}
 ```
 `-dataset` :
 ```tcl
@@ -228,12 +228,11 @@ $chart toJSON
 There are three ways to do this :
 
 - Encapsulates the string with braces + quotes :
-> `{"{b0}: {c0}<br />{b1}: {c1}"}`
+> {"{b0}: {c0}\<br />{b1}: {c1}"}
 - Use ticklecharts::eString _class_ :
-> `new estr "{b0}: {c0}<br />{b1}: {c1}"`
-
-- Replaces special chars : (Deprecated)
-> `"<0123>b0<0125>: <0123>c0<0125><br /><0123>b1<0125>: <0123>c1<0125>"`
+> new estr "{b0}: {c0}\<br />{b1}: {c1}"
+- Replaces by special chars : (Deprecated)
+> "<0123>b0<0125>: <0123>c0<0125>\<br /><0123>b1<0125>: <0123>c1<0125>"
 
 | Chars         | Map      
 | ------------- | ---------
@@ -295,7 +294,6 @@ $chart Render -title "Example jsfunc class" -script [list [list $var $header]]
             "maskImage": maskImage,
             // ...
         }
-    ...
     </script>
   </body>
 </html>
@@ -316,8 +314,8 @@ ticklecharts::eHuddleCritcl True
 
 source examples/candlestick/candlestick_large_scale.tcl ; # dataCount set to 200,000
 #             | This run (Mac Os Core i7)
-#    pure Tcl |   25354915 microseconds per iteration 
-#    critcl   |    6338728 microseconds per iteration (≃4x faster)
+#    pure Tcl | 25354915 microseconds per iteration 
+#    critcl   |  6338728 microseconds per iteration (≃4x faster)
 ```
 `Note` : _No advantage to use this command with small data._
 
@@ -335,7 +333,7 @@ Since version **3.2.3** when default type is `list.d` it can be replaced by `lis
 This improves performance by avoiding the need to scan the list to find the type of data. By example, the default type   
 for `Xaxis.data` is `list.d`, this property can be written as follows : 
 ```tcl
-$chart Xaxis -data [new elist.s {...}]; # If you are sure that the data is of type 'string'.
+$chart Xaxis -data [new elist.s {...}] ; # If you are sure that the X data is of type 'string'.
 ```
 
 Global variables :
@@ -398,7 +396,7 @@ $chart Yaxis -name "Precipitation" -position "left" -min 0 -max 250 -interval 50
 $chart Yaxis -name "Temperature"   -position "right" -min 0 -max 25  -interval 5 \
                                    -axisLabel [list formatter [new estr "{value} °C"]]
 
-# Add bars.
+# Add bars series.
 $chart Add "barSeries" -name "Evaporation" \
                        -data [list {2.0 4.9 7.0 23.2 25.6 76.7 135.6 162.2 32.6 20.0 6.4 3.3}]
                     
