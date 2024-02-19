@@ -314,6 +314,17 @@ oo::define ticklecharts::chart {
         if {$methodCall ne "RenderJupyter"} {
             set template [ticklecharts::readHTMLTemplate $template]
         }
+
+        # SVG renderer is not supported with Echarts GL.
+        set renderer [lindex [dict get $opts -renderer] 0]
+        if {$renderer eq "svg"} {
+            if {[my getType] eq "chart3D" || "globe" in [[my get] keys] ||
+                [regexp {3D|surface|GL} [[my get] getTypeSeries]]} {
+                error "wrong # args: 'svg' renderer is not supported\
+                       with echarts-gl."
+            }
+        }
+
         set newhtml [ticklecharts::htmlMap [my get] $template $opts]
 
         # Replaces json data in and return HTML...

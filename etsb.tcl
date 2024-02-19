@@ -171,6 +171,15 @@ if {[namespace exists ::tsb]} {
                 set merge    [lindex [dict get $opts -merge] 0]
                 set evalJSON [lindex [dict get $opts -evalJSON] 0]
 
+                # SVG renderer is not supported with Echarts GL.
+                if {$renderer eq "svg"} {
+                    if {[my getType] eq "chart3D" || "globe" in [[my get] keys] ||
+                        [regexp {3D|surface|GL} [[my get] getTypeSeries]]} {
+                        error "wrong # args: 'svg' renderer is not supported\
+                               with echarts-gl."
+                    }
+                }
+
                 # Add global options to main options.
                 if {[my getType] in {chart chart3D}} {
                     set myopts [list {*}[my globalOptions] {*}[my options]]
