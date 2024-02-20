@@ -1183,6 +1183,7 @@ proc ticklecharts::parallelSeries {index value} {
     setdef options -zlevel                  -minversion 5       -validvalue {}                  -type num               -default 0
     setdef options -z                       -minversion 5       -validvalue {}                  -type num               -default 2
     setdef options -silent                  -minversion 5       -validvalue {}                  -type bool              -default "False"
+    setdef options -blendMode               -minversion 5       -validvalue formatBlendM        -type str|null          -default "nothing"
     setdef options -animation               -minversion 5       -validvalue {}                  -type bool|null         -default "nothing"
     setdef options -animationThreshold      -minversion 5       -validvalue {}                  -type num|null          -default "nothing"
     setdef options -animationDuration       -minversion 5       -validvalue {}                  -type num|jsfunc|null   -default "nothing"
