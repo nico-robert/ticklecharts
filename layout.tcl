@@ -86,14 +86,15 @@ oo::define ticklecharts::Gridlayout {
         #           and the second is the vertical position. (array)
         #
         # Returns nothing
+        if {[llength $args] % 2} {
+            error "wrong # args: should be \"[self] [self method]\
+                   \$chart ?-top top? ...\""
+        }
+
         foreach {key value} $args {
-
             if {$value eq ""} {
-                error "No value specified for key '$key'"
-            }
-
-            if {[llength $value] != [llength $chart]} {
-                error "llength charts must be equal with values of $key"
+                error "wrong # args: No value specified for\
+                       this property '$key'"
             }
 
             switch -exact -- $key {
@@ -104,7 +105,11 @@ oo::define ticklecharts::Gridlayout {
                 "-width"  {set width $value}
                 "-height" {set height $value}
                 "-center" {set center $value}
-                default {error "Unknown key '$key' specified"}
+                default {
+                    error "wrong # args: Unknown property '$key' specified,\
+                          should be '-top, -bottom, -left, -right, -width,\
+                          -height or -center'"
+                }
             }
         }
 
@@ -112,22 +117,22 @@ oo::define ticklecharts::Gridlayout {
         set chartType [$chart getType]
 
         if {"series" ni $keys} {
-            error "charts must have a key 'series'"
+            error "\$chart must have a series'"
         }
 
         # Not supported yet.
         if {"graphic" in $keys} {
-            error "graphic not supported."
+            error "`graphic` key option not supported."
         }
 
         if {([lsearch $keys grid*] == -1) && ($args eq "")} {
-            error "charts must have a grid key if no options."
+            error "\$chart must have a 'grid' arguments if no options."
         }
 
         switch -exact -- $chartType {
             chart   {incr _indexchart2D ; lappend _charts2D $chart}
             chart3D {incr _indexchart3D ; lappend _charts3D $chart}
-            default {error "class '$chartType' not supported."}
+            default {error "Class '$chartType' not supported."}
         }
 
         set g 0 ; # variable for grid*
@@ -447,8 +452,9 @@ oo::define ticklecharts::Gridlayout {
     #   toJSON   - Returns json chart data.
     #   toHTML   - Export chart as HTML fragment.
     #   get      - Gets huddle object.
+    #   setTrace - Sets trace properties.
     # ...
-    foreach method {Render dataset options toJSON toHTML get} {
+    foreach method {Render dataset options toJSON toHTML get setTrace} {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 
