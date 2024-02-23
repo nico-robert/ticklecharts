@@ -65,7 +65,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatBarGap {
             # possible values...
             if {![regexp {^[-0-9.]+%$} $value]} {
-                errorEFormat "$key ($nameproc) : The gap between bars between different series,\
+                errorEFormat "$key\($nameproc) : The gap between bars between different series,\
                     is a percent value like '30%', which means 30% of the bar width.\
                     Set barGap as '-100%' can overlap bars that belong to different series,\
                     which is useful when making a series of bar be background."
@@ -86,7 +86,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                errorEFormat "$key ($nameproc) : value can be instant pixel value like 20;\
+                errorEFormat "$key\($nameproc) : value can be instant pixel value like 20;\
                     it can also be a percentage value relative to container width like '20%';\
                     and it can also be 'auto', left', 'center', or 'right'"
             }
@@ -107,7 +107,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                errorEFormat "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
+                errorEFormat "$key\($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
                     Percent value: For example, can be a string '33%', means the final result\
                     should be calculated by this value and the height of its parent.\
                     'center': means position the element in the middle of according to its parent.\
@@ -130,7 +130,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                errorEFormat "$key ($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
+                errorEFormat "$key\($nameproc) : Pixel value. For example, can be a number 30, means 30px.\
                     Percent value: For example, can be a string '33%', means the final result\
                     should be calculated by this value and the height of its parent.\
                     'middle': means position the element in the middle of according to its parent.\
@@ -152,7 +152,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                errorEFormat "$key ($nameproc) value can be instant pixel value like 20;\
+                errorEFormat "$key\($nameproc) value can be instant pixel value like 20;\
                     it can also be a percentage value relative to container width like '20%';\
                     and it can also be 'auto', top', 'middle', or 'bottom'"
             }
@@ -161,6 +161,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatBottom - 
         formatRight {
             # possible values...
+            lappend validvalue {^auto$}
             lappend validvalue {^[0-9.]+%$}
             lappend validvalue {^[0-9.]+$}
 
@@ -172,7 +173,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
 
             if {!$match} {
-                errorEFormat "$key ($nameproc) value can be instant pixel value like 20;\
+                errorEFormat "$key\($nameproc) value can be instant pixel value like 20;\
                     it can also be a percentage value relative to container width like '20%'."
             }
         }
@@ -206,7 +207,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
 
                 if {!$match} {
-                    errorEFormat "$key ($nameproc). Color can be represented in RGB, for example 'rgb(128, 128, 128)'.\
+                    errorEFormat "$key\($nameproc). Color can be represented in RGB, for example 'rgb(128, 128, 128)'.\
                         RGBA can be used when you need alpha channel, for example 'rgba(128, 128, 128, 0.5)'.\
                         You may also use hexadecimal format, for example '#ccc'. The current value is '$value'"
                 }
@@ -467,7 +468,8 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 "pieSeries"        {append validvalue " calendar none gmap"}
                 "heatmapSeries"    {append validvalue " calendar gmap"}
                 "scatterSeries"    {append validvalue " calendar gmap"}
-                "linesSeries"      {lappend validvalue gmap}
+                "linesSeries"      {set validvalue {cartesian2d gmap geo}}
+                "surfaceSeries"    -
                 "line3DSeries"     {set validvalue "cartesian3D"}
                 "lines3DSeries"    {set validvalue {geo3D globe}}
                 "scatter3DSeries"  -
@@ -483,6 +485,9 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatSampling {
             # possible values...
             set validvalue {lttb average max min sum}
+            if {[ticklecharts::vCompare $echarts_version "5.5.0"] >= 0} {
+                append validvalue " minmax"
+            }
             if {$value ni $validvalue} {
                 errorEFormat "'$value' should be '[eFormat $validvalue]'\
                     for this key: '$key' in '$nameproc' level procedure."
@@ -507,6 +512,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
         }
 
+        formatPadangle -
         formatStartangle {
             # possible values...
             if {![expr {$value >= 0 && $value <= 360}]} {
@@ -517,10 +523,17 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatEndangle {
             # possible values...
+            if {([ticklecharts::whichSeries? $nameproc] eq "pieSeries") && ($type eq "str")} {
+                if {$value ne "auto"} {
+                    errorEFormat "'$value' should be 'auto'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
+            } else {
             if {![expr {$value <= 0 && $value >= -360}]} {
                 errorEFormat "'$value' should be between '0' and '-360'\
                     for this key: '$key' in '$nameproc' level procedure."
             }
+        }
         }
 
         formatAType {
@@ -1243,15 +1256,6 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             }
         }
 
-        formatTypeScatter {
-            # possible values...
-            set validvalue {scatter effectScatter}
-            if {$value ni $validvalue} {
-                errorEFormat "'$value' should be '[eFormat $validvalue]'\
-                    for this key: '$key' in '$nameproc' level procedure."
-            }
-        }
-
         formatNameMap {
             # possible values...
             if {$type eq "str"} {
@@ -1385,6 +1389,67 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         formatBlendTo {
             # possible values...
             set validvalue {albedo emission}
+            if {$value ni $validvalue} {
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
+
+        formatalignL {
+            # possible values...
+            set validvalue {left center right}
+            if {$value ni $validvalue} {
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
+
+        formatValignL {
+            # possible values...
+            set validvalue {top middle bottom}
+            if {$value ni $validvalue} {
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
+
+        formatTypeBar      - formatTypeLine    - formatTypePie         -
+        formatTypeFunnel   - formatTypeRadar   - formatTypeHeatmap     -
+        formatTypeSunburst - formatTypeTree    - formatTypeTRiver      -
+        formatTypeSankey   - formatTypePBar    - formatTypeCandlestick -
+        formatTypeGauge    - formatTypeGraph   - formatTypeWCloud      -
+        formatTypeBoxplot  - formatTypeTreemap - formatTypeMap         -
+        formatTypeLines    - formatTypeBar3D   - formatTypeL3D         -
+        formatTypeSurf     - formatTypeSc3D    - formatTypeLs3D        - 
+        formatTypeScatter {
+            # possible values...
+            switch -exact -- $formattype {
+                formatTypeBar          {set validvalue "bar"}
+                formatTypeLine         {set validvalue "line"}
+                formatTypePie          {set validvalue "pie"}
+                formatTypeFunnel       {set validvalue "funnel"}
+                formatTypeRadar        {set validvalue "radar"}
+                formatTypeHeatmap      {set validvalue "heatmap"}
+                formatTypeSunburst     {set validvalue "sunburst"}
+                formatTypeTree         {set validvalue "tree"}
+                formatTypeTRiver       {set validvalue "themeRiver"}
+                formatTypeSankey       {set validvalue "sankey"}
+                formatTypePBar         {set validvalue "pictorialBar"}
+                formatTypeGauge        {set validvalue "gauge"}
+                formatTypeGraph        {set validvalue "graph"}
+                formatTypeWCloud       {set validvalue "wordCloud"}
+                formatTypeBoxplot      {set validvalue "boxplot"}
+                formatTypeTreemap      {set validvalue "treemap"}
+                formatTypeCandlestick  {set validvalue "candlestick"}
+                formatTypeScatter      {set validvalue {scatter effectScatter}}
+                formatTypeMap          {set validvalue "map"}
+                formatTypeLines        {set validvalue "lines"}
+                formatTypeBar3D        {set validvalue "bar3D"}
+                formatTypeL3D          {set validvalue "line3D"}
+                formatTypeSurf         {set validvalue "surface"}
+                formatTypeSc3D         {set validvalue "scatter3D"}
+                formatTypeLs3D         {set validvalue "lines3D"}
+            }
             if {$value ni $validvalue} {
                 errorEFormat "'$value' should be '[eFormat $validvalue]'\
                     for this key: '$key' in '$nameproc' level procedure."

@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -229,6 +229,7 @@ proc ticklecharts::tooltip {value} {
     setdef options enterable          -minversion 5       -validvalue {}               -type bool|null              -default "nothing"
     setdef options renderMode         -minversion 5       -validvalue formatRenderMode -type str|null               -default "nothing"
     setdef options confine            -minversion 5       -validvalue formatConfine    -type bool|null              -default "nothing"
+    setdef options appendTo           -minversion "5.5.0" -validvalue {}               -type str|jsfunc|null        -default "nothing"
     setdef options appendToBody       -minversion 5       -validvalue {}               -type bool|null              -default "nothing"
     setdef options className          -minversion 5       -validvalue {}               -type str|null               -default "nothing"
     setdef options transitionDuration -minversion 5       -validvalue {}               -type num|null               -default 0.4

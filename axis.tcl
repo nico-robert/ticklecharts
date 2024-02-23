@@ -89,33 +89,34 @@ proc ticklecharts::angleAxis {value} {
 
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -id             -minversion 5  -validvalue {}               -type str|null            -trace yes  -default "nothing"
-    setdef options -polarIndex     -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -startAngle     -minversion 5  -validvalue formatStartangle -type num                 -trace no   -default 90
-    setdef options -clockwise      -minversion 5  -validvalue {}               -type bool                -trace no   -default "True"
-    setdef options -type           -minversion 5  -validvalue formatType       -type str|null            -trace no   -default "nothing"
-    setdef options -boundaryGap    -minversion 5  -validvalue {}               -type bool|list.d|null    -trace no   -default "nothing"
-    setdef options -min            -minversion 5  -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale          -minversion 5  -validvalue {}               -type bool|null           -trace no   -default "nothing"
-    setdef options -splitNumber    -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -minInterval    -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -maxInterval    -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -interval       -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -logBase        -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -silent         -minversion 5  -validvalue {}               -type bool|null           -trace no   -default "nothing"
-    setdef options -triggerEvent   -minversion 5  -validvalue {}               -type bool|null           -trace no   -default "nothing"
-    setdef options -axisLine       -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
-    setdef options -axisTick       -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
-    setdef options -minorTick      -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
-    setdef options -axisLabel      -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLabel $value]
-    setdef options -splitLine      -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::splitLine $value]
-    setdef options -minorSplitLine -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::minorSplitLine $value]
-    setdef options -splitArea      -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::splitArea $value]
-    setdef options -data           -minversion 5  -validvalue {}               -type list.d|null         -trace no   -default "nothing"
-    setdef options -axisPointer    -minversion 5  -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
-    setdef options -zlevel         -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -z              -minversion 5  -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -id             -minversion 5        -validvalue {}               -type str|null            -trace yes  -default "nothing"
+    setdef options -polarIndex     -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -startAngle     -minversion 5        -validvalue formatStartangle -type num                 -trace no   -default 90
+    setdef options -endAngle       -minversion "5.5.0"  -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -clockwise      -minversion 5        -validvalue {}               -type bool                -trace no   -default "True"
+    setdef options -type           -minversion 5        -validvalue formatType       -type str|null            -trace no   -default "nothing"
+    setdef options -boundaryGap    -minversion 5        -validvalue {}               -type bool|list.d|null    -trace no   -default "nothing"
+    setdef options -min            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
+    setdef options -max            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
+    setdef options -scale          -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
+    setdef options -splitNumber    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -minInterval    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -maxInterval    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -interval       -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -logBase        -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -silent         -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
+    setdef options -triggerEvent   -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
+    setdef options -axisLine       -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
+    setdef options -axisTick       -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
+    setdef options -minorTick      -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
+    setdef options -axisLabel      -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLabel $value]
+    setdef options -splitLine      -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::splitLine $value]
+    setdef options -minorSplitLine -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::minorSplitLine $value]
+    setdef options -splitArea      -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::splitArea $value]
+    setdef options -data           -minversion 5        -validvalue {}               -type list.d|null         -trace no   -default "nothing"
+    setdef options -axisPointer    -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
+    setdef options -zlevel         -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -z              -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
     #...
 
     # remove key(s)...

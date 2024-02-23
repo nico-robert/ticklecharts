@@ -1,19 +1,17 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
 
 proc ticklecharts::levelsSankeyItem {value} {
 
-    if {![dict exists $value -levels]} {
+    if {![ticklecharts::keyDictExists "-levels" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value -levels] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options depth       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
         setdef options label       -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
@@ -42,9 +40,7 @@ proc ticklecharts::sankeyItem {value key} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
         setdef options value       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
@@ -72,13 +68,12 @@ proc ticklecharts::linksItem {value key} {
         return "nothing"
     }
 
-    set levelP [ticklecharts::getLevelProperties [info level]]
+    set levelP      [ticklecharts::getLevelProperties [info level]]
+    set graphSeries [expr {[ticklecharts::whichSeries? $levelP] eq "graphSeries"}]
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options source      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
         setdef options target      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
@@ -88,7 +83,7 @@ proc ticklecharts::linksItem {value key} {
         setdef options blur        -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
         setdef options select      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
 
-        if {[ticklecharts::whichSeries? $levelP] eq "graphSeries"} {
+        if {$graphSeries} {
             setdef options source            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
             setdef options target            -minversion 5  -validvalue {}               -type str|num|null    -default "nothing"
             setdef options symbol            -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
@@ -110,11 +105,11 @@ proc ticklecharts::linksItem {value key} {
 
 proc ticklecharts::themeRiverData {value} {
 
-    if {![dict exists $value -data]} {
+    if {![ticklecharts::keyDictExists "-data" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value -data] {
+    foreach item [dict get $value $key] {
 
         if {[llength $item] != 3} {
             error "Item list should be a list of 3 elements for\
@@ -143,15 +138,11 @@ proc ticklecharts::treeItem {value} {
 
     set key [ticklecharts::itemKey {-data -dataItem children} $value]
 
-    if {$key eq ""} {
-        return "nothing"
-    }
+    if {$key eq ""} {return "nothing"}
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name                    -minversion 5  -validvalue {}            -type str|null        -default "nothing"
         setdef options value                   -minversion 5  -validvalue {}            -type num|null        -default "nothing"
@@ -187,9 +178,7 @@ proc ticklecharts::legendItem {value} {
 
     foreach item [dict get $value dataLegendItem] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name         -minversion 5  -validvalue {}               -type str|null     -default "nothing"
         setdef options icon         -minversion 5  -validvalue formatItemSymbol -type str|null     -default "nothing"
@@ -213,15 +202,11 @@ proc ticklecharts::sunburstItem {value} {
 
     set key [ticklecharts::itemKey {-data -dataItem children} $value]
 
-    if {$key eq ""} {
-        return "nothing"
-    }
+    if {$key eq ""} {return "nothing"}
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
         setdef options value       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
@@ -244,15 +229,13 @@ proc ticklecharts::sunburstItem {value} {
 
 proc ticklecharts::levelsItem {value} {
 
-    if {![dict exists $value -levels]} {
+    if {![ticklecharts::keyDictExists "-levels" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value -levels] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options radius      -minversion "5.2.0" -validvalue {}  -type list.d|null -default "nothing"
         setdef options label       -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
@@ -277,15 +260,11 @@ proc ticklecharts::treemapItem {value} {
 
     set key [ticklecharts::itemKey {-data -dataItem children} $value]
 
-    if {$key eq ""} {
-        return "nothing"
-    }
+    if {$key eq ""} {return "nothing"}
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $key value
@@ -328,15 +307,13 @@ proc ticklecharts::treemapItem {value} {
 
 proc ticklecharts::levelsTreeMapItem {value} {
 
-    if {![dict exists $value -levels]} {
+    if {![ticklecharts::keyDictExists "-levels" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value -levels] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options visualDimension      -minversion 5  -validvalue {}                  -type num|null                -default "nothing"
         setdef options visualMin            -minversion 5  -validvalue {}                  -type num|null                -default "nothing"
@@ -369,23 +346,22 @@ proc ticklecharts::barItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name       -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options value      -minversion 5  -validvalue {}  -type num|null    -default "nothing"
-        setdef options groupId    -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options label      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
-        setdef options labelLine  -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
-        setdef options itemStyle  -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur       -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
-        setdef options select     -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+        setdef options name          -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options value         -minversion 5       -validvalue {}  -type num|null    -default "nothing"
+        setdef options groupId       -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options childGroupId  -minversion "5.5.0" -validvalue {}  -type str|null    -default "nothing"
+        setdef options label         -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine     -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle     -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis      -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur          -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select        -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
 
         # remove key(s)...
         set item [dict remove $item label labelLine itemStyle emphasis blur select]
@@ -402,9 +378,7 @@ proc ticklecharts::pictorialBarItem {value key} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $key value
@@ -455,27 +429,27 @@ proc ticklecharts::lineItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
-        setdef options value            -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbol           -minversion 5  -validvalue formatItemSymbol -type str|null    -default "nothing"
-        setdef options symbolSize       -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolRotate     -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolKeepAspect -minversion 5  -validvalue {}               -type bool        -default "False"
-        setdef options symbolOffset     -minversion 5  -validvalue {}               -type list.n|null -default "nothing"
-        setdef options label            -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
-        setdef options labelLine        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::labelLine $item]
-        setdef options itemStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis         -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur             -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
-        setdef options tooltip          -minversion 5  -validvalue {}               -type dict|null   -default "nothing"
+        setdef options name             -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options value            -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options groupId          -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options childGroupId     -minversion "5.5.0" -validvalue {}               -type str|null    -default "nothing"
+        setdef options symbol           -minversion 5       -validvalue formatItemSymbol -type str|null    -default "nothing"
+        setdef options symbolSize       -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolRotate     -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolKeepAspect -minversion 5       -validvalue {}               -type bool        -default "False"
+        setdef options symbolOffset     -minversion 5       -validvalue {}               -type list.n|null -default "nothing"
+        setdef options label            -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis         -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur             -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
+        setdef options tooltip          -minversion 5       -validvalue {}               -type dict|null   -default "nothing"
 
         # remove key(s)...
         set item [dict remove $item label labelLine itemStyle emphasis blur]
@@ -492,30 +466,29 @@ proc ticklecharts::radarItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
-        setdef options value            -minversion 5  -validvalue {}               -type list.n|null -default "nothing"
-        setdef options groupId          -minversion 5  -validvalue {}               -type str|null    -default "nothing"
-        setdef options symbol           -minversion 5  -validvalue formatItemSymbol -type str|null    -default "nothing"
-        setdef options symbolSize       -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolRotate     -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolKeepAspect -minversion 5  -validvalue {}               -type bool        -default "False"
-        setdef options symbolOffset     -minversion 5  -validvalue {}               -type list.n|null -default "nothing"
-        setdef options label            -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
-        setdef options itemStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options lineStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::lineStyle $item]
-        setdef options areaStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::areaStyle $item]
-        setdef options emphasis         -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur             -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
-        setdef options select           -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::select $item]
-        setdef options tooltip          -minversion 5  -validvalue {}               -type dict|null   -default "nothing"
+        setdef options name             -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options value            -minversion 5       -validvalue {}               -type list.n|null -default "nothing"
+        setdef options groupId          -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options childGroupId     -minversion "5.5.0" -validvalue {}               -type str|null    -default "nothing"
+        setdef options symbol           -minversion 5       -validvalue formatItemSymbol -type str|null    -default "nothing"
+        setdef options symbolSize       -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolRotate     -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolKeepAspect -minversion 5       -validvalue {}               -type bool        -default "False"
+        setdef options symbolOffset     -minversion 5       -validvalue {}               -type list.n|null -default "nothing"
+        setdef options label            -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
+        setdef options itemStyle        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options lineStyle        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::lineStyle $item]
+        setdef options areaStyle        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::areaStyle $item]
+        setdef options emphasis         -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur             -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select           -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip          -minversion 5       -validvalue {}               -type dict|null   -default "nothing"
 
         # remove key(s)...
         set item [dict remove $item label itemStyle lineStyle areaStyle emphasis blur select]
@@ -534,19 +507,14 @@ proc ticklecharts::indicatorItem {value} {
     set key [ticklecharts::itemKey {-indicatoritem -indicatorItem} $value]
 
     if {$key eq ""} {
-        set levelP [uplevel 1 {
-                ticklecharts::getLevelProperties [info level]
-            }
-        ]
+        set levelP [uplevel 1 {ticklecharts::getLevelProperties [info level]}]
         error "Key property '-indicatoritem' or '-indicatorItem'\
                not defined for $levelP"
     }
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item name]} {
             ticklecharts::errorKeyArgs $key name
@@ -569,24 +537,23 @@ proc ticklecharts::pieItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name      -minversion 5  -validvalue {} -type str|null    -default "nothing"
-        setdef options value     -minversion 5  -validvalue {} -type num|null    -default "nothing"
-        setdef options groupId   -minversion 5  -validvalue {} -type num|null    -default "nothing"
-        setdef options selected  -minversion 5  -validvalue {} -type bool        -default "False"
-        setdef options label     -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::label $item]
-        setdef options labelLine -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::labelLine $item]
-        setdef options itemStyle -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis  -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur      -minversion 5  -validvalue {} -type dict|null   -default [ticklecharts::blur $item]
-        setdef options tooltip   -minversion 5  -validvalue {} -type dict|null   -default "nothing"
+        setdef options name         -minversion 5       -validvalue {} -type str|null    -default "nothing"
+        setdef options value        -minversion 5       -validvalue {} -type num|null    -default "nothing"
+        setdef options groupId      -minversion 5       -validvalue {} -type num|null    -default "nothing"
+        setdef options childGroupId -minversion "5.5.0" -validvalue {} -type str|null    -default "nothing"
+        setdef options selected     -minversion 5       -validvalue {} -type bool        -default "False"
+        setdef options label        -minversion 5       -validvalue {} -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine    -minversion 5       -validvalue {} -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle    -minversion 5       -validvalue {} -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis     -minversion 5       -validvalue {} -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur         -minversion 5       -validvalue {} -type dict|null   -default [ticklecharts::blur $item]
+        setdef options tooltip      -minversion 5       -validvalue {} -type dict|null   -default "nothing"
 
         # remove key(s)...
         set item [dict remove $item label labelLine itemStyle emphasis blur]
@@ -603,9 +570,7 @@ proc ticklecharts::funnelItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
@@ -636,9 +601,7 @@ proc ticklecharts::parallelItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name           -minversion 5  -validvalue {}                  -type str|null         -default "nothing"
         setdef options value          -minversion 5  -validvalue {}                  -type list.d           -default {}
@@ -672,33 +635,32 @@ proc ticklecharts::scatterItem {value type itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name             -minversion 5  -validvalue {}               -type str|null    -default "nothing"
-        setdef options value            -minversion 5  -validvalue {}               -type list.d      -default {}
-        setdef options groupId          -minversion 5  -validvalue {}               -type str|null    -default "nothing"
-        setdef options symbol           -minversion 5  -validvalue formatItemSymbol -type str|null    -default "nothing"
-        setdef options symbolSize       -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolRotate     -minversion 5  -validvalue {}               -type num|null    -default "nothing"
-        setdef options symbolKeepAspect -minversion 5  -validvalue {}               -type bool|null   -default "nothing"
-        setdef options symbolOffset     -minversion 5  -validvalue {}               -type list.n|null -default "nothing"
-        setdef options labelLine        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::labelLine $item]
-        setdef options itemStyle        -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options label            -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
-        setdef options emphasis         -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur             -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
-        setdef options select           -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::select $item]
-        setdef options tooltip          -minversion 5  -validvalue {}               -type dict|null   -default [ticklecharts::tooltip $item]
+        setdef options name             -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options value            -minversion 5       -validvalue {}               -type list.d      -default {}
+        setdef options groupId          -minversion 5       -validvalue {}               -type str|null    -default "nothing"
+        setdef options childGroupId     -minversion "5.5.0" -validvalue {}               -type str|null    -default "nothing"
+        setdef options symbol           -minversion 5       -validvalue formatItemSymbol -type str|null    -default "nothing"
+        setdef options symbolSize       -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolRotate     -minversion 5       -validvalue {}               -type num|null    -default "nothing"
+        setdef options symbolKeepAspect -minversion 5       -validvalue {}               -type bool|null   -default "nothing"
+        setdef options symbolOffset     -minversion 5       -validvalue {}               -type list.n|null -default "nothing"
+        setdef options labelLine        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle        -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options label            -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::label $item]
+        setdef options emphasis         -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur             -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select           -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip          -minversion 5       -validvalue {}               -type dict|null   -default [ticklecharts::tooltip $item]
 
         # remove key(s)...
         if {$type eq "effectScatter"} {
-            set options [dict remove $options groupId]
+            set options [dict remove $options groupId childGroupId]
         }
         set item [dict remove $item labelLine itemStyle label emphasis blur select tooltip]
 
@@ -714,9 +676,7 @@ proc ticklecharts::gaugeItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
@@ -743,9 +703,7 @@ proc ticklecharts::dataGraphItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null        -default "nothing"
         setdef options x                -minversion 5  -validvalue {}               -type num|null        -default "nothing"
@@ -784,9 +742,7 @@ proc ticklecharts::candlestickItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
@@ -797,14 +753,15 @@ proc ticklecharts::candlestickItem {value itemKey} {
                    for [ticklecharts::getLevelProperties [info level]]."
         }
 
-        setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options value       -minversion 5  -validvalue {}  -type list.n|null -default "nothing"
-        setdef options groupId     -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options itemStyle   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis    -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur        -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
-        setdef options select      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
-        setdef options tooltip     -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
+        setdef options name         -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options value        -minversion 5       -validvalue {}  -type list.n|null -default "nothing"
+        setdef options groupId      -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options childGroupId -minversion "5.5.0" -validvalue {}  -type str|null    -default "nothing"
+        setdef options itemStyle    -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis     -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur         -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select       -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip      -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
 
         # remove key(s)...
         set item [dict remove $item itemStyle emphasis blur select tooltip]
@@ -821,9 +778,7 @@ proc ticklecharts::dataWCItem {value key} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $key value
@@ -850,15 +805,11 @@ proc ticklecharts::richItem {value} {
     # Both properties are supported.
     set rkey [ticklecharts::itemKey {richitem richItem} $value]
 
-    if {$rkey eq ""} {
-        return "nothing"
-    }
+    if {$rkey eq ""} {return "nothing"}
 
     foreach {key item} [dict get $value $rkey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options color         -minversion 5  -validvalue formatColor             -type e.color|str|null  -default "#fff"
         setdef options fontStyle     -minversion 5  -validvalue formatFontStyle         -type str|null          -default "normal"
@@ -917,9 +868,7 @@ proc ticklecharts::boxPlotItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
@@ -930,14 +879,15 @@ proc ticklecharts::boxPlotItem {value itemKey} {
                     for [ticklecharts::getLevelProperties [info level]]"
         }
 
-        setdef options name       -minversion 5  -validvalue {}   -type str|null    -default "nothing"
-        setdef options value      -minversion 5  -validvalue {}   -type list.n      -default {}
-        setdef options groupId    -minversion 5  -validvalue {}   -type str|null    -default "nothing"
-        setdef options itemStyle  -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis   -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options blur       -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::blur $item]
-        setdef options select     -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::select $item]
-        setdef options tooltip    -minversion 5  -validvalue {}   -type dict|null   -default [ticklecharts::tooltip $item]
+        setdef options name         -minversion 5       -validvalue {}   -type str|null    -default "nothing"
+        setdef options value        -minversion 5       -validvalue {}   -type list.n      -default {}
+        setdef options groupId      -minversion 5       -validvalue {}   -type str|null    -default "nothing"
+        setdef options childGroupId -minversion "5.5.0" -validvalue {}   -type str|null    -default "nothing"
+        setdef options itemStyle    -minversion 5       -validvalue {}   -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis     -minversion 5       -validvalue {}   -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options blur         -minversion 5       -validvalue {}   -type dict|null   -default [ticklecharts::blur $item]
+        setdef options select       -minversion 5       -validvalue {}   -type dict|null   -default [ticklecharts::select $item]
+        setdef options tooltip      -minversion 5       -validvalue {}   -type dict|null   -default [ticklecharts::tooltip $item]
 
         # remove key(s)...
         set item [dict remove $item select itemStyle emphasis blur tooltip]
@@ -954,24 +904,23 @@ proc ticklecharts::mapItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         if {![dict exists $item value]} {
             ticklecharts::errorKeyArgs $itemKey value
         }
 
-        setdef options name        -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options value       -minversion 5  -validvalue {}  -type num|null    -default "nothing"
-        setdef options groupId     -minversion 5  -validvalue {}  -type str|null    -default "nothing"
-        setdef options selected    -minversion 5  -validvalue {}  -type bool|null   -default "nothing"
-        setdef options label       -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
-        setdef options labelLine   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
-        setdef options itemStyle   -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
-        setdef options emphasis    -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
-        setdef options tooltip     -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
-        setdef options select      -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
+        setdef options name         -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options value        -minversion 5       -validvalue {}  -type num|null    -default "nothing"
+        setdef options groupId      -minversion 5       -validvalue {}  -type str|null    -default "nothing"
+        setdef options childGroupId -minversion "5.5.0" -validvalue {}  -type str|null    -default "nothing"
+        setdef options selected     -minversion 5       -validvalue {}  -type bool|null   -default "nothing"
+        setdef options label        -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::label $item]
+        setdef options labelLine    -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle    -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis     -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::emphasis $item]
+        setdef options tooltip      -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::tooltip $item]
+        setdef options select       -minversion 5       -validvalue {}  -type dict|null   -default [ticklecharts::select $item]
 
         # remove key(s)...
         set item [dict remove $item label labelLine itemStyle emphasis tooltip select]
@@ -986,15 +935,13 @@ proc ticklecharts::mapItem {value itemKey} {
 
 proc ticklecharts::regionsItem {value} {
 
-    if {![dict exists $value regions]} {
+    if {![ticklecharts::keyDictExists "regions" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value regions] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name        -minversion 5        -validvalue {}  -type str|null    -default "nothing"
         setdef options selected    -minversion 5        -validvalue {}  -type bool|null   -default "nothing"
@@ -1020,22 +967,21 @@ proc ticklecharts::linesItem {value itemKey} {
 
     foreach item [dict get $value $itemKey] {
 
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
+
         if {![dict exists $item coords]} {
             ticklecharts::errorKeyArgs $itemKey coords
         }
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
-
-        setdef options name       -minversion 5  -validvalue {} -type str|null     -default "nothing"
-        setdef options groupId    -minversion 5  -validvalue {} -type str|null     -default "nothing"
-        setdef options coords     -minversion 5  -validvalue {} -type list.n|null  -default "nothing"
-        setdef options lineStyle  -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::lineStyle $item]
-        setdef options label      -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::label $item]
-        setdef options emphasis   -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::emphasis $item]
-        setdef options blur       -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::blur $item]
-        setdef options select     -minversion 5  -validvalue {} -type dict|null    -default [ticklecharts::select $item]
+        setdef options name         -minversion 5       -validvalue {} -type str|null     -default "nothing"
+        setdef options groupId      -minversion 5       -validvalue {} -type str|null     -default "nothing"
+        setdef options childGroupId -minversion "5.5.0" -validvalue {} -type str|null     -default "nothing"
+        setdef options coords       -minversion 5       -validvalue {} -type list.n|null  -default "nothing"
+        setdef options lineStyle    -minversion 5       -validvalue {} -type dict|null    -default [ticklecharts::lineStyle $item]
+        setdef options label        -minversion 5       -validvalue {} -type dict|null    -default [ticklecharts::label $item]
+        setdef options emphasis     -minversion 5       -validvalue {} -type dict|null    -default [ticklecharts::emphasis $item]
+        setdef options blur         -minversion 5       -validvalue {} -type dict|null    -default [ticklecharts::blur $item]
+        setdef options select       -minversion 5       -validvalue {} -type dict|null    -default [ticklecharts::select $item]
 
         # remove key(s)...
         set item [dict remove $item lineStyle label emphasis blur select]
@@ -1050,11 +996,11 @@ proc ticklecharts::linesItem {value itemKey} {
 
 proc ticklecharts::markAreaItem {value} {
 
-    if {![dict exists $value data]} {
+    if {![ticklecharts::keyDictExists "data" $value key]} {
         return "nothing"
     }
 
-    foreach listitem [dict get $value data] {
+    foreach listitem [dict get $value $key] {
 
         if {[llength $listitem] != 2} {
             error "Item list should be a list of 2 elements for\
@@ -1065,9 +1011,7 @@ proc ticklecharts::markAreaItem {value} {
 
         foreach item $listitem {
 
-            if {[llength $item] % 2} {
-                ticklecharts::errorEvenArgs
-            }
+            if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
             setdef options type       -minversion 5  -validvalue {} -type str|null     -default "nothing"
             setdef options valueIndex -minversion 5  -validvalue {} -type num|null     -default 0
@@ -1100,15 +1044,13 @@ proc ticklecharts::markAreaItem {value} {
 
 proc ticklecharts::piecesItem {value} {
 
-    if {![dict exists $value pieces]} {
+    if {![ticklecharts::keyDictExists "pieces" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value pieces] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options label -minversion 5  -validvalue {}          -type str|null         -default "nothing"
         setdef options value -minversion 5  -validvalue {}          -type num|null         -default "nothing"
@@ -1130,15 +1072,13 @@ proc ticklecharts::piecesItem {value} {
 
 proc ticklecharts::markPointItem {value} {
 
-    if {![dict exists $value data]} {
+    if {![ticklecharts::keyDictExists "data" $value key]} {
         return "nothing"
     }
 
-    foreach info [dict get $value data] {
+    foreach item [dict get $value $key] {
 
-        set d [dict create -data $info]
-
-        set data [dict get $d -data]
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
         setdef options type                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
@@ -1150,9 +1090,9 @@ proc ticklecharts::markPointItem {value} {
         setdef options value                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
         setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
         setdef options symbolSize              -minversion 5  -validvalue {}               -type num|list.n|null -default "nothing"
-        setdef options itemStyle               -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::itemStyle $data]
-        setdef options label                   -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $data]
-        setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $data]
+        setdef options itemStyle               -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::itemStyle $item]
+        setdef options label                   -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $item]
+        setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $item]
         setdef options animation               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
         setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
         setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
@@ -1163,9 +1103,9 @@ proc ticklecharts::markPointItem {value} {
         setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
 
         # remove key(s)...
-        set data [dict remove $data itemStyle label emphasis]
+        set item [dict remove $item itemStyle label emphasis]
 
-        lappend opts [merge $options $data]
+        lappend opts [merge $options $item]
         set options {}
     }
 
@@ -1174,15 +1114,13 @@ proc ticklecharts::markPointItem {value} {
 
 proc ticklecharts::linkAxisPointerItem {value} {
 
-    if {![dict exists $value link]} {
+    if {![ticklecharts::keyDictExists "link" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value link] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options xAxisIndex       -minversion 5  -validvalue {}  -type str|num|list.n|null  -default "nothing"
         setdef options xAxisName        -minversion 5  -validvalue {}  -type str|null             -default "nothing"
@@ -1712,9 +1650,7 @@ proc ticklecharts::childrenElements {value key} {
                    [ticklecharts::getLevelProperties [info level]]"
         }
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         set typegraphic [dict get $item type]
 
@@ -2013,15 +1949,13 @@ proc ticklecharts::layoutRect {value} {
 
 proc ticklecharts::keyframeAnimation {value type} {
 
-    if {![dict exists $value keyframeAnimation]} {
+    if {![ticklecharts::keyDictExists "keyframeAnimation" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value keyframeAnimation] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options duration  -minversion 5  -validvalue {}            -type num|null    -default "nothing"
         setdef options easing    -minversion 5  -validvalue formatAEasing -type str|null    -default "nothing"
@@ -2042,15 +1976,13 @@ proc ticklecharts::keyframeAnimation {value type} {
 
 proc ticklecharts::keyframes {value type} {
 
-    if {![dict exists $value keyframes]} {
+    if {![ticklecharts::keyDictExists "keyframes" $value key]} {
         return "nothing"
     }
 
-    foreach item [dict get $value keyframes] {
+    foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options percent -minversion 5  -validvalue {}            -type num|null  -default "nothing"
         setdef options easing  -minversion 5  -validvalue formatAEasing -type str|null  -default "nothing"
@@ -2623,6 +2555,16 @@ proc ticklecharts::axisLabel {value} {
         # add 'distance' property to series-gauge.axisLabel
         setdef options rotate    -minversion "5.4.0" -validvalue formatGaugeALrotate -type str|num  -default 0
         setdef options distance  -minversion 5       -validvalue {}                  -type num|null -default "nothing"
+    }
+
+    if {[infoNameProc $levelP "xAxis.axisLabel"]} {
+        setdef options alignMinLabel -minversion "5.5.0" -validvalue formatalignL -type str|null  -default "nothing"
+        setdef options alignMaxLabel -minversion "5.5.0" -validvalue formatalignL -type str|null  -default "nothing"
+    }
+
+    if {[infoNameProc $levelP "yAxis.axisLabel"]} {
+        setdef options verticalAlignMinLabel -minversion "5.5.0" -validvalue formatValignL -type str|null  -default "nothing"
+        setdef options verticalAlignMaxLabel -minversion "5.5.0" -validvalue formatValignL -type str|null  -default "nothing"
     }
 
     set options [merge $options $d]
@@ -3888,27 +3830,33 @@ proc ticklecharts::leaves {value} {
 
 proc ticklecharts::encode {chart value} {
 
-    if {![dict exists $value -encode]} {
+    if {![ticklecharts::keyDictExists "-encode" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "-encode"]
+    set d [ticklecharts::getValue $value $key]
 
-    setdef options x          -minversion 5  -validvalue {}  -type str|num|list.d|null  -default "nothing"
-    setdef options y          -minversion 5  -validvalue {}  -type str|num|list.d|null  -default "nothing"
+    setdef options x                 -minversion 5       -validvalue {}  -type str|num|list.d|null  -default "nothing"
+    setdef options y                 -minversion 5       -validvalue {}  -type str|num|list.d|null  -default "nothing"
     if {[$chart getType] eq "chart3D"} {
-        setdef options z      -minversion 5  -validvalue {}  -type str|num|list.d|null  -default "nothing"
+        setdef options z             -minversion 5       -validvalue {}  -type str|num|list.d|null  -default "nothing"
     }
-    setdef options itemName   -minversion 5  -validvalue {}  -type str|null             -default "nothing"
-    setdef options label      -minversion 5  -validvalue {}  -type num|str|null         -default "nothing"
-    setdef options value      -minversion 5  -validvalue {}  -type str|null             -default "nothing"
-    setdef options radius     -minversion 5  -validvalue {}  -type num|null             -default "nothing"
-    setdef options angle      -minversion 5  -validvalue {}  -type num|null             -default "nothing"
-    setdef options tooltip    -minversion 5  -validvalue {}  -type list.d|str|null      -default "nothing"
+    setdef options itemName          -minversion 5       -validvalue {}  -type str|num|null         -default "nothing"
+    setdef options label             -minversion 5       -validvalue {}  -type num|str|null         -default "nothing"
+    setdef options value             -minversion 5       -validvalue {}  -type str|null             -default "nothing"
+    setdef options seriesName        -minversion 5       -validvalue {}  -type list.d|null          -default "nothing"
+    setdef options itemId            -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options itemGroupId       -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options itemChildGroupId  -minversion "5.5.0" -validvalue {}  -type num|null             -default "nothing"
+    setdef options radius            -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options angle             -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options lng               -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options lat               -minversion 5       -validvalue {}  -type num|null             -default "nothing"
+    setdef options tooltip           -minversion 5       -validvalue {}  -type list.d|str|null      -default "nothing"
     #...
 
-    # Special case when dimensions are double values...
+    # Special case when dimensions are double values.
     # If I understand Echarts documentation
     # 'value' should be a string value
     set dataset [$chart dataset]
@@ -3939,12 +3887,12 @@ proc ticklecharts::encode {chart value} {
 
 proc ticklecharts::config {value} {
 
-    if {![dict exists $value config]} {
+    if {![ticklecharts::keyDictExists "config" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "config"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options dimension         -minversion 5  -validvalue {}  -type str|num|null    -default "nothing"
     setdef options order             -minversion 5  -validvalue {}  -type str|null        -default "nothing"
@@ -3963,9 +3911,7 @@ proc ticklecharts::config {value} {
 
     if {[dict exists $d resultDimensions]} {
         foreach item [dict get $d resultDimensions] {
-            if {[llength $item] % 2} {
-                ticklecharts::errorEvenArgs
-            }
+            if {[llength $item] % 2} ticklecharts::errorEvenArgs
             set listobj {}
             foreach {key info} $item {
                 set val [ticklecharts::mapSpaceString $info]
@@ -4526,9 +4472,7 @@ proc ticklecharts::categories {value} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options name             -minversion 5  -validvalue {}               -type str|null          -default "nothing"
         setdef options symbol           -minversion 5  -validvalue formatItemSymbol -type str|null          -default "nothing"
@@ -5054,9 +4998,7 @@ proc ticklecharts::mapGStyle {value} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options featureType  -minversion {}  -validvalue {}  -type str|null     -default "nothing"
         setdef options elementType  -minversion {}  -validvalue {}  -type str|null     -default "nothing"
@@ -5081,9 +5023,7 @@ proc ticklecharts::stylers {value} {
 
     foreach item [dict get $value $key] {
 
-        if {[llength $item] % 2} {
-            ticklecharts::errorEvenArgs
-        }
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
         setdef options color      -minversion {}  -validvalue formatColor  -type str|null -default "nothing"
         setdef options visibility -minversion {}  -validvalue {}           -type str|null -default "nothing"
