@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>pie_with_padAngle</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="id_55c3f6a7c69243aaa8b49d63b2613852" class="chart-container" style="width:900px; height:500px;"></div>
+    <script>
+      var chart_55c3f6a7c69243aaa8b49d63b2613852 = echarts.init(document.getElementById("id_55c3f6a7c69243aaa8b49d63b2613852"), null, {renderer: "canvas"});
+      var option_55c3f6a7c69243aaa8b49d63b2613852 = {
+  "backgroundColor": "rgba(0,0,0,0)",
+  "color": [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc"
+  ],
+  "animation": true,
+  "animationDuration": 1000,
+  "animationDurationUpdate": 500,
+  "animationEasing": "cubicInOut",
+  "animationEasingUpdate": "cubicInOut",
+  "animationThreshold": 2000,
+  "progressiveThreshold": 3000,
+  "legend": [{
+      "type": "plain",
+      "show": true,
+      "z": 2,
+      "left": "center",
+      "top": "5%",
+      "right": "auto",
+      "bottom": "auto",
+      "width": "auto",
+      "height": "auto",
+      "orient": "horizontal",
+      "align": "auto",
+      "padding": 5,
+      "itemGap": 10,
+      "itemWidth": 25,
+      "itemHeight": 14,
+      "symbolRotate": "inherit",
+      "selectedMode": true,
+      "inactiveColor": "rgb(204, 204, 204)",
+      "inactiveBorderColor": "rgb(204, 204, 204)",
+      "inactiveBorderWidth": "auto",
+      "backgroundColor": "transparent",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "pageButtonItemGap": 5,
+      "pageIconColor": "rgb(47, 69, 84)",
+      "pageIconInactiveColor": "rgb(170, 170, 170)",
+      "pageIconSize": 15
+    }],
+  "tooltip": [{
+      "show": true,
+      "trigger": "item",
+      "showContent": true,
+      "alwaysShowContent": false,
+      "triggerOn": "mousemove|click",
+      "transitionDuration": 0.4,
+      "padding": 5,
+      "order": "seriesAsc"
+    }],
+  "series": [{
+      "type": "pie",
+      "name": "Access From",
+      "colorBy": "data",
+      "legendHoverLink": true,
+      "selectedOffset": 10,
+      "clockwise": true,
+      "startAngle": 90,
+      "minAngle": 0,
+      "padAngle": 5,
+      "minShowLabelAngle": 0,
+      "roseType": false,
+      "avoidLabelOverlap": false,
+      "stillShowZeroSum": true,
+      "cursor": "pointer",
+      "zlevel": 0,
+      "z": 2,
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": "auto",
+      "height": "auto",
+      "showEmptyCircle": true,
+      "label": {
+        "show": false,
+        "position": "center",
+        "rotate": 0,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontFamily": "sans-serif",
+        "fontSize": 12,
+        "lineHeight": 12,
+        "borderWidth": 0,
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderRadius": 2,
+        "shadowColor": "transparent",
+        "shadowBlur": 0,
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 0,
+        "textBorderColor": null,
+        "textBorderWidth": 0,
+        "textBorderType": "solid",
+        "textBorderDashOffset": 0,
+        "textShadowColor": "transparent",
+        "textShadowBlur": 0,
+        "textShadowOffsetX": 0,
+        "textShadowOffsetY": 0,
+        "overflow": "truncate",
+        "ellipsis": "...",
+        "alignTo": "none",
+        "edgeDistance": "25%",
+        "bleedMargin": 10,
+        "distanceToLabelLine": 5
+      },
+      "labelLine": {"show": false},
+      "itemStyle": {
+        "borderType": "solid",
+        "borderDashOffset": 0,
+        "borderCap": "butt",
+        "borderJoin": "bevel",
+        "opacity": 1,
+        "borderRadius": 10
+      },
+      "emphasis": {
+        "scale": true,
+        "focus": "none",
+        "blurScope": "coordinateSystem",
+        "label": {
+          "show": true,
+          "rotate": 0,
+          "fontStyle": "normal",
+          "fontWeight": "bold",
+          "fontFamily": "sans-serif",
+          "fontSize": 25,
+          "lineHeight": 12,
+          "borderWidth": 0,
+          "borderType": "solid",
+          "borderDashOffset": 0,
+          "borderRadius": 2,
+          "shadowColor": "transparent",
+          "shadowBlur": 0,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "textBorderColor": null,
+          "textBorderWidth": 0,
+          "textBorderType": "solid",
+          "textBorderDashOffset": 0,
+          "textShadowColor": "transparent",
+          "textShadowBlur": 0,
+          "textShadowOffsetX": 0,
+          "textShadowOffsetY": 0,
+          "overflow": "truncate",
+          "ellipsis": "...",
+          "alignTo": "none",
+          "edgeDistance": "25%",
+          "bleedMargin": 10,
+          "distanceToLabelLine": 5
+        }
+      },
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "radius": [
+        "40%",
+        "70%"
+      ],
+      "silent": false,
+      "animationType": "expansion",
+      "animationTypeUpdate": "transition",
+      "animation": true,
+      "data": [
+        {
+          "name": "Search Engine",
+          "value": 1048,
+          "selected": false
+        },
+        {
+          "name": "Direct",
+          "value": 735,
+          "selected": false
+        },
+        {
+          "name": "Email",
+          "value": 580,
+          "selected": false
+        },
+        {
+          "name": "Union Ads",
+          "value": 484,
+          "selected": false
+        },
+        {
+          "name": "Video Ads",
+          "value": 300,
+          "selected": false
+        }
+      ]
+    }]
+};
+      chart_55c3f6a7c69243aaa8b49d63b2613852.setOption(option_55c3f6a7c69243aaa8b49d63b2613852);
+    </script>
+  </body>
+</html>
