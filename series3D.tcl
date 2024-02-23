@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -13,7 +13,7 @@ proc ticklecharts::bar3DSeries {index chart value} {
     # Returns dict bar3DSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3D"
+    setdef options -type                    -minversion 5       -validvalue formatTypeBar3D      -type str             -trace no   -default "bar3D"
     setdef options -name                    -minversion 5       -validvalue {}                   -type str             -trace no   -default "bar3DSeries_${index}"
     setdef options -coordinateSystem        -minversion 5       -validvalue formatCSYS           -type str             -trace no   -default "cartesian3D"    
     setdef options -grid3DIndex             -minversion 5       -validvalue {}                   -type num|null        -trace no   -default "nothing"
@@ -93,7 +93,7 @@ proc ticklecharts::line3DSeries {index chart value} {
     # Returns dict line3DSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5  -validvalue {}             -type str             -default "line3D"
+    setdef options -type                    -minversion 5  -validvalue formatTypeL3D  -type str             -default "line3D"
     setdef options -name                    -minversion 5  -validvalue {}             -type str             -default "line3Dseries_${index}"
     setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS     -type str             -default "cartesian3D"
     setdef options -grid3DIndex             -minversion 5  -validvalue {}             -type num|null        -default "nothing"
@@ -156,7 +156,7 @@ proc ticklecharts::surfaceSeries {index value} {
     # Returns dict surfaceSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5  -validvalue {}               -type str             -default "surface"
+    setdef options -type                    -minversion 5  -validvalue formatTypeSurf   -type str             -default "surface"
     setdef options -name                    -minversion 5  -validvalue {}               -type str             -default "surfaceseries_${index}"
     setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS       -type str             -default "cartesian3D"
     setdef options -grid3DIndex             -minversion 5  -validvalue {}               -type num|null        -default "nothing"
@@ -228,7 +228,7 @@ proc ticklecharts::scatter3DSeries {index chart value} {
     # Returns dict scatter3DSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5  -validvalue {}                -type str               -default "scatter3D"
+    setdef options -type                    -minversion 5  -validvalue formatTypeSc3D    -type str               -default "scatter3D"
     setdef options -name                    -minversion 5  -validvalue {}                -type str               -default "scatter3Dseries_${index}"
     setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS        -type str               -default "cartesian3D"
     setdef options -grid3DIndex             -minversion 5  -validvalue {}                -type num|null          -default "nothing"
@@ -299,7 +299,7 @@ proc ticklecharts::lines3DSeries {index chart value} {
     # Returns dict lines3DSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5  -validvalue {}             -type str             -default "lines3D"
+    setdef options -type                    -minversion 5  -validvalue formatTypeLs3D -type str             -default "lines3D"
     setdef options -name                    -minversion 5  -validvalue {}             -type str             -default "lines3Dseries_${index}"
     setdef options -coordinateSystem        -minversion 5  -validvalue formatCSYS     -type str             -default "geo3D"
     setdef options -geo3DIndex              -minversion 5  -validvalue {}             -type num|null        -default "nothing"
