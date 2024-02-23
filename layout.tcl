@@ -452,9 +452,8 @@ oo::define ticklecharts::Gridlayout {
     #   toJSON   - Returns json chart data.
     #   toHTML   - Export chart as HTML fragment.
     #   get      - Gets huddle object.
-    #   setTrace - Sets trace properties.
     # ...
-    foreach method {Render dataset options toJSON toHTML get setTrace} {
+    foreach method {Render dataset options toJSON toHTML get} {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 
