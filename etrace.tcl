@@ -192,7 +192,7 @@ proc ticklecharts::readEchartsVersion {minversion baseversion args} {
     }
 
     # Remove trace.
-    set vinfo [lindex [trace vinfo [lindex $args 0]] 0 1]
+    set vinfo [lindex [trace info variable [lindex $args 0]] 0 1]
     trace remove variable [lindex $args 0] read [list {*}$vinfo]
 
     return {}
@@ -239,12 +239,19 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
                should be an object, now is '$obj'"
     }
 
-    # Guess if '$value' is an object...
+    # No other classes accepted.
+    if {[$obj getType] ni {chart chart3D}} {
+        return {}
+    }
+
+    # Guess if '$value' is an object.
     if {[ticklecharts::isAObject $value]} {
         set value [$value get]
     }
 
     $obj setTrace [join [list {*}[lrange $properties 1 end] $key] "."] $value
+
+    return {}
 }
 
 proc ticklecharts::track {properties} {
