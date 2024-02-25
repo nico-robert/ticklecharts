@@ -640,3 +640,9 @@ Release :
     - Better handling of error messages and argument length.
     - Add the `ticklecharts::eString` class as a new `ehuddle` type.
     - Cosmetic changes.
+*  **25-Feb-2024** : 3.2.3
+    - Bump to version `5.5.0` for Echarts.
+    - Add new examples.
+    - Two new elist commands have been added (elist.s & elist.n), see 'Type substitution' section for further information.
+    - Changes the format of the `parallelAxis` key property, the missing minus sign at the beginning of a key is also accepted.
+    - Cosmetic changes.
