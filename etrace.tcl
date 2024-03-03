@@ -14,13 +14,13 @@ proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
     #
     # minversion   - minimum version
     # baseversion  - current version
-    # args         - not used...
+    # args         - not used.
     #
     # Returns nothing.
     variable escript ; variable echarts_version
     variable checkURL
 
-    # Minimum Echarts version...
+    # Minimum Echarts version.
     if {[ticklecharts::vCompare $minversion $echarts_version] == 1} {
         error "The minimum Echarts version for 'ticklEcharts' package\
                is the version '$minversion', currently the modified version\
@@ -51,13 +51,13 @@ proc ticklecharts::traceEchartsGLVersion {minversion baseversion args} {
     #
     # minversion   - minimum version
     # baseversion  - current version
-    # args         - not used...
+    # args         - not used.
     #
     # Returns nothing.
     variable eGLscript ; variable gl_version
     variable checkURL
 
-    # Minimum GL Echarts version...
+    # Minimum GL Echarts version.
     if {[ticklecharts::vCompare $minversion $gl_version] == 1} {
         error "The minimum Echarts GL version for 'ticklEcharts' package\
                is the version '$minversion', currently the modified version\
@@ -88,13 +88,13 @@ proc ticklecharts::traceGmapVersion {minversion baseversion args} {
     #
     # minversion   - minimum version
     # baseversion  - current version
-    # args         - not used...
+    # args         - not used.
     #
     # Returns nothing.
     variable gmscript ; variable gmap_version
     variable checkURL
 
-    # Minimum WordCloud Echarts version...
+    # Minimum WordCloud Echarts version.
     if {[ticklecharts::vCompare $minversion $gmap_version] == 1} {
         error "The minimum Echarts Gmap version for 'ticklEcharts' package\
                is the version '$minversion', currently the modified version\
@@ -125,13 +125,13 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
     #
     # minversion   - minimum version
     # baseversion  - current version
-    # args         - not used...
+    # args         - not used.
     #
     # Returns nothing.
     variable wcscript ; variable wc_version
     variable checkURL
 
-    # Minimum WordCloud Echarts version...
+    # Minimum WordCloud Echarts version.
     if {[ticklecharts::vCompare $minversion $wc_version] == 1} {
         error "The minimum Echarts wordcloud version for 'ticklEcharts' package\
                is the version '$minversion', currently the modified version\
@@ -160,7 +160,7 @@ proc ticklecharts::traceWCVersion {minversion baseversion args} {
 proc ticklecharts::traceKeyGMAPI {args} {
     # Changes the API key in Google script js.
     #
-    # args   - not used...
+    # args   - not used.
     #
     # Returns nothing.
     variable gapiscript ; variable keyGMAPI
@@ -207,7 +207,8 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
     #
     # Returns nothing
 
-    set properties {}
+    set properties  {}
+    set traceSeries {lineSeries barSeries barSeries3D} ; # series filters 
     set key [string map {"-" ""} $key]
 
     for {set i $level} {$i > 0} {incr i -1} {
@@ -217,6 +218,10 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
 
             # Adds an index if the level properties is related to a series.
             if {[string match {ticklecharts::*Series} $name]} {
+                
+                # No other series accepted.
+                if {$property ni $traceSeries} {return {}}
+
                 set index [lindex [info level $i] 1]
                 if {[ticklecharts::typeOf $index] ne "num"} {
                     error "'$index' should be an integer value." 
@@ -268,11 +273,17 @@ proc ticklecharts::track {properties} {
     #
     # properties - list
     #
+    # REMINDER FOR ME : The series are filtered in this procedure
+    # 'ticklecharts::getTraceLevelProperties', if you want to add series,
+    # think of also modifying it here.
+    #
     # Returns nothing.
 
     foreach {keyP value} $properties {
-        switch -glob -- $keyP {
-            "lineSeries(*).showAllSymbol" {
+        set i [expr {[regexp {\(\d+\)} $keyP num] ? $num : -1}]
+        
+        switch -exact -- $keyP {
+            "lineSeries($i).showAllSymbol" {
                 # https://echarts.apache.org/en/option.html#series-line.showAllSymbol
                 if {($value ne "nothing") && [dict exists $properties xAxis.type]} {
                     set v [dict get $properties xAxis.type] 
@@ -282,9 +293,9 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "barSeries(*).stack"    -
-            "barSeries3D(*).stack"  -
-            "lineSeries(*).stack" {
+            "barSeries($i).stack"    -
+            "barSeries3D($i).stack"  -
+            "lineSeries($i).stack" {
                 # https://echarts.apache.org/en/option.html#series-line.stack
                 # https://echarts.apache.org/en/option.html#series-bar.stack
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stack
@@ -303,9 +314,9 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "barSeries(*).stackStrategy"   -
-            "barSeries3D(*).stackStrategy" -
-            "lineSeries(*).stackStrategy" {
+            "barSeries($i).stackStrategy"   -
+            "barSeries3D($i).stackStrategy" -
+            "lineSeries($i).stackStrategy" {
                 # https://echarts.apache.org/en/option.html#series-line.stackStrategy
                 # https://echarts.apache.org/en/option.html#series-bar.stackStrategy
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stackStrategy
@@ -316,7 +327,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).label.distance" {
+            "lineSeries($i).label.distance" {
                 # https://echarts.apache.org/en/option.html#series-line.label.distance
                 lassign [split $keyP "."] series _
                 if {($value ne "nothing") && [dict exists $properties $series.label.position]} {
@@ -327,7 +338,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).labelLine.lineStyle.miterLimit" {
+            "lineSeries($i).labelLine.lineStyle.miterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.miterLimit
                 lassign [split $keyP "."] series _
                 if {($value ne "nothing") && [dict exists $properties $series.labelLine.lineStyle.join]} {
@@ -338,7 +349,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).labelLine.lineStyle.join" {
+            "lineSeries($i).labelLine.lineStyle.join" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.join
                 lassign [split $keyP "."] series _
                 if {($value ne "nothing") && [dict exists $properties $series.labelLine.lineStyle.miterLimit]} {
@@ -349,7 +360,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).itemStyle.borderMiterLimit" {
+            "lineSeries($i).itemStyle.borderMiterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.itemStyle.borderMiterLimit
                 lassign [split $keyP "."] series _
                 if {($value ne "nothing") && [dict exists $properties $series.itemStyle.borderJoin]} {
@@ -360,7 +371,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).itemStyle.borderJoin" {
+            "lineSeries($i).itemStyle.borderJoin" {
                 # Doc e.g: https://echarts.apache.org/en/option.html#series-line.itemStyle.borderJoin
                 lassign [split $keyP "."] series _
                 if {($value eq "miter") && [dict exists $properties $series.itemStyle.borderMiterLimit]} {
@@ -371,7 +382,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries(*).label.ellipsis" {
+            "lineSeries($i).label.ellipsis" {
                 # https://echarts.apache.org/en/option.html#series-line.label.ellipsis
                 lassign [split $keyP "."] series _
                 if {($value ne "nothing") && [dict exists $properties $series.label.overflow]} {
@@ -396,8 +407,8 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "barSeries(*).data"  -
-            "lineSeries(*).data" {
+            "barSeries($i).data"  -
+            "lineSeries($i).data" {
                 if {$value ne ""} {
                     foreach axis {xAxis yAxis} {
                         if {[dict exists $properties $axis.data]} {
