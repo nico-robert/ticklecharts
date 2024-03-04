@@ -107,6 +107,10 @@ proc ticklecharts::barSeries {index chart value} {
                                   -labelLayout -itemStyle -backgroundStyle \
                                   -emphasis -blur -select -tooltip -encode $itemKey]
 
+    # Delete '-backgroundStyle' property for both dictionaries
+    # if this key below is false.
+    ticklecharts::IsItTrue? "-showBackground" -value value -dopts options -remove "-backgroundStyle"
+
     set options [merge $options $value]
 
     return $options
@@ -218,6 +222,11 @@ proc ticklecharts::lineSeries {index chart value} {
                                   -labelLayout -itemStyle -universalTransition \
                                   -emphasis -blur -select -tooltip -encode $itemKey]
 
+    # Delete these properties for both dictionaries
+    # if this key below is false.
+    set del_opts {-symbol -symbolSize -symbolRotate -symbolKeepAspect -symbolOffset -showAllSymbol}
+    ticklecharts::IsItTrue? "-showSymbol" -value value -dopts options -remove $del_opts
+    
     set options [merge $options $value]
 
     return $options

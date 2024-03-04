@@ -2092,6 +2092,10 @@ proc ticklecharts::splitLine {value} {
     # remove key(s)...
     set d [dict remove $d lineStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     # reset minProperties...
@@ -2126,18 +2130,22 @@ proc ticklecharts::universalTransition {value} {
 
 proc ticklecharts::minorSplitLine {value} {
 
-    if {![dict exists $value -minorSplitLine]} {
+    if {![ticklecharts::keyDictExists "-minorSplitLine" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "-minorSplitLine"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show      -minversion 5  -validvalue {} -type bool      -default "False"
     setdef options lineStyle -minversion 5  -validvalue {} -type dict|null -default [ticklecharts::lineStyle $d]
 
     # remove key(s)...
     set d [dict remove $d lineStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -2146,12 +2154,12 @@ proc ticklecharts::minorSplitLine {value} {
 
 proc ticklecharts::splitArea {value} {
 
-    if {![dict exists $value -splitArea]} {
+    if {![ticklecharts::keyDictExists "-splitArea" $value key]} {
         return "nothing"
     }
     
     # Gets key value.
-    set d [ticklecharts::getValue $value "-splitArea"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options interval  -minversion 5  -validvalue {} -type num       -default 0
     setdef options show      -minversion 5  -validvalue {} -type bool      -default "False"
@@ -2159,6 +2167,10 @@ proc ticklecharts::splitArea {value} {
 
     # remove key(s)...
     set d [dict remove $d areaStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -2232,6 +2244,10 @@ proc ticklecharts::axisLine {value} {
 
     # remove key(s)...
     set d [dict remove $d lineStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -2378,6 +2394,10 @@ proc ticklecharts::labelLine {value} {
     # remove key(s)...
     set d [dict remove $d lineStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -2454,6 +2474,10 @@ proc ticklecharts::axisTick {value} {
     # remove key(s)...
     set d [dict remove $d lineStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     # reset minProperties...
@@ -2482,6 +2506,10 @@ proc ticklecharts::minorTick {value} {
 
     # remove key(s)...
     set d [dict remove $d lineStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -3197,6 +3225,10 @@ proc ticklecharts::axisPointer {value} {
     # remove key(s)...
     set d [dict remove $d label lineStyle shadowStyle crossStyle handle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -3422,12 +3454,12 @@ proc ticklecharts::rippleEffect {value} {
 
 proc ticklecharts::feature {value} {
 
-    if {![dict exists $value feature]} {
+    if {![ticklecharts::keyDictExists "feature" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "feature"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options dataZoom     -minversion 5  -validvalue {} -type dict|null  -default [ticklecharts::toolBoxDataZoom $d]
     setdef options dataView     -minversion 5  -validvalue {} -type dict|null  -default [ticklecharts::dataView $d]
@@ -3447,12 +3479,12 @@ proc ticklecharts::feature {value} {
 
 proc ticklecharts::saveAsImage {value} {
 
-    if {![dict exists $value saveAsImage]} {
+    if {![ticklecharts::keyDictExists "saveAsImage" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "saveAsImage"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options type                     -minversion 5  -validvalue formatSaveAsImg -type str              -default "png"
     setdef options name                     -minversion 5  -validvalue {}              -type str|null         -default "nothing"
@@ -3477,12 +3509,12 @@ proc ticklecharts::saveAsImage {value} {
 
 proc ticklecharts::restore {value} {
 
-    if {![dict exists $value restore]} {
+    if {![ticklecharts::keyDictExists "restore" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "restore"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show      -minversion 5  -validvalue {} -type bool      -default "True"
     setdef options title     -minversion 5  -validvalue {} -type str       -default "Restore"
@@ -3494,6 +3526,10 @@ proc ticklecharts::restore {value} {
     # remove key(s)...
     set d [dict remove $d iconStyle emphasis]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -3501,12 +3537,12 @@ proc ticklecharts::restore {value} {
 
 proc ticklecharts::dataView {value} {
 
-    if {![dict exists $value dataView]} {
+    if {![ticklecharts::keyDictExists "dataView" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "dataView"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show                -minversion 5  -validvalue {}          -type bool         -default "True"
     setdef options title               -minversion 5  -validvalue {}          -type str          -default "Data view"
@@ -3527,6 +3563,10 @@ proc ticklecharts::dataView {value} {
     # remove key(s)...
     set d [dict remove $d iconStyle emphasis]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -3534,12 +3574,12 @@ proc ticklecharts::dataView {value} {
 
 proc ticklecharts::toolBoxDataZoom {value} {
 
-    if {![dict exists $value dataZoom]} {
+    if {![ticklecharts::keyDictExists "dataZoom" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "dataZoom"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show        -minversion 5  -validvalue {}               -type bool                     -default "True"
     setdef options title       -minversion 5  -validvalue {}               -type dict|null                -default [ticklecharts::toolBoxTitle $d "dataZoom"]
@@ -3555,6 +3595,10 @@ proc ticklecharts::toolBoxDataZoom {value} {
     # remove key(s)...
     set d [dict remove $d title iconStyle emphasis icon brushStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -3562,12 +3606,12 @@ proc ticklecharts::toolBoxDataZoom {value} {
 
 proc ticklecharts::magicType {value} {
 
-    if {![dict exists $value magicType]} {
+    if {![ticklecharts::keyDictExists "magicType" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "magicType"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show           -minversion 5  -validvalue {} -type bool            -default "True"
     setdef options type           -minversion 5  -validvalue {} -type list.s|null     -default [list {"line" "bar" "stack"}]
@@ -3582,6 +3626,10 @@ proc ticklecharts::magicType {value} {
 
     # remove key(s)...
     set d [dict remove $d title icon iconStyle emphasis]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -4141,6 +4189,10 @@ proc ticklecharts::controlStyle {value} {
     setdef options opacity           -minversion 5  -validvalue formatOpacity       -type num|null          -default "nothing"
     #...
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     # reset minProperties...
@@ -4189,6 +4241,10 @@ proc ticklecharts::progress {value} {
     # remove key(s)...
     set d [dict remove $d label itemStyle lineStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     # reset minProperties...
@@ -4203,12 +4259,12 @@ proc ticklecharts::progress {value} {
 
 proc ticklecharts::pointer {value} {
 
-    if {![dict exists $value -pointer]} {
+    if {![ticklecharts::keyDictExists "-pointer" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "-pointer"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show         -minversion 5       -validvalue {}               -type bool      -default "True"
     setdef options showAbove    -minversion "5.2.0" -validvalue {}               -type bool      -default "True"
@@ -4222,6 +4278,10 @@ proc ticklecharts::pointer {value} {
     # remove key(s)...
     set d [dict remove $d label itemStyle]
 
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
+
     set options [merge $options $d]
 
     return [new edict $options]
@@ -4229,12 +4289,12 @@ proc ticklecharts::pointer {value} {
 
 proc ticklecharts::anchor {value} {
 
-    if {![dict exists $value -anchor]} {
+    if {![ticklecharts::keyDictExists "-anchor" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "-anchor"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show         -minversion 5  -validvalue {}               -type bool      -default "True"
     setdef options showAbove    -minversion 5  -validvalue {}               -type bool      -default "False"
@@ -4246,6 +4306,10 @@ proc ticklecharts::anchor {value} {
 
     # remove key(s)...
     set d [dict remove $d label itemStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -4499,12 +4563,12 @@ proc ticklecharts::categories {value} {
 
 proc ticklecharts::breadcrumb {value} {
 
-    if {![dict exists $value breadcrumb]} {
+    if {![ticklecharts::keyDictExists "breadcrumb" $value key]} {
         return "nothing"
     }
 
     # Gets key value.
-    set d [ticklecharts::getValue $value "breadcrumb"]
+    set d [ticklecharts::getValue $value $key]
 
     setdef options show           -minversion 5       -validvalue {}            -type bool          -default "True"
     setdef options left           -minversion 5       -validvalue formatLeft    -type str|num|null  -default "center"
@@ -4519,6 +4583,10 @@ proc ticklecharts::breadcrumb {value} {
 
     # remove key(s)...
     set d [dict remove $d emphasis itemStyle]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -4647,8 +4715,11 @@ proc ticklecharts::handle {value} {
     setdef options shadowColor   -minversion 5  -validvalue formatColor        -type str|null         -default "nothing"
     setdef options shadowOffsetX -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
     setdef options shadowOffsetY -minversion 5  -validvalue {}                 -type num|null         -default "nothing"
-
     #...
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -4771,6 +4842,10 @@ proc ticklecharts::ariaDecal {value} {
 
     # remove key(s)...
     set d [dict remove $d decals]
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 
@@ -4984,6 +5059,10 @@ proc ticklecharts::effect {value} {
     setdef options loop          -minversion 5        -validvalue {}                      -type bool              -default "True"
     setdef options roundTrip     -minversion "5.4.0"  -validvalue {}                      -type bool|null         -default "nothing"
     #...
+
+    # Switch not necessary properties for default dictionary
+    # to 'nothing' if this key below is false.
+    ticklecharts::IsItTrue? "show" -value d -dopts options -remove "not_needed"
 
     set options [merge $options $d]
 

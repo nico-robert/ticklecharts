@@ -1109,6 +1109,66 @@ proc ticklecharts::whichSeries? {levelP} {
     return [lindex [split $levelP "."] 0]
 }
 
+proc ticklecharts::IsItTrue? {key args} {
+    # Remove properties if key is set to false.
+    #
+    # key  - dict key
+    # args - see below
+    #
+    # Returns nothing.
+    variable minProperties
+
+    if {$minProperties} {return {}}
+
+    foreach {k info} $args {
+        switch -exact -- $k {
+            -value   {upvar 1 $info value}
+            -dopts   {upvar 1 $info options}
+            -remove  {set opts $info}
+            default  {error "Unknown key '$k' specified"}
+        }
+    }
+
+    set isTrue 1
+    # The 'key' should be present in the both dictionaries.
+    if {[dict exists $value $key] && [dict exists $options $key]} {
+        set val [dict get $value $key]
+        if {([ticklecharts::typeOf $val] eq "bool") && !$val} {
+            set isTrue 0
+        }
+    }
+
+    # Checks whether the default value for
+    # the 'key' is also set to false.
+    if {$isTrue} {
+        if {[dict exists $options $key] && ![dict exists $value $key]} {
+            set val [lindex [dict get $options $key] 0]
+            if {([ticklecharts::typeOf $val] eq "bool") && !$val} {
+                set isTrue 0
+            }
+        }
+    }
+
+    # Set keys to nothing for default dictionary 
+    # if 'opts' variable is equal to 'not_needed'.
+    # Remove keys if the opts value contains a list of keys to be removed.
+    if {!$isTrue} {
+        if {$opts eq "not_needed"} {
+            set kopts   [dict keys $options]
+            set delkeys [lsearch -inline -all -not -exact $kopts $key]
+            foreach k $delkeys {
+                if {[dict exists $value $k]} {continue}
+                dict set options $k {nothing null {} {} {} no}
+            }
+        } else {
+            set value   [dict remove $value   {*}$opts]
+            set options [dict remove $options {*}$opts]
+        }
+    }
+
+    return {}
+}
+
 proc ticklecharts::isURL? {url} {
     # Checks whether the url is valid.
     #
