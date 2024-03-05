@@ -391,7 +391,7 @@ proc ticklecharts::eHuddleCritcl {bool} {
             }
 
         } else {
-            puts stderr "warning : $infocrit"
+            puts stderr "warning(eHuddleCrit): $infocrit"
         }
     }
 
