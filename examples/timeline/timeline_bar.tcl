@@ -2,6 +2,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
+# v3.0 : Use 'estr' class instead of 'jsfunc' class for formatter property.
 
 proc fakerRandomData {min max len} {
 
@@ -19,7 +20,6 @@ proc fakerRandomData {min max len} {
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
 set timeline [ticklecharts::timeline new]
-set js [ticklecharts::jsfunc new {"{b}"}]
 
 $timeline SetOptions -axisType "category"
 
@@ -33,11 +33,11 @@ for {set i 2008} {$i < 2023} {incr i} {
     $chart Add "barSeries" -data [list [fakerRandomData 10 100 12]]
     $chart Add "barSeries" -data [list [fakerRandomData 50 200 12]]
 
-    $timeline Add $chart -data [list value $i tooltip [list formatter $js]]
+    $timeline Add $chart -data [list value $i tooltip [list formatter [new estr "{b}"]]]
 
 }
 
-                 
+
 set fbasename [file rootname [file tail [info script]]]
 set dirname [file dirname [info script]]
 
