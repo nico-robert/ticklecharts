@@ -234,7 +234,7 @@
                 # Changes the format of the `parallelAxis` key property, the missing minus sign at the beginning of a key is also accepted.
                 # Cosmetic changes.
 
-package require Tcl 8.6
+package require Tcl 8.6-
 package require huddle 0.3
 
 namespace eval ticklecharts {
