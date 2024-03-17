@@ -180,12 +180,15 @@ proc ticklecharts::legendItem {value} {
 
         if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
-        setdef options name         -minversion 5  -validvalue {}               -type str|null     -default "nothing"
-        setdef options icon         -minversion 5  -validvalue formatItemSymbol -type str|null     -default "nothing"
-        setdef options itemStyle    -minversion 5  -validvalue {}               -type dict|null    -default [ticklecharts::itemStyle $item]
-        setdef options lineStyle    -minversion 5  -validvalue {}               -type dict|null    -default [ticklecharts::lineStyle $item]
-        setdef options symbolRotate -minversion 5  -validvalue {}               -type str|num|null -default "inherit"
-        setdef options textStyle    -minversion 5  -validvalue {}               -type dict|null    -default [ticklecharts::textStyle $item textStyle]
+        setdef options name                -minversion 5  -validvalue {}               -type str|null          -default "nothing"
+        setdef options icon                -minversion 5  -validvalue formatItemSymbol -type str|null          -default "nothing"
+        setdef options inactiveColor       -minversion 5  -validvalue formatColor      -type str|e.color|null  -default "nothing"
+        setdef options inactiveBorderColor -minversion 5  -validvalue formatColor      -type str|e.color|null  -default "nothing"
+        setdef options inactiveBorderWidth -minversion 5  -validvalue formatIBwidth    -type str|num|null      -default "nothing"
+        setdef options itemStyle           -minversion 5  -validvalue {}               -type dict|null         -default [ticklecharts::itemStyle $item]
+        setdef options lineStyle           -minversion 5  -validvalue {}               -type dict|null         -default [ticklecharts::lineStyle $item]
+        setdef options symbolRotate        -minversion 5  -validvalue {}               -type str|num|null      -default "inherit"
+        setdef options textStyle           -minversion 5  -validvalue {}               -type dict|null         -default [ticklecharts::textStyle $item textStyle]
 
         # remove key(s)...
         set item [dict remove $item itemStyle lineStyle textStyle]

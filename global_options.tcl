@@ -317,9 +317,7 @@ proc ticklecharts::legend {value} {
     setdef options selectorPosition        -minversion 5  -validvalue formatSelectorPos     -type str|null         -default "nothing"
     setdef options selectorItemGap         -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
     setdef options selectorButtonGap       -minversion 5  -validvalue {}                    -type num|null         -default "nothing"
-
-    # not fully supported...
-    setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null     -default "nothing"
+    setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null      -default "nothing"
     #...
 
     if {[dict exists $d dataLegendItem]} {

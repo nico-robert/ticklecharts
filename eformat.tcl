@@ -1455,6 +1455,17 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                     for this key: '$key' in '$nameproc' level procedure."
             }
         }
+
+        formatIBwidth {
+            # possible values...
+            if {$type eq "str"} {
+                set validvalue {auto inherit}
+                if {$value ni $validvalue} {
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
+            }
+        }
     }
 
     return {}
