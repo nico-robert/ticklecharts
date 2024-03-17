@@ -9,7 +9,7 @@ proc ticklecharts::radiusAxis {value} {
 
     setdef options -id             -minversion 5  -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -polarIndex     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -type           -minversion 5  -validvalue formatType          -type str|null            -trace no   -default "nothing"
+    setdef options -type           -minversion 5  -validvalue formatType          -type str|null            -trace yes  -default "nothing"
     setdef options -name           -minversion 5  -validvalue {}                  -type str|null            -trace no   -default "nothing"
     setdef options -nameLocation   -minversion 5  -validvalue formatNameLocation  -type str|null            -trace no   -default "nothing"
     setdef options -nameTextStyle  -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $value]
@@ -18,14 +18,14 @@ proc ticklecharts::radiusAxis {value} {
     setdef options -nameTruncate   -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
     setdef options -boundaryGap    -minversion 5  -validvalue {}                  -type bool|list.d|null    -trace no   -default "nothing"
-    setdef options -min            -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale          -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-    setdef options -splitNumber    -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -minInterval    -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -maxInterval    -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -interval       -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -logBase        -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+    setdef options -min            -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -max            -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -scale          -minversion 5  -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
+    setdef options -splitNumber    -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -minInterval    -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -maxInterval    -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -interval       -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -logBase        -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -silent         -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
     setdef options -triggerEvent   -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
     setdef options -axisLine       -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
@@ -94,16 +94,16 @@ proc ticklecharts::angleAxis {value} {
     setdef options -startAngle     -minversion 5        -validvalue formatStartangle -type num                 -trace no   -default 90
     setdef options -endAngle       -minversion "5.5.0"  -validvalue {}               -type num|null            -trace no   -default "nothing"
     setdef options -clockwise      -minversion 5        -validvalue {}               -type bool                -trace no   -default "True"
-    setdef options -type           -minversion 5        -validvalue formatType       -type str|null            -trace no   -default "nothing"
+    setdef options -type           -minversion 5        -validvalue formatType       -type str|null            -trace yes  -default "nothing"
     setdef options -boundaryGap    -minversion 5        -validvalue {}               -type bool|list.d|null    -trace no   -default "nothing"
-    setdef options -min            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale          -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
-    setdef options -splitNumber    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -minInterval    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -maxInterval    -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -interval       -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
-    setdef options -logBase        -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -min            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -max            -minversion 5        -validvalue {}               -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -scale          -minversion 5        -validvalue {}               -type bool|null           -trace yes  -default "nothing"
+    setdef options -splitNumber    -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
+    setdef options -minInterval    -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
+    setdef options -maxInterval    -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
+    setdef options -interval       -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
+    setdef options -logBase        -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
     setdef options -silent         -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
     setdef options -triggerEvent   -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
     setdef options -axisLine       -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
@@ -138,7 +138,7 @@ proc ticklecharts::xAxis {chart value} {
     setdef options -type           -minversion 5       -validvalue formatType          -type str|null            -trace yes  -default "category"
     setdef options -data           -minversion 5       -validvalue {}                  -type list.d|null         -trace yes  -default "nothing"
     setdef options -gridIndex      -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
-    setdef options -alignTicks     -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+    setdef options -alignTicks     -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
     setdef options -position       -minversion 5       -validvalue formatXAxisPosition -type str                 -trace no   -default "bottom"
     setdef options -offset         -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -name           -minversion 5       -validvalue {}                  -type str|null            -trace no   -default "nothing"
@@ -149,14 +149,14 @@ proc ticklecharts::xAxis {chart value} {
     setdef options -nameTruncate   -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -boundaryGap    -minversion 5       -validvalue {}                  -type bool|list.d         -trace no   -default "True"
-    setdef options -min            -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max            -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale          -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
-    setdef options -splitNumber    -minversion 5       -validvalue {}                  -type num                 -trace no   -default 5
-    setdef options -minInterval    -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
-    setdef options -maxInterval    -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -interval       -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -logBase        -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
+    setdef options -min            -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -max            -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -scale          -minversion 5       -validvalue {}                  -type bool                -trace yes  -default "False"
+    setdef options -splitNumber    -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -minInterval    -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -maxInterval    -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -interval       -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -logBase        -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -silent         -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -triggerEvent   -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -axisLine       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
@@ -196,7 +196,7 @@ proc ticklecharts::yAxis {chart value} {
     setdef options -id              -minversion 5       -validvalue {}                  -type str|null            -trace yes  -default "nothing"
     setdef options -show            -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
     setdef options -gridIndex       -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
-    setdef options -alignTicks      -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+    setdef options -alignTicks      -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
     setdef options -position        -minversion 5       -validvalue formatYAxisPosition -type str                 -trace no   -default "left"
     setdef options -offset          -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -realtimeSort    -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
@@ -211,14 +211,14 @@ proc ticklecharts::yAxis {chart value} {
     setdef options -nameTruncate    -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
     setdef options -inverse         -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -boundaryGap     -minversion 5       -validvalue {}                  -type bool|list.s         -trace no   -default "False"
-    setdef options -min             -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max             -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale           -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
-    setdef options -splitNumber     -minversion 5       -validvalue {}                  -type num                 -trace no   -default 5
-    setdef options -minInterval     -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
-    setdef options -maxInterval     -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -interval        -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
-    setdef options -logBase         -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
+    setdef options -min             -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -max             -minversion 5       -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -scale           -minversion 5       -validvalue {}                  -type bool                -trace yes  -default "False"
+    setdef options -splitNumber     -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -minInterval     -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -maxInterval     -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -interval        -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+    setdef options -logBase         -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -silent          -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -triggerEvent    -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
     setdef options -axisLine        -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
@@ -265,7 +265,7 @@ proc ticklecharts::singleAxis {value} {
     setdef options -width          -minversion 5  -validvalue {}                 -type num|str             -trace no   -default "auto"
     setdef options -height         -minversion 5  -validvalue {}                 -type num|str             -trace no   -default "auto"
     setdef options -orient         -minversion 5  -validvalue formatOrient       -type str                 -trace no   -default "horizontal"
-    setdef options -type           -minversion 5  -validvalue formatType         -type str|null            -trace no   -default "value"
+    setdef options -type           -minversion 5  -validvalue formatType         -type str|null            -trace yes  -default "value"
     setdef options -name           -minversion 5  -validvalue {}                 -type str|null            -trace no   -default "nothing"
     setdef options -nameLocation   -minversion 5  -validvalue formatNameLocation -type str                 -trace no   -default "end"
     setdef options -nameTextStyle  -minversion 5  -validvalue {}                 -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $value]
@@ -274,14 +274,14 @@ proc ticklecharts::singleAxis {value} {
     setdef options -nameTruncate   -minversion 5  -validvalue {}                 -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
     setdef options -inverse        -minversion 5  -validvalue {}                 -type bool                -trace no   -default "False"
     setdef options -boundaryGap    -minversion 5  -validvalue {}                 -type bool|list.d         -trace no   -default "True"
-    setdef options -min            -minversion 5  -validvalue {}                 -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}                 -type num|str|jsfunc|null -trace no   -default "nothing"
-    setdef options -scale          -minversion 5  -validvalue {}                 -type bool|null           -trace no   -default "nothing"
-    setdef options -splitNumber    -minversion 5  -validvalue {}                 -type num                 -trace no   -default 5
-    setdef options -minInterval    -minversion 5  -validvalue {}                 -type num                 -trace no   -default 0
-    setdef options -maxInterval    -minversion 5  -validvalue {}                 -type num|null            -trace no   -default "nothing"
-    setdef options -interval       -minversion 5  -validvalue {}                 -type num|null            -trace no   -default "nothing"
-    setdef options -logBase        -minversion 5  -validvalue {}                 -type num|null            -trace no   -default "nothing"
+    setdef options -min            -minversion 5  -validvalue {}                 -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -max            -minversion 5  -validvalue {}                 -type num|str|jsfunc|null -trace yes  -default "nothing"
+    setdef options -scale          -minversion 5  -validvalue {}                 -type bool|null           -trace yes  -default "nothing"
+    setdef options -splitNumber    -minversion 5  -validvalue {}                 -type num|null            -trace yes  -default "nothing"
+    setdef options -minInterval    -minversion 5  -validvalue {}                 -type num|null            -trace yes  -default "nothing"
+    setdef options -maxInterval    -minversion 5  -validvalue {}                 -type num|null            -trace yes  -default "nothing"
+    setdef options -interval       -minversion 5  -validvalue {}                 -type num|null            -trace yes  -default "nothing"
+    setdef options -logBase        -minversion 5  -validvalue {}                 -type num|null            -trace yes  -default "nothing"
     setdef options -silent         -minversion 5  -validvalue {}                 -type bool                -trace no   -default "False"
     setdef options -triggerEvent   -minversion 5  -validvalue {}                 -type bool                -trace no   -default "False"
     setdef options -axisPointer    -minversion 5  -validvalue {}                 -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
@@ -330,7 +330,7 @@ proc ticklecharts::parallelAxis {value} {
         setdef options parallelIndex   -minversion 5  -validvalue {}                  -type num                 -trace no   -default 0
         setdef options realtime        -minversion 5  -validvalue {}                  -type bool                -trace no   -default "True"
         setdef options areaSelectStyle -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::areaSelectStyle $item]
-        setdef options type            -minversion 5  -validvalue formatType          -type str|null            -trace no   -default "value"
+        setdef options type            -minversion 5  -validvalue formatType          -type str|null            -trace yes  -default "value"
         setdef options name            -minversion 5  -validvalue {}                  -type str|null            -trace no   -default "nothing"
         setdef options nameLocation    -minversion 5  -validvalue formatNameLocation  -type str|null            -trace no   -default "end"
         setdef options nameTextStyle   -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $item]
@@ -339,14 +339,14 @@ proc ticklecharts::parallelAxis {value} {
         setdef options nameTruncate    -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTruncate $value]
         setdef options inverse         -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
         setdef options boundaryGap     -minversion 5  -validvalue {}                  -type bool|list.d|null    -trace no   -default "nothing"
-        setdef options min             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-        setdef options max             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace no   -default "nothing"
-        setdef options scale           -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options splitNumber     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options minInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options maxInterval     -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options interval        -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
-        setdef options logBase         -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
+        setdef options min             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+        setdef options max             -minversion 5  -validvalue {}                  -type num|str|jsfunc|null -trace yes  -default "nothing"
+        setdef options scale           -minversion 5  -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
+        setdef options splitNumber     -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+        setdef options minInterval     -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+        setdef options maxInterval     -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+        setdef options interval        -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
+        setdef options logBase         -minversion 5  -validvalue {}                  -type num|null            -trace yes  -default "nothing"
         setdef options silent          -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
         setdef options triggerEvent    -minversion 5  -validvalue {}                  -type bool|null           -trace no   -default "nothing"
         setdef options axisLine        -minversion 5  -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $item]

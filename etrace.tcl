@@ -285,7 +285,7 @@ proc ticklecharts::track {properties} {
         switch -exact -- $keyP {
             "lineSeries($i).showAllSymbol" {
                 # https://echarts.apache.org/en/option.html#series-line.showAllSymbol
-                if {($value ne "nothing") && [dict exists $properties xAxis.type]} {
+                if {($value ni {nothing null}) && [dict exists $properties xAxis.type]} {
                     set v [dict get $properties xAxis.type] 
                     if {$v ne "category"} {
                         puts stderr "warning(trace): xAxis.type should be set to 'category'\
@@ -299,7 +299,7 @@ proc ticklecharts::track {properties} {
                 # https://echarts.apache.org/en/option.html#series-line.stack
                 # https://echarts.apache.org/en/option.html#series-bar.stack
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stack
-                if {($value ne "nothing") && [dict exists $properties yAxis.type]} {
+                if {($value ni {nothing null}) && [dict exists $properties yAxis.type]} {
                     set v [dict get $properties yAxis.type]
                     # Case barSeries (horizontal)
                     set xval ""
@@ -320,9 +320,9 @@ proc ticklecharts::track {properties} {
                 # https://echarts.apache.org/en/option.html#series-line.stackStrategy
                 # https://echarts.apache.org/en/option.html#series-bar.stackStrategy
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stackStrategy
-                if {$value ne "nothing"} {
+                if {$value ni {nothing null}} {
                     lassign [split $keyP "."] series _
-                    if {![dict exists $properties $series.stack] || [dict get $properties $series.stack] eq "nothing"} {
+                    if {![dict exists $properties $series.stack] || [dict get $properties $series.stack] in {nothing null}} {
                         puts stderr "warning(trace): If '$keyP' is set, '$series.stack' should be set too."
                     }
                 }
@@ -330,9 +330,9 @@ proc ticklecharts::track {properties} {
             "lineSeries($i).label.distance" {
                 # https://echarts.apache.org/en/option.html#series-line.label.distance
                 lassign [split $keyP "."] series _
-                if {($value ne "nothing") && [dict exists $properties $series.label.position]} {
+                if {($value ni {nothing null}) && [dict exists $properties $series.label.position]} {
                     set v [dict get $properties $series.label.position]
-                    if {($v ne "nothing") && ($v ni {top insideRight})} {
+                    if {($v ni {nothing null}) && ($v ni {top insideRight})} {
                         puts stderr "warning(trace): '$keyP' is valid only\
                                     when '$series.label.position' is a 'string' (like 'top', 'insideRight')."
                     }
@@ -341,7 +341,7 @@ proc ticklecharts::track {properties} {
             "lineSeries($i).labelLine.lineStyle.miterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.miterLimit
                 lassign [split $keyP "."] series _
-                if {($value ne "nothing") && [dict exists $properties $series.labelLine.lineStyle.join]} {
+                if {($value ni {nothing null}) && [dict exists $properties $series.labelLine.lineStyle.join]} {
                     set v [dict get $properties $series.labelLine.lineStyle.join]
                     if {$v ne "miter"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
@@ -352,7 +352,7 @@ proc ticklecharts::track {properties} {
             "lineSeries($i).labelLine.lineStyle.join" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.join
                 lassign [split $keyP "."] series _
-                if {($value ne "nothing") && [dict exists $properties $series.labelLine.lineStyle.miterLimit]} {
+                if {($value ni {nothing null}) && [dict exists $properties $series.labelLine.lineStyle.miterLimit]} {
                     set v [dict get $properties $series.labelLine.lineStyle.miterLimit]
                     if {$v eq "nothing"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
@@ -363,7 +363,7 @@ proc ticklecharts::track {properties} {
             "lineSeries($i).itemStyle.borderMiterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.itemStyle.borderMiterLimit
                 lassign [split $keyP "."] series _
-                if {($value ne "nothing") && [dict exists $properties $series.itemStyle.borderJoin]} {
+                if {($value ni {nothing null}) && [dict exists $properties $series.itemStyle.borderJoin]} {
                     set v [dict get $properties $series.itemStyle.borderJoin]
                     if {$v ne "miter"} {
                         puts stderr "warning(trace): '$keyP' is valid only\
@@ -376,7 +376,7 @@ proc ticklecharts::track {properties} {
                 lassign [split $keyP "."] series _
                 if {($value eq "miter") && [dict exists $properties $series.itemStyle.borderMiterLimit]} {
                     set v [dict get $properties $series.itemStyle.borderMiterLimit]
-                    if {$v eq "nothing"} {
+                    if {$v in {nothing null}} {
                         puts stderr "warning(trace): '$keyP' is valid only\
                                     when '$series.itemStyle.borderMiterLimit' is set, now it set to '$v'"
                     }
@@ -385,7 +385,7 @@ proc ticklecharts::track {properties} {
             "lineSeries($i).label.ellipsis" {
                 # https://echarts.apache.org/en/option.html#series-line.label.ellipsis
                 lassign [split $keyP "."] series _
-                if {($value ne "nothing") && [dict exists $properties $series.label.overflow]} {
+                if {($value ni {nothing null}) && [dict exists $properties $series.label.overflow]} {
                     set v [dict get $properties $series.label.overflow]
                     if {$v ne "truncate"} {
                         puts stderr "warning(trace):: '$keyP' is displayed when\
@@ -423,8 +423,103 @@ proc ticklecharts::track {properties} {
             }
             "xAxis.data" -
             "yAxis.data" {
-                if {($value ne "nothing") && [llength $value] > 1} {
+                if {($value ni {nothing null}) && [llength $value] > 1} {
                     return -code error "'$keyP' cannot be defined as \[\[X, Y] \[...]]."
+                }
+            }
+            "yAxis.alignTicks" -
+            "xAxis.alignTicks" {
+                # https://echarts.apache.org/en/option.html#xAxis.alignTicks
+                if {($value ni {nothing null}) && $value} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ne "null") && ($p ni {value log})} {
+                            puts stderr "warning(trace): ${axis}.type should be set to\
+                                        'value' or 'log' if '$keyP' is set to '$value'."
+                        }
+                    }
+                }
+            }
+            "yAxis.scale" - "radiusAxis.scale" - "angleAxis.scale" -
+            "xAxis.scale" - "singleAxis.scale" - "parallelAxis.scale" {
+                # https://echarts.apache.org/en/option.html#xAxis.scale
+                if {($value ni {nothing null}) && $value} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ne "null") && ($p ne "value")} {
+                            puts stderr "warning(trace): ${axis}.type should be set to\
+                                        'value' if '$keyP' is set to '$value'."
+                        }
+                    }
+                    if {[dict exists $properties ${axis}.max] && [dict exists $properties ${axis}.min]} {
+                        set max [dict get $properties ${axis}.max]
+                        set min [dict get $properties ${axis}.min]
+                        if {($max ni {nothing null}) && ($min ni {nothing null})} {
+                            puts stderr "warning(trace): ${axis}.scale is unavailable\
+                                         when the 'min' and 'max' properties are set."
+                        }
+                    }
+                }
+            }
+            "yAxis.splitNumber" - "singleAxis.splitNumber" - "angleAxis.splitNumber" -
+            "xAxis.splitNumber" - "radiusAxis.splitNumber" - "parallelAxis.splitNumber" {
+                # https://echarts.apache.org/en/option.html#xAxis.splitNumber
+                if {$value ni {nothing null}} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ne "null") && ($p eq "category")} {
+                            puts stderr "warning(trace): ${axis}.type should not be set to\
+                                        'category' if '$keyP' is set."
+                        }
+                    }
+                }
+            }
+            "yAxis.interval" - "singleAxis.interval" - "angleAxis.interval" -
+            "xAxis.interval" - "radiusAxis.interval" - "parallelAxis.interval" {
+                # https://echarts.apache.org/en/option.html#xAxis.interval
+                if {$value ni {nothing null}} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ne "null") && ($p eq "category")} {
+                            puts stderr "warning(trace): ${axis}.type should not be set to\
+                                        'category' if '$keyP' is set."
+                        }
+                    }
+                }
+            }
+            "yAxis.minInterval"      - "yAxis.maxInterval"        - "singleAxis.maxInterval" -
+            "radiusAxis.minInterval" - "radiusAxis.maxInterval"   - "angleAxis.maxInterval"  -
+            "xAxis.minInterval"      - "xAxis.maxInterval"        - "singleAxis.minInterval" - 
+            "angleAxis.minInterval"  - "parallelAxis.maxInterval" - "parallelAxis.minInterval" {
+                # https://echarts.apache.org/en/option.html#xAxis.minInterval
+                # https://echarts.apache.org/en/option.html#xAxis.maxInterval
+                if {$value ni {nothing null}} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ni {null nothing}) && ($p ni {value time})} {
+                            puts stderr "warning(trace): ${axis}.type should not be set to\
+                                        '$p' if '$keyP' is set."
+                        }
+                    }
+                }
+            }
+            "yAxis.logBase" - "singleAxis.logBase" - "angleAxis.logBase" -
+            "xAxis.logBase" - "radiusAxis.logBase" - "parallelAxis.logBase" {
+                # https://echarts.apache.org/en/option.html#xAxis.logBase
+                if {$value ni {nothing null}} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.type]} {
+                        set p [dict get $properties ${axis}.type] 
+                        if {($p ne "null") && ($p ne "log")} {
+                            puts stderr "warning(trace): ${axis}.type should be set to\
+                                        'log' if '$keyP' is set."
+                        }
+                    }
                 }
             }
         }
