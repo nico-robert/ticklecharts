@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -132,6 +132,30 @@ proc ticklecharts::lines3DItem {value itemKey} {
 
         # remove key(s)...
         set item [dict remove $item lineStyle]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+}
+
+proc ticklecharts::axis3DItem {value itemKey} {
+
+    foreach item [dict get $value $itemKey] {
+
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
+        }
+
+        setdef options value      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
+        setdef options textStyle  -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::textStyle3D $item textStyle]
+
+        # remove key(s)...
+        set item [dict remove $item textStyle]
 
         lappend opts [merge $options $item]
         set options {}

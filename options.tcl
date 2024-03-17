@@ -1151,6 +1151,30 @@ proc ticklecharts::linkAxisPointerItem {value} {
     return [list {*}$opts]
 }
 
+proc ticklecharts::axisItem {value itemKey} {
+
+    foreach item [dict get $value $itemKey] {
+
+        if {[llength $item] % 2} ticklecharts::errorEvenArgs
+
+        if {![dict exists $item value]} {
+            ticklecharts::errorKeyArgs $itemKey value
+        }
+
+        setdef options value      -minversion 5  -validvalue {}  -type str|null    -default "nothing"
+        setdef options textStyle  -minversion 5  -validvalue {}  -type dict|null   -default [ticklecharts::textStyle $item textStyle]
+
+        # remove key(s)...
+        set item [dict remove $item textStyle]
+
+        lappend opts [merge $options $item]
+        set options {}
+
+    }
+
+    return [list {*}$opts]
+}
+
 proc ticklecharts::dataBackground {value} {
 
     if {![ticklecharts::keyDictExists "dataBackground" $value key]} {

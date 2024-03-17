@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -29,10 +29,23 @@ proc ticklecharts::xAxis3D {value} {
     setdef options -axisPointer    -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::axisPointer3D $value]
     #...
 
+    # Both properties item are accepted.
+    #   -dataXAxis3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataXAxis3DItem -dataItem} $value]
+
+    if {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axis3DItem $value $itemKey]
+    }
+
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick \
                                   -axisLabel -splitLine -axisPointer \
-                                  -splitArea -nameTextStyle]
+                                  -splitArea -nameTextStyle $itemKey]
 
     set options [merge $options $value]
     
@@ -65,10 +78,24 @@ proc ticklecharts::yAxis3D {value} {
     setdef options -axisPointer    -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::axisPointer3D $value]
     #...
 
+    # Both properties item are accepted.
+    #   -dataYAxis3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataYAxis3DItem -dataItem} $value]
+
+    if {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axis3DItem $value $itemKey]
+    }
+
+
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick \
                                   -axisLabel -splitLine -axisPointer \
-                                  -splitArea -nameTextStyle]
+                                  -splitArea -nameTextStyle $itemKey]
 
     set options [merge $options $value]
     
@@ -101,10 +128,23 @@ proc ticklecharts::zAxis3D {value} {
     setdef options -axisPointer    -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::axisPointer3D $value]
     #...
 
+    # Both properties item are accepted.
+    #   -dataZAxis3DItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataZAxis3DItem -dataItem} $value]
+
+    if {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart3D' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axis3DItem $value $itemKey]
+    }
+
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick \
                                   -axisLabel -splitLine -axisPointer \
-                                  -splitArea -nameTextStyle]
+                                  -splitArea -nameTextStyle $itemKey]
 
     set options [merge $options $value]
     

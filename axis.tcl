@@ -41,10 +41,23 @@ proc ticklecharts::radiusAxis {value} {
     setdef options -z              -minversion 5  -validvalue {}                  -type num|null            -trace no   -default "nothing"
     #...
 
+    # Both properties item are accepted.
+    #   -dataRadiusAxisItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataRadiusAxisItem -dataItem} $value]
+
+    if {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axisItem $value $itemKey]
+    }
+
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick -minorSplitLine \
                                   -axisLabel -splitLine -axisPointer \
-                                  -splitArea -nameTextStyle -minorTick -nameTruncate]
+                                  -splitArea -nameTextStyle -minorTick -nameTruncate $itemKey]
 
     set options [merge $options $value]
 
@@ -119,10 +132,23 @@ proc ticklecharts::angleAxis {value} {
     setdef options -z              -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
     #...
 
+    # Both properties item are accepted.
+    #   -dataAngleAxisItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataAngleAxisItem -dataItem} $value]
+
+    if {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axisItem $value $itemKey]
+    }
+
     # remove key(s)...
     set value [dict remove $value -axisLine -axisTick \
                                   -minorTick -axisLabel -splitLine \
-                                  -minorSplitLine -splitArea -axisPointer]
+                                  -minorSplitLine -splitArea -axisPointer $itemKey]
 
     set options [merge $options $value]
 
@@ -173,16 +199,28 @@ proc ticklecharts::xAxis {chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataXAxisItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataXAxisItem -dataItem} $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data]} {
-            error "'chart' Class cannot contains Xaxis 'data' when a class dataset is defined."
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' object cannot contains '-data', '-dataItem' or '-dataXAxisItem'\
+                    when a class dataset is defined."
         }
+    } elseif {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axisItem $value $itemKey]
     }
 
     # remove key(s)...
     set value [dict remove $value -nameTextStyle -axisLine -axisTick \
                                   -minorTick -axisLabel -splitLine \
-                                  -minorSplitLine -splitArea -axisPointer -nameTruncate]
+                                  -minorSplitLine -splitArea -axisPointer -nameTruncate $itemKey]
 
     set options [merge $options $value]
 
@@ -235,16 +273,28 @@ proc ticklecharts::yAxis {chart value} {
     # check if chart includes a dataset class
     set dataset [$chart dataset]
 
+    # Both properties item are accepted.
+    #   -dataYAxisItem
+    #   -dataItem
+    set itemKey [ticklecharts::itemKey {-dataYAxisItem -dataItem} $value]
+
     if {$dataset ne ""} {
-        if {[dict exists $value -data]} {
-            error "'chart' Class cannot contains YAxis 'data' when a class dataset is defined."
+        if {[dict exists $value -data] || [dict exists $value $itemKey]} {
+            error "'chart' object cannot contains '-data', '-dataItem' or '-dataYAxisItem'\
+                    when a class dataset is defined."
         }
+    } elseif {[dict exists $value $itemKey]} {
+        if {[dict exists $value -data]} {
+            error "'chart' object cannot contains '-data' and '$itemKey'... for\
+                   '[ticklecharts::getLevelProperties [info level]]'"
+        }
+        setdef options -data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axisItem $value $itemKey]
     }
 
     # remove key(s)...
     set value [dict remove $value -nameTextStyle -axisLine -axisTick \
                                   -minorTick -axisLabel -splitLine \
-                                  -minorSplitLine -splitArea -axisPointer -nameTruncate]
+                                  -minorSplitLine -splitArea -axisPointer -nameTruncate $itemKey]
 
     set options [merge $options $value]
 
@@ -356,8 +406,21 @@ proc ticklecharts::parallelAxis {value} {
         setdef options data            -minversion 5  -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
         #...
 
+        # Both properties item are accepted.
+        #   -dataAngleAxisItem
+        #   -dataItem
+        set itemKey [ticklecharts::itemKey {dataParallelAxisItem dataItem} $item]
+
+        if {[dict exists $item $itemKey]} {
+            if {[dict exists $item data]} {
+                error "'chart' object cannot contains 'data' and '$itemKey'... for\
+                    '[ticklecharts::getLevelProperties [info level]]'"
+            }
+            setdef options data -minversion 5  -validvalue {} -type list.o -trace no -default [ticklecharts::axisItem $item $itemKey]
+        }
+
         # remove key(s)...
-        set item [dict remove $item areaSelectStyle nameTextStyle axisLine axisTick minorTick axisLabel nameTruncate]
+        set item [dict remove $item areaSelectStyle nameTextStyle axisLine axisTick minorTick axisLabel nameTruncate $itemKey]
 
         lappend opts [merge $options $item]
         set options {}
