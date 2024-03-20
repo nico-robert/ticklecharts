@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : delete borderColor in SetOptions(-legend) it's not a key option.
 # v3.0 : Update example with the new 'Add' method for chart series.
+# v4.0 : Update example with eStruct class for demo, use 'data' property instead of 'dataLegendItem'.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -24,8 +25,23 @@ set data2 {
 
 set chart [ticklecharts::chart new]
 
+new estruct itemLegend1 {
+    name str
+    icon str
+    symbolRotate str
+}
+
+new estruct itemLegend2 {
+    name str
+    icon str
+    symbolRotate str
+}
+
+$itemLegend1 setdef {name "tree1" icon "rect" symbolRotate "inherit"}
+$itemLegend2 setdef {name "tree2" icon "rect" symbolRotate "inherit"}
+
 $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"} \
-                  -legend {top 2% left 3% orient vertical dataLegendItem {{name "tree1" icon "rect"} {name "tree2" icon "rect"}}} \
+                  -legend [list top 2% left 3% orient vertical data [list [list $itemLegend1 $itemLegend2]]] \
                 
 $chart Add "treeSeries" -name "tree1" -top "5%" -left "7%" -bottom "2%" -right "60%" -symbolSize 7 \
                         -label {position "left" verticalAlign "middle" align "right"} \
