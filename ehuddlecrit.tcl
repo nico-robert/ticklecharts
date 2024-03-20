@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -166,11 +166,12 @@ set critCmd [string map [list \
             * getObj --
             *----------------------------------------------------------------------
             */
-            void getObj (Tcl_Interp* interp, Tcl_Obj* obj) {
+            int getObj (Tcl_Interp* interp, Tcl_Obj* obj) {
 
                 Tcl_Obj* cmd[2];
                 Tcl_Obj* class[2];
                 const char* str;
+                int typeObj = 0;
 
                 // Find type.
                 class[0] = Tcl_NewStringObj("ticklecharts::typeOfClass", -1);
@@ -189,16 +190,21 @@ set critCmd [string map [list \
 
                 str = Tcl_GetString(Tcl_GetObjResult(interp));
 
-                if (strcmp(str, "::ticklecharts::eString")) {
+                // Get object value.
+                cmd[0] = obj;
+
+                if (!strcmp(str, "::ticklecharts::eString")) {
+                    cmd[1] = Tcl_NewStringObj("get", -1);
+                    typeObj = 1;
+                } else if (!strcmp(str, "::ticklecharts::eStruct")) {
+                    cmd[1] = Tcl_NewStringObj("toHuddle", -1);
+                    typeObj = 2;
+                } else {
                     fprintf(stderr,
                         "error(getObj): Object should be 'eString' class.\n"
                     );
                     exit(EXIT_FAILURE);
                 }
-
-                // Get object value.
-                cmd[0] = obj;
-	            cmd[1] = Tcl_NewStringObj("get", -1);
 
                 Tcl_IncrRefCount(cmd[0]);
                 Tcl_IncrRefCount(cmd[1]);
@@ -211,7 +217,7 @@ set critCmd [string map [list \
                 Tcl_DecrRefCount(cmd[0]);
 	            Tcl_DecrRefCount(cmd[1]);
 
-                return;
+                return typeObj;
             }
             /*
             *----------------------------------------------------------------------
@@ -933,7 +939,8 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
 
     Tcl_Obj *dataObj = Tcl_NewListObj (0,NULL);
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
-    Tcl_Obj* l       = Tcl_NewStringObj("L", 1);
+    Tcl_Obj* D       = Tcl_NewStringObj("D", 1);
+    Tcl_Obj* L       = Tcl_NewStringObj("L", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
     Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
     Tcl_Obj* type;
@@ -956,8 +963,25 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
                     type = null;
                 } else if (!strncmp(str, "::oo::Obj", 9)) {
                     type = s;
-                    getObj(interp, sub_list[j]);
+                    int typeObj = getObj(interp, sub_list[j]);
                     sub_list[j] = Tcl_GetObjResult(interp);
+
+                    // typeObj = 1 : eString class
+                    // typeObj = 2 : eStruct class
+                    if (typeObj = 2) {
+                        Tcl_Obj* index_obj = NULL;
+                        Tcl_ListObjIndex(interp, sub_list[j], 0, &index_obj);
+                        str = Tcl_GetString(index_obj);
+
+                        if (!strncmp(str, "D", 1)) {
+                            type = D;
+                        } else if (!strncmp(str, "L", 1)) {
+                            type = L;
+                        }
+
+                        Tcl_ListObjIndex(interp, sub_list[j], 1, &index_obj);
+                        sub_list[j] = index_obj;
+                    }
                 } else {
                     type = s;
                 }
@@ -969,7 +993,7 @@ critcl::cproc critHuddleListMap {Tcl_Interp* interp Tcl_Obj* data} ok {
             Tcl_ListObjAppendElement(interp, innerObj, dataTag);
         }
 
-        Tcl_ListObjAppendElement(interp, lTag, l);
+        Tcl_ListObjAppendElement(interp, lTag, L);
         Tcl_ListObjAppendElement(interp, lTag, innerObj);
         Tcl_ListObjAppendElement(interp, dataObj, lTag);
     }
@@ -1003,6 +1027,8 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
 
     Tcl_Obj *dataObj = Tcl_NewListObj (0,NULL);
     Tcl_Obj* s       = Tcl_NewStringObj("s", 1);
+    Tcl_Obj* D       = Tcl_NewStringObj("D", 1);
+    Tcl_Obj* L       = Tcl_NewStringObj("L", 1);
     Tcl_Obj* n       = Tcl_NewStringObj("num", 3);
     Tcl_Obj* null    = Tcl_NewStringObj("null", 4);
     Tcl_Obj* type;
@@ -1019,8 +1045,25 @@ critcl::cproc critHuddleListInsert {Tcl_Interp* interp Tcl_Obj* data} ok {
                 type = null;
             } else if (!strncmp(str, "::oo::Obj", 9)) {
                 type = s;
-                getObj(interp, sub_elements[i]);
+                int typeObj = getObj(interp, sub_elements[i]);
                 sub_elements[i] = Tcl_GetObjResult(interp);
+
+                // typeObj = 1 : eString class
+                // typeObj = 2 : eStruct class
+                if (typeObj = 2) {
+                    Tcl_Obj* index_obj = NULL;
+                    Tcl_ListObjIndex(interp, sub_elements[i], 0, &index_obj);
+                    str = Tcl_GetString(index_obj);
+
+                    if (!strncmp(str, "D", 1)) {
+                        type = D;
+                    } else if (!strncmp(str, "L", 1)) {
+                        type = L;
+                    }
+
+                    Tcl_ListObjIndex(interp, sub_elements[i], 1, &index_obj);
+                    sub_elements[i] = index_obj;
+                }
             } else {
                 type = s;
             }

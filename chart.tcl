@@ -291,9 +291,9 @@ oo::define ticklecharts::chart {
         #
         # Returns HTML as a string
 
-	    if {[llength $args] % 2} {
+        if {[llength $args] % 2} {
             error "wrong # args: should be \"[self] [self method]\
-            	   ?-title title? ...\""
+                   ?-title title? ...\""
         }
 
         set json [my toJSON] ; # jsondump
@@ -912,6 +912,30 @@ oo::define ticklecharts::chart {
         return {}
     }
 
+    method AddJSON {struct} {
+        # Build your own JSON.
+        #
+        # struct - eStruct class
+        #
+        # Returns nothing
+
+        if {![ticklecharts::iseStructClass $struct]} {
+            error "'$struct' should be a eStruct class for\
+                   '[self method]' method."
+        }
+
+        if {![llength [my globalOptions]] && ($::ticklecharts::theme eq "custom")} {
+            set _opts_global "nothing"
+        }
+
+        set options [$struct get]
+        set f [ticklecharts::optsToEchartsHuddle $options]
+
+        lappend _options {*}$f
+
+        return {}
+    }
+
     method Add {args} {
         # This method is identical to methods for adding series, it is a 
         # different way of writing it.
@@ -1152,5 +1176,5 @@ oo::define ticklecharts::chart {
            AddHeatmapSeries AddGraphic AddSunburstSeries AddTreeSeries AddThemeRiverSeries AddSankeySeries \
            Xaxis Yaxis RadiusAxis RadarCoordinate AngleAxis SetOptions SingleAxis Render AddPictorialBarSeries \
            AddCandlestickSeries AddParallelSeries ParallelAxis AddGaugeSeries AddGraphSeries AddWordCloudSeries \
-           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries Add
+           AddBoxPlotSeries AddTreeMapSeries AddMapSeries AddLinesSeries Add AddJSON
 }

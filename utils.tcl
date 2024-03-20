@@ -243,6 +243,7 @@ proc ticklecharts::ehuddleType {type} {
         null              {set htype @NULL}
         e.color - dict    {set htype @L}
         list.o            {set htype @DO}
+        list.dict         {set htype @D}
         jsfunc            {set htype @JS}
         default           {error "no type for '$type'"}
     }
@@ -310,6 +311,7 @@ proc ticklecharts::typeOf {value} {
             *::eList   {return list.e}
             *::eDict   {return dict}
             *::eString {return str.e}
+            *::eStruct {return struct}
         }
     }
 
@@ -333,7 +335,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
-            dict {
+            dict - list.dict {
                 if {![ticklecharts::iseDictClass $value]} {
                     error "should be a 'eDict' class."
                 }
@@ -405,7 +407,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
-            dict {
+            dict - list.dict {
                 if {![ticklecharts::iseDictClass $value]} {
                     error "should be a 'eDict' class."
                 }

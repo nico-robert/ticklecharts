@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -351,16 +351,17 @@ oo::define ticklecharts::chart3D {
     #   deleteSeries  - Delete series by index.
     #   globalOptions - Returns global options. 
     #                   Note : This variable can be empty.
+    #   AddJSON       - Build your own JSON.
     # ...
     foreach method {
         Render setTrace track toHTML options get toJSON
-        dataset getOptions keys deleteSeries globalOptions
+        dataset getOptions keys deleteSeries globalOptions AddJSON
         } {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 
     # export of methods
     export AddLine3DSeries AddBar3DSeries AddSurfaceSeries AddScatter3DSeries AddLines3DSeries \
-           Xaxis3D Yaxis3D Zaxis3D SetOptions Render Add
+           Xaxis3D Yaxis3D Zaxis3D SetOptions Render Add AddJSON
 
 }
