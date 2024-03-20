@@ -182,6 +182,11 @@ $chart toJSON
 ```tcl
 $chart toHTML ?-template ?...
 ```
+5. Add JSON structure:
+```tcl
+# Since version 3.2.4 :
+$chart AddJSON $struct ; # see '# Build JSON' section
+```
 
 Add extra JS script, variable, etc. :
 -------------------------
@@ -335,6 +340,26 @@ for `Xaxis.data` is `list.d`, this property can be written as follows :
 ```tcl
 $chart Xaxis -data [new elist.s {...}] ; # If you are sure that the X data is of type 'string'.
 ```
+Build JSON :
+-------------------------
+Since version **3.2.4**, it is now possible to construct your own `JSON`, and a new `eStruct` class has been added   
+for this purpose. The idea here is to give the user the choice of making their own structure.   
+
+> [!TIP]  
+> This makes it possible to add properties not present in the `ticklecharts` package.
+
+```tcl
+# The keys must be typed (str, struct, bool...).
+# Be careful, input data is not verified, you have control.
+new estruct myStruct {
+    key1:num    "num value"
+    key2:str    "string value"
+    key3:list.n "list num value"
+    key4:bool   "boolean value"
+}
+$chart AddJSON $myStruct
+```
+_See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) for a more detailed example_.  
 
 Global variables :
 -------------------------
