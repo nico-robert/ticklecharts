@@ -26,19 +26,16 @@ set data2 {
 set chart [ticklecharts::chart new]
 
 new estruct itemLegend1 {
-    name str
-    icon str
-    symbolRotate str
+    name:str         "tree1"
+    icon:str         "rect"
+    symbolRotate:str "inherit"
 }
 
 new estruct itemLegend2 {
-    name str
-    icon str
-    symbolRotate str
+    name:str         "tree2"
+    icon:str         "rect"
+    symbolRotate:str "inherit"
 }
-
-$itemLegend1 setdef {name "tree1" icon "rect" symbolRotate "inherit"}
-$itemLegend2 setdef {name "tree2" icon "rect" symbolRotate "inherit"}
 
 $chart SetOptions -tooltip {trigger "item" triggerOn "mousemove"} \
                   -legend [list top 2% left 3% orient vertical data [list [list $itemLegend1 $itemLegend2]]] \
