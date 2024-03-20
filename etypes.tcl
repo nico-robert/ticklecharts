@@ -48,7 +48,7 @@ foreach ptype {elist elist.n elist.s elist.o elist.d} {
     #   - list.s (list string)
     #   - list.n (list integer)
     #   - list.d (list integer || string or both)
-    #   - list.o ({list of list})
+    #   - list.o ({{list typed} {list typed}})
     # 
     # args - list tcl
     #
@@ -120,7 +120,8 @@ proc ticklecharts::edict {value} {
     # Returns a eDict object.
 
     if {![ticklecharts::isDict $value]} {
-        error "should be a dict representation..."
+        error "wrong # args: Should be a dict\
+               representation."
     }
 
     return [ticklecharts::eDict new $value]
@@ -186,7 +187,6 @@ proc ticklecharts::iseStringClass {value} {
 }
 
 oo::class create ticklecharts::eStruct {
-    variable _estruct
     variable _options
     variable _stype
     variable _varname
@@ -197,45 +197,59 @@ oo::class create ticklecharts::eStruct {
         set _options {}
         set _stype $stype
         set _varname $name
+        set estruct [dict create {*}$value]
 
-        set _estruct $value
+        foreach {key info} $estruct {
 
-        foreach {key type} $_estruct {
+            lassign [split $key ":"] k type
 
-            if {$type in {
-                str num str.e null bool list.n
-                list.s e.color jsfunc list.e list.d
+            if {$type eq "" || $type ni {
+                str num str.e null bool list.n struct
+                list.s e.color jsfunc list.d dict list.o
             }} {
-                continue
+                error "wrong # args: '$type' should be a 'eStruct'\
+                       class, str, num, str.e, bool, list.n, list.s,\
+                       e.color, jsfunc, list.d, list.o, dict or null type"
             }
 
-            if {[string match {proc.*} $type] } {
-                set cmd [string map {proc. ""} $type]
+            switch -exact -- $type {
+                struct {
+                    if {![ticklecharts::iseStructClass $info]} {
+                        error "wrong # args: Should be a eStruct\
+                               class if type 'struct' is specified."
+                    }
 
-                if {[string range $cmd 0 1] ne "::"} {
-                    set cmd ::$cmd
+                    set type [$info sType]
+                    set info [new edict [$info get]]
                 }
-
-                if {[info procs $cmd] eq ""} {
-                    error "'$cmd' command should exist."
+                dict {
+                    if {![ticklecharts::iseDictClass $info]} {
+                        error "wrong # args: Should be a eDict\
+                               class if type 'dict' is specified."
+                    }
                 }
-                dict set _estruct $key $cmd
-                continue
+                list.d - list.n - list.s - list.o {
+                    if {[ticklecharts::iseListClass $info]} {
+                        set mylType [$info lType]
+                        if {($mylType ne "list") && ($mylType ne $type)} {
+                            error "type for 'eList' class doesn't\
+                                   match with '$key' type"
+                        }
+                        if {$mylType eq "list.o"} {set info [$info get]}
+                    }
+                }
+                str {
+                    # Replaces spaces by special characters.
+                    set info [ticklecharts::mapSpaceString $info]
+                    if {$info eq ""} {
+                        # To avoid the incorrect number of arguments
+                        # error for the ehuddle class.
+                        set info "{}"
+                    }
+                }
             }
-
-            if {[string match {struct.*} $type] } {
-                set struct [string map {struct. ""} $type]
-                upvar 2 $struct obj
-                if {![info exists obj] || ![ticklecharts::iseStructClass $obj]} {
-                    error "'$struct' structure should exist."
-                }
-
-                dict set _estruct $key $obj
-                continue
-            }
-            error "'$type' should be a 'eStruct' class, str, num,\
-                   str.e, bool, list.n, list.s, e.color, jsfunc,\
-                   list.e, list.d, procedure or null type"
+            # dict info : value type validvalue minversion versionLib trace.
+            dict set _options $k [list $info $type {} {} {} no]
         }
     }
 }
@@ -246,13 +260,8 @@ oo::define ticklecharts::eStruct {
         return "eStruct"
     }
 
-    method struct {} {
-        # Returns the dict struct.
-        return $_estruct
-    }
-
     method name {} {
-        # Returns name's struct.
+        # Returns name's structure.
         return $_varname
     }
 
@@ -267,13 +276,12 @@ oo::define ticklecharts::eStruct {
     }
 
     method sType {} {
-        # Returns struct type.
+        # Returns the structure type.
         return $_stype
     }
 
     method toHuddle {} {
-        # Returns options in huddle format.
-
+        # Returns huddle object.
         set opts   [ticklecharts::optsToEchartsHuddle [my get]]
         set h      [ticklecharts::ehuddle new]
         set huddle [$h set {*}$opts]
@@ -283,66 +291,10 @@ oo::define ticklecharts::eStruct {
         switch -exact -- [my sType] {
             dict      {set hobj [lindex [huddle create {*}$huddle] 1]}
             list.dict {set hobj [lindex [huddle list [huddle create {*}$huddle]] 1]}
-            default   {error "'[my sType]' not supported"}
+            default   {error "'[my sType]' not supported [self method]"}
         }
 
         return $hobj
-    }
-
-    method setdef {value} {
-        # Sets dict struct value.
-        #
-        # value - dict value
-        #
-        # Returns nothing.
-
-        if {[llength $value] % 2} {
-            error "wrong # args: item list for '[self method]'\
-                   method must have an even number of elements."
-        }
-
-        foreach {key info} $value {
-
-            if {![dict exists [my struct] $key]} {
-                error "'$key' key not present in struct '[my name]' keys:\
-                       '[join [dict keys [my struct]] ", "]'"
-            }
-
-            if {[ticklecharts::iseStructClass $info]} {
-
-                if {[dict get [my struct] $key] ne $info} {
-                    error "struct obj doesn't match with 'base' structure"
-                }
-
-                set type [$info sType]
-                set info [new edict [$info get]]
-
-            } elseif {[info procs [dict get [my struct] $key]] ne ""} {
-
-                if {$info eq ""} {
-                    # no arguments
-                    set info [[dict get [my struct] $key]]
-                } else {
-                    set info [[dict get [my struct] $key] $info]
-                }
-
-                set t [ticklecharts::typeOf $info]
-                if {$t eq "list.e"} {
-                    set type [$info lType]
-                    set info [$info get]
-                } else {
-                    set type $t
-                }
-
-            } else {
-                set type [dict get [my struct] $key]
-            }
-
-            # dict info : value type validvalue minversion versionLib trace.
-            dict set _options $key [list $info $type {} {} {} no]
-        }
-
-        return {}
     }
 }
 
@@ -355,13 +307,12 @@ proc ticklecharts::estruct {name value {type "dict"}} {
     #
     #
     # Returns nothing.
-
     if {![ticklecharts::isDict $value]} {
-        error "should be a dict representation..."
+        error "wrong # args: Should be a dict\
+               representation."
     }
 
     upvar 1 $name obj
-
     set obj [ticklecharts::eStruct new $name $value $type]
 
     return {}
