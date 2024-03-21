@@ -14,6 +14,8 @@ proc generateLineData {} {
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
 
+set myTheme $::ticklecharts::theme
+
 # Adds a theme so that you don't have to write 
 # the default values for global options. (animation, background etc...)
 set chart [ticklecharts::chart new -theme dark]
@@ -79,3 +81,5 @@ set dirname [file dirname [info script]]
 
 $chart Render -title "Magic Structure!" \
               -outfile [file join $dirname $fbasename.html]
+
+set ::ticklecharts::theme $myTheme
