@@ -521,14 +521,22 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
         list.e {
             # If variable 'mytype' is a eList class,
             # replaces default values 'type' by new type.
-            # Only valid for replace these type list.d list.dt.
             upvar 1 value obj
             if {[catch {$obj lType} lType]} {
                 error "wrong # args: $lType"
             }
             set mytype $lType
+            # Only valid for replace these type list.d, list.dt,
+            # list.s, list.st, list.n or list.nt.
             if {$lType in {list.s list.n}} {
                 set lmap [list list.d $lType list.dt ${lType}t]
+                set type [string map $lmap $type]
+            } elseif {$lType eq "list.d"} {
+                set lmap [list \
+                    list.n $lType list.s $lType \
+                    list.st ${lType}t \
+                    list.nt ${lType}t \
+                ]
                 set type [string map $lmap $type]
             }
         }
@@ -765,8 +773,8 @@ proc ticklecharts::infoOptions {key {indent 0}} {
     set key  [string map {"-" ""} $key]
     set body [split [info body ticklecharts::$key] "\n"]
     set listmap {"setdef" "" "options" ""}
-    ldset {buffer ifnP copyifnP dataInfo} to {}
-    ldset {info switch} to 0
+    ldset {buffer ifnP copyifnP dataInfo} -to {}
+    ldset {info switch} -to 0
 
     for {set i 0} {$i < [llength $body]} {incr i} {
         # Find command in body.
@@ -832,7 +840,7 @@ proc ticklecharts::infoOptions {key {indent 0}} {
             if {[lsearch $buffer *setdef*] > -1} {
                 lappend dataInfo [format "%${indent}s \}" ""]
             }
-            ldset {buffer ifnP copyifnP} to {}
+            ldset {buffer ifnP copyifnP} -to {}
             set info 0
         }
 
