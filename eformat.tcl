@@ -26,7 +26,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         set type  "str"
     }
 
-    if {$value eq "nothing" || $value eq "null"} {
+    if {$value in {nothing null}} {
         return {}
     }
     
