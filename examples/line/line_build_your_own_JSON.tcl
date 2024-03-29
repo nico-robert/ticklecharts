@@ -76,8 +76,26 @@ new estruct myStruct_2 [list series:struct $lineseries2]
 # Adds the new structure to 'AddJSON' method
 $chart AddJSON $myStruct_2
 
+# Demo 'AddJSON' method with '-parent' property.
+new estruct structSize {
+    fontSize:num 12
+}
+# With -parent property we'll add the 'fontSize' property to subtextStyle title.
+$chart AddJSON $structSize -parent title.subtextStyle
+
+# Demo 'AddJSON' method with '-parent' property with an index.
+new estruct structSilent {
+    silent:bool "False"
+}
+
+# In this example we have added 2 series, to specify that 
+# we would like to add to the first series, 
+# (by default this would have added to the last series).
+# we can specify it with by adding a index to the key.
+$chart AddJSON $structSilent -parent series(0)
+
 set fbasename [file rootname [file tail [info script]]]
-set dirname [file dirname [info script]]
+set dirname   [file dirname [info script]]
 
 $chart Render -title "Magic Structure!" \
               -outfile [file join $dirname $fbasename.html]

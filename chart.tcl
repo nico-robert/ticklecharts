@@ -912,26 +912,70 @@ oo::define ticklecharts::chart {
         return {}
     }
 
-    method AddJSON {struct} {
+    method AddJSON {struct {args ""}} {
         # Build your own JSON.
         #
-        # struct - eStruct class
+        # This method can be used to add a structure to JSON
+        # By default the structure will be added at the end,
+        # but this can be changed by adding the '-parent' property.
+        #
+        # struct  - eStruct class
+        # args    - Options described below (optional).
+        # -parent : Allows you to add data to the structure.
+        # and allows you to make a choice if several elements are found 
+        # with an index (optional).
         #
         # Returns nothing
 
         if {![ticklecharts::iseStructClass $struct]} {
-            error "'$struct' should be a eStruct class for\
-                   '[self method]' method."
+            error "wrong # args : '$struct' should be a\
+                   eStruct class for '[self method]' method."
         }
 
-        if {![llength [my globalOptions]] && ($::ticklecharts::theme eq "custom")} {
-            set _opts_global "nothing"
+        if {[dict exists $args -parent]} {
+            set parent [dict get $args -parent]
+            set i 0 ; set lLindex {}
+
+            foreach child [split $parent "."] {
+                # Removes num index if present
+                regsub -line {\([0-9]+\)$} $child {} c
+
+                set re [list (@D=|@L=|@DO=)$c]
+                set l  [lindex $_options $lLindex]
+                set index [lsearch -all -regexp $l $re]
+
+                if {[llength $index] > 1} {
+                    if {[regexp {\(([0-9]+)\)$} $child -> myindex]} {
+                        set index [lindex $index $myindex]
+                    } else {
+                        set index [lindex $index end]
+                    }
+                }
+
+                if {$index eq ""} {
+                    error "wrong # args : '$parent' property\
+                           doesn't exists."
+                }
+
+                if {[string match {@DO=*} [lindex $l $index]]} {
+                    error "wrong # args : '@DO=*' type key\
+                           is not supported."
+                }
+
+                set i [expr {$index + 1}] ; lappend lLindex $i
+            }
+
+            set options [$struct get]
+            set f [ticklecharts::optsToEchartsHuddle $options]
+
+            lappend lLindex "end+1"
+            foreach elem $f {lset _options $lLindex $elem}
+
+        } else {
+            set options [$struct get]
+            set f [ticklecharts::optsToEchartsHuddle $options]
+            lappend _options {*}$f
         }
-
-        set options [$struct get]
-        set f [ticklecharts::optsToEchartsHuddle $options]
-
-        lappend _options {*}$f
 
         return {}
     }

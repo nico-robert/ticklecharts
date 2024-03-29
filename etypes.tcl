@@ -197,13 +197,13 @@ oo::class create ticklecharts::eStruct {
         set _options {}
         set _stype $stype
         set _varname $name
-        set estruct [dict create {*}$value]
+        set estruct $value
 
         foreach {key info} $estruct {
 
             lassign [split $key ":"] k type
 
-            if {$type eq "" || $type ni {
+            if {($type eq "") || $type ni {
                 str num str.e null bool list.n struct
                 list.s e.color jsfunc list.d dict list.o
             }} {
@@ -215,7 +215,7 @@ oo::class create ticklecharts::eStruct {
             switch -exact -- $type {
                 struct {
                     if {![ticklecharts::iseStructClass $info]} {
-                        error "wrong # args: Should be a eStruct\
+                        error "wrong # args: Should be a 'eStruct'\
                                class if type 'struct' is specified."
                     }
 
@@ -224,7 +224,7 @@ oo::class create ticklecharts::eStruct {
                 }
                 dict {
                     if {![ticklecharts::iseDictClass $info]} {
-                        error "wrong # args: Should be a eDict\
+                        error "wrong # args: Should be a 'eDict'\
                                class if type 'dict' is specified."
                     }
                 }
@@ -238,6 +238,24 @@ oo::class create ticklecharts::eStruct {
                         if {$mylType eq "list.o"} {set info [$info get]}
                     }
                 }
+                str.e {
+                    if {![ticklecharts::iseStringClass $info]} {
+                        error "wrong # args: Should be a 'eString'\
+                               class if type 'str.e' is specified."
+                    }
+                }
+                jsfunc {
+                    if {[ticklecharts::typeOf $info] ne "jsfunc"} {
+                        error "wrong # args: Should be a 'jsfunc'\
+                               class if type 'jsfunc' is specified."
+                    }
+                }
+                e.color {
+                    if {[ticklecharts::typeOf $info] ne "e.color"} {
+                        error "wrong # args: Should be a 'e.color'\
+                               class if type 'e.color' is specified."
+                    }
+                }
                 str {
                     # Replaces spaces by special characters.
                     set info [ticklecharts::mapSpaceString $info]
@@ -249,7 +267,7 @@ oo::class create ticklecharts::eStruct {
                 }
             }
             # dict info : value type validvalue minversion versionLib trace.
-            dict set _options $k [list $info $type {} {} {} no]
+            lappend _options $k [list $info $type {} {} {} no]
         }
     }
 }
@@ -268,7 +286,7 @@ oo::define ticklecharts::eStruct {
     method get {} {
         # Returns dict options.
 
-        if {![dict size $_options]} {
+        if {![llength $_options]} {
             error "The dictionary struct '[my name]'\
                    options are empty."
         }

@@ -185,7 +185,7 @@ $chart toHTML ?-template ?...
 5. Add JSON structure:
 ```tcl
 # Since version 3.2.4 :
-$chart AddJSON $struct ; # see '# Build JSON' section
+$chart AddJSON $struct ?-parent ?...; # see '# Build JSON' section
 ```
 
 Add extra JS script, variable, etc. :
@@ -357,7 +357,10 @@ new estruct myStruct {
     key3:list.n "list num value"
     key4:bool   "boolean value"
 }
-$chart AddJSON $myStruct
+# Optional argument to 'AddJSON' method: 
+# '-parent' (with or without index).
+# With this optional argument, we can add our structure to a specific location.
+$chart AddJSON $myStruct ?-parent ?property_1(?).property_2(?).?
 ```
 _See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) for a more detailed example_.  
 
