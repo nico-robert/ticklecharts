@@ -185,7 +185,7 @@ $chart toHTML ?-template ?...
 5. Add JSON structure:
 ```tcl
 # Since version 3.2.4 :
-$chart AddJSON $struct ?-parent ?...; # see '# Build JSON' section
+$chart AddJSON $struct ?-parent ?...; # see '# Structure' section
 ```
 
 Add extra JS script, variable, etc. :
@@ -340,7 +340,7 @@ for `Xaxis.data` is `list.d`, this property can be written as follows :
 ```tcl
 $chart Xaxis -data [new elist.s {...}] ; # If you are sure that the X data is of type 'string'.
 ```
-Build JSON :
+Structure :
 -------------------------
 Since version **3.2.4**, it is now possible to construct your own `JSON`, and a new `eStruct` class has been added   
 for this purpose. The idea here is to give the user the choice of making their own structure.   
@@ -352,15 +352,16 @@ for this purpose. The idea here is to give the user the choice of making their o
 # The keys must be typed (str, struct, bool...).
 # Be careful, input data is not verified, you have control.
 new estruct myStruct {
-    key1:num    "num value"
+    key1:num    "number value"
     key2:str    "string value"
-    key3:list.n "list num value"
+    key3:list.n "list of numbers"
     key4:bool   "boolean value"
+    key4:...    "..."
 }
 # Optional argument to 'AddJSON' method: 
 # '-parent' (with or without index).
 # With this optional argument, we can add our structure to a specific location.
-$chart AddJSON $myStruct ?-parent ?property_1(?).property_2(?).?
+$chart AddJSON $myStruct ?-parent ?key1(?index).?key2(?index)
 ```
 _See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) for a more detailed example_.  
 
