@@ -44,7 +44,7 @@ proc ticklecharts::renderOptions {value method} {
     variable escript
     variable htmltemplate
 
-    # Required values... set minProperties to false.
+    # Required values set minProperties to false.
     set minP $minProperties ; set minProperties 0
 
     # Generate random number generator.
@@ -53,21 +53,6 @@ proc ticklecharts::renderOptions {value method} {
     set outfile [file join [file dirname [info script]] render.html]
 
     switch -exact -- $method  {
-        "toHTML" {
-            # Global options for 'toHTML' method
-            setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
-            setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
-            setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
-            setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
-            setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
-            setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s" $uuid]
-            setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
-            setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
-            setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
-            setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
-            setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
-            setdef options -template   -minversion {}  -validvalue {}             -type str.n              -default $htmltemplate
-        }
         "RenderTsb" {
             # Global options for 'Taygete Scrap Book' method.
             setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
@@ -82,20 +67,22 @@ proc ticklecharts::renderOptions {value method} {
             setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
         }
         default {
-            # Global default options...
+            # Global options for other methods.
             setdef options -title      -minversion {}  -validvalue {}             -type str.n              -default "ticklEcharts !!!"
             setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "900px"
             setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
             setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
             setdef options -jschartvar -minversion {}  -validvalue {}             -type str.n              -default [format "chart_%s" $uuid]
             setdef options -divid      -minversion {}  -validvalue {}             -type str.n              -default [format "id_%s" $uuid]
-            setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default $outfile
             setdef options -jsecharts  -minversion {}  -validvalue {}             -type str.n              -default $escript
             setdef options -jsvar      -minversion {}  -validvalue {}             -type str.n              -default [format "option_%s" $uuid]
             setdef options -script     -minversion {}  -validvalue {}             -type list.d|jsfunc|null -default "nothing"
             setdef options -class      -minversion {}  -validvalue {}             -type str.n              -default "chart-container"
             setdef options -style      -minversion {}  -validvalue {}             -type str.n|null         -default "nothing"
             setdef options -template   -minversion {}  -validvalue {}             -type str.n              -default $htmltemplate
+            if {$method eq "Render"} {
+            setdef options -outfile    -minversion {}  -validvalue {}             -type str.n              -default $outfile
+            }
         }
     }
 
