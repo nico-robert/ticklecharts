@@ -388,7 +388,7 @@ proc ticklecharts::track {properties} {
                 if {($value ni {nothing null}) && [dict exists $properties $series.label.overflow]} {
                     set v [dict get $properties $series.label.overflow]
                     if {$v ne "truncate"} {
-                        puts stderr "warning(trace):: '$keyP' is displayed when\
+                        puts stderr "warning(trace): '$keyP' is displayed when\
                                     '$series.label.overflow' is set to 'truncate'."
                     }
                 }
