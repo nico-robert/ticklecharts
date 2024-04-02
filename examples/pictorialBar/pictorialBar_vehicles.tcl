@@ -3,6 +3,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v1.0 : Initial example
 # v2.0 : Update example with the new 'Add' method for chart series.
 # v3.0 : Use '-dataItem' property for pictorialBarSeries instead of '-data' (both are accepted).
+# v4.0 : Force string values for legend items.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -21,7 +22,7 @@ set labelSetting [list show true position "right" offset [list {10 0}] fontSize 
 set picBar [ticklecharts::chart new]
 
 $picBar SetOptions -title {text "Vehicles in X City"} \
-                   -legend [list data [list {2015 2016}]] \
+                   -legend [list data [new elist.s {2015 2016}]] \
                    -tooltip {trigger axis axisPointer {type shadow}} \
                    -grid {containLabel "True" left 20}
 
