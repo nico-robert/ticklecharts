@@ -5,6 +5,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 # v3.0 : Update example with the new 'Add' method for chart series.
 # v4.0 : Replaces '-dataGaugeItem' by '-dataItem' (both properties are available).
 #        Replaces 'richitem' by 'richItem' (both properties are available).
+# v5.0 : Update example with an structure for 'rich' property.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -16,6 +17,36 @@ set js [ticklecharts::jsfunc new {
                 return '{value|' + value.toFixed(0) + '}{unit|km/h}';
             }
           }]
+
+# Define a new structure for 'value' property.
+new estruct value {
+    color:str "#777"
+    fontStyle:str "normal"
+    fontWeight:str "bolder"
+    fontFamily:str "sans-serif"
+    fontSize:num 50
+    borderType:str "solid"
+    textBorderType:str "solid"
+    textShadowColor:str "transparent"
+}
+# Define a new structure for 'unit' property.
+new estruct unit {
+    color:str "#999"
+    fontStyle:str "normal"
+    fontWeight:str "normal"
+    fontFamily:str "sans-serif"
+    fontSize:num 20
+    borderType:str "solid"
+    padding:list.n {{0 0 -20 10}}
+    textBorderType:str "solid"
+    textShadowColor:str "transparent"
+}
+
+# Assembly
+new estruct richStruct [subst {
+    value:struct $value
+    unit:struct  $unit
+}]
                
 $chart Add "gaugeSeries" -startAngle 180 -endAngle 0 -min 0 -max 240 -splitNumber 12 \
                          -itemStyle     {color "#58D9F9" shadowColor "rgba(0,138,255,0.45)" borderColor "nothing" shadowBlur 10 shadowOffsetX 2 shadowOffsetY 2} \
@@ -30,13 +61,12 @@ $chart Add "gaugeSeries" -startAngle 180 -endAngle 0 -min 0 -max 240 -splitNumbe
                          -splitLine     {length 12 lineStyle {width 3 color "#999"}} \
                          -axisLabel     {distance 30 color "#999" fontSize 20} \
                          -title         {show "False"} \
-                         -detail        [list backgroundColor "#fff" borderColor #999 borderWidth 2  width "60%" \
-                                              lineHeight 40 height 40 borderRadius 8 valueAnimation "True" \
-                                              formatter $js offsetCenter [list {0 "35%"}] \
-                                              richItem [list \
-                                                               value {fontSize 50 fontWeight "bolder" color "#777"} \
-                                                               unit  [list fontSize 20 color "#999" padding [list {0 0 -20 10}]] \
-                                  ]] \
+                         -detail        [list \
+                                            backgroundColor "#fff" borderColor #999 borderWidth 2  width "60%" \
+                                            lineHeight 40 height 40 borderRadius 8 valueAnimation "True" \
+                                            formatter $js offsetCenter [list {0 "35%"}] \
+                                            rich $richStruct \
+                                        ] \
                          -dataItem {{value 100}}
 
 set fbasename [file rootname [file tail [info script]]]
