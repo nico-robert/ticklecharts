@@ -220,7 +220,6 @@ oo::class create ticklecharts::eStruct {
                     }
 
                     set type [$info sType]
-                    set info [new edict [$info get]]
                 }
                 dict {
                     if {![ticklecharts::iseDictClass $info]} {
@@ -266,8 +265,8 @@ oo::class create ticklecharts::eStruct {
                     }
                 }
             }
-            # dict info : value type validvalue minversion versionLib trace.
-            lappend _options $k [list $info $type {} {} {} no]
+            # dict info : value type.
+            lappend _options $k [list $info $type]
         }
     }
 }
@@ -307,8 +306,8 @@ oo::define ticklecharts::eStruct {
 
         # huddle object
         switch -exact -- [my sType] {
-            dict      {set hobj [lindex [huddle create {*}$huddle] 1]}
-            list.dict {set hobj [lindex [huddle list [huddle create {*}$huddle]] 1]}
+            struct.d  {set hobj [lindex [huddle create {*}$huddle] 1]}
+            struct.ld {set hobj [lindex [huddle list [huddle create {*}$huddle]] 1]}
             default   {error "'[my sType]' not supported [self method]"}
         }
 
@@ -316,7 +315,7 @@ oo::define ticklecharts::eStruct {
     }
 }
 
-proc ticklecharts::estruct {name value {type "dict"}} {
+proc ticklecharts::estruct {name value {type "struct.d"}} {
     # Build eStruct class.
     # 
     # name  - var name
