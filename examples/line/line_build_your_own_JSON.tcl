@@ -24,7 +24,7 @@ set chart [ticklecharts::chart new -theme dark]
 # Each key must have a corresponding type.
 # For 'struct' type, a structure class should exist.
 # Note: 
-#   'list.dict' (optional argument) allows to generate a JSON schema like 
+#   'struct.ld' (optional argument) allows to generate a JSON schema like 
 #    this : mainKey:[{key: value, key1: value1, ...,}]
 #    'dict' (default value) generate a JSON schema like 
 #    this : mainKey:{key: value, key1: value1, ...,}
@@ -42,7 +42,7 @@ new estruct lineseries1 [subst {
     type:str    "line"
     name:str    "myLineStructJSON1"
     smooth:bool "true"
-}] list.dict
+}] struct.ld
 
 # Sets a new structure for xAxis and yAxis properties.
 new estruct Xaxis {
