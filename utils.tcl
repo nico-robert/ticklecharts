@@ -243,7 +243,8 @@ proc ticklecharts::ehuddleType {type} {
         null              {set htype @NULL}
         e.color - dict    {set htype @L}
         list.o            {set htype @DO}
-        list.dict         {set htype @D}
+        struct.d          {set htype @L}
+        struct.ld         {set htype @D}
         jsfunc            {set htype @JS}
         default           {error "no type for '$type'"}
     }
@@ -329,13 +330,13 @@ proc ticklecharts::optsToEchartsHuddle {options} {
     set opts {}
 
     foreach {key info} $options {
-        lassign $info value type trace
+        lassign $info value type
 
         set key   [string map {- ""} $key]
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
-            dict - list.dict {
+            dict {
                 if {![ticklecharts::iseDictClass $value]} {
                     error "should be a 'eDict' class."
                 }
@@ -377,7 +378,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 }
                 append opts [format " ${htype}=$key {%s}" [list $l]]
             }
-            e.color {
+            e.color - struct.d - struct.ld {
                 append opts [format " ${htype}=$key {%s}" \
                     [ticklecharts::dictToEchartsHuddle [$value get]] \
                 ]
@@ -402,12 +403,12 @@ proc ticklecharts::dictToEchartsHuddle {options} {
     set opts {}
 
     foreach {subkey subinfo} $options {
-        lassign $subinfo value type trace
+        lassign $subinfo value type
 
         set htype [ticklecharts::ehuddleType $type]
 
         switch -exact -- $type {
-            dict - list.dict {
+            dict {
                 if {![ticklecharts::iseDictClass $value]} {
                     error "should be a 'eDict' class."
                 }
@@ -451,7 +452,7 @@ proc ticklecharts::dictToEchartsHuddle {options} {
                 }
                 append opts [format " ${htype}=$subkey {%s}" [list @AO $l]]
             }
-            e.color {
+            e.color - struct.d - struct.ld {
                 append opts [format " ${htype}=$subkey {%s}" \
                     [ticklecharts::dictToEchartsHuddle [$value get]] \
                 ]
@@ -517,6 +518,17 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
             # If variable 'mytype' is a eString class,
             # replaces default values 'type' by new type.
             set type [string map {str str.e str.t str.et} $type]
+        }
+        struct {
+            # If variable 'mytype' is a eStruct class,
+            # replaces default values 'type' by new type.
+            upvar 1 value obj
+            if {[catch {$obj sType} sType]} {
+                error "wrong # args: $sType"
+            }
+            set mytype $sType
+            set lmap [list struct $sType]
+            set type [string map $lmap $type]
         }
         list.e {
             # If variable 'mytype' is a eList class,
