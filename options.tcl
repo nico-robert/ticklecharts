@@ -2680,7 +2680,7 @@ proc ticklecharts::upperLabel {value} {
     setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num              -default 0
     setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str              -default "none"
     setdef options ellipsis             -minversion 5  -validvalue {}                      -type str              -default "..."
-    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null        -default [ticklecharts::richItem $d]
+    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|struct|null -default [ticklecharts::richItem $d]
     #...
 
     # remove key(s) from dict value rich...
@@ -2750,7 +2750,7 @@ proc ticklecharts::label {value} {
     setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num                -trace no   -default 0
     setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str                -trace yes  -default "truncate"
     setdef options ellipsis             -minversion 5  -validvalue {}                      -type str                -trace yes  -default "..."
-    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null          -trace no   -default [ticklecharts::richItem $d]
+    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|struct|null   -trace no   -default [ticklecharts::richItem $d]
     #...
 
     if {[infoNameProc $levelP "*.axisPointer.*"]} {
@@ -4436,7 +4436,7 @@ proc ticklecharts::detail {value} {
     setdef options valueAnimation       -minversion 5  -validvalue {}                   -type bool|null           -default "nothing"
     setdef options offsetCenter         -minversion 5  -validvalue {}                   -type list.d              -default [list {0 "40%"}]
     setdef options formatter            -minversion 5  -validvalue {}                   -type str|jsfunc|null     -default "nothing"
-    setdef options rich                 -minversion 5  -validvalue {}                   -type dict|null           -default [ticklecharts::richItem $d]
+    setdef options rich                 -minversion 5  -validvalue {}                   -type dict|struct|null    -default [ticklecharts::richItem $d]
     #...
 
     # remove key(s)...
@@ -4544,7 +4544,7 @@ proc ticklecharts::edgeLabel {value} {
     setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str                 -default "none"
     setdef options ellipsis             -minversion 5  -validvalue {}                      -type str                 -default "..."
     setdef options valueAnimation       -minversion 5  -validvalue {}                      -type bool|null           -default "nothing"
-    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null           -default [ticklecharts::richItem $d]
+    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|struct|null    -default [ticklecharts::richItem $d]
     #...
 
     # remove key(s)...
@@ -4812,7 +4812,7 @@ proc ticklecharts::calendarLabel {value time} {
     setdef options margin               -minversion 5  -validvalue {}                      -type num|null           -default "nothing"
     setdef options position             -minversion 5  -validvalue formatPosition          -type str|null           -default "nothing"
     setdef options nameMap              -minversion 5  -validvalue formatNameMap           -type list.d|str|null    -default "nothing"
-    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str.t|null -default [echartsOptsTheme calendar.${time}.color ]
+    setdef options color                -minversion 5  -validvalue formatColor             -type e.color|str.t|null -default [echartsOptsTheme calendar.${time}.color]
     setdef options fontStyle            -minversion 5  -validvalue formatFontStyle         -type str                -default "normal"
     setdef options fontWeight           -minversion 5  -validvalue formatFontWeight        -type str|num            -default "normal"
     setdef options fontFamily           -minversion 5  -validvalue {}                      -type str                -default "sans-serif"
@@ -4843,7 +4843,7 @@ proc ticklecharts::calendarLabel {value time} {
     setdef options textShadowOffsetY    -minversion 5  -validvalue {}                      -type num                -default 0
     setdef options overflow             -minversion 5  -validvalue formatOverflow          -type str                -default "none"
     setdef options ellipsis             -minversion 5  -validvalue {}                      -type str                -default "..."
-    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|null          -default [ticklecharts::richItem $d]
+    setdef options rich                 -minversion 5  -validvalue {}                      -type dict|struct|null   -default [ticklecharts::richItem $d]
     #...
 
     # remove key(s) from dict value rich...
