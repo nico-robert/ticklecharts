@@ -14,9 +14,16 @@ oo::class create ticklecharts::eList {
         # Initializes a new eList Class.
         #
         if {$type eq "list.o"} {
-            set re {bool|str|num|dict|list.n|null|jsfunc|e.color|list.s}
-            if {[lsearch -regexp -index 1 $value $re] < 0} {
-                error "'list.o' should be a typed list."
+            set re {\s(bool|str|num|dict|list\.n|null|jsfunc|e\.color|list\.s|str\.e|list\.e)$}
+            foreach val $value {
+                if {[llength $val] % 2} ticklecharts::errorEvenArgs
+                set match [lsearch -all -regexp $val $re]
+                if {
+                    ($match eq "") || 
+                    ([llength $match] != ([llength $val] / 2))
+                } {
+                    error "'list.o' should be a typed list."
+                }
             }
         }
 
@@ -48,7 +55,7 @@ foreach ptype {elist elist.n elist.s elist.o elist.d} {
     #   - list.s (list string)
     #   - list.n (list integer)
     #   - list.d (list integer || string or both)
-    #   - list.o ({{list typed} {list typed}})
+    #   - list.o ({key1 {value 'type'} key2 {...}})
     # 
     # args - list tcl
     #
