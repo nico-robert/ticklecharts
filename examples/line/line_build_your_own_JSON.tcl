@@ -26,7 +26,7 @@ set chart [ticklecharts::chart new -theme dark]
 # Note: 
 #   'struct.ld' (optional argument) allows to generate a JSON schema like 
 #    this : mainKey:[{key: value, key1: value1, ...,}]
-#    'dict' (default value) generate a JSON schema like 
+#   'struct.d' (default value) generate a JSON schema like 
 #    this : mainKey:{key: value, key1: value1, ...,}
 
 # Be careful :
