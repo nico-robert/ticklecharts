@@ -55,7 +55,7 @@ oo::define ticklecharts::ehuddle {
             lassign [split $key "="] type keyvalue
 
             if {$info eq "nothing"} {continue}
-            # Transform key to huddle type...
+            # Transform key to huddle type.
             #
             switch -exact -- $type {
                 "@B"    {set value [list HUDDLE [list b [string tolower $info]]]}
@@ -157,7 +157,7 @@ oo::define ticklecharts::ehuddle {
 
     method append {key value} {
         # append dict option to huddle instance or
-        # set huddle if key doesn't exist...
+        # set huddle if key doesn't exist.
         # 
         # key   - dict key
         # value - dict value
@@ -198,14 +198,14 @@ oo::define ticklecharts::ehuddle {
             }
         }
 
-        # Add series type...
+        # Add series type.
         if {[string match {*=series*} $key]} {
             if {[dict exists $value "@S=type"]} {
                 lappend _series [dict get $value "@S=type"]
             }
         }
 
-        # destroy...
+        # destroy.
         $eh destroy
 
         # set new huddle list
@@ -245,7 +245,7 @@ oo::define ticklecharts::ehuddle {
 
     method dump {} {
         # Transform huddle to JSON
-        # replace special chars by space... etc.
+        # replace special chars by space, etc.
         # 
         # Returns JSON
         set lstringmap {
@@ -346,52 +346,36 @@ proc ticklecharts::eHuddleCritcl {bool} {
     variable edir
 
     if {$bool} {
-        if {![catch {uplevel 1 [list source [file join $edir ehuddlecrit.tcl]]} infocrit]} {
-            # Replace 'if {[isHuddle $key]} {...}' by 'if {[huddle::isHuddle $key]} {...}'
-            # Problem if full namespace is not included... 
-            proc ::huddle::types::dict::create {args} {
-                if {[llength $args] % 2} {error {wrong # args: should be "huddle create ?key value ...?"}}
-                set resultL [dict create]
-
-                foreach {key value} $args {
-                    if {[huddle::isHuddle $key]} {
-                        foreach {tag src} [unwrap $key] break
-                        if {$tag ne "string"} {error "The key '$key' must a string literal or huddle string" }
-                        set key $src
-                    }
-                    dict set resultL $key [argument_to_node $value]
-                }
-                return [wrap [list D $resultL]]
-            }
-
+        if {![catch {
+            uplevel 1 [list source [file join $edir ehuddlecrit.tcl]]
+        } infocrit]
+        } {
             # JsonDump
             rename ::huddle::jsondump "" ; # delete proc
-            rename ticklecharts::critJsonDump ::huddle::jsondump
+            rename critJsonDump ::huddle::jsondump
             # RetrieveHuddle
             rename ::huddle::retrieve_huddle "" ; # delete proc
             rename critRetrieveHuddle ::huddle::retrieve_huddle
             # IsHuddle
             rename ::huddle::isHuddle "" ; # delete proc
-            rename critIsHuddle ::huddle::isHuddle
+            rename critIsHuddle ::isHuddle
             # huddle list
             rename ::huddle::types::list::List "" ; # delete proc
-            rename ticklecharts::critHList ::huddle::types::list::List
+            rename critHList ::huddle::types::list::List
 
             # ehuddle procedures :
-            rename ::ticklecharts::ehuddleListMap "" ; # delete proc
-            rename critHuddleListMap ::ticklecharts::ehuddleListMap
-
-            rename ::ticklecharts::ehuddleListInsert "" ; # delete proc
-            rename critHuddleListInsert ::ticklecharts::ehuddleListInsert
+            rename ehuddleListMap "" ; # delete proc
+            rename critHuddleListMap ehuddleListMap
+            rename ehuddleListInsert "" ; # delete proc
+            rename critHuddleListInsert ehuddleListInsert
 
             proc eHuddleCritcl {bool} {
-                # Procedure already activated...
+                # Procedure already activated.
                 # Output a message to say that it is already running.
                 #
                 puts stderr "'ticklecharts::eHuddleCritcl' procedure\
                              is already activated."
             }
-
         } else {
             puts stderr "warning(eHuddleCrit): $infocrit"
         }
