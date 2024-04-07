@@ -596,7 +596,7 @@ Release :
         - `gettype` method is renamed `getType` (internal method).
         -  Rename `basic` theme to `custom` theme.
         - `theme.tcl` file has been completely reworked.
-        - Several options are no longer supported when initializing the `ticklecharts::chart` class, all of these options are initialized in `Setoptions` method now.
+        - Several options are no longer supported when initializing the `ticklecharts::chart` class, all of these options are initialized in `SetOptions` method now.
         - To keep the same `Echarts` logic, some _ticklEcharts_ properties are renamed :  
                 - `-databaritem` is renamed `-dataBarItem`.  
                 - `-datalineitem` is renamed `-dataLineItem`.  
