@@ -210,13 +210,15 @@ oo::class create ticklecharts::eStruct {
 
             lassign [split $key ":"] k type
 
-            if {($type eq "") || $type ni {
+            if {
+                ($type eq "") || $type ni {
                 str num str.e null bool list.n struct
-                list.s e.color jsfunc list.d dict list.o
-            }} {
-                error "wrong # args: '$type' should be a 'eStruct'\
-                       class, str, num, str.e, bool, list.n, list.s,\
-                       e.color, jsfunc, list.d, list.o, dict or null type"
+                list.s e.color jsfunc list.d dict list.o}
+            } {
+                error "wrong # args: 'type' should be a struct,\
+                       str, num, str.e, bool, list.n, list.s,\
+                       e.color, jsfunc, list.d, list.o, dict or null type\
+                       instead of '$type'."
             }
 
             switch -exact -- $type {
