@@ -2,8 +2,14 @@
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
-    namespace ensemble create -command ::new
-    namespace export elist elist.n elist.s elist.o elist.d edict estr estruct
+    namespace eval ::new {
+        namespace ensemble create -map {
+            elist   ::ticklecharts::elist   elist.n ::ticklecharts::elist.n
+            elist.s ::ticklecharts::elist.s elist.o ::ticklecharts::elist.o
+            elist.d ::ticklecharts::elist.d edict   ::ticklecharts::edict
+            estr    ::ticklecharts::estr    estruct ::ticklecharts::estruct
+        }
+    }
 }
 
 oo::class create ticklecharts::eList {
@@ -14,14 +20,11 @@ oo::class create ticklecharts::eList {
         # Initializes a new eList Class.
         #
         if {$type eq "list.o"} {
-            set re {\s(bool|str|num|dict|list\.n|null|jsfunc|e\.color|list\.s|str\.e|list\.e)$}
+            set re {\s(bool|str|num|dict|list\.[nse]|null|jsfunc|e\.color|str\.e)$}
             foreach val $value {
                 if {[llength $val] % 2} ticklecharts::errorEvenArgs
                 set match [lsearch -all -regexp $val $re]
-                if {
-                    ($match eq "") || 
-                    ([llength $match] != ([llength $val] / 2))
-                } {
+                if {($match eq "") || ([llength $match] != ([llength $val] / 2))} {
                     error "'list.o' should be a typed list."
                 }
             }
