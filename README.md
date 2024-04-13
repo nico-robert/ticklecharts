@@ -184,8 +184,7 @@ $chart toHTML ?-template ?...
 ```
 5. Add JSON structure:
 ```tcl
-# Since version 3.2.4 :
-$chart AddJSON $struct ?-parent ?...; # see '# Structure' section
+$chart AddJSON $struct ?-parent ?... ; # See '# Structure' section
 ```
 
 Add extra JS script, variable, etc. :
@@ -344,9 +343,6 @@ Structure :
 -------------------------
 Since version **3.2.4**, it is now possible to construct your own `JSON`, and a new `eStruct` class has been added   
 for this purpose. The idea here is to give the user the choice of making their own structure.   
-
-> [!TIP]  
-> This makes it possible to add properties not present in the `ticklecharts` package.
 
 ```tcl
 # The keys must be typed (str, struct, bool...).
