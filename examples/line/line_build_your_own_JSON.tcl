@@ -8,7 +8,7 @@ proc generateLineData {} {
         lappend items [expr {rand() * 500}]
     }
 
-    return [new elist $items]
+    return [new elist.n $items]
 }
 
 # source all.tcl

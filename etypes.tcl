@@ -207,10 +207,8 @@ oo::class create ticklecharts::eStruct {
         set _options {}
         set _stype $stype
         set _varname $name
-        set estruct $value
 
-        foreach {key info} $estruct {
-
+        foreach {key info} $value {
             lassign [split $key ":"] k type
 
             if {
@@ -242,7 +240,7 @@ oo::class create ticklecharts::eStruct {
                 list.d - list.n - list.s - list.o {
                     if {[ticklecharts::iseListClass $info]} {
                         set mylType [$info lType]
-                        if {($mylType ne "list") && ($mylType ne $type)} {
+                        if {$mylType ne $type} {
                             error "type for 'eList' class doesn't\
                                    match with '$key' type"
                         }
@@ -277,7 +275,6 @@ oo::class create ticklecharts::eStruct {
                     }
                 }
             }
-            # dict info : value type.
             lappend _options $k [list $info $type]
         }
     }
@@ -298,8 +295,7 @@ oo::define ticklecharts::eStruct {
         # Returns dict options.
 
         if {![llength $_options]} {
-            error "The dictionary struct '[my name]'\
-                   options are empty."
+            error "The dictionary struct '[my name]' options are empty."
         }
         return $_options
     }
