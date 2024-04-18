@@ -196,7 +196,7 @@ set critCmd [string map [list \
                     cmd[1] = Tcl_NewStringObj("get", -1);
                     typeObj = 1;
                 } else if (!strcmp(str, "::ticklecharts::eStruct")) {
-                    cmd[1] = Tcl_NewStringObj("toHuddle", -1);
+                    cmd[1] = Tcl_NewStringObj("structHuddle", -1);
                     typeObj = 2;
                 } else {
                     fprintf(stderr, "error(getObj): Object in 'list.d' should be\

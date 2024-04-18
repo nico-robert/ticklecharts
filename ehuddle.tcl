@@ -306,7 +306,7 @@ proc ticklecharts::ehuddleListMap data {
                         num     {list num $v}
                         null    {list null}
                         str.e   {list s [$v get]}
-                        struct  {$v toHuddle}
+                        struct  {$v structHuddle}
                         default {list s $v}
                     }
                 }
@@ -328,7 +328,7 @@ proc ticklecharts::ehuddleListInsert data {
             num     {lappend listv [list num $val]}
             null    {lappend listv [list null]}
             str.e   {lappend listv [list s [$val get]]}
-            struct  {lappend listv [$val toHuddle]}
+            struct  {lappend listv [$val structHuddle]}
             default {lappend listv [list s $val]}
         }
     }

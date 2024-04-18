@@ -305,7 +305,7 @@ oo::define ticklecharts::eStruct {
         return $_stype
     }
 
-    method toHuddle {} {
+    method structHuddle {} {
         # Returns huddle object.
         set opts   [ticklecharts::optsToEchartsHuddle [my get]]
         set h      [ticklecharts::ehuddle new]
