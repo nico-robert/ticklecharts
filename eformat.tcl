@@ -334,14 +334,14 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             # possible values...
             # see https://echarts.apache.org/examples/en/editor.html?c=line-easing
             set validvalue {
-                            linear quadraticIn quadraticOut quadraticInOut cubicIn
-                            cubicOut cubicInOut quarticIn quarticOut quarticInOut
-                            quinticIn quinticOut quinticInOut sinusoidalIn sinusoidalOut
-                            sinusoidalInOut exponentialIn exponentialOut exponentialInOut
-                            circularIn circularOut circularInOut elasticIn elasticOut
-                            elasticInOut backIn backOut backInOut bounceIn bounceOut
-                            bounceInOut
-                            }
+                linear quadraticIn quadraticOut quadraticInOut cubicIn
+                cubicOut cubicInOut quarticIn quarticOut quarticInOut
+                quinticIn quinticOut quinticInOut sinusoidalIn sinusoidalOut
+                sinusoidalInOut exponentialIn exponentialOut exponentialInOut
+                circularIn circularOut circularInOut elasticIn elasticOut
+                elasticInOut backIn backOut backInOut bounceIn bounceOut
+                bounceInOut
+            }
             if {$value ni $validvalue} {
                 errorEFormat "'$value' should be '[eFormat $validvalue]'\
                     for this key: '$key' in '$nameproc' level procedure."
@@ -1147,8 +1147,10 @@ proc ticklecharts::formatEcharts {formattype value key type} {
 
         formatWCshape {
             # possible values...
-            set validvalue {circle cardioid diamond triangle-forward triangle
-                            pentagon triangle-upright star square}
+            set validvalue {
+                circle cardioid diamond triangle-forward triangle
+                pentagon triangle-upright star square
+            }
             if {$value ni $validvalue} {
                 errorEFormat "'$value' should be '[eFormat $validvalue]'\
                     for this key: '$key' in '$nameproc' level procedure."
@@ -1156,6 +1158,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
         }
 
         formatDataBox {
+            if {$type eq "list.e"} {set value [$value get]}
             foreach val $value {
                 if {[llength $val] != 5} {
                     errorEFormat "'val' should be a list of 5 elements :\
