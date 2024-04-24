@@ -2254,17 +2254,17 @@ proc ticklecharts::axisLine {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value $key]
 
-    setdef options show            -minversion 5  -validvalue {}               -type bool.t          -default $show
-    setdef options onZero          -minversion 5  -validvalue {}               -type bool            -default "True"
-    setdef options onZeroAxisIndex -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-    setdef options symbol          -minversion 5  -validvalue formatItemSymbol -type str|list.s|null -default "null"
-    setdef options symbolSize      -minversion 5  -validvalue {}               -type list.n|null     -default "nothing"
-    setdef options symbolOffset    -minversion 5  -validvalue {}               -type list.n|num|null -default "nothing"
-    setdef options lineStyle       -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
+    setdef options show            -minversion 5  -validvalue {}               -type bool.t          -trace no  -default $show
+    setdef options onZero          -minversion 5  -validvalue {}               -type bool            -trace yes -default "True"
+    setdef options onZeroAxisIndex -minversion 5  -validvalue {}               -type num|null        -trace no  -default "nothing"
+    setdef options symbol          -minversion 5  -validvalue formatItemSymbol -type str|list.s|null -trace no  -default "null"
+    setdef options symbolSize      -minversion 5  -validvalue {}               -type list.n|null     -trace no  -default "nothing"
+    setdef options symbolOffset    -minversion 5  -validvalue {}               -type list.n|num|null -trace no  -default "nothing"
+    setdef options lineStyle       -minversion 5  -validvalue {}               -type dict|null       -trace no  -default [ticklecharts::lineStyle $d]
 
     if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
-        setdef options show      -minversion 5  -validvalue {} -type bool -default "True"
-        setdef options roundCap  -minversion 5  -validvalue {} -type bool -default "False"
+        setdef options show      -minversion 5  -validvalue {} -type bool -trace no -default "True"
+        setdef options roundCap  -minversion 5  -validvalue {} -type bool -trace no -default "False"
         # remove flag from dict options... not defined in series-gauge.axisLine
         set options [dict remove $options onZero onZeroAxisIndex symbol symbolSize symbolOffset]
     }
