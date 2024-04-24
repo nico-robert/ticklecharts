@@ -215,12 +215,19 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
         set name [lindex [info level $i] 0]
         if {[string match {ticklecharts::*} $name] || [ticklecharts::isAObject $name]} {
             set property [string map {ticklecharts:: ""} $name]
-
-            # Adds an index if the level properties is related to a series.
-            if {[string match {ticklecharts::*Series} $name]} {
-                
+            # Adds an index if the level properties is related 
+            # to a series or specific axes.
+            if {
+                [string match {ticklecharts::*Series} $name] ||
+                [string match {ticklecharts::[xy]Axis} $name] ||
+                [string match {ticklecharts::radarCoordinate} $name]
+            } {
                 # No other series accepted.
-                if {$property ni $traceSeries} {return {}}
+                if {[string match {*Series} $property] && 
+                    ($property ni $traceSeries)
+                } {
+                    return {}
+                }
 
                 set index [lindex [info level $i] 1]
                 if {[ticklecharts::typeOf $index] ne "num"} {
@@ -280,43 +287,44 @@ proc ticklecharts::track {properties} {
     # Returns nothing.
 
     foreach {keyP value} $properties {
-        set i [expr {[regexp {\(\d+\)} $keyP num] ? $num : -1}]
-        
-        switch -exact -- $keyP {
-            "lineSeries($i).showAllSymbol" {
+
+        switch -glob -- $keyP {
+            "lineSeries(*).showAllSymbol" {
                 # https://echarts.apache.org/en/option.html#series-line.showAllSymbol
-                if {($value ni {nothing null}) && [dict exists $properties xAxis.type]} {
-                    set v [dict get $properties xAxis.type] 
-                    if {$v ne "category"} {
-                        puts stderr "warning(trace): xAxis.type should be set to 'category'\
-                                     if '$keyP' is set to '$value'"
+                if {$value ni {nothing null}} {
+                    foreach {k info} [dict filter $properties key xAxis(*).type] {
+                        if {$info ne "category"} {
+                            puts stderr "warning(trace): '$k' should be set to 'category'\
+                                        if '$keyP' is set to '$value'"
+                        }
                     }
                 }
             }
-            "barSeries($i).stack"    -
-            "barSeries3D($i).stack"  -
-            "lineSeries($i).stack" {
+            "barSeries(*).stack"    -
+            "barSeries3D(*).stack"  -
+            "lineSeries(*).stack" {
                 # https://echarts.apache.org/en/option.html#series-line.stack
                 # https://echarts.apache.org/en/option.html#series-bar.stack
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stack
-                if {($value ni {nothing null}) && [dict exists $properties yAxis.type]} {
-                    set v [dict get $properties yAxis.type]
-                    # Case barSeries (horizontal)
-                    set xval ""
-                    if {[string match {barSeries*} $keyP]} {
-                        if {[dict exists $properties xAxis.type]} {
-                            set xval [dict get $properties xAxis.type]
+                if {$value ni {nothing null}} {
+                    foreach {k info} [dict filter $properties key yAxis(*).type] {
+                        # Case barSeries (horizontal)
+                        set xval ""
+                        if {[string match {barSeries*} $keyP]} {
+                            foreach {kb infob} [dict filter $properties key xAxis(*).type] {
+                                set xval $infob
+                            }
                         }
-                    }
-                    if {$v in {time category} && ($xval ne "value")} {
-                        puts stderr "warning(trace): yAxis.type should be set to 'value' or 'log'\
-                                    if '$keyP' is set."
+                        if {$info in {time category} && ($xval ne "value")} {
+                            puts stderr "warning(trace): '$k' should be set to 'value' or 'log'\
+                                        if '$keyP' is set."
+                        }
                     }
                 }
             }
-            "barSeries($i).stackStrategy"   -
-            "barSeries3D($i).stackStrategy" -
-            "lineSeries($i).stackStrategy" {
+            "barSeries(*).stackStrategy"   -
+            "barSeries3D(*).stackStrategy" -
+            "lineSeries(*).stackStrategy" {
                 # https://echarts.apache.org/en/option.html#series-line.stackStrategy
                 # https://echarts.apache.org/en/option.html#series-bar.stackStrategy
                 # https://echarts.apache.org/en/option-gl.html#series-bar3D.stackStrategy
@@ -327,7 +335,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).label.distance" {
+            "lineSeries(*).label.distance" {
                 # https://echarts.apache.org/en/option.html#series-line.label.distance
                 lassign [split $keyP "."] series _
                 if {($value ni {nothing null}) && [dict exists $properties $series.label.position]} {
@@ -338,7 +346,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).labelLine.lineStyle.miterLimit" {
+            "lineSeries(*).labelLine.lineStyle.miterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.miterLimit
                 lassign [split $keyP "."] series _
                 if {($value ni {nothing null}) && [dict exists $properties $series.labelLine.lineStyle.join]} {
@@ -349,7 +357,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).labelLine.lineStyle.join" {
+            "lineSeries(*).labelLine.lineStyle.join" {
                 # https://echarts.apache.org/en/option.html#series-line.labelLine.lineStyle.join
                 lassign [split $keyP "."] series _
                 if {($value ni {nothing null}) && [dict exists $properties $series.labelLine.lineStyle.miterLimit]} {
@@ -360,7 +368,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).itemStyle.borderMiterLimit" {
+            "lineSeries(*).itemStyle.borderMiterLimit" {
                 # https://echarts.apache.org/en/option.html#series-line.itemStyle.borderMiterLimit
                 lassign [split $keyP "."] series _
                 if {($value ni {nothing null}) && [dict exists $properties $series.itemStyle.borderJoin]} {
@@ -371,7 +379,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).itemStyle.borderJoin" {
+            "lineSeries(*).itemStyle.borderJoin" {
                 # Doc e.g: https://echarts.apache.org/en/option.html#series-line.itemStyle.borderJoin
                 lassign [split $keyP "."] series _
                 if {($value eq "miter") && [dict exists $properties $series.itemStyle.borderMiterLimit]} {
@@ -382,7 +390,7 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "lineSeries($i).label.ellipsis" {
+            "lineSeries(*).label.ellipsis" {
                 # https://echarts.apache.org/en/option.html#series-line.label.ellipsis
                 lassign [split $keyP "."] series _
                 if {($value ni {nothing null}) && [dict exists $properties $series.label.overflow]} {
@@ -393,27 +401,25 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "xAxis.id" -
-            "yAxis.id" {
+            "xAxis(*).id" -
+            "yAxis(*).id" {
                 # Some axis combinations are not allowed.
                 foreach axisID {
-                    angleAxis.id radiusAxis.id radarCoordinate.id 
-                    singleAxis.id parallelAxis.id
+                    angleAxis radiusAxis radarCoordinate
+                    singleAxis parallelAxis
                 } {
-                    if {[dict exists $properties $axisID]} {
-                        set axis1 [lindex [split $keyP "."] 0]
-                        set axis2 [lindex [split $axisID "."] 0]
-                        return -code error "'$axis2' not suitable with '$axis1'"
+                    if {[dict keys $properties ${axisID}*.id] ne ""} {
+                        regsub {\(\d+\)\.id} $keyP {} axis1
+                        return -code error "'$axisID' not suitable with '$axis1'"
                     }
                 }
             }
-            "barSeries($i).data"  -
-            "lineSeries($i).data" {
+            "barSeries(*).data"  -
+            "lineSeries(*).data" {
                 if {$value ne ""} {
                     foreach axis {xAxis yAxis} {
-                        if {[dict exists $properties $axis.data]} {
-                            set val [dict get $properties $axis.data]
-                            if {($val ne "nothing") && [llength $value] > 1} {
+                        foreach {k info} [dict filter $properties key ${axis}(*).data] {
+                            if {($info ne "nothing") && [llength $value] > 1} {
                                 return -code error "'$keyP' is defined as \[\[X, Y] \[...]], data\
                                     '$axis.data' property should not exist."
                             }
@@ -421,14 +427,14 @@ proc ticklecharts::track {properties} {
                     }                    
                 }
             }
-            "xAxis.data" -
-            "yAxis.data" {
+            "xAxis(*).data" -
+            "yAxis(*).data" {
                 if {($value ni {nothing null}) && [llength $value] > 1} {
                     return -code error "'$keyP' cannot be defined as \[\[X, Y] \[...]]."
                 }
             }
-            "yAxis.alignTicks" -
-            "xAxis.alignTicks" {
+            "yAxis(*).alignTicks" -
+            "xAxis(*).alignTicks" {
                 # https://echarts.apache.org/en/option.html#xAxis.alignTicks
                 if {($value ni {nothing null}) && $value} {
                     set axis [lindex [split $keyP "."] 0]
@@ -441,8 +447,8 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis.scale" - "radiusAxis.scale" - "angleAxis.scale" -
-            "xAxis.scale" - "singleAxis.scale" - "parallelAxis.scale" {
+            "yAxis(*).scale" - "radiusAxis.scale" - "angleAxis.scale" -
+            "xAxis(*).scale" - "singleAxis.scale" - "parallelAxis.scale" {
                 # https://echarts.apache.org/en/option.html#xAxis.scale
                 if {($value ni {nothing null}) && $value} {
                     set axis [lindex [split $keyP "."] 0]
@@ -453,7 +459,9 @@ proc ticklecharts::track {properties} {
                                         'value' if '$keyP' is set to '$value'."
                         }
                     }
-                    if {[dict exists $properties ${axis}.max] && [dict exists $properties ${axis}.min]} {
+                    if {[dict exists $properties ${axis}.max] && 
+                        [dict exists $properties ${axis}.min]
+                    } {
                         set max [dict get $properties ${axis}.max]
                         set min [dict get $properties ${axis}.min]
                         if {($max ni {nothing null}) && ($min ni {nothing null})} {
@@ -463,8 +471,8 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis.splitNumber" - "singleAxis.splitNumber" - "angleAxis.splitNumber" -
-            "xAxis.splitNumber" - "radiusAxis.splitNumber" - "parallelAxis.splitNumber" {
+            "yAxis(*).splitNumber" - "singleAxis.splitNumber" - "angleAxis.splitNumber" -
+            "xAxis(*).splitNumber" - "radiusAxis.splitNumber" - "parallelAxis.splitNumber" {
                 # https://echarts.apache.org/en/option.html#xAxis.splitNumber
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -477,8 +485,8 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis.interval" - "singleAxis.interval" - "angleAxis.interval" -
-            "xAxis.interval" - "radiusAxis.interval" - "parallelAxis.interval" {
+            "yAxis(*).interval" - "singleAxis.interval" - "angleAxis.interval" -
+            "xAxis(*).interval" - "radiusAxis.interval" - "parallelAxis.interval" {
                 # https://echarts.apache.org/en/option.html#xAxis.interval
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -491,9 +499,9 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis.minInterval"      - "yAxis.maxInterval"        - "singleAxis.maxInterval" -
+            "yAxis(*).minInterval"   - "yAxis(*).maxInterval"     - "singleAxis.maxInterval" -
             "radiusAxis.minInterval" - "radiusAxis.maxInterval"   - "angleAxis.maxInterval"  -
-            "xAxis.minInterval"      - "xAxis.maxInterval"        - "singleAxis.minInterval" - 
+            "xAxis(*).minInterval"   - "xAxis(*).maxInterval"     - "singleAxis.minInterval" - 
             "angleAxis.minInterval"  - "parallelAxis.maxInterval" - "parallelAxis.minInterval" {
                 # https://echarts.apache.org/en/option.html#xAxis.minInterval
                 # https://echarts.apache.org/en/option.html#xAxis.maxInterval
@@ -508,8 +516,8 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis.logBase" - "singleAxis.logBase" - "angleAxis.logBase" -
-            "xAxis.logBase" - "radiusAxis.logBase" - "parallelAxis.logBase" {
+            "yAxis(*).logBase" - "singleAxis.logBase" - "angleAxis.logBase" -
+            "xAxis(*).logBase" - "radiusAxis.logBase" - "parallelAxis.logBase" {
                 # https://echarts.apache.org/en/option.html#xAxis.logBase
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -519,6 +527,19 @@ proc ticklecharts::track {properties} {
                             puts stderr "warning(trace): ${axis}.type should be set to\
                                         'log' if '$keyP' is set."
                         }
+                    }
+                }
+            }
+            "yAxis(*).offset" -
+            "xAxis(*).offset" {
+                # https://echarts.apache.org/en/option.html#xAxis.offset
+                # https://echarts.apache.org/en/option.html#yAxis.offset
+                if {$value ni {nothing null}} {
+                    set axis [lindex [split $keyP "."] 0]
+                    if {[dict exists $properties ${axis}.axisLine.onZero] &&
+                        [dict get $properties ${axis}.axisLine.onZero]} {
+                        puts stderr "warning(trace): Set '${axis}.axisLine.onZero' to\
+                                     'False' to activate '$keyP' option."
                     }
                 }
             }
