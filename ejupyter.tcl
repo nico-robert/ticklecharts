@@ -13,7 +13,6 @@
 if {[info commands ::jupyter::html] ne ""} {
 
     namespace eval ticklecharts {
-        set env "jupyter" ; # Set environment
         set minProperties "True" ; # To gain speed
         set htmltemplate [readHTMLTemplate \
                          [file join $edir html jupyter_template.html]]

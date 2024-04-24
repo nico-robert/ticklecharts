@@ -248,7 +248,6 @@ namespace eval ticklecharts {
     variable theme           "custom"
     variable htmlstdout      "True"
     variable minProperties   "False"
-    variable env             "tclsh"
     variable checkURL        "False" ; # Checks if a URL exists.
     variable htmltemplate    [file join $edir html template.html]
     variable escript         "https://cdn.jsdelivr.net/npm/echarts@${echarts_version}/dist/echarts.min.js"

@@ -46,8 +46,6 @@ if {[namespace exists ::tsb]} {
 
         if {!$isReady} {error "'Tsb' file not sourced..."}
 
-        # Set environment
-        set env "tsb"
         # To gain speed
         set minProperties "True"
 
