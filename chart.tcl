@@ -32,6 +32,12 @@ oo::class create ticklecharts::chart {
 
 oo::define ticklecharts::chart {
 
+    method getONSClass {} {
+        # Returns the name of the internal 
+        # namespace of the object.
+        return [info object namespace [self class]]
+    }
+
     method get {} {
         # Gets huddle object.
         return $_h
@@ -268,6 +274,11 @@ oo::define ticklecharts::chart {
             puts [format {html:%s} [file nativename $outputFile]]
         }
 
+        # Deletes link variables when the current script is sourced.
+        if {[ticklecharts::isSourced [info script]]} {
+            ticklecharts::unsetVars [self]
+        }
+
         return $outputFile
     }
 
@@ -333,7 +344,7 @@ oo::define ticklecharts::chart {
 
     method toJSON {} {
         # Returns json chart data.
-        my track    ; # Compares properties values with each other. 
+        my track    ; # Compares properties values with each other.
         my ToHuddle ; # Transforms to huddle.
 
         # ehuddle jsondump
@@ -350,8 +361,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#xAxis
         #
         # Returns nothing
+        classvar indexxAxis
 
-        set options [ticklecharts::xAxis [self] $args]
+        set options [ticklecharts::xAxis [incr indexxAxis] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=xAxis [list {*}$f]
@@ -369,8 +381,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#yAxis
         #
         # Returns nothing
+        classvar indexyAxis
 
-        set options [ticklecharts::yAxis [self] $args]
+        set options [ticklecharts::yAxis [incr indexyAxis] [self] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=yAxis [list {*}$f]
@@ -445,8 +458,9 @@ oo::define ticklecharts::chart {
         # from doc : https://echarts.apache.org/en/option.html#radar
         #
         # Returns nothing
+        classvar indexradarC
 
-        set options [ticklecharts::radarCoordinate $args]
+        set options [ticklecharts::radarCoordinate [incr indexradarC] $args]
         set f [ticklecharts::optsToEchartsHuddle $options]
 
         lappend _options @D=radar [list {*}$f]
