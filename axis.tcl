@@ -64,7 +64,7 @@ proc ticklecharts::radiusAxis {value} {
     return $options
 }
 
-proc ticklecharts::radarCoordinate {value} {
+proc ticklecharts::radarCoordinate {index value} {
 
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
@@ -155,7 +155,7 @@ proc ticklecharts::angleAxis {value} {
     return $options
 }
 
-proc ticklecharts::xAxis {chart value} {
+proc ticklecharts::xAxis {index chart value} {
 
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
@@ -166,7 +166,7 @@ proc ticklecharts::xAxis {chart value} {
     setdef options -gridIndex      -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -alignTicks     -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
     setdef options -position       -minversion 5       -validvalue formatXAxisPosition -type str                 -trace no   -default "bottom"
-    setdef options -offset         -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
+    setdef options -offset         -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -name           -minversion 5       -validvalue {}                  -type str|null            -trace no   -default "nothing"
     setdef options -nameLocation   -minversion 5       -validvalue formatNameLocation  -type str                 -trace no   -default "end"
     setdef options -nameTextStyle  -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::nameTextStyle $value]
@@ -227,7 +227,7 @@ proc ticklecharts::xAxis {chart value} {
     return $options
 }
 
-proc ticklecharts::yAxis {chart value} {
+proc ticklecharts::yAxis {index chart value} {
 
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
@@ -236,7 +236,7 @@ proc ticklecharts::yAxis {chart value} {
     setdef options -gridIndex       -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -alignTicks      -minversion "5.3.0" -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
     setdef options -position        -minversion 5       -validvalue formatYAxisPosition -type str                 -trace no   -default "left"
-    setdef options -offset          -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
+    setdef options -offset          -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -realtimeSort    -minversion 5       -validvalue {}                  -type bool                -trace no   -default "True"
     setdef options -sortSeriesIndex -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -type            -minversion 5       -validvalue formatType          -type str|null            -trace yes  -default "value"
