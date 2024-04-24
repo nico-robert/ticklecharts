@@ -1208,15 +1208,44 @@ proc ::oo::Helpers::classvar {name} {
     # name - variable
     #
     # Returns nothing
-    if {([info exists ::argv0] && ([info script] eq $::argv0)) ||
-        ($::ticklecharts::env in {tsb jupyter})} {
-        set ns [info object namespace [uplevel 1 {self class}]]
-        set vs [list $name $name]
+    set ns [uplevel 1 {my getONSClass}]
+    set vs [list $name $name]
 
-        tailcall namespace upvar $ns {*}$vs
+    tailcall namespace upvar $ns {*}$vs
+
+    return {}
+}
+
+proc ticklecharts::unsetVars {obj} {
+    # Deletes all variables when the current script
+    # is sourced.
+    #
+    # obj - object
+    #
+    # Returns nothing
+    if {[$obj getType] in {timeline gridlayout}} {
+        foreach ch [$obj charts] {
+            ticklecharts::unsetVars $ch
+        }
+    } else {
+        set cNs [$obj getONSClass]
+        unset {*}[info vars ${cNs}::*]
     }
 
     return {}
+}
+
+proc ticklecharts::isSourced {script} {
+    # Checks if current script is sourced.
+    #
+    # script - current script
+    #
+    # Returns true if current script is sourced,
+    # false otherwise.
+    return [expr {
+        [info exists ::argv0] &&
+        !([file tail $script] eq [file tail $::argv0])
+    }]
 }
 
 proc ticklecharts::itemKey {keySeries value} {
