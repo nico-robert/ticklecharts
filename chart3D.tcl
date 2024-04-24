@@ -352,9 +352,10 @@ oo::define ticklecharts::chart3D {
     #   globalOptions - Returns global options. 
     #                   Note : This variable can be empty.
     #   AddJSON       - Build your own JSON.
+    #   getONSClass   - Name of the internal namespace of the object.
     # ...
     foreach method {
-        Render setTrace track toHTML options get toJSON
+        Render setTrace track toHTML options get toJSON getONSClass
         dataset getOptions keys deleteSeries globalOptions AddJSON
         } {
         method $method {*}[ticklecharts::classDef "chart" $method]
