@@ -1,26 +1,23 @@
 # Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
-namespace eval ticklecharts {}
+namespace eval ticklecharts {
+    # Adds jsfunc as huddle type.
+    namespace eval ::huddle::types::jsfunc {
+        variable settings 
 
-# add jsfunc huddle type
-namespace eval ::huddle::types::jsfunc {
-    variable settings 
+        # type definition
+        set settings {publicMethods "jsfunc" tag "jsf" isContainer "no"}
 
-    # type definition
-    set settings {
-        publicMethods {jsfunc}
-        tag jsf
-        isContainer no
+        proc jsfunc {arg} {
+            return [wrap [list jsf $arg]]
+        }
+
+        proc jsondump {huddle_object offset newline nextoff} {
+            return [join [lindex $huddle_object 1 1]]
+        }
     }
-
-    proc jsfunc {arg} {
-        return [wrap [list jsf $arg]]
-    }
-
-    proc jsondump {huddle_object offset newline nextoff} {
-        return [join [lindex $huddle_object 1 1]]
-    }
+    ::huddle::addType ::huddle::types::jsfunc
 }
 
 oo::class create ticklecharts::ehuddle {
@@ -84,13 +81,13 @@ oo::define ticklecharts::ehuddle {
                     }
                 "@LJ"   {
                         set subH {}
-                        foreach var {*}$info {
-                            lassign $var k vvv 
-                            lassign [split $k "="] type _
-                            switch -exact -- $type {
-                                "@LS"   {set h [huddle list {*}[join $vvv]]}
-                                "@L"    {lappend subH [huddle create {*}[my set {*}$vvv]]}
-                                default {error "No @LJ type '$type' specified for '$keyvalue'."}
+                        foreach var $info {
+                            lassign $var vk vinfo 
+                            lassign [split $vk "="] vtype _
+                            switch -exact -- $vtype {
+                                "@LS"   {set h [huddle list {*}[join $vinfo]]}
+                                "@L"    {lappend subH [huddle create {*}[my set {*}$vinfo]]}
+                                default {error "No @LJ type '$vtype' specified for '$keyvalue'."}
                             }
                         }
                         set value [huddle append h {*}$subH]
@@ -383,6 +380,3 @@ proc ticklecharts::eHuddleCritcl {bool} {
 
     return {}
 }
-
-# Add jsfunc as hudlle type
-huddle addType ::huddle::types::jsfunc
