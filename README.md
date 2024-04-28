@@ -337,7 +337,9 @@ Since version **3.2.3** when default type is `list.d` it can be replaced by `lis
 This improves performance by avoiding the need to scan the list to find the type of data. By example, the default type   
 for `Xaxis.data` is `list.d`, this property can be written as follows : 
 ```tcl
-$chart Xaxis -data [new elist.s {...}] ; # If you are sure that the X data is of type 'string'.
+# Note : If you are sure that the X data is of type 'string', you can replace 
+# -data [list {...}] property by :
+$chart Xaxis -data [new elist.s {...}]
 ```
 Structure :
 -------------------------
