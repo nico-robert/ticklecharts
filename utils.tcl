@@ -392,7 +392,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 foreach val $value {
                     lappend l [optsToEchartsHuddle [list $key $val]]
                 }
-                append opts [format " ${htype}=$key {%s}" [list $l]]
+                append opts [format " ${htype}=$key {%s}" $l]
             }
             e.color - struct.d - struct.ld {
                 append opts [format " ${htype}=$key {%s}" \
