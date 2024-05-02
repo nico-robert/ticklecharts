@@ -38,7 +38,7 @@ set chart [ticklecharts::chart new -theme dark]
 #               > {'type': foo} instead of {'type': 'foo'} 
 
 new estruct lineseries1 [subst {
-    data:list.n [generateLineData]
+    data:elist.n [generateLineData]
     type:str    "line"
     name:str    "myLineStructJSON1"
     smooth:bool "true"
@@ -65,10 +65,10 @@ $chart AddJSON $myStruct_1
 
 # Define a new structure for add a new series
 new estruct lineseries2 [subst {
-    data:list.n [generateLineData]
-    type:str    "line"
-    name:str    "myLineStructJSON2"
-    smooth:bool "true"
+    data:elist.n [generateLineData]
+    type:str     "line"
+    name:str     "myLineStructJSON2"
+    smooth:bool  "true"
 }]
 
 new estruct myStruct_2 [list series:struct $lineseries2]
