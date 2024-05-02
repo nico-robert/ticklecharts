@@ -9,6 +9,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #               in favor of this writing. (see formatter property + 'Add' method below)
 # v5.0 : Update of the dataset class example with key property without the minus sign at the beginning.
 #        Note : Both are accepted, with or without.
+# v6.0 : Add eStruct class to dataset dimension for testing.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -29,11 +30,17 @@ try {
     set sizeValue "57%"
     set symbolSize 2.5
 
-    # Adds eDict class (only for test)
-    # Note : Values are arbitrary, that does not matter on the graphic result.
+    # Adds eDict + eStruct classes (only for test)
+    # Note : Values are arbitrary, that does not matter 
+    # on the graphic result.
+    new estruct struct_dim {
+        name:str "test_struct"
+        type:str "number"
+    }
     set dimensions [list "Income" "Life Expectancy" "Population" "Country" \
                          {name "Year" type "ordinal"} \
-                         [new edict {name "dummy" type "number"}]]
+                         [new edict {name "dummy" type "number"}] \
+                         $struct_dim]
 
     # dataset class
     set dset [ticklecharts::dataset new [list dimensions $dimensions source $datajson]]
