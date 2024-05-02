@@ -19,7 +19,7 @@ oo::class create ticklecharts::eList {
     constructor {value type} {
         # Initializes a new eList Class.
         #
-        if {$type eq "list.o"} {
+        if {$type eq "elist.o"} {
             set re {\s(bool|str|num|dict|list\.[nse]|null|jsfunc|e\.color|str\.e)$}
             foreach val $value {
                 if {[llength $val] % 2} ticklecharts::errorEvenArgs
@@ -76,8 +76,7 @@ foreach ptype {elist elist.n elist.s elist.o elist.d} {
     # when we are certain of the type to be integrated. 
     #
     # Returns a eList object.
-    set tlist [string map {e ""} $ptype]
-    proc ticklecharts::${ptype} {args} [string map [list %tlist% $tlist] {
+    proc ticklecharts::${ptype} {args} [string map [list %tlist% $ptype] {
             return [ticklecharts::eList new $args %tlist%]
         }
     ]
@@ -213,12 +212,15 @@ oo::class create ticklecharts::eStruct {
 
             if {
                 ($type eq "") || $type ni {
-                str num str.e null bool list.n struct
-                list.s e.color jsfunc list.d dict list.o}
+                    elist.d elist.o elist.n elist.s
+                    str num str.e null bool list.n struct
+                    list.s e.color jsfunc list.d dict
+                }
             } {
                 error "wrong # args: 'type' should be a struct,\
                        str, num, str.e, bool, list.n, list.s,\
-                       e.color, jsfunc, list.d, list.o, dict or null type\
+                       elist.d, elist.o, elist.n, elist.s,\
+                       e.color, jsfunc, list.d, dict or null type\
                        instead of '$type'."
             }
 
@@ -226,9 +228,9 @@ oo::class create ticklecharts::eStruct {
                 struct {
                     if {![ticklecharts::iseStructClass $info]} {
                         error "wrong # args: Should be a 'eStruct'\
-                               class if type 'struct' is specified."
+                               class if type '$type' is specified\
+                               for '$k' property in struct '$name'."
                     }
-
                     set type [$info sType]
                 }
                 dict {
@@ -237,32 +239,45 @@ oo::class create ticklecharts::eStruct {
                                class if type 'dict' is specified."
                     }
                 }
-                list.d - list.n - list.s - list.o {
-                    if {[ticklecharts::iseListClass $info]} {
-                        set mylType [$info lType]
-                        if {$mylType ne $type} {
-                            error "type for 'eList' class doesn't\
-                                   match with '$key' type"
-                        }
-                        if {$mylType eq "list.o"} {set info [$info get]}
+                elist.d - elist.o - elist.n - elist.s {
+                    if {![ticklecharts::iseListClass $info]} {
+                        error "wrong # args: Should be a 'eList'\
+                               class if type '$type' is specified\
+                               for '$k' property in struct '$name'."
+                    }
+                    set mylType [$info lType]
+                    if {$mylType ne $type} {
+                        error "Type in structure for 'eList' class doesn't\
+                               match with '$type' subtype for '$k' property\
+                               in struct '$name'."
+                    }
+                    if {$mylType eq "elist.o"} {set info [$info get]}
+                }
+                list.d - list.o - list.n - list.s {
+                    if {![ticklecharts::isListOfList $info]} {
+                        error "'$type' should be a list of list\
+                                for '$k' property in struct '$name'."
                     }
                 }
                 str.e {
                     if {![ticklecharts::iseStringClass $info]} {
                         error "wrong # args: Should be a 'eString'\
-                               class if type 'str.e' is specified."
+                               class if type 'str.e' is specified\
+                               for '$k' property in struct '$name'."
                     }
                 }
                 jsfunc {
                     if {[ticklecharts::typeOf $info] ne "jsfunc"} {
                         error "wrong # args: Should be a 'jsfunc'\
-                               class if type 'jsfunc' is specified."
+                               class if type 'jsfunc' is specified\
+                               for '$k' property in struct '$name'."
                     }
                 }
                 e.color {
                     if {[ticklecharts::typeOf $info] ne "e.color"} {
                         error "wrong # args: Should be a 'e.color'\
-                               class if type 'e.color' is specified."
+                               class if type 'e.color' is specified\
+                               for '$k' property in struct '$name'."
                     }
                 }
                 str {

@@ -232,21 +232,24 @@ proc ticklecharts::ehuddleType {type} {
     # Returns huddle echarts type
 
     switch -exact -- $type {
-        str.t   - str     {set htype @S}
-        str.et  - str.e   {set htype @SE}
-        num.t   - num     {set htype @N}
-        bool.t  - bool    {set htype @B}
-        list.st - list.s  {set htype @LS}
-        list.nt - list.n  {set htype @LN}
-        list.dt - list.d  {set htype @LD}
-        list.j            {set htype @LJ}
-        null              {set htype @NULL}
-        e.color - dict    {set htype @L}
-        list.o            {set htype @DO}
-        struct.d          {set htype @L}
-        struct.ld         {set htype @D}
-        jsfunc            {set htype @JS}
-        default           {error "no type for '$type'"}
+        str.t     - str     {set htype @S}
+        str.et    - str.e   {set htype @SE}
+        num.t     - num     {set htype @N}
+        bool.t    - bool    {set htype @B}
+        list.st   - list.s  -
+        elist.st  - elist.s {set htype @LS}
+        list.nt   - list.n  -
+        elist.nt  - elist.n {set htype @LN}
+        list.dt   - list.d  -
+        elist.dt  - elist.d {set htype @LD}
+        e.color   - dict    {set htype @L}
+        list.o    - elist.o {set htype @DO}
+        list.j              {set htype @LJ}
+        null                {set htype @NULL}
+        struct.d            {set htype @L}
+        struct.ld           {set htype @D}
+        jsfunc              {set htype @JS}
+        default             {error "no type for '$type'"}
     }
 
     return $htype
@@ -346,7 +349,7 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                     [optsToEchartsHuddle [$value get]] \
                 ]
             }
-            list.o {
+            list.o - elist.o {
                 set l {}
                 foreach val $value {
                     if {[lindex $val end] eq "list.o"} {
@@ -374,18 +377,19 @@ proc ticklecharts::optsToEchartsHuddle {options} {
                 append opts [format " ${htype}=$key {%s}" [list @AO $l]]
             }
             list.st - list.s {
-                if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$key {%s}" [$value get]]
-                } else {
-                    append opts [format " ${htype}=$key {%s}" $value]
-                }
+                append opts [format " ${htype}=$key {%s}" $value]
+            }
+            elist.st - elist.s {
+                append opts [format " ${htype}=$key {%s}" [$value get]]
             }
             list.dt - list.d - list.nt - list.n {
-                if {[ticklecharts::iseListClass $value]} {
-                    append opts [format " ${htype}=$key {%s}" [list [$value get]]]
-                } else {
-                    append opts [format " ${htype}=$key {%s}" [list $value]]
+                append opts [format " ${htype}=$key {%s}" [list $value]]
+            }
+            elist.dt - elist.d - elist.nt - elist.n {
+                if {[$value lType] eq "elist.n"} {
+                    set htype "@LPN"
                 }
+                append opts [format " ${htype}=$key {%s}" [list [$value get]]]
             }
             list.j {
                 set l {}
@@ -488,16 +492,18 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
             set mytype $lType
             # Only valid for replace these type list.d, list.dt,
             # list.s, list.st, list.n or list.nt.
-            if {$lType in {list.s list.n}} {
-                set lmap [list list.d $lType list.dt ${lType}t]
-                set type [string map $lmap $type]
-            } elseif {$lType eq "list.d"} {
-                set lmap [list \
-                    list.n $lType list.s $lType \
-                    list.st ${lType}t \
-                    list.nt ${lType}t \
-                ]
-                set type [string map $lmap $type]
+            switch -exact -- $lType {
+                elist {
+                    set type [string map [list "list" $lType] $type]
+                }
+                elist.d - elist.s - elist.n {
+                    set lmap [list \
+                        list.nt ${lType}t list.n $lType \
+                        list.st ${lType}t list.s $lType \
+                        list.dt ${lType}t list.d $lType \
+                    ]
+                    set type [string map $lmap $type]
+                }
             }
         }
     }
