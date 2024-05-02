@@ -42,7 +42,7 @@ oo::class create ticklecharts::dataset {
         foreach item $value {
 
             if {[llength $item] % 2} {
-                error "dataset 'item' list must have an even number of elements..."
+                error "dataset 'item' list must have an even number of elements."
             }
 
             # Keep compatibility with previous versions.
@@ -73,7 +73,7 @@ oo::class create ticklecharts::dataset {
                 set item [dict remove $item transform dimensions]
             }
 
-            # set dataset...
+            # Set dataset.
             lappend opts [${ns}::merge $options $item]
             set options {}
         }
@@ -84,22 +84,22 @@ oo::class create ticklecharts::dataset {
 
 oo::define ticklecharts::dataset {
     method get {} {
-        # Returns dataset
+        # Returns dataset.
         return $_dataset
     }
 
     method getType {} {
-        # Returns type
+        # Returns type.
         return "dataset"
     }
 
     method dim {} {
-        # Returns data dim
+        # Returns data dimensions.
         return $_dimension
     }
 
     method dimensions {value} {
-        # Set dimension
+        # Set dimension.
         #
         # value - dict
         #
@@ -109,28 +109,32 @@ oo::define ticklecharts::dataset {
             return "nothing"
         }
 
-        set d {} ; set vald {}
         set ns [namespace qualifiers [self class]]
-
+        ticklecharts::ldset {d vald} -to ""
+        
+        # Note : The 'dim' variable can contain, a structure from the eStruct class, a dictionary 
+        # from the eDict class, a simple string value or pure Tcl dictionary.
         foreach dim [dict get $value $key] {
-            if {[ticklecharts::iseDictClass $dim] || ([ticklecharts::isDict $dim] && 
-               ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type]))} {
-
-                if {[ticklecharts::iseDictClass $dim]} {
-                    set dim [$dim get]
-                }
+            if {
+                [ticklecharts::iseDictClass $dim] || ([ticklecharts::isDict $dim] && 
+                ([dict exists $dim value] || [dict exists $dim name] || [dict exists $dim type]))
+            } {
+                if {[ticklecharts::iseDictClass $dim]} {set dim [$dim get]}
 
                 ${ns}::setdef options name   -minversion 5  -validvalue {}            -type str|null  -default "nothing"
                 ${ns}::setdef options value  -minversion 5  -validvalue {}            -type num|null  -default "nothing"
                 ${ns}::setdef options type   -minversion 5  -validvalue formatDimType -type str|null  -default "nothing"
 
                 lappend d [list [new edict [${ns}::merge $options $dim]] dict]
-                continue
+
+            } elseif {[ticklecharts::iseStructClass $dim]} {
+                lappend d [list $dim [$dim sType]]
+            } else {
+                lappend vald [ticklecharts::mapSpaceString $dim]
             }
-            lappend vald [ticklecharts::mapSpaceString $dim]
         }
 
-        if {[llength $d] == 0} {
+        if {![llength $d]} {
             set _dimension [list [list $vald list.s]]
         } else {
             set _dimension [join [list [list [list $vald list.s]] $d]]
@@ -140,7 +144,7 @@ oo::define ticklecharts::dataset {
     }
 
     method transform {value} {
-        # Transform dataset
+        # Transform dataset.
         #
         # value - dict
         #
@@ -155,7 +159,7 @@ oo::define ticklecharts::dataset {
         foreach item [dict get $value $key] {
 
             if {[llength $item] % 2} {
-                error "transform 'item' list must have an even number of elements..."
+                error "transform 'item' list must have an even number of elements."
             }
 
             ${ns}::setdef options type   -minversion 5  -validvalue formatTransform -type str       -default "filter"
@@ -174,7 +178,7 @@ oo::define ticklecharts::dataset {
     }
 
     method source {value t} {
-        # source dataset
+        # Source dataset.
         #
         # value - dict
         # t     - upvar type
@@ -216,11 +220,11 @@ oo::define ticklecharts::dataset {
 
         if {[ticklecharts::iseListClass $d]} {
             if {![ticklecharts::isListOfList {*}[$d get]]} {
-                error "'source' should be a list of list..."
+                error "'source' should be a list of list."
             }
             foreach item {*}[$d get] {
                 if {[llength $item] % 2} {
-                    error "source 'item' list must have an even number of elements..."
+                    error "source 'item' list must have an even number of elements."
                 }
                 set k {}
                 foreach {key info} $item {
@@ -228,14 +232,14 @@ oo::define ticklecharts::dataset {
                         error "'$key' is duplicated in '$item'"
                     }
 
-                    # replaces spaces if present...
+                    # Replaces spaces if present.
                     set mapKey [ticklecharts::mapSpaceString $key]
                     lappend k $key $mapKey 
 
                     set mytype [ticklecharts::typeOf $info]
 
                     if {$mytype ni {str num}} {
-                        error "'$info' should be a string or num for this '$key' value..."
+                        error "'$info' should be a string or num for this '$key' value."
                     }
 
                     ${ns}::setdef options $mapKey -minversion 5 -validvalue {} -type $mytype -default $info
@@ -250,7 +254,7 @@ oo::define ticklecharts::dataset {
 
         } else {
             if {![ticklecharts::isListOfList $d]} {
-                error "'source' should be a list of list..."
+                error "'source' should be a list of list."
             }
             return $d
         }
@@ -258,11 +262,12 @@ oo::define ticklecharts::dataset {
 }
 
 proc ticklecharts::isdatasetClass {value} {
-    # Check if value is dataset class
+    # Check if the value is a 'dataset' class.
     #
     # value - obj or string
     #
-    # Returns true if 'value' is a dataset class, false otherwise.
+    # Returns true if 'value' is a dataset class,
+    # false otherwise.
     return [expr {
             [ticklecharts::isAObject $value] && 
             [string match "*::dataset" [ticklecharts::typeOfClass $value]]
