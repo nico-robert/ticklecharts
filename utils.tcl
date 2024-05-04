@@ -457,8 +457,6 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
     # Returns true if mytype is found, 
     # false otherwise.
 
-    upvar 1 $keyt typekey
-
     switch -exact -- $mytype {
         str.e {
             # If variable 'mytype' is a eString class,
@@ -507,6 +505,8 @@ proc ticklecharts::matchTypeOf {mytype type keyt} {
             }
         }
     }
+
+    upvar 1 $keyt typekey
 
     foreach valtype [split $type "|"] {
         if {[string match $mytype* $valtype]} {
@@ -664,9 +664,11 @@ proc ticklecharts::merge {d other} {
             # Only write values that are defined in the *.tcl file.
             # Be careful, properties in the *.tcl file must be implicitly marked.
             if {$minProperties} {
-                if {$key ni {-type -name -id} && $typekey ni {
-                    dict list.o list.j str.t str.et list.st 
-                    list.dt list.nt bool.t num.t
+                if {
+                    $key ni {-type -name -id} && $typekey ni {
+                    dict list.o list.j str.t str.et list.st
+                    elist.st elist.nt elist.dt list.dt
+                    list.nt bool.t num.t
                     }
                 } {continue}
             }
