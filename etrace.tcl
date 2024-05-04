@@ -1,14 +1,6 @@
 # Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
-namespace eval ticklecharts {}
-
-# Minimum versions
-set ECHARTSVMIN "5.0.0"
-set GLVMIN      "2.0.0"
-set GMAPVMIN    "1.5.0"
-set WCVMIN      "2.0.0"
-
 proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
     # Changes the script Echarts version variable.
     #
@@ -549,18 +541,26 @@ proc ticklecharts::track {properties} {
     return {}
 }
 
-# Adds a trace when the variable version is read for the first time.
-# This trace command is removed on first reading.
-trace add variable ticklecharts::echarts_version read [list ticklecharts::readEchartsVersion $ECHARTSVMIN $::ticklecharts::echarts_version]
-trace add variable ticklecharts::gl_version      read [list ticklecharts::readEchartsVersion $GLVMIN      $::ticklecharts::gl_version]
-trace add variable ticklecharts::gmap_version    read [list ticklecharts::readEchartsVersion $GMAPVMIN    $::ticklecharts::gmap_version]
-trace add variable ticklecharts::wc_version      read [list ticklecharts::readEchartsVersion $WCVMIN      $::ticklecharts::wc_version]
+namespace eval ticklecharts {
+    # Minimum versions :
+    proc EVMIN    {} {return "5.0.0"}
+    proc GLVMIN   {} {return "2.0.0"}
+    proc GMAPVMIN {} {return "1.5.0"}
+    proc WCVMIN   {} {return "2.0.0"}
 
-# When the version is modified adds trace command.
-# The first argument of the command is the minimum version.
-# The last argument of the command is the current version.
-trace add variable ticklecharts::echarts_version write [list ticklecharts::traceEchartsVersion   $ECHARTSVMIN $::ticklecharts::echarts_version]
-trace add variable ticklecharts::gl_version      write [list ticklecharts::traceEchartsGLVersion $GLVMIN      $::ticklecharts::gl_version] 
-trace add variable ticklecharts::gmap_version    write [list ticklecharts::traceGmapVersion      $GMAPVMIN    $::ticklecharts::gmap_version]
-trace add variable ticklecharts::wc_version      write [list ticklecharts::traceWCVersion        $WCVMIN      $::ticklecharts::wc_version]
-trace add variable ticklecharts::keyGMAPI        write [list ticklecharts::traceKeyGMAPI]
+    # Adds a trace when the variable version is read for the first time.
+    # This trace command is removed on first reading.
+    trace add variable echarts_version read [list ticklecharts::readEchartsVersion [EVMIN]    $echarts_version]
+    trace add variable gl_version      read [list ticklecharts::readEchartsVersion [GLVMIN]   $gl_version]
+    trace add variable gmap_version    read [list ticklecharts::readEchartsVersion [GMAPVMIN] $gmap_version]
+    trace add variable wc_version      read [list ticklecharts::readEchartsVersion [WCVMIN]   $wc_version]
+
+    # When the version is modified adds trace command.
+    #  - The first argument of the command is the minimum version.
+    #  - The last argument of the command is the current version.
+    trace add variable echarts_version write [list ticklecharts::traceEchartsVersion   [EVMIN]    $echarts_version]
+    trace add variable gl_version      write [list ticklecharts::traceEchartsGLVersion [GLVMIN]   $gl_version]
+    trace add variable gmap_version    write [list ticklecharts::traceGmapVersion      [GMAPVMIN] $gmap_version]
+    trace add variable wc_version      write [list ticklecharts::traceWCVersion        [WCVMIN]   $wc_version]
+    trace add variable keyGMAPI        write [list ticklecharts::traceKeyGMAPI]
+}
