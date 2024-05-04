@@ -2,13 +2,8 @@
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
-    namespace eval ::new {
-        namespace ensemble create -map {
-            elist   ::ticklecharts::elist   elist.n ::ticklecharts::elist.n
-            elist.s ::ticklecharts::elist.s elist.o ::ticklecharts::elist.o
-            elist.d ::ticklecharts::elist.d edict   ::ticklecharts::edict
-            estr    ::ticklecharts::estr    estruct ::ticklecharts::estruct
-        }
+    namespace ensemble create -command ::new -subcommands {
+        elist elist.n elist.s elist.o elist.d edict estr estruct
     }
 }
 
