@@ -1469,6 +1469,38 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
             }
         }
+
+        formatRendSnap {
+            # possible values...
+            set validvalue {base64 png svg}
+            if {$value ni $validvalue} {
+                errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                    for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
+
+        formatExcludeC {
+            if {$type eq "list.e"} {
+                set value [$value get]
+            }
+            if {[llength $value] == 1} {
+                set value {*}$value
+            }
+            set validvalue {title toolbox visualMap legend dataZoom}
+            foreach val $value {
+                if {$val ni $validvalue} {
+                    errorEFormat "'$val' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
+            }
+        }
+        formatTimeout {
+            # possible values...
+            if {![expr {$value >= 200 && $value <= 2000}]} {
+                errorEFormat "'$value' should be between '200' and '2000'\
+                    milliseconds for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
     }
 
     return {}
