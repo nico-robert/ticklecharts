@@ -186,6 +186,10 @@ $chart toHTML ?-template ?...
 ```tcl
 $chart AddJSON $struct ?-parent ?... ; # See '# Structure' section
 ```
+6. Capture an image:
+```tcl
+$chart SnapShot ?-outfile ?... ; # See '# Image' section
+```
 
 Add extra JS script, variable, etc. :
 -------------------------
@@ -362,6 +366,50 @@ new estruct myStruct {
 $chart AddJSON $myStruct ?-parent ?key1(?index).?key2(?index)
 ```
 _See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) for a more detailed example_.  
+
+Image :
+-------------------------
+Since version **3.2.4**, if `Chrome` or `Edge` is installed, it is possible to capture an image via `chrome devtools protocol`.  
+The return type for image is either a `*.(png|svg)` file or data in `base64` format.   
+
+_Dependencies_ : `websocket` package from [Tcllib](https://core.tcl-lang.org/tcllib/doc/trunk/embedded/index.md)   
+
+##### Arguments available :
+| args                 | Description                  | Default values
+| ------               | ------                       | ------
+| _-address_           | Local adress                 | `"127.0.0.1"`
+| _-port_              | Port number                  | `8888`
+| _-exe_               | Full path executable         | `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`
+| _-html_              | Html fragment                  | `"nothing"`
+| _-jschartvar_        | Variable name chart          | `"nothing"` (Required if `-html` property is set)
+| _-renderer_          | base64, png or svg           | `"png"`
+| _-outfile_           | Full path file               | `"./render.(png\|svg)"`
+| _-excludecomponents_ | Excluded components          | `"nothing"` (List e.g. `['toolbox', 'title', '...']`)
+| _-timeout_           | Time to execute JS function  | `400` (milliseconds)
+
+```tcl
+# Note : Animations must be disabled, which is not the case by default. 
+$chart SetOptions -animation "False"
+# ...
+$chart SnapShot -timeout 600 -port 8080 ;  # Returns full path '*.png' file
+
+# Example with 'html' fragment on Windows :
+# It is important to specify the variable 'jschartvar' to have the same 
+# one for the 'SnapShot' method.
+#
+set html [$chart toHTML -jschartvar "mychart"] ; # Export '$chart' as HTML fragment.
+# Note : A full path should be specified if 'msedge.exe' is not included in 'env(PATH)'.
+$chart SnapShot -exe "msedge.exe"  -jschartvar "mychart" -html $html -renderer "base64"
+
+# For 'svg' renderer it's important to set the '-renderer' property
+# to 'svg' in 'toHTML' method.
+set html [$chart toHTML -jschartvar "mychart" -renderer "svg"]
+$chart SnapShot -jschartvar "mychart" -renderer "svg" -html $html
+# ...
+```
+> [!NOTE]   
+> - A temporary file is created when the command is executed (This may change in future versions of 'ticklEcharts').   
+> - Method not supported with 'chart3D' class.
 
 Global variables :
 -------------------------
