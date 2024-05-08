@@ -61,10 +61,23 @@ proc ticklecharts::renderOptions {value method} {
             setdef options -evalJSON   -minversion {}  -validvalue {}             -type bool               -default "False"
         }
         "RenderJupyter" {
-            # Global options chart for 'Jupyter' method.
+            # Global options for 'Jupyter' method.
             setdef options -width      -minversion {}  -validvalue {}             -type str.n|num          -default "100%"
             setdef options -height     -minversion {}  -validvalue {}             -type str.n|num          -default "500px"
             setdef options -renderer   -minversion {}  -validvalue formatRenderer -type str.n              -default "canvas"
+        }
+        "SnapShot" {
+            # Global options for 'SnapShot' method.
+            set ext [expr {[dict exists $value -renderer] ? [dict get $value -renderer] : "png"}]
+            setdef options -address           -minversion {}  -validvalue {}             -type str.n       -default "127.0.0.1"
+            setdef options -port              -minversion {}  -validvalue {}             -type num         -default 8888
+            setdef options -exe               -minversion {}  -validvalue {}             -type str.n       -default "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            setdef options -html              -minversion {}  -validvalue {}             -type str.n       -default {}
+            setdef options -jschartvar        -minversion {}  -validvalue {}             -type str.n       -default {}
+            setdef options -renderer          -minversion {}  -validvalue formatRendSnap -type str.n       -default "png"
+            setdef options -outfile           -minversion {}  -validvalue {}             -type str.n       -default [file rootname $outfile].$ext
+            setdef options -excludecomponents -minversion {}  -validvalue formatExcludeC -type list.s|null -default "nothing"
+            setdef options -timeout           -minversion {}  -validvalue formatTimeout  -type num         -default 400
         }
         default {
             # Global options for other methods.
