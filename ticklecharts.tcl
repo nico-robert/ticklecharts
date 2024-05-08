@@ -233,12 +233,17 @@
                 # Two new elist commands have been added (elist.s & elist.n), see 'Type substitution' section for further information.
                 # Changes the format of the `parallelAxis` key property, the missing minus sign at the beginning of a key is also accepted.
                 # Cosmetic changes.
+# 08-May-2024 : v3.2.4
+                # New `AddJSON` method to build its own structure, see `Structure` section for further information.
+                # New `SnapShot` method to capture an image, see `Image` section for further information.
+                # `Tcl9` taken into consideration (Not yet for `critcl`).
+                # Cosmetic changes.
 
 package require Tcl 8.6-
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.2.3 ; # ticklEcharts version
+    variable version         3.2.4 ; # ticklEcharts version
     variable echarts_version 5.5.0 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-5-0)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)

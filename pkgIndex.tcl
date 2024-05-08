@@ -1,6 +1,6 @@
 # Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
-package ifneeded ticklecharts 3.2.3 [list apply {dir {
+package ifneeded ticklecharts 3.2.4 [list apply {dir {
 
     source [file join $dir ticklecharts.tcl]
     source [file join $dir utils.tcl]

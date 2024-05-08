@@ -235,3 +235,8 @@ replace the html template file `template.html` with a string. See [this file](ex
 - Two new elist commands have been added (elist.s & elist.n), see `Type substitution` section for further information.
 - Changes the format of the `parallelAxis` key property, the missing minus sign at the beginning of a key is also accepted.
 - Cosmetic changes.
+## 08-May-2024 : 3.2.4
+- New `AddJSON` method to build its own structure, see `Structure` section for further information.
+- New `SnapShot` method to capture an image, see `Image` section for further information.
+- `Tcl9` taken into consideration (Not yet for `critcl`).
+- Cosmetic changes.
