@@ -27,5 +27,6 @@ package ifneeded ticklecharts 3.2.3 [list apply {dir {
     source [file join $dir etrace.tcl]
     source [file join $dir etsb.tcl]
     source [file join $dir ejupyter.tcl]
+    source [file join $dir esnap.tcl]
 
 }} $dir]
