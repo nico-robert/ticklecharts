@@ -1223,6 +1223,11 @@ proc ::oo::Helpers::classvar {name} {
 
     return {}
 }
+proc ::oo::Helpers::callback {method args} {
+    # callbacks private method
+    # source : https://wiki.tcl-lang.org/page/TclOO+Tricks
+    return [list [uplevel 1 {namespace which my}] $method {*}$args]
+}
 
 proc ticklecharts::unsetVars {obj} {
     # Deletes all variables when the current script
