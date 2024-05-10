@@ -200,7 +200,6 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
     # Returns nothing
 
     set properties  {}
-    set traceSeries {lineSeries barSeries barSeries3D} ; # series filters 
     set key [string map {"-" ""} $key]
 
     for {set i $level} {$i > 0} {incr i -1} {
@@ -214,12 +213,6 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
                 [string match {ticklecharts::[xy]Axis} $name] ||
                 [string match {ticklecharts::radarCoordinate} $name]
             } {
-                # No other series accepted.
-                if {[string match {*Series} $property] && 
-                    ($property ni $traceSeries)
-                } {
-                    return {}
-                }
 
                 set index [lindex [info level $i] 1]
                 if {[ticklecharts::typeOf $index] ne "num"} {
@@ -271,10 +264,6 @@ proc ticklecharts::track {properties} {
     #  - An 'error' message if some axis combinations are not allowed.
     #
     # properties - list
-    #
-    # REMINDER FOR ME : The series are filtered in this procedure
-    # 'ticklecharts::getTraceLevelProperties', if you want to add series,
-    # think of also modifying it here.
     #
     # Returns nothing.
 
@@ -532,6 +521,16 @@ proc ticklecharts::track {properties} {
                         [dict get $properties ${axis}.axisLine.onZero]} {
                         puts stderr "warning(trace): Set '${axis}.axisLine.onZero' to\
                                      'False' to activate '$keyP' option."
+                    }
+                }
+            }
+            "*animation*" - 
+            "*layoutAnimation*" {
+                # Check if animation property is disabled for 'SnapShot' method.
+                if {$value ni {null nothing} && [ticklecharts::isSnapShotLevel]} {
+                    if {([ticklecharts::typeOf $value] eq "bool") && $value} {
+                        return -code error "'animation' property should be disabled\
+                            in '$keyP' when 'SnapShot' method is used."
                     }
                 }
             }

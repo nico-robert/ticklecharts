@@ -144,24 +144,24 @@ proc ticklecharts::treeItem {value} {
 
         if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
-        setdef options name                    -minversion 5  -validvalue {}            -type str|null        -default "nothing"
-        setdef options value                   -minversion 5  -validvalue {}            -type num|null        -default "nothing"
-        setdef options collapsed               -minversion 5  -validvalue {}            -type bool|null       -default "False"
-        setdef options itemStyle               -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::itemStyle $item]
-        setdef options lineStyle               -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::lineStyle $item]
-        setdef options children                -minversion 5  -validvalue {}            -type list.o|null     -default [ticklecharts::treeItem $item]
-        setdef options label                   -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::label $item]
-        setdef options emphasis                -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::emphasis $item]
-        setdef options blur                    -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::blur $item]
-        setdef options select                  -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::select $item]
-        setdef options animation               -minversion 5  -validvalue {}            -type bool|null       -default "nothing"
-        setdef options animationThreshold      -minversion 5  -validvalue {}            -type num|null        -default "nothing"
-        setdef options animationDuration       -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationEasing         -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-        setdef options animationDelay          -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationDurationUpdate -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-        setdef options animationDelayUpdate    -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
+        setdef options name                    -minversion 5  -validvalue {}            -type str|null        -trace no   -default "nothing"
+        setdef options value                   -minversion 5  -validvalue {}            -type num|null        -trace no   -default "nothing"
+        setdef options collapsed               -minversion 5  -validvalue {}            -type bool|null       -trace no   -default "False"
+        setdef options itemStyle               -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::itemStyle $item]
+        setdef options lineStyle               -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::lineStyle $item]
+        setdef options children                -minversion 5  -validvalue {}            -type list.o|null     -trace no   -default [ticklecharts::treeItem $item]
+        setdef options label                   -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::label $item]
+        setdef options emphasis                -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::emphasis $item]
+        setdef options blur                    -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::blur $item]
+        setdef options select                  -minversion 5  -validvalue {}            -type dict|null       -trace no   -default [ticklecharts::select $item]
+        setdef options animation               -minversion 5  -validvalue {}            -type bool|null       -trace yes  -default "nothing"
+        setdef options animationThreshold      -minversion 5  -validvalue {}            -type num|null        -trace no   -default "nothing"
+        setdef options animationDuration       -minversion 5  -validvalue {}            -type num|jsfunc|null -trace no   -default "nothing"
+        setdef options animationEasing         -minversion 5  -validvalue formatAEasing -type str|null        -trace no   -default "nothing"
+        setdef options animationDelay          -minversion 5  -validvalue {}            -type num|jsfunc|null -trace no   -default "nothing"
+        setdef options animationDurationUpdate -minversion 5  -validvalue {}            -type num|jsfunc|null -trace no   -default "nothing"
+        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null        -trace no   -default "nothing"
+        setdef options animationDelayUpdate    -minversion 5  -validvalue {}            -type num|jsfunc|null -trace no   -default "nothing"
 
         # remove key(s)...
         set item [dict remove $item children label itemStyle lineStyle emphasis blur select]
@@ -387,35 +387,35 @@ proc ticklecharts::pictorialBarItem {value key} {
             ticklecharts::errorKeyArgs $key value
         }
 
-        setdef options name                    -minversion 5  -validvalue {}                    -type str|null          -default "nothing"
-        setdef options value                   -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options groupId                 -minversion 5  -validvalue {}                    -type str|null          -default "nothing"
-        setdef options symbol                  -minversion 5  -validvalue formatItemSymbol      -type str|jsfunc|null   -default "nothing"
-        setdef options symbolSize              -minversion 5  -validvalue {}                    -type num|list.d|null   -default "nothing"
-        setdef options symbolPosition          -minversion 5  -validvalue formatSymbolPosition  -type str|null          -default "nothing"
-        setdef options symbolOffset            -minversion 5  -validvalue {}                    -type list.d|null       -default "nothing"
-        setdef options symbolRotate            -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options symbolRepeat            -minversion 5  -validvalue formatSymbolRepeat    -type bool|str|num|null -default "nothing"
-        setdef options symbolRepeatDirection   -minversion 5  -validvalue formatsymbolRepeatDir -type str|null          -default "nothing"
-        setdef options symbolMargin            -minversion 5  -validvalue {}                    -type str|num|null      -default "nothing"
-        setdef options symbolClip              -minversion 5  -validvalue {}                    -type bool|null         -default "nothing"
-        setdef options symbolBoundingData      -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options symbolPatternSize       -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options hoverAnimation          -minversion 5  -validvalue {}                    -type bool|null         -default "nothing"
-        setdef options z                       -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options animation               -minversion 5  -validvalue {}                    -type bool|null         -default "nothing"
-        setdef options animationThreshold      -minversion 5  -validvalue {}                    -type num|null          -default "nothing"
-        setdef options animationDuration       -minversion 5  -validvalue {}                    -type num|jsfunc|null   -default "nothing"
-        setdef options animationEasing         -minversion 5  -validvalue formatAEasing         -type str|null          -default "nothing"
-        setdef options animationDelay          -minversion 5  -validvalue {}                    -type num|jsfunc|null   -default "nothing"
-        setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|jsfunc|null   -default "nothing"
-        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing         -type str|null          -default "nothing"
-        setdef options animationDelayUpdate    -minversion 5  -validvalue {}                    -type num|jsfunc|null   -default "nothing"
-        setdef options labelLine               -minversion 5  -validvalue {}                    -type dict|null         -default [ticklecharts::labelLine $item]
-        setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null         -default [ticklecharts::itemStyle $item]
-        setdef options emphasis                -minversion 5  -validvalue {}                    -type dict|null         -default [ticklecharts::emphasis $item]
-        setdef options blur                    -minversion 5  -validvalue {}                    -type dict|null         -default [ticklecharts::blur $item]
-        setdef options select                  -minversion 5  -validvalue {}                    -type dict|null         -default [ticklecharts::select $item]
+        setdef options name                    -minversion 5  -validvalue {}                    -type str|null          -trace no   -default "nothing"
+        setdef options value                   -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options groupId                 -minversion 5  -validvalue {}                    -type str|null          -trace no   -default "nothing"
+        setdef options symbol                  -minversion 5  -validvalue formatItemSymbol      -type str|jsfunc|null   -trace no   -default "nothing"
+        setdef options symbolSize              -minversion 5  -validvalue {}                    -type num|list.d|null   -trace no   -default "nothing"
+        setdef options symbolPosition          -minversion 5  -validvalue formatSymbolPosition  -type str|null          -trace no   -default "nothing"
+        setdef options symbolOffset            -minversion 5  -validvalue {}                    -type list.d|null       -trace no   -default "nothing"
+        setdef options symbolRotate            -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options symbolRepeat            -minversion 5  -validvalue formatSymbolRepeat    -type bool|str|num|null -trace no   -default "nothing"
+        setdef options symbolRepeatDirection   -minversion 5  -validvalue formatsymbolRepeatDir -type str|null          -trace no   -default "nothing"
+        setdef options symbolMargin            -minversion 5  -validvalue {}                    -type str|num|null      -trace no   -default "nothing"
+        setdef options symbolClip              -minversion 5  -validvalue {}                    -type bool|null         -trace no   -default "nothing"
+        setdef options symbolBoundingData      -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options symbolPatternSize       -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options hoverAnimation          -minversion 5  -validvalue {}                    -type bool|null         -trace no   -default "nothing"
+        setdef options z                       -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options animation               -minversion 5  -validvalue {}                    -type bool|null         -trace yes  -default "nothing"
+        setdef options animationThreshold      -minversion 5  -validvalue {}                    -type num|null          -trace no   -default "nothing"
+        setdef options animationDuration       -minversion 5  -validvalue {}                    -type num|jsfunc|null   -trace no   -default "nothing"
+        setdef options animationEasing         -minversion 5  -validvalue formatAEasing         -type str|null          -trace no   -default "nothing"
+        setdef options animationDelay          -minversion 5  -validvalue {}                    -type num|jsfunc|null   -trace no   -default "nothing"
+        setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|jsfunc|null   -trace no   -default "nothing"
+        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing         -type str|null          -trace no   -default "nothing"
+        setdef options animationDelayUpdate    -minversion 5  -validvalue {}                    -type num|jsfunc|null   -trace no   -default "nothing"
+        setdef options labelLine               -minversion 5  -validvalue {}                    -type dict|null         -trace no   -default [ticklecharts::labelLine $item]
+        setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null         -trace no   -default [ticklecharts::itemStyle $item]
+        setdef options emphasis                -minversion 5  -validvalue {}                    -type dict|null         -trace no   -default [ticklecharts::emphasis $item]
+        setdef options blur                    -minversion 5  -validvalue {}                    -type dict|null         -trace no   -default [ticklecharts::blur $item]
+        setdef options select                  -minversion 5  -validvalue {}                    -type dict|null         -trace no   -default [ticklecharts::select $item]
 
         # remove key(s)...
         set item [dict remove $item labelLine itemStyle emphasis blur select]
@@ -1083,27 +1083,27 @@ proc ticklecharts::markPointItem {value} {
 
         if {[llength $item] % 2} ticklecharts::errorEvenArgs
 
-        setdef options name                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options type                    -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options valueIndex              -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options valueDim                -minversion 5  -validvalue {}               -type str|null        -default "nothing"
-        setdef options coord                   -minversion 5  -validvalue {}               -type list.d|null     -default "nothing"
-        setdef options xAxis                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options yAxis                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options value                   -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|null        -default "nothing"
-        setdef options symbolSize              -minversion 5  -validvalue {}               -type num|list.n|null -default "nothing"
-        setdef options itemStyle               -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::itemStyle $item]
-        setdef options label                   -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $item]
-        setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $item]
-        setdef options animation               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
-        setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-        setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-        setdef options animationEasing         -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
-        setdef options animationDelay          -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-        setdef options animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
-        setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
+        setdef options name                    -minversion 5  -validvalue {}               -type str|null         -trace no   -default "nothing"
+        setdef options type                    -minversion 5  -validvalue {}               -type str|null         -trace no   -default "nothing"
+        setdef options valueIndex              -minversion 5  -validvalue {}               -type num|null         -trace no   -default "nothing"
+        setdef options valueDim                -minversion 5  -validvalue {}               -type str|null         -trace no   -default "nothing"
+        setdef options coord                   -minversion 5  -validvalue {}               -type list.d|null      -trace no   -default "nothing"
+        setdef options xAxis                   -minversion 5  -validvalue {}               -type num|null         -trace no   -default "nothing"
+        setdef options yAxis                   -minversion 5  -validvalue {}               -type num|null         -trace no   -default "nothing"
+        setdef options value                   -minversion 5  -validvalue {}               -type num|null         -trace no   -default "nothing"
+        setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|null         -trace no   -default "nothing"
+        setdef options symbolSize              -minversion 5  -validvalue {}               -type num|list.n|null  -trace no   -default "nothing"
+        setdef options itemStyle               -minversion 5  -validvalue {}               -type dict|null        -trace no   -default [ticklecharts::itemStyle $item]
+        setdef options label                   -minversion 5  -validvalue {}               -type dict|null        -trace no   -default [ticklecharts::label $item]
+        setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null        -trace no   -default [ticklecharts::emphasis $item]
+        setdef options animation               -minversion 5  -validvalue {}               -type bool|null        -trace yes  -default "nothing"
+        setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null         -trace no   -default "nothing"
+        setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null  -trace no   -default "nothing"
+        setdef options animationEasing         -minversion 5  -validvalue formatAEasing    -type str|null         -trace no   -default "nothing"
+        setdef options animationDelay          -minversion 5  -validvalue {}               -type num|jsfunc|null  -trace no   -default "nothing"
+        setdef options animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null  -trace no   -default "nothing"
+        setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null         -trace no   -default "nothing"
+        setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null  -trace no   -default "nothing"
 
         # remove key(s)...
         set item [dict remove $item itemStyle label emphasis]
@@ -2297,23 +2297,23 @@ proc ticklecharts::markLine {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value $key]
 
-    setdef options silent                  -minversion 5  -validvalue {}               -type bool            -default "False"
-    setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|list.s|null -default "nothing"
-    setdef options symbolSize              -minversion 5  -validvalue {}               -type list.n|null     -default "nothing"
-    setdef options precision               -minversion 5  -validvalue {}               -type num|null        -default 2
-    setdef options label                   -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::label $d]
-    setdef options lineStyle               -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::lineStyle $d]
-    setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::emphasis $d]
-    setdef options blur                    -minversion 5  -validvalue {}               -type dict|null       -default [ticklecharts::blur $d]
-    setdef options data                    -minversion 5  -validvalue {}               -type list.o|null     -default [ticklecharts::markLineItem $d]
-    setdef options animation               -minversion 5  -validvalue {}               -type bool|null       -default "nothing"
-    setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null        -default "nothing"
-    setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-    setdef options animationEasing         -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
-    setdef options animationDelay          -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-    setdef options animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
-    setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null        -default "nothing"
-    setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null -default "nothing"
+    setdef options silent                  -minversion 5  -validvalue {}               -type bool              -trace no   -default "False"
+    setdef options symbol                  -minversion 5  -validvalue formatItemSymbol -type str|list.s|null   -trace no   -default "nothing"
+    setdef options symbolSize              -minversion 5  -validvalue {}               -type list.n|null       -trace no   -default "nothing"
+    setdef options precision               -minversion 5  -validvalue {}               -type num|null          -trace no   -default 2
+    setdef options label                   -minversion 5  -validvalue {}               -type dict|null         -trace no   -default [ticklecharts::label $d]
+    setdef options lineStyle               -minversion 5  -validvalue {}               -type dict|null         -trace no   -default [ticklecharts::lineStyle $d]
+    setdef options emphasis                -minversion 5  -validvalue {}               -type dict|null         -trace no   -default [ticklecharts::emphasis $d]
+    setdef options blur                    -minversion 5  -validvalue {}               -type dict|null         -trace no   -default [ticklecharts::blur $d]
+    setdef options data                    -minversion 5  -validvalue {}               -type list.o|null       -trace no   -default [ticklecharts::markLineItem $d]
+    setdef options animation               -minversion 5  -validvalue {}               -type bool|null         -trace yes  -default "nothing"
+    setdef options animationThreshold      -minversion 5  -validvalue {}               -type num|null          -trace no   -default "nothing"
+    setdef options animationDuration       -minversion 5  -validvalue {}               -type num|jsfunc|null   -trace no   -default "nothing"
+    setdef options animationEasing         -minversion 5  -validvalue formatAEasing    -type str|null          -trace no   -default "nothing"
+    setdef options animationDelay          -minversion 5  -validvalue {}               -type num|jsfunc|null   -trace no   -default "nothing"
+    setdef options animationDurationUpdate -minversion 5  -validvalue {}               -type num|jsfunc|null   -trace no   -default "nothing"
+    setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing    -type str|null          -trace no   -default "nothing"
+    setdef options animationDelayUpdate    -minversion 5  -validvalue {}               -type num|jsfunc|null   -trace no   -default "nothing"
 
     # remove key(s)...
     set d [dict remove $d data label lineStyle emphasis blur]
@@ -3434,20 +3434,20 @@ proc ticklecharts::markArea {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value "-markArea"]
 
-    setdef options silent                  -minversion 5  -validvalue {}            -type bool|null       -default "False"
-    setdef options label                   -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::label $d]
-    setdef options itemStyle               -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::itemStyle $d]
-    setdef options emphasis                -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::emphasis $d]
-    setdef options blur                    -minversion 5  -validvalue {}            -type dict|null       -default [ticklecharts::blur $d]
-    setdef options data                    -minversion 5  -validvalue {}            -type list.o|null     -default [ticklecharts::markAreaItem $d]
-    setdef options animation               -minversion 5  -validvalue {}            -type bool|null       -default "nothing"
-    setdef options animationThreshold      -minversion 5  -validvalue {}            -type num|null        -default "nothing"
-    setdef options animationDuration       -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-    setdef options animationEasing         -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-    setdef options animationDelay          -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-    setdef options animationDurationUpdate -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
-    setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null        -default "nothing"
-    setdef options animationDelayUpdate    -minversion 5  -validvalue {}            -type num|jsfunc|null -default "nothing"
+    setdef options silent                  -minversion 5  -validvalue {}            -type bool|null        -trace no   -default "False"
+    setdef options label                   -minversion 5  -validvalue {}            -type dict|null        -trace no   -default [ticklecharts::label $d]
+    setdef options itemStyle               -minversion 5  -validvalue {}            -type dict|null        -trace no   -default [ticklecharts::itemStyle $d]
+    setdef options emphasis                -minversion 5  -validvalue {}            -type dict|null        -trace no   -default [ticklecharts::emphasis $d]
+    setdef options blur                    -minversion 5  -validvalue {}            -type dict|null        -trace no   -default [ticklecharts::blur $d]
+    setdef options data                    -minversion 5  -validvalue {}            -type list.o|null      -trace no   -default [ticklecharts::markAreaItem $d]
+    setdef options animation               -minversion 5  -validvalue {}            -type bool|null        -trace yes  -default "nothing"
+    setdef options animationThreshold      -minversion 5  -validvalue {}            -type num|null         -trace no   -default "nothing"
+    setdef options animationDuration       -minversion 5  -validvalue {}            -type num|jsfunc|null  -trace no   -default "nothing"
+    setdef options animationEasing         -minversion 5  -validvalue formatAEasing -type str|null         -trace no   -default "nothing"
+    setdef options animationDelay          -minversion 5  -validvalue {}            -type num|jsfunc|null  -trace no   -default "nothing"
+    setdef options animationDurationUpdate -minversion 5  -validvalue {}            -type num|jsfunc|null  -trace no   -default "nothing"
+    setdef options animationEasingUpdate   -minversion 5  -validvalue formatAEasing -type str|null         -trace no   -default "nothing"
+    setdef options animationDelayUpdate    -minversion 5  -validvalue {}            -type num|jsfunc|null  -trace no   -default "nothing"
     #...
 
     # remove key(s)...
@@ -4132,27 +4132,27 @@ proc ticklecharts::checkPointStyle {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value $key]
 
-    setdef options symbol            -minversion 5  -validvalue formatItemSymbol -type str              -default "circle"
-    setdef options symbolSize        -minversion 5  -validvalue {}               -type num              -default 13
-    setdef options symbolRotate      -minversion 5  -validvalue {}               -type num|null         -default "nothing"
-    setdef options symbolKeepAspect  -minversion 5  -validvalue {}               -type bool             -default "False"
-    setdef options symbolOffset      -minversion 5  -validvalue {}               -type list.n|null      -default "nothing"
-    setdef options color             -minversion 5  -validvalue formatColor      -type str.t|null       -default [echartsOptsTheme $levelP.color]
-    setdef options borderColor       -minversion 5  -validvalue formatColor      -type str.t|null       -default [echartsOptsTheme $levelP.borderColor]
-    setdef options borderWidth       -minversion 5  -validvalue {}               -type num|null         -default 2
-    setdef options borderType        -minversion 5  -validvalue formatBorderType -type str|null         -default "solid"
-    setdef options borderDashOffset  -minversion 5  -validvalue {}               -type num|null         -default "nothing"
-    setdef options borderCap         -minversion 5  -validvalue formatCap        -type str              -default "butt"
-    setdef options borderJoin        -minversion 5  -validvalue formatJoin       -type str              -default "bevel"
-    setdef options borderMiterLimit  -minversion 5  -validvalue {}               -type num              -default 10
-    setdef options shadowBlur        -minversion 5  -validvalue {}               -type num|null         -default 2
-    setdef options shadowColor       -minversion 5  -validvalue formatColor      -type str|null         -default "rgba(0, 0, 0, 0.3)"
-    setdef options shadowOffsetX     -minversion 5  -validvalue {}               -type num|null         -default 1
-    setdef options shadowOffsetY     -minversion 5  -validvalue {}               -type num|null         -default 1
-    setdef options opacity           -minversion 5  -validvalue formatOpacity    -type num|null         -default "nothing"
-    setdef options animation         -minversion 5  -validvalue {}               -type bool|null        -default "True"
-    setdef options animationDuration -minversion 5  -validvalue {}               -type num|null         -default 300
-    setdef options animationEasing   -minversion 5  -validvalue formatAEasing    -type str|null         -default "quinticInOut"
+    setdef options symbol            -minversion 5  -validvalue formatItemSymbol -type str          -trace no   -default "circle"
+    setdef options symbolSize        -minversion 5  -validvalue {}               -type num          -trace no   -default 13
+    setdef options symbolRotate      -minversion 5  -validvalue {}               -type num|null     -trace no   -default "nothing"
+    setdef options symbolKeepAspect  -minversion 5  -validvalue {}               -type bool         -trace no   -default "False"
+    setdef options symbolOffset      -minversion 5  -validvalue {}               -type list.n|null  -trace no   -default "nothing"
+    setdef options color             -minversion 5  -validvalue formatColor      -type str.t|null   -trace no   -default [echartsOptsTheme $levelP.color]
+    setdef options borderColor       -minversion 5  -validvalue formatColor      -type str.t|null   -trace no   -default [echartsOptsTheme $levelP.borderColor]
+    setdef options borderWidth       -minversion 5  -validvalue {}               -type num|null     -trace no   -default 2
+    setdef options borderType        -minversion 5  -validvalue formatBorderType -type str|null     -trace no   -default "solid"
+    setdef options borderDashOffset  -minversion 5  -validvalue {}               -type num|null     -trace no   -default "nothing"
+    setdef options borderCap         -minversion 5  -validvalue formatCap        -type str          -trace no   -default "butt"
+    setdef options borderJoin        -minversion 5  -validvalue formatJoin       -type str          -trace no   -default "bevel"
+    setdef options borderMiterLimit  -minversion 5  -validvalue {}               -type num          -trace no   -default 10
+    setdef options shadowBlur        -minversion 5  -validvalue {}               -type num|null     -trace no   -default 2
+    setdef options shadowColor       -minversion 5  -validvalue formatColor      -type str|null     -trace no   -default "rgba(0, 0, 0, 0.3)"
+    setdef options shadowOffsetX     -minversion 5  -validvalue {}               -type num|null     -trace no   -default 1
+    setdef options shadowOffsetY     -minversion 5  -validvalue {}               -type num|null     -trace no   -default 1
+    setdef options opacity           -minversion 5  -validvalue formatOpacity    -type num|null     -trace no   -default "nothing"
+    setdef options animation         -minversion 5  -validvalue {}               -type bool|null    -trace yes  -default "True"
+    setdef options animationDuration -minversion 5  -validvalue {}               -type num|null     -trace no   -default 300
+    setdef options animationEasing   -minversion 5  -validvalue formatAEasing    -type str|null     -trace no   -default "quinticInOut"
     #...
 
     set options [merge $options $d]
