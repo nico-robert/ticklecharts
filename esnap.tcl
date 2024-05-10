@@ -68,21 +68,35 @@ foreach class {
                         set htmlopts [ticklecharts::renderOptions {} "toHTML"]
                     }
                     set jschartvar [lindex [dict get $htmlopts -jschartvar] 0]
-                    set html       [my toHTML {*}$htmlopts]
+                    set html [my toHTML {*}$htmlopts]
                 } else {
                     if {$jschartvar eq ""} {
                         error "'-jschartvar' property should be defined\
                                 if '-html' is provided."
                     }
+
+                    # Try to find out if 'animation' is actived.
+                    # The animation causes a delay in image display.
+                    if {[my getType] in {gridlayout timeline}} {
+                        set charts [my charts]
+                    } else {
+                        set charts [self]
+                    }
+                    foreach c $charts {
+                        set lanim {}
+                        set tracep [set [info object namespace $c]::_trace]
+                        # 'track' list filter.
+                        foreach anim [lsearch -all -nocase $tracep *animation*] {
+                            lappend lanim [lindex $tracep $anim] [lindex $tracep $anim+1]
+                        }
+                        ticklecharts::track $lanim
+                    }
                 }
 
-                if {$renderer in {png svg}} {
-                    if {
-                        ($outfile ne "") && 
-                        ([file extension $outfile] ne ".$renderer")
-                    } {
+                if {($renderer in {png svg}) && ($outfile ne "")} {
+                    if {[file extension $outfile] ne ".$renderer"} {
                         error "wrong # args: file extension for '-outfile'\
-                            property should be '.png'"
+                               property should be '.$renderer'"
                     }
                 }
 
@@ -94,32 +108,6 @@ foreach class {
                             error "'[my getType]' class should not\
                                     contain 'chart3D'."
                         }
-                    }
-                }
-
-                # Add global options to main options.
-                if {[my getType] eq "chart"} {
-                    set myopts [list {*}[my globalOptions] {*}[my options]]
-                    set optsg  [[ticklecharts::globalOptions {}] get]
-                    set optsg  [ticklecharts::optsToEchartsHuddle $optsg]
-                } else {
-                    set myopts [my options]
-                    set optsg {}
-                }
-
-                switch -exact -- [my getType] {
-                    timeline {set options [list {*}$myopts]}
-                    default  {set options [list $myopts $optsg]}
-                }
-                    
-                # Finds out whether the animation property is active or not.
-                foreach opts $options {
-                    if {[dict exists $opts @B=animation]} {
-                        if {[dict get $opts @B=animation]} {
-                            error "'-animation' in global options property\
-                                    should be disabled."
-                        }
-                        break
                     }
                 }
 
@@ -219,7 +207,7 @@ foreach class {
         method ConnectLocalHost {url} {
             # Connection to local host.
             #
-            # url     - string url
+            # url - string url
             #
             set response [http::geturl $url]
             set data [http::data $response]
@@ -353,7 +341,7 @@ foreach class {
         method Runtime {sock} {
             # Execute Js function.
             #
-            # sock    - websocket
+            # sock - websocket
             #
             # Return nothing
             my variable forever
@@ -403,14 +391,19 @@ foreach class {
 proc ticklecharts::htmlTmpFile {html} {
     # Create a temporary file.
     #
-    # html  - html string
+    # html - html string
     #
     # Returns full path.
+    set tmpdir ""
     foreach tmp {TMP TEMP TMPDIR} {
         if {[info exists ::env($tmp)]} {
             set tmpdir $::env($tmp)
+            break
         }
     }
+    # Temp directory not found, writes file 
+    # according to script directory.
+    if {$tmpdir eq ""} {set tmpdir [info script]}
 
     set htmltmpfile [file join $tmpdir [clock click].html]
     set fp [open $htmltmpfile w+]
@@ -421,12 +414,26 @@ proc ticklecharts::htmlTmpFile {html} {
 }
 
 proc ticklecharts::messageToDict {msg} {
-    # Trnasform Json to dict.
+    # Transform Json to dict.
     #
-    # msg  - json data
+    # msg - json data
     #
     # Returns dict.
     set h [huddle::json2huddle $msg]
 
     return [huddle get_stripped $h]
+}
+
+proc ticklecharts::isSnapShotLevel {} {
+    # See if the 'SnapShot' method is available 
+    # according to my levels.
+    #
+    # Returns true if method is available, 
+    # false otherwise.
+    for {set i [info level]} {$i > 0} {incr i -1} {
+        if {[lindex [info level $i] 1] eq "SnapShot"} {
+            return 1
+        }
+    }
+    return 0
 }
