@@ -72,8 +72,7 @@ proc ticklecharts::renderOptions {value method} {
             setdef options -address           -minversion {}  -validvalue {}             -type str.n       -default "127.0.0.1"
             setdef options -port              -minversion {}  -validvalue {}             -type num         -default 8888
             setdef options -exe               -minversion {}  -validvalue {}             -type str.n       -default "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-            setdef options -html              -minversion {}  -validvalue {}             -type str.n       -default {}
-            setdef options -jschartvar        -minversion {}  -validvalue {}             -type str.n       -default {}
+            setdef options -html              -minversion {}  -validvalue {}             -type str.n|null  -default "nothing"
             setdef options -renderer          -minversion {}  -validvalue formatRendSnap -type str.n       -default "png"
             setdef options -outfile           -minversion {}  -validvalue {}             -type str.n       -default [file rootname $outfile].$ext
             setdef options -excludecomponents -minversion {}  -validvalue formatExcludeC -type list.s|null -default "nothing"
