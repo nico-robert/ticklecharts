@@ -16,6 +16,7 @@ oo::class create ticklecharts::Gridlayout {
     variable _charts3D     ; # list charts 3D
     variable _keyglob      ; # global key options
     variable _dataset      ; # dataset chart(s)
+    variable _jschartvar   ; # js variable chart
 
     constructor {args} {
         # Initializes a new layout Class.

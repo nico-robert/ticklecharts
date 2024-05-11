@@ -13,6 +13,7 @@ oo::class create ticklecharts::timeline {
     variable _opts       ; # list options timeline
     variable _baseOption ; # list base options timeline
     variable _options    ; # list charts options timeline
+    variable _jschartvar ; # js variable chart
 
     constructor {args} {
         # Initializes a new timeline Class.

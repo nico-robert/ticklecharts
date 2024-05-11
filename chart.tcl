@@ -9,6 +9,7 @@ oo::class create ticklecharts::chart {
     variable _opts_global ; # list global options chart
     variable _dataset     ; # dataset chart
     variable _trace       ; # trace properties chart
+    variable _jschartvar  ; # js variable chart
 
     constructor {args} {
         # Initializes a new Chart Class.
@@ -335,6 +336,9 @@ oo::define ticklecharts::chart {
                        with echarts-gl."
             }
         }
+
+        # Save variable.
+        set _jschartvar [lindex [dict get $opts -jschartvar] 0]
 
         set newhtml [ticklecharts::htmlMap [my get] $template $opts]
 
