@@ -14,7 +14,7 @@ oo::class create ticklecharts::Gridlayout {
     variable _options      ; # list options chart
     variable _charts2D     ; # list charts 2D
     variable _charts3D     ; # list charts 3D
-    variable _keyglob      ; # global key options
+    variable _opts_global  ; # global options
     variable _dataset      ; # dataset chart(s)
     variable _jschartvar   ; # js variable chart
 
@@ -26,22 +26,17 @@ oo::class create ticklecharts::Gridlayout {
         # -theme  - name theme see : theme.tcl
         #
         ticklecharts::setTheme $args ; # theme options
-        set _options   {}
-        set _keyglob   {}
-        set _dataset   {}
-        set _charts2D  {}
-        set _charts3D  {}
+        set _options      {}
+        set _opts_global  {}
+        set _dataset      {}
+        set _charts2D     {}
+        set _charts3D     {}
         set _indexchart2D -1
         set _indexchart3D -1
     }
 }
 
 oo::define ticklecharts::Gridlayout {
-
-    method globalKeyOptions {} {
-        # Gets global key options.
-        return $_keyglob
-    }
 
     method getType {} {
         # Returns type of class.
@@ -314,8 +309,9 @@ oo::define ticklecharts::Gridlayout {
             lassign [split $key "="] _ k
             if {$k in $gopts} {continue}
 
-            if {$key in [my globalKeyOptions]} {
-                puts stderr "warning([self class]): '$key' in chart class is already\
+            if {$key in [dict keys [my globalOptions]]} {
+                puts stderr "warning([self class]): '$key' in\
+                            '[ticklecharts::typeOfClass $chart]' is already\
                              activated with 'SetGlobalOptions' method\
                              it is not taken into account."
                 continue
@@ -401,12 +397,16 @@ oo::define ticklecharts::Gridlayout {
 
         # Insert or not global options in the top of list.
         set match2D 0 ; set match3D 0
-        if {![llength [my globalKeyOptions]]} {
-            # priority chart 2D for global options
+        if {![llength [my globalOptions]]} {
+            # Priority chart 2D for global options
             foreach chart [my getCharts "2D"] {
-                if {[$chart globalOptions] ne ""} {
+                if {([$chart globalOptions] ne "") && !$match2D} {
                     set _options [linsert $_options 0 {*}[$chart globalOptions]]
-                    set match2D 1 ; break
+                    set match2D 1
+                } elseif {[$chart globalOptions] eq ""} {
+                    # Default options.
+                    set val [ticklecharts::procDefaultValue globalOptions -animation]
+                    $chart setTrace globalOptions.animation $val
                 }
             }
             if {!$match2D} {
@@ -419,13 +419,16 @@ oo::define ticklecharts::Gridlayout {
             }
         }
 
-        set opts $_options
+        set opts [my options]
 
         # No global options adds if need.
-        if {![llength [my globalKeyOptions]] && !$match2D && !$match3D} {
+        if {![llength [my globalOptions]] && !$match2D && !$match3D} {
             set optsg  [ticklecharts::globalOptions {}]
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
             set opts   [linsert $opts 0 {*}$optsEH]
+            # Set trace animation on first chart
+            set val [ticklecharts::procDefaultValue globalOptions -animation]
+            [lindex [my charts] 0] setTrace globalOptions.animation $val
         }
 
         # Init ehuddle.
@@ -450,8 +453,8 @@ oo::define ticklecharts::Gridlayout {
         set c [ticklecharts::chart new]
         $c SetOptions {*}$args
 
-        lappend _options {*}[$c options]
-        lappend _keyglob {*}[dict keys [$c options]]
+        lappend _options     {*}[$c options]
+        lappend _opts_global {*}[$c options]
 
         # Check if chart has dataset.
         # Save if yes.
@@ -476,14 +479,15 @@ oo::define ticklecharts::Gridlayout {
 
     # Copy shared methods definition from 'ticklecharts::chart' class :
     #
-    #   Render   - Export layout html.
-    #   dataset  - Returns dataset.
-    #   options  - Returns layout options.
-    #   toJSON   - Returns json chart data.
-    #   toHTML   - Export chart as HTML fragment.
-    #   get      - Gets huddle object.
+    #   Render        - Export layout html.
+    #   dataset       - Returns dataset.
+    #   options       - Returns layout options.
+    #   toJSON        - Returns json chart data.
+    #   toHTML        - Export chart as HTML fragment.
+    #   get           - Gets huddle object.
+    #   globalOptions - Global options.
     # ...
-    foreach method {Render dataset options toJSON toHTML get} {
+    foreach method {Render dataset options toJSON toHTML get globalOptions} {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 
