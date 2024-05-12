@@ -524,16 +524,6 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "*animation*" - 
-            "*layoutAnimation*" {
-                # Check if animation property is disabled for 'SnapShot' method.
-                if {$value ni {null nothing} && [ticklecharts::isSnapShotLevel]} {
-                    if {([ticklecharts::typeOf $value] eq "bool") && $value} {
-                        return -code error "'animation' property should be disabled\
-                            in '$keyP' when 'SnapShot' method is used."
-                    }
-                }
-            }
         }
     }
 
