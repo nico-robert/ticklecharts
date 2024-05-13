@@ -20,7 +20,6 @@ foreach class {
             # -port              - Port number.
             # -exe               - Full path executable.
             # -html              - Html fragment.
-            # -jschartvar        - Variable name chart.
             # -renderer          - base64, png or svg.
             # -outfile           - Full path file.
             # -excludecomponents - Excluded components.
@@ -59,7 +58,7 @@ foreach class {
                     set $k [lindex $info 0]
                 }
 
-                if {$html eq ""} {
+                if {$html eq "nothing"} {
                     if {$renderer eq "svg"} {
                         set htmlopts [ticklecharts::renderOptions {
                             -renderer svg
@@ -67,29 +66,38 @@ foreach class {
                     } else {
                         set htmlopts [ticklecharts::renderOptions {} "toHTML"]
                     }
-                    set jschartvar [lindex [dict get $htmlopts -jschartvar] 0]
                     set html [my toHTML {*}$htmlopts]
-                } else {
-                    if {$jschartvar eq ""} {
-                        error "'-jschartvar' property should be defined\
-                                if '-html' is provided."
-                    }
+                }
 
-                    # Try to find out if 'animation' is actived.
-                    # The animation causes a delay in image display.
-                    if {[my getType] in {gridlayout timeline}} {
-                        set charts [my charts]
-                    } else {
-                        set charts [self]
-                    }
-                    foreach c $charts {
-                        set lanim {}
-                        set tracep [set [info object namespace $c]::_trace]
-                        # 'track' list filter.
-                        foreach anim [lsearch -all -nocase $tracep *animation*] {
-                            lappend lanim [lindex $tracep $anim] [lindex $tracep $anim+1]
+                # Try to find out if 'animation' is actived.
+                # The animation causes a delay in image display.
+                if {[my getType] in {gridlayout timeline}} {
+                    set charts [my charts]
+                } else {
+                    set charts [self]
+                }
+                if {[my getType] eq "gridlayout"} {
+                    if {[my globalOptions] ne ""} {
+                        if {[dict exists [my globalOptions] @B=animation]} {
+                            if {[dict get [my globalOptions] @B=animation]} {
+                                error "'animation' property should be disabled\
+                                        in 'SetGlobalOptions' when 'SnapShot'\
+                                        method is used."
+                            }
                         }
-                        ticklecharts::track $lanim
+                    }
+                }
+                foreach c $charts {
+                    foreach {keyP value} [set [info object namespace $c]::_trace] {
+                        # 'track' list filter.
+                        if {[string match -nocase {*animation*} $keyP]} {
+                            if {$value ni {null nothing}} {
+                                if {([ticklecharts::typeOf $value] eq "bool") && $value} {
+                                    error "'animation' property should be disabled\
+                                            in '$keyP' when 'SnapShot' method is used."
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -120,6 +128,9 @@ foreach class {
                     ]
                     set exc $frt
                 }
+
+                # Gets variable value from self.
+                set jschartvar [set [info object namespace [self]]::_jschartvar]
 
                 # JS function.
                 if {$renderer in {png base64}} {
@@ -163,7 +174,7 @@ foreach class {
         }
 
         method StartBrowser {exe port address tmpfile} {
-            # Start Browser
+            # Start Browser.
             #
             # exe      - full path executable.
             # port     - port number.
@@ -176,10 +187,10 @@ foreach class {
                         --headless file:///${tmpfile}]
 
             set f [open "|$cmd 2>@1" r]
-            fileevent  $f readable [callback Handle $f]
+            fileevent  $f readable [callback ReadBrowser $f]
         }
 
-        method Handle {f} {
+        method ReadBrowser {f} {
             # Capture sdterr, stdout '-exe' file.
             #
             # f - open file
@@ -317,7 +328,7 @@ foreach class {
                         } else {
                             set info $msg
                         }
-                        # Try running the command again
+                        # Try running the command again.
                         if {
                             ($connection <= 2) &&
                             [string match "*$jschartvar is not defined*" $info]
@@ -344,16 +355,13 @@ foreach class {
             # sock - websocket
             #
             # Return nothing
-            my variable forever
             my variable js
             my variable timeout
 
             set conninfo [websocket::conninfo $sock state]
             if {$conninfo ne "CONNECTED"} {
-                websocket::close $sock
-                my CloseBrowser $sock
                 puts stderr "warning(snap): [websocket::conninfo $sock state]"
-                set forever 1
+                my CloseBrowser $sock
             } else {
                 after $timeout
                 set jsonData [subst {
@@ -377,7 +385,7 @@ foreach class {
             # sock - websocket
             #
             # Return nothing
-            set jsonData {{"id": 1,  "method": "Browser.close"}}
+            set jsonData {{"id": 1, "method": "Browser.close"}}
             websocket::send $sock text $jsonData
 
             return {}
@@ -422,18 +430,4 @@ proc ticklecharts::messageToDict {msg} {
     set h [huddle::json2huddle $msg]
 
     return [huddle get_stripped $h]
-}
-
-proc ticklecharts::isSnapShotLevel {} {
-    # See if the 'SnapShot' method is available 
-    # according to my levels.
-    #
-    # Returns true if method is available, 
-    # false otherwise.
-    for {set i [info level]} {$i > 0} {incr i -1} {
-        if {[lindex [info level $i] 1] eq "SnapShot"} {
-            return 1
-        }
-    }
-    return 0
 }
