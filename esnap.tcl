@@ -88,7 +88,7 @@ foreach class {
                     }
                 }
                 foreach c $charts {
-                    foreach {keyP value} [set [info object namespace $c]::_trace] {
+                    foreach {keyP value} [my getTrace] {
                         # 'track' list filter.
                         if {[string match -nocase {*animation*} $keyP]} {
                             if {$value ni {null nothing}} {

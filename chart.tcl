@@ -73,11 +73,16 @@ oo::define ticklecharts::chart {
         return {}
     }
 
+    method getTrace {} {
+        # Returns trace properties.
+        return $_trace
+    }
+
     method track {} {
         # Compares properties.
         #
         # Returns nothing
-        ticklecharts::track $_trace
+        ticklecharts::track [my getTrace]
 
         return {}
     }

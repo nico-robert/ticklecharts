@@ -353,11 +353,12 @@ oo::define ticklecharts::chart3D {
     #                   Note : This variable can be empty.
     #   AddJSON       - Build your own JSON.
     #   getONSClass   - Name of the internal namespace of the object.
+    #   getTrace      - Returns trace properties.
     # ...
     foreach method {
-        Render setTrace track toHTML options get toJSON getONSClass
+        Render setTrace track toHTML options get toJSON getONSClass getTrace
         dataset getOptions keys deleteSeries globalOptions AddJSON
-        } {
+    } {
         method $method {*}[ticklecharts::classDef "chart" $method]
     }
 
