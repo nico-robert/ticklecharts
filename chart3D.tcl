@@ -9,6 +9,7 @@ oo::class create ticklecharts::chart3D {
     variable _opts_global  ; # list global options chart
     variable _dataset      ; # dataset chart3D
     variable _trace        ; # trace properties chart
+    variable _jschartvar   ; # js variable chart
 
     # See 'chart' class for further details on arguments.
     constructor {*}[info class constructor "ticklecharts::chart"]
