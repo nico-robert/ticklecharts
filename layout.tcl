@@ -427,8 +427,11 @@ oo::define ticklecharts::Gridlayout {
             set optsEH [ticklecharts::optsToEchartsHuddle [$optsg get]]
             set opts   [linsert $opts 0 {*}$optsEH]
             # Set trace animation on first chart
-            set val [ticklecharts::procDefaultValue globalOptions -animation]
-            [lindex [my charts] 0] setTrace globalOptions.animation $val
+            foreach chart [my getCharts "2D"] {
+                set val [ticklecharts::procDefaultValue globalOptions -animation]
+                $chart setTrace globalOptions.animation $val
+                break
+            }
         }
 
         # Init ehuddle.
