@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Nicolas ROBERT.
+# Copyright (c) 2022-2024 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -34,7 +34,7 @@ oo::class create ticklecharts::timeline {
 oo::define ticklecharts::timeline {
 
     method getType {} {
-        # Returns type
+        # Returns type.
         return "timeline"
     }
 
@@ -65,6 +65,11 @@ oo::define ticklecharts::timeline {
         #
         # Returns nothing
 
+        if {[llength $args] % 2} {
+            error "wrong # args: [self] SetOptions \$args must have\
+                   an even number of elements."
+        }
+
         set _opts {}
         lappend _opts "@L=timeline" [ticklecharts::timelineOpts $args]
 
@@ -72,11 +77,11 @@ oo::define ticklecharts::timeline {
     }
 
     method Add {chart args} {
-        # Add data dict to timeline options
+        # Add data dict to timeline options.
         #
         # Returns nothing
 
-        if {[llength $args] == 0} {
+        if {![llength $args]} {
              error "wrong # args: 'timeline' arguments should not be equal\
                     to 0 for the 'Add' method."
         }
@@ -93,7 +98,7 @@ oo::define ticklecharts::timeline {
     }
 
     method ToHuddle {} {
-        # Transform list to ehudlle
+        # Transform list to ehudlle.
         #
         # Returns nothing
 
@@ -105,30 +110,32 @@ oo::define ticklecharts::timeline {
         set dataopts [lindex $_opts 1]
 
         # Insert data to timeline options
-        lappend timeline_opts $key [linsert $dataopts end {*}[format "-data {{%s} list.o}" $_data]]
+        lappend timeline_opts $key [linsert \
+            $dataopts end {*}[format "-data {{%s} list.o}" $_data] \
+        ]
 
-        # get keys from global options & remove...
+        # Retrieves global option keys and deletes them.
         set optsglob [ticklecharts::globalOptions {}]
         set keysoptsglob [dict keys [ticklecharts::optsToEchartsHuddle [$optsglob get]]]
 
-        # add keys from 'SetOptions' ticklecharts::chart* method
+        # Add keys from 'SetOptions' ticklecharts::chart* method
         foreach class {"chart" "chart3D"} {
             lappend infomethod [lindex [ticklecharts::classDef $class SetOptions] 1]
         }
         foreach linebody [split $infomethod "\n"] {
             if {[string match {*@*} $linebody]} {
                 set keyopts [lindex $linebody 2]
-                set range [string range $keyopts 0 2]
-                if {($range eq "@D=") || ($range eq "@L=")} {
+                set hType [string range $keyopts 0 2]
+                if {$hType in {@D= @L=}} {
                     lappend keysoptsglob $keyopts
                 }
             }
         }
 
-        # get first chart
+        # Gets the first chart.
         set optschart [[lindex [my charts] 0] options]
 
-        # remove keys global for baseOption...
+        # Removes keys global for 'baseOption'.
         set _baseOption {}
         foreach {key value} $optschart {
             if {$key in $keysoptsglob} {
@@ -137,15 +144,15 @@ oo::define ticklecharts::timeline {
             lappend _baseOption $key $value
         }
 
-        # add timeline options to huddle baseOption.
+        # Add 'timeline' options to huddle 'baseOption'.
         foreach {key value} $timeline_opts {
             set f [ticklecharts::optsToEchartsHuddle $value]
             lappend _baseOption $key [list {*}$f]
         }
-        # Add baseOption
+        # Add 'baseOption' key.
         $_h append "@L=baseOption" $_baseOption
 
-        # add all charts to 'option' key
+        # Add all charts to 'option' key.
         set _options {}
         foreach chart [my charts] {
             set option {}
@@ -177,14 +184,9 @@ oo::define ticklecharts::timeline {
 }
 
 proc ticklecharts::timelineOpts {value} {
-    # timeline options
+    # timeline options.
     #
     # Returns dict options
-
-    if {[llength $value] % 2} {
-        error "wrong # args: \[self\] SetOptions \$value\
-               must have an even number of elements."
-    }
 
     setdef options -show              -minversion 5  -validvalue {}                      -type bool             -default "True"
     setdef options -type              -minversion 5  -validvalue formatTimelineType      -type str              -default "slider"
@@ -232,7 +234,7 @@ proc ticklecharts::timelineOpts {value} {
 }
 
 proc ticklecharts::timelineItem {value} {
-    # timeline item options
+    # timeline item options.
     #
     # Returns dict options
 
@@ -241,7 +243,7 @@ proc ticklecharts::timelineItem {value} {
     }
 
     if {![dict exists $value -data]} {
-        error "Property '-data' not defined for\
+        error "wrong # args: Property '-data' not defined for\
               '[ticklecharts::getLevelProperties [info level]]'"
     }
 
@@ -251,8 +253,7 @@ proc ticklecharts::timelineItem {value} {
         ticklecharts::errorKeyArgs -data value
     }
 
-    # force string value for this key below
-    # with 'eString' class.
+    # Force string value for this key below.
     set typeOf [ticklecharts::typeOf [dict get $d value]]
     if {$typeOf ni {str str.e}} {
         dict set d value [new estr [dict get $d value]]
@@ -272,11 +273,12 @@ proc ticklecharts::timelineItem {value} {
 }
 
 proc ticklecharts::istimelineClass {value} {
-    # Check if value is timeline class
+    # Check if value is timeline class.
     #
     # value - obj or string
     #
-    # Returns true if 'value' is a timeline class, false otherwise.
+    # Returns true if 'value' is a timeline class, 
+    # false otherwise.
     return [expr {
             [ticklecharts::isAObject $value] && 
             [string match "*::timeline" [ticklecharts::typeOfClass $value]]
