@@ -50,6 +50,7 @@ foreach class {
 
                 set imginfo -1
                 set connection 0
+                set isrendered 0
                 # Gets arguments options
                 set opts [ticklecharts::renderOptions $args [self method]]
 
@@ -151,11 +152,7 @@ foreach class {
                 # A temporary file is created when the command is executed.
                 # This may change in future versions of 'ticklEcharts'
                 set htmltmpfile [ticklecharts::htmlTmpFile $html]
-
-                set isrendered 0
-
                 my StartBrowser $exe $port $address $htmltmpfile
-                vwait [namespace current]::browser
 
                 if {$browser != 2} {
                     set url "http://${address}:${port}/json"
@@ -187,7 +184,8 @@ foreach class {
                         --headless file:///${tmpfile}]
 
             set f [open "|$cmd 2>@1" r]
-            fileevent  $f readable [callback ReadBrowser $f]
+            fileevent $f readable [callback ReadBrowser $f]
+            vwait [namespace current]::browser
         }
 
         method ReadBrowser {f} {
@@ -199,17 +197,22 @@ foreach class {
 
             set status [catch {gets $f line} result]
             if {$status != 0} {
-                catch {close $f}
+                puts stderr "error(snap): $result"
+                set browser 2
             } elseif {$result >= 0} {
                 if {[string match {*ERROR:*} $line]} {
                     puts stderr "error(snap): $line"
-                    catch {close $f}
                     set browser 2
+                } elseif {[string match {*WARNING:*} $line]} {
+                    if {$::ticklecharts::snapdebug} {
+                        puts stdout $line
+                    }
+                    set browser 1
                 } else {
                     set browser 1
                 }
             } elseif {[eof $f]} {
-                catch {close $f}
+                set browser 2
             } elseif {[fblocked $f]} {
                 # do nothing
             }
