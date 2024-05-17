@@ -262,61 +262,61 @@ proc ticklecharts::legend {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value "-legend"]
 
-    setdef options type                    -minversion 5  -validvalue formatLegendType      -type str              -trace no  -default "plain"
-    setdef options id                      -minversion 5  -validvalue {}                    -type str|null         -trace no  -default "nothing"
-    setdef options show                    -minversion 5  -validvalue {}                    -type bool             -trace no  -default "True"
-    setdef options zlevel                  -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options z                       -minversion 5  -validvalue {}                    -type num              -trace no  -default 2
-    setdef options left                    -minversion 5  -validvalue formatLeft            -type str|num|null     -trace no  -default "center"
-    setdef options top                     -minversion 5  -validvalue formatTop             -type str|num|null     -trace no  -default "auto"
-    setdef options right                   -minversion 5  -validvalue formatRight           -type str|num|null     -trace no  -default "auto"
-    setdef options bottom                  -minversion 5  -validvalue {}                    -type str|num|null     -trace no  -default "auto"
-    setdef options width                   -minversion 5  -validvalue {}                    -type str|num|null     -trace no  -default "auto"
-    setdef options height                  -minversion 5  -validvalue {}                    -type str|num|null     -trace no  -default "auto"
-    setdef options orient                  -minversion 5  -validvalue formatOrient          -type str              -trace no  -default "horizontal"
-    setdef options align                   -minversion 5  -validvalue formatAlign           -type str              -trace no  -default "auto"
-    setdef options padding                 -minversion 5  -validvalue {}                    -type num|list.n       -trace no  -default 5
-    setdef options itemGap                 -minversion 5  -validvalue {}                    -type num              -trace no  -default 10
-    setdef options itemWidth               -minversion 5  -validvalue {}                    -type num              -trace no  -default 25
-    setdef options itemHeight              -minversion 5  -validvalue {}                    -type num              -trace no  -default 14
-    setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::itemStyle $d]
-    setdef options lineStyle               -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::lineStyle $d]
-    setdef options symbolRotate            -minversion 5  -validvalue {}                    -type str|num          -trace no  -default "inherit"
-    setdef options formatter               -minversion 5  -validvalue {}                    -type str|jsfunc|null  -trace no  -default "nothing"
-    setdef options selectedMode            -minversion 5  -validvalue {}                    -type bool|str         -trace no  -default "True"
-    setdef options inactiveColor           -minversion 5  -validvalue formatColor           -type str              -trace no  -default "rgb(204, 204, 204)"
-    setdef options inactiveBorderColor     -minversion 5  -validvalue formatColor           -type str              -trace no  -default "rgb(204, 204, 204)"
-    setdef options inactiveBorderWidth     -minversion 5  -validvalue formatColor           -type str              -trace no  -default "auto"
-    setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|null      -trace no  -default "nothing"
-    setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::textStyle $d textStyle]
-    setdef options tooltip                 -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::tooltip $d]
-    setdef options icon                    -minversion 5  -validvalue {}                    -type str|null         -trace no  -default "nothing"
-    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.color|str|null -trace no  -default "transparent"
-    setdef options borderWidth             -minversion 5  -validvalue {}                    -type num              -trace no  -default 0
-    setdef options borderRadius            -minversion 5  -validvalue {}                    -type num              -trace no  -default 0
-    setdef options shadowBlur              -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options shadowColor             -minversion 5  -validvalue formatColor           -type str|null         -trace no  -default "nothing"
-    setdef options shadowOffsetX           -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options shadowOffsetY           -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options scrollDataIndex         -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options pageButtonItemGap       -minversion 5  -validvalue {}                    -type num              -trace no  -default 5
-    setdef options pageButtonGap           -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options pageButtonPosition      -minversion 5  -validvalue formatPButtonPosition -type str|null         -trace no  -default "nothing"
-    setdef options pageFormatter           -minversion 5  -validvalue {}                    -type str|jsfunc|null  -trace no  -default "nothing"
-    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::pageIcons $d]
-    setdef options pageIconColor           -minversion 5  -validvalue formatColor           -type str              -trace no  -default "rgb(47, 69, 84)"
-    setdef options pageIconInactiveColor   -minversion 5  -validvalue formatColor           -type str              -trace no  -default "rgb(170, 170, 170)"
-    setdef options pageIconSize            -minversion 5  -validvalue {}                    -type num|list.n       -trace no  -default 15
-    setdef options pageTextStyle           -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::pageTextStyle $d]
-    setdef options animation               -minversion 5  -validvalue {}                    -type bool|null        -trace yes -default "nothing"
-    setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options emphasis                -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::emphasis $d]
-    setdef options selector                -minversion 5  -validvalue {}                    -type bool|list.d|null -trace no  -default "nothing"
-    setdef options selectorLabel           -minversion 5  -validvalue {}                    -type dict|null        -trace no  -default [ticklecharts::selectorLabel $d]
-    setdef options selectorPosition        -minversion 5  -validvalue formatSelectorPos     -type str|null         -trace no  -default "nothing"
-    setdef options selectorItemGap         -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options selectorButtonGap       -minversion 5  -validvalue {}                    -type num|null         -trace no  -default "nothing"
-    setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null      -trace no  -default "nothing"
+    setdef options type                    -minversion 5  -validvalue formatLegendType      -type str                 -trace no  -default "plain"
+    setdef options id                      -minversion 5  -validvalue {}                    -type str|null            -trace no  -default "nothing"
+    setdef options show                    -minversion 5  -validvalue {}                    -type bool                -trace no  -default "True"
+    setdef options zlevel                  -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options z                       -minversion 5  -validvalue {}                    -type num                 -trace no  -default 2
+    setdef options left                    -minversion 5  -validvalue formatLeft            -type str|num|null        -trace no  -default "center"
+    setdef options top                     -minversion 5  -validvalue formatTop             -type str|num|null        -trace no  -default "auto"
+    setdef options right                   -minversion 5  -validvalue formatRight           -type str|num|null        -trace no  -default "auto"
+    setdef options bottom                  -minversion 5  -validvalue {}                    -type str|num|null        -trace no  -default "auto"
+    setdef options width                   -minversion 5  -validvalue {}                    -type str|num|null        -trace no  -default "auto"
+    setdef options height                  -minversion 5  -validvalue {}                    -type str|num|null        -trace no  -default "auto"
+    setdef options orient                  -minversion 5  -validvalue formatOrient          -type str                 -trace no  -default "horizontal"
+    setdef options align                   -minversion 5  -validvalue formatAlign           -type str                 -trace no  -default "auto"
+    setdef options padding                 -minversion 5  -validvalue {}                    -type num|list.n          -trace no  -default 5
+    setdef options itemGap                 -minversion 5  -validvalue {}                    -type num                 -trace no  -default 10
+    setdef options itemWidth               -minversion 5  -validvalue {}                    -type num                 -trace no  -default 25
+    setdef options itemHeight              -minversion 5  -validvalue {}                    -type num                 -trace no  -default 14
+    setdef options itemStyle               -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::itemStyle $d]
+    setdef options lineStyle               -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::lineStyle $d]
+    setdef options symbolRotate            -minversion 5  -validvalue {}                    -type str|num             -trace no  -default "inherit"
+    setdef options formatter               -minversion 5  -validvalue {}                    -type str|jsfunc|null     -trace no  -default "nothing"
+    setdef options selectedMode            -minversion 5  -validvalue {}                    -type bool|str            -trace no  -default "True"
+    setdef options inactiveColor           -minversion 5  -validvalue formatColor           -type str                 -trace no  -default "rgb(204, 204, 204)"
+    setdef options inactiveBorderColor     -minversion 5  -validvalue formatColor           -type str                 -trace no  -default "rgb(204, 204, 204)"
+    setdef options inactiveBorderWidth     -minversion 5  -validvalue formatColor           -type str                 -trace no  -default "auto"
+    setdef options selected                -minversion 5  -validvalue {}                    -type jsfunc|struct|null  -trace no  -default "nothing"
+    setdef options textStyle               -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::textStyle $d textStyle]
+    setdef options tooltip                 -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::tooltip $d]
+    setdef options icon                    -minversion 5  -validvalue {}                    -type str|null            -trace no  -default "nothing"
+    setdef options backgroundColor         -minversion 5  -validvalue formatColor           -type e.color|str|null    -trace no  -default "transparent"
+    setdef options borderWidth             -minversion 5  -validvalue {}                    -type num                 -trace no  -default 0
+    setdef options borderRadius            -minversion 5  -validvalue {}                    -type num                 -trace no  -default 0
+    setdef options shadowBlur              -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options shadowColor             -minversion 5  -validvalue formatColor           -type str|null            -trace no  -default "nothing"
+    setdef options shadowOffsetX           -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options shadowOffsetY           -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options scrollDataIndex         -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options pageButtonItemGap       -minversion 5  -validvalue {}                    -type num                 -trace no  -default 5
+    setdef options pageButtonGap           -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options pageButtonPosition      -minversion 5  -validvalue formatPButtonPosition -type str|null            -trace no  -default "nothing"
+    setdef options pageFormatter           -minversion 5  -validvalue {}                    -type str|jsfunc|null     -trace no  -default "nothing"
+    setdef options pageIcons               -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::pageIcons $d]
+    setdef options pageIconColor           -minversion 5  -validvalue formatColor           -type str                 -trace no  -default "rgb(47, 69, 84)"
+    setdef options pageIconInactiveColor   -minversion 5  -validvalue formatColor           -type str                 -trace no  -default "rgb(170, 170, 170)"
+    setdef options pageIconSize            -minversion 5  -validvalue {}                    -type num|list.n          -trace no  -default 15
+    setdef options pageTextStyle           -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::pageTextStyle $d]
+    setdef options animation               -minversion 5  -validvalue {}                    -type bool|null           -trace yes -default "nothing"
+    setdef options animationDurationUpdate -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options emphasis                -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::emphasis $d]
+    setdef options selector                -minversion 5  -validvalue {}                    -type bool|list.d|null    -trace no  -default "nothing"
+    setdef options selectorLabel           -minversion 5  -validvalue {}                    -type dict|null           -trace no  -default [ticklecharts::selectorLabel $d]
+    setdef options selectorPosition        -minversion 5  -validvalue formatSelectorPos     -type str|null            -trace no  -default "nothing"
+    setdef options selectorItemGap         -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options selectorButtonGap       -minversion 5  -validvalue {}                    -type num|null            -trace no  -default "nothing"
+    setdef options data                    -minversion 5  -validvalue {}                    -type list.d|null         -trace no  -default "nothing"
     #...
 
     if {[dict exists $d dataLegendItem]} {
