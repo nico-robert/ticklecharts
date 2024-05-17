@@ -203,7 +203,14 @@ oo::class create ticklecharts::eStruct {
         set _varname $name
 
         foreach {key info} $value {
-            lassign [split $key ":"] k type
+            # In case there are two dots in the key name.
+            set key  [string trim $key]
+            set sk   [split $key ":"]
+            set type [lindex $sk end]
+            set len  [expr {[string length $type] + 1}]
+            set k    [string range $key 0 end-$len]
+            # In case there are spaces in the key.
+            set k [ticklecharts::mapSpaceString $k]
 
             if {
                 ($type eq "") || $type ni {
@@ -326,7 +333,7 @@ oo::define ticklecharts::eStruct {
         switch -exact -- [my sType] {
             struct.d  {set hobj [lindex [huddle create {*}$huddle] 1]}
             struct.ld {set hobj [lindex [huddle list [huddle create {*}$huddle]] 1]}
-            default   {error "'[my sType]' not supported [self method]"}
+            default   {error "'[my sType]' not supported for '[self method]'"}
         }
 
         return $hobj
