@@ -1550,51 +1550,52 @@ proc ticklecharts::treemapSeries {index value} {
     # Returns dict treemapSeries options
     if {[llength $value] % 2} ticklecharts::errorEvenArgs
 
-    setdef options -type                    -minversion 5  -validvalue formatTypeTreemap   -type str               -default "treemap"
-    setdef options -id                      -minversion 5  -validvalue {}                  -type str|null          -default "nothing"
-    setdef options -name                    -minversion 5  -validvalue {}                  -type str               -default "treemapseries_${index}"
-    setdef options -zlevel                  -minversion 5  -validvalue {}                  -type num               -default 0
-    setdef options -z                       -minversion 5  -validvalue {}                  -type num               -default 2
-    setdef options -left                    -minversion 5  -validvalue formatLeft          -type num|str           -default "center"
-    setdef options -top                     -minversion 5  -validvalue formatTop           -type num|str           -default "middle"
-    setdef options -right                   -minversion 5  -validvalue formatRight         -type num|str           -default "auto"
-    setdef options -bottom                  -minversion 5  -validvalue formatBottom        -type num|str           -default "auto"
-    setdef options -width                   -minversion 5  -validvalue {}                  -type num|str           -default "80%"
-    setdef options -height                  -minversion 5  -validvalue {}                  -type num|str           -default "80%"
-    setdef options -squareRatio             -minversion 5  -validvalue {}                  -type num               -default [expr {0.5 * (1 + sqrt(5))}]
-    setdef options -leafDepth               -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -drillDownIcon           -minversion 5  -validvalue {}                  -type str               -default "▶"
-    setdef options -roam                    -minversion 5  -validvalue formatRoam          -type str|bool          -default "True"
-    setdef options -nodeClick               -minversion 5  -validvalue formatNodeClick     -type bool|str          -default "zoomToNode"
-    setdef options -zoomToNodeRatio         -minversion 5  -validvalue {}                  -type num               -default [expr {0.32 * 0.32}]
-    setdef options -visualDimension         -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -visualMin               -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -visualMax               -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -colorAlpha              -minversion 5  -validvalue {}                  -type list.n|null       -default "nothing"
-    setdef options -colorSaturation         -minversion 5  -validvalue {}                  -type list.n|null       -default "nothing"
-    setdef options -colorMappingBy          -minversion 5  -validvalue formatColorMapping  -type str               -default "index"
-    setdef options -visibleMin              -minversion 5  -validvalue {}                  -type num               -default 10
-    setdef options -childrenVisibleMin      -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -label                   -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
-    setdef options -upperLabel              -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::upperLabel $value]
-    setdef options -itemStyle               -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
-    setdef options -emphasis                -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
-    setdef options -blur                    -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
-    setdef options -select                  -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
-    setdef options -selectedMode            -minversion 5  -validvalue formatSelectedMode  -type bool|str|null     -default "False"
-    setdef options -breadcrumb              -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::breadcrumb $value]
-    setdef options -labelLine               -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::labelLine $value]
-    setdef options -labelLayout             -minversion 5  -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
-    setdef options -levels                  -minversion 5  -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsTreeMapItem $value]
-    setdef options -data                    -minversion 5  -validvalue {}                  -type list.o            -default [ticklecharts::treemapItem $value]
-    setdef options -silent                  -minversion 5  -validvalue {}                  -type bool              -default "False"
-    setdef options -animationDuration       -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -animationEasing         -minversion 5  -validvalue formatAEasing       -type str|null          -default "nothing"
-    setdef options -animationDelay          -minversion 5  -validvalue {}                  -type num|jsfunc|null   -default "nothing"
-    setdef options -selector                -minversion 5  -validvalue {}                  -type bool|null         -default "nothing"
-    setdef options -selectorPosition        -minversion 5  -validvalue formatSelectorPos   -type str|null          -default "nothing"
-    setdef options -selectorItemGap         -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
-    setdef options -selectorButtonGap       -minversion 5  -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -type                    -minversion 5        -validvalue formatTypeTreemap   -type str               -default "treemap"
+    setdef options -id                      -minversion 5        -validvalue {}                  -type str|null          -default "nothing"
+    setdef options -name                    -minversion 5        -validvalue {}                  -type str               -default "treemapseries_${index}"
+    setdef options -zlevel                  -minversion 5        -validvalue {}                  -type num               -default 0
+    setdef options -z                       -minversion 5        -validvalue {}                  -type num               -default 2
+    setdef options -left                    -minversion 5        -validvalue formatLeft          -type num|str           -default "center"
+    setdef options -top                     -minversion 5        -validvalue formatTop           -type num|str           -default "middle"
+    setdef options -right                   -minversion 5        -validvalue formatRight         -type num|str           -default "auto"
+    setdef options -bottom                  -minversion 5        -validvalue formatBottom        -type num|str           -default "auto"
+    setdef options -width                   -minversion 5        -validvalue {}                  -type num|str           -default "80%"
+    setdef options -height                  -minversion 5        -validvalue {}                  -type num|str           -default "80%"
+    setdef options -squareRatio             -minversion 5        -validvalue {}                  -type num               -default [expr {0.5 * (1 + sqrt(5))}]
+    setdef options -leafDepth               -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -drillDownIcon           -minversion 5        -validvalue {}                  -type str               -default "▶"
+    setdef options -roam                    -minversion 5        -validvalue formatRoam          -type str|bool          -default "True"
+    setdef options -scaleLimit              -minversion "5.5.1"  -validvalue {}                  -type dict|null         -default [ticklecharts::scaleLimit $value]
+    setdef options -nodeClick               -minversion 5        -validvalue formatNodeClick     -type bool|str          -default "zoomToNode"
+    setdef options -zoomToNodeRatio         -minversion 5        -validvalue {}                  -type num               -default [expr {0.32 * 0.32}]
+    setdef options -visualDimension         -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -visualMin               -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -visualMax               -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -colorAlpha              -minversion 5        -validvalue {}                  -type list.n|null       -default "nothing"
+    setdef options -colorSaturation         -minversion 5        -validvalue {}                  -type list.n|null       -default "nothing"
+    setdef options -colorMappingBy          -minversion 5        -validvalue formatColorMapping  -type str               -default "index"
+    setdef options -visibleMin              -minversion 5        -validvalue {}                  -type num               -default 10
+    setdef options -childrenVisibleMin      -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -label                   -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::label $value]
+    setdef options -upperLabel              -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::upperLabel $value]
+    setdef options -itemStyle               -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::itemStyle $value]
+    setdef options -emphasis                -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -select                  -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::select $value]
+    setdef options -selectedMode            -minversion 5        -validvalue formatSelectedMode  -type bool|str|null     -default "False"
+    setdef options -breadcrumb              -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::breadcrumb $value]
+    setdef options -labelLine               -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::labelLine $value]
+    setdef options -labelLayout             -minversion 5        -validvalue {}                  -type dict|null         -default [ticklecharts::labelLayout $value]
+    setdef options -levels                  -minversion 5        -validvalue {}                  -type list.o|null       -default [ticklecharts::levelsTreeMapItem $value]
+    setdef options -data                    -minversion 5        -validvalue {}                  -type list.o            -default [ticklecharts::treemapItem $value]
+    setdef options -silent                  -minversion 5        -validvalue {}                  -type bool              -default "False"
+    setdef options -animationDuration       -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -animationEasing         -minversion 5        -validvalue formatAEasing       -type str|null          -default "nothing"
+    setdef options -animationDelay          -minversion 5        -validvalue {}                  -type num|jsfunc|null   -default "nothing"
+    setdef options -selector                -minversion 5        -validvalue {}                  -type bool|null         -default "nothing"
+    setdef options -selectorPosition        -minversion 5        -validvalue formatSelectorPos   -type str|null          -default "nothing"
+    setdef options -selectorItemGap         -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
+    setdef options -selectorButtonGap       -minversion 5        -validvalue {}                  -type num|null          -default "nothing"
 
     if {![dict exists $value -data] && ![dict exists $value -dataItem]} {
         error "Property '-data' or '-dataItem' not defined for '[ticklecharts::getLevelProperties [info level]]'"
@@ -1604,7 +1605,7 @@ proc ticklecharts::treemapSeries {index value} {
     set value [dict remove $value -label -upperLabel \
                                   -data -dataItem -breadcrumb -tooltip \
                                   -labelLine -labelLayout -itemStyle \
-                                  -emphasis -blur -select -levels]
+                                  -emphasis -blur -select -levels -scaleLimit]
 
 
     set options [merge $options $value]

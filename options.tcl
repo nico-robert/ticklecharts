@@ -1275,7 +1275,8 @@ proc ticklecharts::itemStyle {value} {
             setdef options borderWidth  -minversion 5  -validvalue {}            -type str|num|null     -trace no  -default 1.5
         }
         "sankeySeries" {
-            setdef options borderColor  -minversion 5  -validvalue formatColor   -type e.color|str|null -trace no  -default "inherit"
+            setdef options borderColor  -minversion 5        -validvalue formatColor  -type e.color|str|null -trace no  -default "inherit"
+            setdef options borderRadius -minversion "5.5.1"  -validvalue {}           -type list.n|null      -trace no  -default "nothing"
         }
         "barSeries" {
             setdef options borderRadius -minversion 5  -validvalue {} -type num|list.n|null -trace no   -default "nothing"
@@ -2485,12 +2486,13 @@ proc ticklecharts::axisTick {value} {
     # Gets key value.
     set d [ticklecharts::getValue $value $key]
 
-    setdef options show            -minversion 5  -validvalue {}             -type bool.t         -default $show
-    setdef options alignWithLabel  -minversion 5  -validvalue {}             -type bool|null      -default "nothing"
-    setdef options inside          -minversion 5  -validvalue {}             -type bool|null      -default "nothing"
-    setdef options interval        -minversion 5  -validvalue formatInterval -type str|num|jsfunc -default "auto"
-    setdef options length          -minversion 5  -validvalue {}             -type num            -default 5
-    setdef options lineStyle       -minversion 5  -validvalue {}             -type dict|null      -default [ticklecharts::lineStyle $d]
+    setdef options show            -minversion 5        -validvalue {}             -type bool.t         -default $show
+    setdef options alignWithLabel  -minversion 5        -validvalue {}             -type bool|null      -default "nothing"
+    setdef options inside          -minversion 5        -validvalue {}             -type bool|null      -default "nothing"
+    setdef options interval        -minversion 5        -validvalue formatInterval -type str|num|jsfunc -default "auto"
+    setdef options length          -minversion 5        -validvalue {}             -type num            -default 5
+    setdef options lineStyle       -minversion 5        -validvalue {}             -type dict|null      -default [ticklecharts::lineStyle $d]
+    setdef options customValues    -minversion "5.5.1"  -validvalue {}             -type list.d|null    -default "nothing"
 
     if {[ticklecharts::whichSeries? $levelP] eq "gaugeSeries"} {
         # add 'distance' property to series-gauge.axisTick
