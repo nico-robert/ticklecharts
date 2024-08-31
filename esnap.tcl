@@ -52,9 +52,7 @@ foreach class {
                 set connection 0
                 set isrendered 0
                 # Gets arguments options
-                set opts [ticklecharts::renderOptions $args [self method]]
-
-                foreach {key info} $opts {
+                foreach {key info} [ticklecharts::renderOptions $args [self method]] {
                     set k  [string map {- ""} $key]
                     set $k [lindex $info 0]
                 }
@@ -131,7 +129,7 @@ foreach class {
                 }
 
                 # Gets variable value from self.
-                set jschartvar [set [info object namespace [self]]::_jschartvar]
+                set jschartvar [set [my varname _jschartvar]]
 
                 # JS function.
                 if {$renderer in {png base64}} {
@@ -157,7 +155,7 @@ foreach class {
                 if {$browser != 2} {
                     set url "http://${address}:${port}/json"
                     my ConnectLocalHost $url
-                    vwait [namespace current]::forever
+                    vwait [my varname forever]
                 }
 
                 return $imginfo
@@ -185,7 +183,7 @@ foreach class {
 
             set f [open "|$cmd 2>@1" r]
             fileevent $f readable [callback ReadBrowser $f]
-            vwait [namespace current]::browser
+            vwait [my varname browser]
         }
 
         method ReadBrowser {f} {
