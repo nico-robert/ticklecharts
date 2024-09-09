@@ -70,6 +70,10 @@ foreach ptype {elist elist.n elist.s elist.o elist.d} {
     # This is useful for improving performance 
     # when we are certain of the type to be integrated. 
     #
+    # example :
+    # new elist.n {1 2 3 4 5}
+    # new elist.s {1 2 3 4 5} > force JSON string values ["1", "2", "3", ...].
+    #
     # Returns a eList object.
     proc ticklecharts::${ptype} {args} [string map [list %tlist% $ptype] {
             return [ticklecharts::eList new $args %tlist%]
