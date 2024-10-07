@@ -406,8 +406,9 @@ $chart SnapShot -renderer "svg" -html $html
 # ...
 ```
 > [!NOTE]   
-> - A temporary file is created when the command is executed (This may change in future versions of 'ticklEcharts').   
+> - A temporary file is created when the command is executed (This may change in future versions of `ticklEcharts`).   
 > - Method not supported with 'chart3D' class.
+> - Highly unstable, depends on the version of chrome installed.   
 
 Global variables :
 -------------------------
