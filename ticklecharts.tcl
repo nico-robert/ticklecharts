@@ -238,16 +238,21 @@
                 # New `SnapShot` method to capture an image, see `Image` section for further information.
                 # `Tcl9` taken into consideration (Not yet for `critcl`).
                 # Cosmetic changes.
+# 08-May-2024 : v3.2.5
+                # Add new Echarts `5.5.1` options.
+                # `-jschartvar` in `Snapshot` method is no longer supported (directly taken from the `html/Render` method).
+                # Bump Echarts gmap extension version to `1.7.0`.
+                # Cosmetic changes.
 
 package require Tcl 8.6-
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.2.4 ; # ticklEcharts version
+    variable version         3.2.5 ; # ticklEcharts version
     variable echarts_version 5.5.0 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-5-0)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
-    variable gmap_version    1.5.0 ; # gmap version       (https://github.com/plainheart/echarts-extension-gmap)
+    variable gmap_version    1.7.0 ; # gmap version       (https://github.com/plainheart/echarts-extension-gmap)
     variable keyGMAPI        "??"  ; # Please replace '??' with your own API key.
     variable edir            [file dirname [file normalize [info script]]]
     variable theme           "custom"

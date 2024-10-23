@@ -240,3 +240,8 @@ replace the html template file `template.html` with a string. See [this file](ex
 - New `SnapShot` method to capture an image, see `Image` section for further information.
 - `Tcl9` taken into consideration (Not yet for `critcl`).
 - Cosmetic changes.
+## 23-Oct-2024 : 3.2.5
+- Add new Echarts `5.5.1` options.
+- `-jschartvar` in `Snapshot` method is no longer supported (directly taken from the `html/Render` method).
+- Bump echarts gmap extension version to `1.7.0`.
+- Cosmetic changes.
