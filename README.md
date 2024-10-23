@@ -369,7 +369,7 @@ _See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) 
 
 Image :
 -------------------------
-Since version **3.2.4**, if `Chrome` or `Edge` is installed, it is possible to capture an image 
+Since version **3.2.4**, if `Chromium` (web browser)` is installed, it is possible to capture an image 
 via `chrome devtools protocol`. The return type for image is either a `*.(png|svg)` file or data in `base64` format.   
 
 _Dependencies_ : `websocket` package from [Tcllib](https://core.tcl-lang.org/tcllib/doc/trunk/embedded/index.md)   
@@ -408,7 +408,7 @@ $chart SnapShot -renderer "svg" -html $html
 > [!NOTE]   
 > - A temporary file is created when the command is executed (This may change in future versions of `ticklEcharts`).   
 > - Method not supported with 'chart3D' class.
-> - Highly unstable, depends on the version of chrome installed.   
+> - Highly unstable, depends on the version of `Chromium` installed.   
 
 Global variables :
 -------------------------
