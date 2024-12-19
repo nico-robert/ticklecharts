@@ -77,11 +77,11 @@ Data series :
 $chart Add "lineSeries" -data [list {150 230 224 218 135 147 260}]
 $chart Yaxis
 ```
-`-data` (x, y values) : 
+`-data` (x, y) : 
 ```tcl
 # Example for lineseries
 $chart Add "lineSeries" -data [list {Mon 150} {Tue 230} {Wed 224} {... ...}]
-# Mon = X value
+# Mon = X category
 # 150 = Y value
 # Please note : X data is not included.
 $chart Xaxis
@@ -369,7 +369,7 @@ _See [line_build_your_own_JSON.tcl](examples/line/line_build_your_own_JSON.tcl) 
 
 Image :
 -------------------------
-Since version **3.2.4**, if `Chromium` (web browser)` is installed, it is possible to capture an image 
+Since version **3.2.4**, if `Chromium` (web browser) is installed, it is possible to capture an image 
 via `chrome devtools protocol`. The return type for image is either a `*.(png|svg)` file or data in `base64` format.   
 
 _Dependencies_ : `websocket` package from [Tcllib](https://core.tcl-lang.org/tcllib/doc/trunk/embedded/index.md)   
