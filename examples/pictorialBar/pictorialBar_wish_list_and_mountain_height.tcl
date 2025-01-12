@@ -7,6 +7,7 @@ lappend auto_path [file dirname [file dirname [file dirname [file dirname [file 
 #               in favor of this writing. (see formatter property + 'Add' method below)
 # v4.0 : Use '-dataItem' property for pictorialBarSeries instead of '-data' (both are accepted).
 #        Use base64 encode instead of plain image.
+# v5.0 : Load exact 'tls' package version for Tcl8.6 according to my env.
 
 # source all.tcl
 if {[catch {package present ticklecharts}]} {package require ticklecharts}
@@ -15,7 +16,7 @@ try {
     # https://wiki.tcl-lang.org/page/HTTPS
     #
     package require http 2
-    package require tls 1.7
+    if {[catch {package require -exact tls 1.7.22}]} {package require tls 1.7}
 
     # upload image from github
     http::register https 443 [list ::tls::socket -autoservername true]
