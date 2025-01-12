@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -508,7 +508,7 @@ proc ticklecharts::formatEcharts {formattype value key type} {
             set validvalue {x y}
             if {$value ni $validvalue} {
                 errorEFormat "'$value' should be '[eFormat $validvalue]'\
-                        for this key: '$key' in '$nameproc' level procedure."
+                    for this key: '$key' in '$nameproc' level procedure."
             }
         }
 
@@ -529,11 +529,11 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                         for this key: '$key' in '$nameproc' level procedure."
                 }
             } else {
-            if {![expr {$value <= 0 && $value >= -360}]} {
-                errorEFormat "'$value' should be between '0' and '-360'\
-                    for this key: '$key' in '$nameproc' level procedure."
+                if {![expr {$value <= 0 && $value >= -360}]} {
+                    errorEFormat "'$value' should be between '0' and '-360'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
             }
-        }
         }
 
         formatAType {
@@ -1494,11 +1494,34 @@ proc ticklecharts::formatEcharts {formattype value key type} {
                 }
             }
         }
+
         formatTimeout {
             # possible values...
             if {![expr {$value >= 200 && $value <= 2000}]} {
                 errorEFormat "'$value' should be between '200' and '2000'\
                     milliseconds for this key: '$key' in '$nameproc' level procedure."
+            }
+        }
+
+        formatMin {
+            # possible values...
+            if {$type eq "str"} {
+                set validvalue {dataMin}
+                if {$value ni $validvalue} {
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
+            }
+        }
+
+        formatMax {
+            # possible values...
+            if {$type eq "str"} {
+                set validvalue {dataMax}
+                if {$value ni $validvalue} {
+                    errorEFormat "'$value' should be '[eFormat $validvalue]'\
+                        for this key: '$key' in '$nameproc' level procedure."
+                }
             }
         }
     }

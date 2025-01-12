@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -13,8 +13,8 @@ proc ticklecharts::xAxis3D {value} {
     setdef options -nameTextStyle  -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::nameTextStyle3D $value]
     setdef options -nameGap        -minversion 5  -validvalue {}          -type num|null      -default 20
     setdef options -type           -minversion 5  -validvalue formatType  -type str|null      -default "value"
-    setdef options -min            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
+    setdef options -min            -minversion 5  -validvalue formatMin   -type num|str|null  -default "nothing"
+    setdef options -max            -minversion 5  -validvalue formatMax   -type num|str|null  -default "nothing"
     setdef options -scale          -minversion 5  -validvalue {}          -type bool|null     -default "False"
     setdef options -splitNumber    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
     setdef options -minInterval    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
@@ -62,8 +62,8 @@ proc ticklecharts::yAxis3D {value} {
     setdef options -nameTextStyle  -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::nameTextStyle3D $value]
     setdef options -nameGap        -minversion 5  -validvalue {}          -type num|null      -default 20
     setdef options -type           -minversion 5  -validvalue formatType  -type str|null      -default "value"
-    setdef options -min            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
+    setdef options -min            -minversion 5  -validvalue formatMin   -type num|str|null  -default "nothing"
+    setdef options -max            -minversion 5  -validvalue formatMax   -type num|str|null  -default "nothing"
     setdef options -scale          -minversion 5  -validvalue {}          -type bool|null     -default "False"
     setdef options -splitNumber    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
     setdef options -minInterval    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
@@ -112,8 +112,8 @@ proc ticklecharts::zAxis3D {value} {
     setdef options -nameTextStyle  -minversion 5  -validvalue {}          -type dict|null     -default [ticklecharts::nameTextStyle3D $value]
     setdef options -nameGap        -minversion 5  -validvalue {}          -type num|null      -default 20
     setdef options -type           -minversion 5  -validvalue formatType  -type str|null      -default "value"
-    setdef options -min            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
-    setdef options -max            -minversion 5  -validvalue {}          -type num|str|null  -default "nothing"
+    setdef options -min            -minversion 5  -validvalue formatMin   -type num|str|null  -default "nothing"
+    setdef options -max            -minversion 5  -validvalue formatMax   -type num|str|null  -default "nothing"
     setdef options -scale          -minversion 5  -validvalue {}          -type bool|null     -default "False"
     setdef options -splitNumber    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
     setdef options -minInterval    -minversion 5  -validvalue {}          -type num|null      -default "nothing"
