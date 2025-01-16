@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -627,7 +627,7 @@ proc ticklecharts::merge {d other} {
         if {[dict exists $other $key]} {
 
             if {$vcompare > 0} {
-                puts stderr "warning(version): '$key' property is not supported with this version\
+                puts stderr "warning(version): '$key' property is not supported with version\
                             '$versionLib' (minimum version = '$minversion'),\
                             it will not be taken into account."
                 continue
@@ -919,7 +919,7 @@ proc ticklecharts::getValue {value key} {
     set d [dict get $value $key]
 
     if {[llength $d] % 2} {
-        uplevel 1 {ticklecharts::errorEvenArgs}
+        uplevel 1 [list ticklecharts::errorEvenArgs $key]
     }
 
     return $d
@@ -1181,16 +1181,90 @@ proc ticklecharts::urlExists? {url} {
     return {}
 }
 
-proc ticklecharts::errorEvenArgs {} {
+proc ticklecharts::errorEvenArgs {{k "nothing"}} {
     # Error number of elements.
     #
+    # k - optional value indicates the value of the key.
+    # 
     # Raise an error.
     set level  [uplevel 1 {info level}]
     set levelP [ticklecharts::getLevelProperties $level]
 
-    return -level [info level] \
-           -code error "wrong # args: item list for\
-                       '$levelP' must have an even number of elements."
+    set msg "wrong # args: item list for\
+            '$levelP' must have an even number of elements."
+
+    if {$k ne "nothing"} {
+        set proc [lindex [split $levelP "."] end]
+        set itemList "False"
+        if {[string match {-*Item} $k] || [string match {*Item} $proc]} {
+            set itemList "True"
+        }
+
+        set hmsg [ticklecharts::infoErrorProc $proc $k $itemList]
+        if {$hmsg ne ""} {
+            set msg "wrong # args: item list for\
+                    '$levelP' should be a dictionary format : $hmsg"
+        }
+    }
+
+    return -level [info level] -code error $msg
+}
+
+proc ticklecharts::infoErrorProc {body k itemList} {
+    # Try to provide more information on errors.
+    #
+    # body     - procedure.
+    # k        - value of the key.
+    # itemList - indicates whether it's a list of list.
+    # 
+    # Returns a message as a string.
+    ldset {opts msg} -to {}
+
+    if {[catch {info body $body} procBody]} {
+        return {}
+    }
+
+    foreach line [split $procBody "\n"] {
+        set line [string trim $line]
+        if {
+            [string match {setdef *} $line] ||
+            [string match {*::setdef *} $line]
+        } {
+            set info [lindex $line 2]
+            if {$info ni {id -id}} {
+                lappend opts [lindex $line 2]
+                if {[llength $opts] > 2} {break}
+            }
+        }
+    }
+
+    if {[llength $opts]} {
+        # Format message.
+        if {$itemList} {
+            set start "$k \{"
+            set end   "...\} \{...\}"
+        } else {
+            set start "$k "
+            set end   "..."
+        }
+
+        foreach var $opts {
+            if {[string index $var 0] ne "-"} {
+                set start "$start\{"
+                set end   "$end\}"
+                break
+            }
+        }
+
+        append msg $start
+        foreach var $opts {
+            append msg "?'$var' ?value "
+        }
+        set msg [string trim $msg]
+        append msg $end
+    }
+
+    return $msg
 }
 
 proc ticklecharts::errorKeyArgs {property value} {
