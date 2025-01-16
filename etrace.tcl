@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 proc ticklecharts::traceEchartsVersion {minversion baseversion args} {
@@ -246,7 +246,25 @@ proc ticklecharts::getTraceLevelProperties {level key value} {
         set value [$value get]
     }
 
-    $obj setTrace [join [list {*}[lrange $properties 1 end] $key] "."] $value
+    set keyP [join [list {*}[lrange $properties 1 end] $key] "."]
+
+    # Special case for 'parallelAxis'
+    if {[lindex $properties 1] eq "parallelAxis"} {
+        set trace [lreverse [$obj getTrace]]
+        set map   [string map {parallelAxis {parallelAxis(*)}} $keyP]
+        set pos   [lsearch -glob $trace $map]
+        if {$pos > -1} {
+            set re [string map {parallelAxis {parallelAxis\(([0-9]+)\)}} $keyP]
+            regexp $re [lindex $trace $pos] -> match
+            lset properties 1 "parallelAxis\([incr match])"
+        } else {
+            lset properties 1 "parallelAxis\(1)"
+        }
+        set keyP [join [list {*}[lrange $properties 1 end] $key] "."]
+    }
+
+    $obj setTrace $keyP $value
+
 
     return {}
 }
@@ -429,7 +447,7 @@ proc ticklecharts::track {properties} {
                 }
             }
             "yAxis(*).scale" - "radiusAxis.scale" - "angleAxis.scale" -
-            "xAxis(*).scale" - "singleAxis.scale" - "parallelAxis.scale" {
+            "xAxis(*).scale" - "singleAxis.scale" - "parallelAxis(*).scale" {
                 # https://echarts.apache.org/en/option.html#xAxis.scale
                 if {($value ni {nothing null}) && $value} {
                     set axis [lindex [split $keyP "."] 0]
@@ -453,7 +471,7 @@ proc ticklecharts::track {properties} {
                 }
             }
             "yAxis(*).splitNumber" - "singleAxis.splitNumber" - "angleAxis.splitNumber" -
-            "xAxis(*).splitNumber" - "radiusAxis.splitNumber" - "parallelAxis.splitNumber" {
+            "xAxis(*).splitNumber" - "radiusAxis.splitNumber" - "parallelAxis(*).splitNumber" {
                 # https://echarts.apache.org/en/option.html#xAxis.splitNumber
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -467,7 +485,7 @@ proc ticklecharts::track {properties} {
                 }
             }
             "yAxis(*).interval" - "singleAxis.interval" - "angleAxis.interval" -
-            "xAxis(*).interval" - "radiusAxis.interval" - "parallelAxis.interval" {
+            "xAxis(*).interval" - "radiusAxis.interval" - "parallelAxis(*).interval" {
                 # https://echarts.apache.org/en/option.html#xAxis.interval
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -480,10 +498,10 @@ proc ticklecharts::track {properties} {
                     }
                 }
             }
-            "yAxis(*).minInterval"   - "yAxis(*).maxInterval"     - "singleAxis.maxInterval" -
-            "radiusAxis.minInterval" - "radiusAxis.maxInterval"   - "angleAxis.maxInterval"  -
-            "xAxis(*).minInterval"   - "xAxis(*).maxInterval"     - "singleAxis.minInterval" - 
-            "angleAxis.minInterval"  - "parallelAxis.maxInterval" - "parallelAxis.minInterval" {
+            "yAxis(*).minInterval"   - "yAxis(*).maxInterval"        - "singleAxis.maxInterval" -
+            "radiusAxis.minInterval" - "radiusAxis.maxInterval"      - "angleAxis.maxInterval"  -
+            "xAxis(*).minInterval"   - "xAxis(*).maxInterval"        - "singleAxis.minInterval" - 
+            "angleAxis.minInterval"  - "parallelAxis(*).maxInterval" - "parallelAxis(*).minInterval" {
                 # https://echarts.apache.org/en/option.html#xAxis.minInterval
                 # https://echarts.apache.org/en/option.html#xAxis.maxInterval
                 if {$value ni {nothing null}} {
@@ -498,7 +516,7 @@ proc ticklecharts::track {properties} {
                 }
             }
             "yAxis(*).logBase" - "singleAxis.logBase" - "angleAxis.logBase" -
-            "xAxis(*).logBase" - "radiusAxis.logBase" - "parallelAxis.logBase" {
+            "xAxis(*).logBase" - "radiusAxis.logBase" - "parallelAxis(*).logBase" {
                 # https://echarts.apache.org/en/option.html#xAxis.logBase
                 if {$value ni {nothing null}} {
                     set axis [lindex [split $keyP "."] 0]
@@ -521,6 +539,22 @@ proc ticklecharts::track {properties} {
                         [dict get $properties ${axis}.axisLine.onZero]} {
                         puts stderr "warning(trace): Set '${axis}.axisLine.onZero' to\
                                      'False' to activate '$keyP' option."
+                    }
+                }
+            }
+            "xAxis(*).tooltip"  - "yAxis(*).tooltip" - "radiusAxis.tooltip" -
+            "angleAxis.tooltip" - "parallelAxis(*).tooltip" - "parallel.parallelAxisDefault.tooltip" {
+                if {$value ni {nothing null}} {
+                    if {$keyP eq "parallel.parallelAxisDefault.tooltip"} {
+                        set axis [string map {.tooltip ""} $keyP]
+                    } else {
+                        set axis [lindex [split $keyP "."] 0]
+                    }
+                    if {[dict exists $properties ${axis}.triggerEvent] &&
+                        ![string equal -nocase "true" [dict get $properties ${axis}.triggerEvent]]
+                    } {
+                        puts stderr "warning(trace): Set '${axis}.triggerEvent' to\
+                                     'True' to activate '$keyP' option."
                     }
                 }
             }
