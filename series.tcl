@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -1102,8 +1102,8 @@ proc ticklecharts::candlestickSeries {index chart value} {
     setdef options -barMaxWidth             -minversion 5       -validvalue {}                    -type str|num|null      -default "nothing"
     setdef options -barMinWidth             -minversion 5       -validvalue {}                    -type str|num|null      -default "null"
     setdef options -itemStyle               -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::itemStyle $value]
-    setdef options -emphasis                -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::emphasis $value]
-    setdef options -blur                    -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::blur $value]
+    setdef options -emphasis                -minversion "5.6.0" -validvalue {}                    -type dict|null         -default [ticklecharts::emphasis $value]
+    setdef options -blur                    -minversion "5.6.0" -validvalue {}                    -type dict|null         -default [ticklecharts::blur $value]
     setdef options -select                  -minversion 5       -validvalue {}                    -type dict|null         -default [ticklecharts::select $value]
     setdef options -selectedMode            -minversion 5       -validvalue formatSelectedMode    -type bool|str|null     -default "nothing"
     setdef options -large                   -minversion 5       -validvalue {}                    -type bool              -default "False"
