@@ -28,7 +28,7 @@ proc ticklecharts::radiusAxis {value} {
     setdef options -logBase        -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -startValue     -minversion "5.5.1" -validvalue {}                  -type num|null            -trace no   -default "nothing"
     setdef options -silent         -minversion 5       -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-    setdef options -triggerEvent   -minversion 5       -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+    setdef options -triggerEvent   -minversion 5       -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
     setdef options -axisLine       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
     setdef options -axisTick       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
     setdef options -minorTick      -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
@@ -40,6 +40,7 @@ proc ticklecharts::radiusAxis {value} {
     setdef options -axisPointer    -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
     setdef options -zlevel         -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
     setdef options -z              -minversion 5       -validvalue {}                  -type num|null            -trace no   -default "nothing"
+    setdef options -tooltip        -minversion "5.6.0" -validvalue {}                  -type dict|null           -trace yes  -default [ticklecharts::tooltip $value]
     #...
 
     # Both properties item are accepted.
@@ -56,7 +57,7 @@ proc ticklecharts::radiusAxis {value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -axisLine -axisTick -minorSplitLine \
+    set value [dict remove $value -axisLine -axisTick -minorSplitLine -tooltip \
                                   -axisLabel -splitLine -axisPointer \
                                   -splitArea -nameTextStyle -minorTick -nameTruncate $itemKey]
 
@@ -120,7 +121,7 @@ proc ticklecharts::angleAxis {value} {
     setdef options -logBase        -minversion 5        -validvalue {}               -type num|null            -trace yes  -default "nothing"
     setdef options -startValue     -minversion "5.5.1"  -validvalue {}               -type num|null            -trace no   -default "nothing"
     setdef options -silent         -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
-    setdef options -triggerEvent   -minversion 5        -validvalue {}               -type bool|null           -trace no   -default "nothing"
+    setdef options -triggerEvent   -minversion 5        -validvalue {}               -type bool|null           -trace yes  -default "nothing"
     setdef options -axisLine       -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
     setdef options -axisTick       -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
     setdef options -minorTick      -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
@@ -132,6 +133,7 @@ proc ticklecharts::angleAxis {value} {
     setdef options -axisPointer    -minversion 5        -validvalue {}               -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
     setdef options -zlevel         -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
     setdef options -z              -minversion 5        -validvalue {}               -type num|null            -trace no   -default "nothing"
+    setdef options -tooltip        -minversion "5.6.0"  -validvalue {}               -type dict|null           -trace yes  -default [ticklecharts::tooltip $value]
     #...
 
     # Both properties item are accepted.
@@ -148,7 +150,7 @@ proc ticklecharts::angleAxis {value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -axisLine -axisTick \
+    set value [dict remove $value -axisLine -axisTick -tooltip \
                                   -minorTick -axisLabel -splitLine \
                                   -minorSplitLine -splitArea -axisPointer $itemKey]
 
@@ -187,7 +189,7 @@ proc ticklecharts::xAxis {index chart value} {
     setdef options -logBase        -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -startValue     -minversion "5.5.1" -validvalue {}                  -type num|null            -trace no   -default "nothing"
     setdef options -silent         -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
-    setdef options -triggerEvent   -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
+    setdef options -triggerEvent   -minversion 5       -validvalue {}                  -type bool                -trace yes  -default "False"
     setdef options -axisLine       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
     setdef options -axisTick       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
     setdef options -minorTick      -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
@@ -198,6 +200,7 @@ proc ticklecharts::xAxis {index chart value} {
     setdef options -axisPointer    -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
     setdef options -zlevel         -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -z              -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
+    setdef options -tooltip        -minversion "5.6.0" -validvalue {}                  -type dict|null           -trace yes  -default [ticklecharts::tooltip $value]
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
@@ -221,7 +224,7 @@ proc ticklecharts::xAxis {index chart value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -nameTextStyle -axisLine -axisTick \
+    set value [dict remove $value -nameTextStyle -axisLine -axisTick -tooltip \
                                   -minorTick -axisLabel -splitLine \
                                   -minorSplitLine -splitArea -axisPointer -nameTruncate $itemKey]
 
@@ -262,7 +265,7 @@ proc ticklecharts::yAxis {index chart value} {
     setdef options -logBase         -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
     setdef options -startValue      -minversion "5.5.1" -validvalue {}                  -type num|null            -trace no   -default "nothing"
     setdef options -silent          -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
-    setdef options -triggerEvent    -minversion 5       -validvalue {}                  -type bool                -trace no   -default "False"
+    setdef options -triggerEvent    -minversion 5       -validvalue {}                  -type bool                -trace yes  -default "False"
     setdef options -axisLine        -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $value]
     setdef options -axisTick        -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $value]
     setdef options -minorTick       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $value]
@@ -273,6 +276,7 @@ proc ticklecharts::yAxis {index chart value} {
     setdef options -axisPointer     -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisPointer $value]
     setdef options -zlevel          -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
     setdef options -z               -minversion 5       -validvalue {}                  -type num                 -trace no   -default 0
+    setdef options -tooltip         -minversion "5.6.0" -validvalue {}                  -type dict|null           -trace yes  -default [ticklecharts::tooltip $value]
 
     # check if chart includes a dataset class
     set dataset [$chart dataset]
@@ -296,7 +300,7 @@ proc ticklecharts::yAxis {index chart value} {
     }
 
     # remove key(s)...
-    set value [dict remove $value -nameTextStyle -axisLine -axisTick \
+    set value [dict remove $value -nameTextStyle -axisLine -axisTick -tooltip \
                                   -minorTick -axisLabel -splitLine \
                                   -minorSplitLine -splitArea -axisPointer -nameTruncate $itemKey]
 
@@ -404,12 +408,13 @@ proc ticklecharts::parallelAxis {value} {
         setdef options logBase         -minversion 5       -validvalue {}                  -type num|null            -trace yes  -default "nothing"
         setdef options startValue      -minversion "5.5.1" -validvalue {}                  -type num|null            -trace no   -default "nothing"
         setdef options silent          -minversion 5       -validvalue {}                  -type bool|null           -trace no   -default "nothing"
-        setdef options triggerEvent    -minversion 5       -validvalue {}                  -type bool|null           -trace no   -default "nothing"
+        setdef options triggerEvent    -minversion 5       -validvalue {}                  -type bool|null           -trace yes  -default "nothing"
         setdef options axisLine        -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLine $item]
         setdef options axisTick        -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisTick $item]
         setdef options minorTick       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::minorTick $item]
         setdef options axisLabel       -minversion 5       -validvalue {}                  -type dict|null           -trace no   -default [ticklecharts::axisLabel $item]
         setdef options data            -minversion 5       -validvalue {}                  -type list.d|null         -trace no   -default "nothing"
+        setdef options tooltip         -minversion "5.6.0" -validvalue {}                  -type dict|null           -trace yes  -default [ticklecharts::tooltip $item]
         #...
 
         # Both properties item are accepted.
@@ -426,7 +431,9 @@ proc ticklecharts::parallelAxis {value} {
         }
 
         # remove key(s)...
-        set item [dict remove $item areaSelectStyle nameTextStyle axisLine axisTick minorTick axisLabel nameTruncate $itemKey]
+        set item [dict remove $item areaSelectStyle nameTextStyle \
+                              axisLine axisTick minorTick axisLabel \
+                              nameTruncate $itemKey tooltip]
 
         lappend opts [merge $options $item]
         set options {}
