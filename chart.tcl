@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {}
@@ -347,8 +347,8 @@ oo::define ticklecharts::chart {
 
         set newhtml [ticklecharts::htmlMap [my get] $template $opts]
 
-        # Replaces json data in and return HTML...
-        return [join [string map [list %json% $json] $newhtml] "\n"]
+        # Replaces json data in and return HTML.
+        return [string map [list %json% $json] [join $newhtml "\n"]]
     }
 
     method toJSON {} {
