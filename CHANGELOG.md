@@ -245,3 +245,8 @@ replace the html template file `template.html` with a string. See [this file](ex
 - `-jschartvar` in `Snapshot` method is no longer supported (directly taken from the `html/Render` method).
 - Bump echarts gmap extension version to `1.7.0`.
 - Cosmetic changes.
+## 17-Jan-2025 : 3.2.6
+- Add new Echarts `5.6.0` options.
+- Fix [#2](https://github.com/nico-robert/ticklecharts/issues/2), thanks @pantao1227.
+- Update Tcl9 for `critcl` (Tcl8.6 and Tcl9 are supported).
+- Update LICENSE year.

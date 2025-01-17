@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 # ticklEcharts - Tcl wrapper around Apache ECharts. (https://echarts.apache.org/en/index.html)
 
@@ -238,17 +238,22 @@
                 # New `SnapShot` method to capture an image, see `Image` section for further information.
                 # `Tcl9` taken into consideration (Not yet for `critcl`).
                 # Cosmetic changes.
-# 08-May-2024 : v3.2.5
+# 23-Oct-2024 : v3.2.5
                 # Add new Echarts `5.5.1` options.
                 # `-jschartvar` in `Snapshot` method is no longer supported (directly taken from the `html/Render` method).
                 # Bump Echarts gmap extension version to `1.7.0`.
                 # Cosmetic changes.
+# 17-Jan-2025 : v3.2.6
+                # Add new Echarts `5.6.0` options.
+                # Fix [#2](https://github.com/nico-robert/ticklecharts/issues/2), thanks @pantao1227.
+                # Update Tcl9 for critcl (Tcl8.6 and Tcl9 are supported).
+                # Update LICENSE year.
 
 package require Tcl 8.6-
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.2.5 ; # ticklEcharts version
+    variable version         3.2.6 ; # ticklEcharts version
     variable echarts_version 5.5.0 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-5-0)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
