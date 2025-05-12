@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Nicolas ROBERT.
+# Copyright (c) 2022-2025 Nicolas ROBERT.
 # Distributed under MIT license. Please see LICENSE for details.
 #
 namespace eval ticklecharts {
@@ -299,7 +299,7 @@ proc ticklecharts::ehuddleListNum {isPureLN data} {
         }
     } else {
         foreach val {*}$data {
-            lappend listv [format {L {%s}} [\
+            lappend listv [list L [\
                 lmap v $val {$cmd $v} \
             ]]
         }
