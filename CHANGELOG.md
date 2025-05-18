@@ -250,3 +250,6 @@ replace the html template file `template.html` with a string. See [this file](ex
 - Fix [#2](https://github.com/nico-robert/ticklecharts/issues/2), thanks @pantao1227.
 - Update Tcl9 for `critcl` (Tcl8.6 and Tcl9 are supported).
 - Update LICENSE year.
+## 18-May-2025 : 3.2.7
+- Try to improve the code + error handling for `ehuddlecrit.tcl` file (Returns an error to the Tcl interpreter instead of using the Tcl_Exit(1) command).
+- Adds `elist.n` as huddle type (improves performance ++).

@@ -248,12 +248,15 @@
                 # Fix [#2](https://github.com/nico-robert/ticklecharts/issues/2), thanks @pantao1227.
                 # Update Tcl9 for critcl (Tcl8.6 and Tcl9 are supported).
                 # Update LICENSE year.
+# 18-May-2025 : v3.2.7
+                # Try to improve the code + error handling for `ehuddlecrit.tcl` file (Returns an error to the Tcl interpreter instead of using the Tcl_Exit(1) command).
+                # Adds `elist.n` as huddle type (improves performance ++).
 
 package require Tcl 8.6-
 package require huddle 0.3
 
 namespace eval ticklecharts {
-    variable version         3.2.6 ; # ticklEcharts version
+    variable version         3.2.7 ; # ticklEcharts version
     variable echarts_version 5.5.0 ; # Echarts version    (https://echarts.apache.org/en/changelog.html#v5-5-0)
     variable gl_version      2.0.9 ; # Echarts GL version (https://github.com/ecomfe/echarts-gl)
     variable wc_version      2.1.0 ; # wordCloud version  (https://github.com/ecomfe/echarts-wordcloud)
