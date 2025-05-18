@@ -1032,6 +1032,85 @@ set critCmd [string map [list \
 
                     return index_subsubobj;
 
+                } else if (!strcmp(type, "LPN")) {
+
+                    Tcl_Obj* node = huddleUnwrapC(interp, huddle_object);
+                    if (node == NULL) return NULL;
+
+                    Tcl_Obj* index_obj;
+                    Tcl_Obj **sub_elements;
+                    Tcl_Obj *joinList = NULL;
+                    Tcl_Obj* nlist = Tcl_NewObj();
+
+                    Tcl_ListObjIndex(interp, node, 1, &index_obj);
+                    
+                    if (Tcl_ListObjGetElements(interp, index_obj, &count, &sub_elements) != TCL_OK) {
+                        Tcl_SetObjResult(
+                            interp,
+                            Tcl_ObjPrintf("error(huddleJsonDumpC): %s", 
+                            Tcl_GetString(Tcl_GetObjResult(interp)))
+                        );
+                        return NULL;
+                    }
+
+                    if (count == 0) {
+                        Tcl_SetObjResult(
+                            interp, 
+                            Tcl_ObjPrintf("error(huddleJsonDumpC):\
+                            'lpn' type list is empty.")
+                        );
+                        return NULL;
+                    }
+
+                    // nlof > "$newline$nextoff"
+                    Tcl_Obj* nlof    = Tcl_NewObj();
+                    Tcl_AppendObjToObj(nlof, elements[1]);
+                    Tcl_AppendObjToObj(nlof, nextoff);
+
+                    // [$nlof
+                    Tcl_Obj* bracketnlof = Tcl_NewObj();
+                    Tcl_AppendObjToObj(bracketnlof, Tcl_NewStringObj("[", 1));
+                    Tcl_AppendObjToObj(bracketnlof, nlof);
+
+                    // $newline$begin]
+                    Tcl_Obj* newlinebeginbracket = Tcl_NewObj();
+                    Tcl_AppendObjToObj(newlinebeginbracket, elements[1]);
+                    Tcl_AppendObjToObj(newlinebeginbracket, elements[2]);
+                    Tcl_AppendObjToObj(newlinebeginbracket, Tcl_NewStringObj("]", 1));
+
+                    if (count == 1) {
+                        Tcl_Obj* index_subsubobj = NULL;
+                        Tcl_ListObjIndex(interp, index_obj, 0, &index_subsubobj);
+
+                        joinList = huddleJoinListC(interp, index_subsubobj, nlof);
+                        if (joinList == NULL) return NULL;
+
+                        Tcl_AppendObjToObj(nlist, bracketnlof);
+                        Tcl_AppendObjToObj(nlist, joinList);
+                        Tcl_AppendObjToObj(nlist, newlinebeginbracket);
+
+                        return nlist;
+                    } else {
+                        Tcl_Obj* data = Tcl_NewObj();
+                        for (i = 0; i < count; ++i) {
+                            joinList = huddleJoinListC(interp, sub_elements[i], nlof);
+                            if (joinList == NULL) return NULL;
+                            Tcl_Obj* newlist = Tcl_NewObj();
+                            Tcl_AppendObjToObj(newlist, bracketnlof);
+                            Tcl_AppendObjToObj(newlist, joinList);
+                            Tcl_AppendObjToObj(newlist, newlinebeginbracket);
+                            Tcl_ListObjAppendElement(interp, data, newlist);
+                        }
+
+                        joinList = huddleJoinListC(interp, data, nlof);
+                        if (joinList == NULL) return NULL;
+                        Tcl_AppendObjToObj(nlist, bracketnlof);
+                        Tcl_AppendObjToObj(nlist, joinList);
+                        Tcl_AppendObjToObj(nlist, newlinebeginbracket);
+
+                        return nlist;
+                    }
+
                 } else {
                     Tcl_SetObjResult(
                         interp,
