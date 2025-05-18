@@ -7,7 +7,11 @@ namespace eval ticklecharts {
         variable settings 
 
         # type definition
-        set settings {publicMethods "jsfunc" tag "jsf" isContainer "no"}
+        set settings {
+            publicMethods "jsfunc" 
+            tag "jsf" 
+            isContainer "no"
+        }
 
         proc jsfunc {arg} {
             return [wrap [list jsf $arg]]
@@ -16,8 +20,41 @@ namespace eval ticklecharts {
         proc jsondump {huddle_object offset newline nextoff} {
             return [join [lindex $huddle_object 1 1]]
         }
-    }
-    ::huddle::addType ::huddle::types::jsfunc
+
+    }; ::huddle::addType ::huddle::types::jsfunc
+
+    # Adds elist.n as huddle type.
+    namespace eval ::huddle::types::listPn {
+        variable settings 
+
+        # type definition
+        set settings {
+            publicMethods "lpn" 
+            tag "LPN" 
+            isContainer "yes"
+        }
+
+        proc lpn {arg} {
+            return [wrap [list LPN $arg]]
+        }
+
+        proc jsondump {huddle_object offset newline nextoff} {
+            set nlof "$newline$nextoff"
+
+            set data [get_src $huddle_object]
+
+            if {[llength $data] == 1} {
+                return "\[$nlof[join {*}$data ,$nlof]$nlof\]"
+            } else {
+                set listv {}
+                foreach val $data {
+                    lappend listv "\[$nlof[join $val ,$nlof]$nlof\]"
+                }
+                return "\[$nlof[join $listv ,$nlof]$nlof\]"
+            }
+        }
+
+    }; ::huddle::addType ::huddle::types::listPn
 }
 
 oo::class create ticklecharts::ehuddle {
@@ -69,13 +106,10 @@ oo::define ticklecharts::ehuddle {
                         ]]
                     }
                 "@LN"   {
-                        set listv [ticklecharts::ehuddleListNum "False" $info]
+                        set listv [ticklecharts::ehuddleListNum $info]
                         set value [format {HUDDLE {L {%s}}} $listv]
                     }
-                "@LPN"  {
-                        set listv [ticklecharts::ehuddleListNum "True" $info]
-                        set value [format {HUDDLE {L {%s}}} $listv]
-                    }
+                "@LPN"  {set value [huddle lpn {*}$info]}
                 "@LD"   {
                         if {[llength {*}$info] == 1} {
                             set listv [ticklecharts::ehuddleListInsert $info]
@@ -274,33 +308,22 @@ proc ticklecharts::ehuddleNum val {
     return [list num $val]
 }
 
-proc ticklecharts::ehuddlePNum val {
-    # Returns format hudlle num without type check.
-    return [list num $val]
-}
-
-proc ticklecharts::ehuddleListNum {isPureLN data} {
+proc ticklecharts::ehuddleListNum {data} {
     # Map tcl list to huddle list format number
     #
-    # isPureLN - boolean value
     # data     - list num
     # 
     # Returns huddle list
     set listv {}
-    set cmd ticklecharts::ehuddleNum
-
-    if {$isPureLN} {
-        set cmd ticklecharts::ehuddlePNum
-    }
 
     if {[llength {*}$data] == 1} {
         foreach val [lindex {*}$data 0] {
-            lappend listv [$cmd $val]
+            lappend listv [ticklecharts::ehuddleNum $val]
         }
     } else {
         foreach val {*}$data {
             lappend listv [list L [\
-                lmap v $val {$cmd $v} \
+                lmap v $val {ticklecharts::ehuddleNum $v} \
             ]]
         }
     }
